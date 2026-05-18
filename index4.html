@@ -1,0 +1,1833 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MVHV — Anthology, Vol. I · MVHV/REC 001 · 33⅓ RPM</title>
+<meta name="description" content="Anthology, Vol. I — a one-person record by Marco van Hylckama Vlieg. Twenty years of product design and engineering, pressed to vinyl. Catalog: MVHV/REC 001. 2026." />
+<meta name="theme-color" content="#10212C" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   MVHV / ANTHOLOGY, VOL. I — Catalog MVHV/REC 001
+   A vinyl record about a person.
+   Single file. No frameworks. ECM / Blue Note minimalist.
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --cream:        #EFE6CC;
+  --cream-2:      #E5DBBA;
+  --cream-3:      #D6CC9F;
+  --paper-edge:   #C0B486;
+
+  --ink:          #0C111A;
+  --ink-2:        #1A2230;
+  --ink-3:        #303A4D;
+
+  --shelf:        #1B2D38;
+  --shelf-2:      #122029;
+  --shelf-3:      #284154;
+
+  --vinyl:        #0A0B0E;
+  --vinyl-shine:  #1B1D24;
+
+  --label-red:    #C8341C;
+  --label-red-2:  #962515;
+  --orange:       #E8642C;
+  --gold:         #B89466;
+  --ash:          #8A8678;
+  --tape:         #DBC585;
+
+  --rule:         rgba(12,17,26,0.18);
+  --rule-on-ink:  rgba(239,230,204,0.16);
+
+  --gutter:       clamp(20px, 5vw, 64px);
+  --max:          1200px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--shelf);
+  color: var(--cream);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* shelf background — felt + wood vignette */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(40,65,84,0.5), transparent 60%),
+    radial-gradient(ellipse at 100% 100%, rgba(0,0,0,0.5), transparent 50%),
+    radial-gradient(ellipse at 0% 100%, rgba(0,0,0,0.4), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  /* fabric texture */
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.7;
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+::selection { background: var(--orange); color: var(--ink); }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+
+/* ── shared type ── */
+.f-display { font-family: 'Anton', 'Archivo Black', sans-serif; font-weight: 400; }
+.f-condensed { font-family: 'Anton', sans-serif; font-weight: 400; }
+.f-serif { font-family: 'Source Serif 4', 'Times New Roman', serif; }
+.f-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ──────────────────────────────────────────────────────────
+   TOP CATALOG BAR (like a record-store display sticker)
+   ────────────────────────────────────────────────────────── */
+.bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(11,17,24,0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule-on-ink);
+  padding: 10px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cream-2);
+}
+.bar__dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 0 rgba(232,100,44,0.7);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(232,100,44,0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(232,100,44,0); }
+  100% { box-shadow: 0 0 0 0 rgba(232,100,44,0); }
+}
+.bar b { color: var(--cream); font-weight: 700; letter-spacing: 0.08em; }
+.bar .sep { color: var(--ash); }
+.bar .right { margin-left: auto; display: flex; gap: 14px; align-items: center; }
+@media (max-width: 720px) {
+  .bar { font-size: 10px; gap: 10px; padding: 8px 16px; }
+  .bar .hide-sm { display: none; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   SIDE A — ALBUM COVER (FRONT)
+   ────────────────────────────────────────────────────────── */
+.cover-stage {
+  padding: 100px 0 80px;
+  position: relative;
+  z-index: 2;
+}
+.cover {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--cream);
+  color: var(--ink);
+  box-shadow:
+    0 60px 100px rgba(0,0,0,0.55),
+    0 20px 40px rgba(0,0,0,0.4),
+    inset 0 0 0 1px rgba(0,0,0,0.06);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(28px, 4.5vw, 56px);
+  gap: clamp(20px, 3.4vw, 40px);
+}
+.cover::after {
+  /* paper texture */
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* top + bottom hairline rules in cream */
+.cover__rule {
+  position: absolute;
+  left: clamp(28px, 4.5vw, 56px);
+  right: clamp(28px, 4.5vw, 56px);
+  height: 1px;
+  background: var(--ink);
+  z-index: 2;
+  opacity: 0.85;
+}
+.cover__rule--top { top: calc(clamp(28px, 4.5vw, 56px) + 22px); }
+.cover__rule--bot { bottom: calc(clamp(28px, 4.5vw, 56px) + 22px); }
+
+/* cover top row */
+.cover__head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  position: relative; z-index: 3;
+}
+.cover__head b { font-weight: 700; }
+
+/* MAIN: the hero disc graphic + title stack */
+.cover__main {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: clamp(20px, 3.2vw, 36px);
+}
+.cover__disc-art {
+  width: clamp(140px, 36vw, 280px);
+  aspect-ratio: 1;
+  position: relative;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.35));
+}
+.cover__disc-art svg {
+  width: 100%; height: 100%;
+  display: block;
+}
+
+.cover__title-block {
+  text-align: center;
+}
+.cover__title-block h1 {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: clamp(48px, 9.4vw, 110px);
+  line-height: 0.86;
+  letter-spacing: -0.018em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0;
+}
+.cover__title-block .vol {
+  margin-top: 6px;
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(18px, 2.4vw, 26px);
+  letter-spacing: 0.01em;
+  color: var(--label-red);
+}
+.cover__title-block .vol::before,
+.cover__title-block .vol::after {
+  content: '·';
+  margin: 0 14px;
+  color: var(--ink-3);
+  font-style: normal;
+}
+.cover__title-block .artist {
+  margin-top: clamp(14px, 2vw, 22px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* cover bottom row */
+.cover__foot {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  position: relative; z-index: 3;
+}
+.cover__foot b { font-weight: 700; }
+@media (max-width: 460px) {
+  .cover__head, .cover__foot { font-size: 9.5px; letter-spacing: 0.14em; }
+}
+
+/* caption under cover */
+.cover__caption {
+  max-width: 700px;
+  margin: 28px auto 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cream-3);
+}
+
+/* ──────────────────────────────────────────────────────────
+   THE VINYL — spinning record with tonearm
+   ────────────────────────────────────────────────────────── */
+.disc-stage {
+  padding: 80px 0 100px;
+  position: relative;
+  z-index: 2;
+  background: var(--shelf-2);
+  border-top: 1px solid var(--rule-on-ink);
+  border-bottom: 1px solid var(--rule-on-ink);
+}
+.disc-stage__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 60px;
+}
+@media (min-width: 900px) {
+  .disc-stage__inner {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 80px;
+  }
+}
+.disc-area {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(0,0,0,0.6);
+  background: #05060A;
+}
+.disc > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* tonearm */
+.tonearm {
+  position: absolute;
+  top: -3%; right: -3%;
+  width: 64%;
+  height: 64%;
+  pointer-events: none;
+  z-index: 4;
+  transform-origin: 86% 14%;
+  transform: rotate(-48deg);
+  transition: transform 1.2s cubic-bezier(.4,.2,.2,1);
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.55));
+}
+.tonearm svg { width: 100%; height: 100%; overflow: visible; display: block; }
+
+/* now-playing panel beside the disc */
+.now-playing {
+  color: var(--cream);
+  padding: 0 8px;
+}
+.now-playing__bar {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 18px;
+}
+.now-playing__bar i {
+  display: inline-block;
+  width: 3px; height: 14px;
+  background: var(--orange);
+  animation: eq 0.9s ease-in-out infinite alternate;
+}
+.now-playing__bar i:nth-child(2) { animation-delay: 0.15s; }
+.now-playing__bar i:nth-child(3) { animation-delay: 0.3s; height: 10px; }
+@keyframes eq { from { transform: scaleY(0.4); } to { transform: scaleY(1.2); } }
+.now-playing__title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  color: var(--cream);
+  transition: color .35s;
+}
+.now-playing__title em {
+  color: var(--orange);
+  font-style: normal;
+}
+.now-playing__sub {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--cream-2);
+  margin-bottom: 28px;
+  line-height: 1.4;
+}
+.now-playing__meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ash);
+  display: flex; flex-wrap: wrap; gap: 12px;
+  letter-spacing: 0.06em;
+}
+.now-playing__meta b { color: var(--cream); font-weight: 500; }
+
+.np-controls {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.np-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--cream);
+  background: transparent;
+  color: var(--cream);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s, transform .2s;
+}
+.np-btn:hover {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--ink);
+}
+.np-btn:active { transform: translateY(1px); }
+.np-btn svg { display: block; }
+.np-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--ash);
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+.now-playing__progress {
+  margin-top: 24px;
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ash);
+}
+.now-playing__progress .timer { color: var(--cream); }
+.now-playing__progress .track {
+  flex: 1;
+  height: 2px;
+  background: var(--rule-on-ink);
+  position: relative;
+  overflow: hidden;
+}
+.now-playing__progress .track i {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: var(--orange);
+  width: 0;
+  transition: width .5s linear;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   SIDE B — BACK COVER (TRACK LISTING)
+   ────────────────────────────────────────────────────────── */
+.tracklist-stage {
+  padding: 100px 0 80px;
+  position: relative;
+  z-index: 2;
+}
+.tracklist {
+  background: var(--cream);
+  color: var(--ink);
+  padding: clamp(36px, 6vw, 72px);
+  box-shadow:
+    0 50px 80px rgba(0,0,0,0.5),
+    0 16px 30px rgba(0,0,0,0.35);
+  position: relative;
+  overflow: hidden;
+}
+.tracklist::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.tracklist__head {
+  display: flex; justify-content: space-between; align-items: end;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 18px;
+  margin-bottom: 32px;
+  position: relative; z-index: 2;
+}
+.tracklist__title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(40px, 6vw, 84px);
+  line-height: 0.84;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+.tracklist__title small {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  margin-top: 8px;
+  font-weight: 400;
+}
+.tracklist__id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--ink-2);
+}
+.tracklist__id b { color: var(--label-red); font-weight: 700; }
+
+/* the two sides */
+.sides {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 50px;
+  position: relative; z-index: 2;
+}
+@media (min-width: 900px) {
+  .sides { grid-template-columns: 1fr 1fr; gap: 60px; }
+}
+.side h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 0.95;
+  letter-spacing: 0;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.side h3 em {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--label-red);
+  font-weight: 600;
+  font-size: 0.85em;
+}
+.side__sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 22px;
+  border-bottom: 1px dotted var(--ink-2);
+  padding-bottom: 12px;
+}
+
+.track {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  transition: padding-left .35s cubic-bezier(.2,.7,.2,1), background .25s;
+  cursor: pointer;
+}
+.track:hover {
+  padding-left: 12px;
+  background: var(--cream-2);
+}
+.track.is-playing {
+  padding-left: 12px;
+  background: var(--cream-2);
+}
+.track.is-playing::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 22px;
+  background: var(--orange);
+}
+.track__num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  text-align: right;
+}
+.track__title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+.track__title small {
+  display: block;
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13.5px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-2);
+  margin-top: 4px;
+}
+.track__title a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.track__title a:hover { color: var(--label-red); }
+.track__dur {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* ──────────────────────────────────────────────────────────
+   GATEFOLD — liner notes spread
+   ────────────────────────────────────────────────────────── */
+.gatefold-stage {
+  padding: 100px 0;
+  position: relative;
+  z-index: 2;
+}
+.gatefold {
+  background: var(--cream-2);
+  color: var(--ink);
+  padding: clamp(40px, 6vw, 80px);
+  box-shadow:
+    0 50px 80px rgba(0,0,0,0.5),
+    0 16px 30px rgba(0,0,0,0.35);
+  position: relative;
+  overflow: hidden;
+}
+.gatefold::before {
+  /* center fold line */
+  content: '';
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.18), transparent);
+  z-index: 1;
+}
+.gatefold::after {
+  /* paper noise */
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.gatefold__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 64px;
+  position: relative; z-index: 2;
+}
+@media (min-width: 1000px) {
+  .gatefold__grid { grid-template-columns: 1fr 1fr; gap: 80px; }
+}
+.gatefold__lead {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 0.92;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.gatefold__lead em {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--label-red);
+  font-size: 0.88em;
+}
+.gatefold__essay p {
+  font-family: 'Source Serif 4', serif;
+  font-size: 17px;
+  line-height: 1.6;
+  margin-bottom: 18px;
+  color: var(--ink-2);
+}
+.gatefold__essay p em {
+  color: var(--label-red);
+  font-style: italic;
+}
+.gatefold__essay p b {
+  font-weight: 700;
+  color: var(--ink);
+}
+.gatefold__essay p:first-child::first-letter {
+  font-family: 'Anton', sans-serif;
+  float: left;
+  font-size: 4.2em;
+  line-height: 0.82;
+  padding: 6px 14px 0 0;
+  color: var(--label-red);
+}
+
+/* credits column on the right */
+.credits-col h4 {
+  font-family: 'Anton', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 28px 0 8px;
+  color: var(--ink);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--rule);
+}
+.credits-col h4:first-child { margin-top: 0; }
+.credits-col p, .credits-col li {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.credits-col ul { list-style: none; }
+.credits-col ul li b { color: var(--ink); font-weight: 700; }
+.credits-col .small-credit {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* ──────────────────────────────────────────────────────────
+   LABEL CLOSEUP
+   ────────────────────────────────────────────────────────── */
+.label-stage {
+  padding: 100px 0;
+  background: var(--shelf-2);
+  border-top: 1px solid var(--rule-on-ink);
+  border-bottom: 1px solid var(--rule-on-ink);
+  position: relative;
+  z-index: 2;
+}
+.label-stage__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 60px;
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .label-stage__inner { grid-template-columns: 1fr 1fr; gap: 80px; }
+}
+.big-label {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--label-red), var(--label-red-2));
+  position: relative;
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.5),
+    inset 0 0 40px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(0,0,0,0.4);
+  display: grid; place-items: center;
+  text-align: center;
+  color: var(--cream);
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+.big-label::before {
+  /* spindle hole */
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--vinyl);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  z-index: 3;
+}
+.big-label__inner {
+  position: relative;
+  z-index: 2;
+  padding: 28px 16px;
+}
+.big-label__inner .super {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  margin-bottom: 14px;
+  color: var(--cream-2);
+}
+.big-label__inner h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 0.88;
+  letter-spacing: 0;
+  margin-bottom: 8px;
+}
+.big-label__inner .vol {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--cream-2);
+  margin: 6px 0 20px;
+}
+.big-label__inner .by {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--cream-2);
+}
+.big-label__inner .row {
+  margin-top: 30px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--cream-2);
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 0 14%;
+}
+.big-label__inner .row b { color: var(--cream); }
+
+/* spec list to right of label */
+.specs h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(36px, 4.6vw, 56px);
+  line-height: 0.92;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--cream);
+}
+.specs h3 em {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--orange);
+}
+.specs .lede {
+  font-family: 'Source Serif 4', serif;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--cream-2);
+  margin-bottom: 28px;
+  max-width: 480px;
+  line-height: 1.5;
+}
+.specs__list {
+  list-style: none;
+  border-top: 1px solid var(--rule-on-ink);
+}
+.specs__list li {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule-on-ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--cream);
+}
+.specs__list li b {
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ash);
+  font-size: 10px;
+}
+.specs__list li a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.specs__list li a:hover { color: var(--orange); }
+
+/* ──────────────────────────────────────────────────────────
+   OUT-SLEEVE — order / contact / colophon
+   ────────────────────────────────────────────────────────── */
+.outsleeve {
+  padding: 120px 0 80px;
+  position: relative;
+  z-index: 2;
+}
+.outsleeve__head {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.outsleeve__head .super {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 14px;
+}
+.outsleeve__head h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(60px, 10vw, 160px);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+.outsleeve__head h2 em {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--orange);
+}
+.outsleeve-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+@media (min-width: 760px) {
+  .outsleeve-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.outsleeve-card {
+  background: var(--cream);
+  color: var(--ink);
+  padding: 28px 30px 32px;
+  position: relative;
+  border: 1px solid var(--paper-edge);
+  box-shadow: 0 18px 30px rgba(0,0,0,0.35), 0 4px 8px rgba(0,0,0,0.18);
+  transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s;
+}
+.outsleeve-card:hover { transform: translateY(-6px); box-shadow: 0 26px 50px rgba(0,0,0,0.45); }
+.outsleeve-card .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--label-red);
+  margin-bottom: 14px;
+}
+.outsleeve-card h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.005em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.outsleeve-card p, .outsleeve-card a {
+  font-family: 'Source Serif 4', serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.outsleeve-card .links {
+  margin-top: 14px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.outsleeve-card .links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  letter-spacing: 0.02em;
+}
+.outsleeve-card .links a::after {
+  content: ' ↗';
+  font-size: 11px;
+  opacity: 0.7;
+}
+.outsleeve-card .links a:hover { color: var(--label-red); }
+
+/* the final CTA */
+.cta-row {
+  text-align: center;
+  margin-top: 80px;
+}
+.cta-row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 40px;
+  background: var(--orange);
+  color: var(--ink);
+  font-family: 'Anton', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background .25s, gap .25s;
+}
+.cta-row a:hover { background: var(--cream); gap: 24px; }
+.cta-row a .glyph {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 22px;
+}
+
+/* colophon footer */
+.colophon {
+  margin-top: 100px;
+  padding: 30px 0;
+  border-top: 1px solid var(--rule-on-ink);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+@media (min-width: 720px) {
+  .colophon {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .colophon .center { text-align: center; }
+  .colophon .right { text-align: right; }
+}
+.colophon b { color: var(--cream); font-weight: 700; }
+
+/* reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+
+<body>
+
+<!-- TOP CATALOG BAR -->
+<header class="bar" role="banner">
+  <span class="bar__dot" aria-hidden="true"></span>
+  <span><b>MVHV/REC · 001</b></span>
+  <span class="sep">·</span>
+  <span class="hide-sm">Anthology, Vol. I</span>
+  <span class="sep hide-sm">·</span>
+  <span class="hide-sm">33⅓ RPM · stereo</span>
+  <div class="right">
+    <span class="hide-sm">side <span id="curSide">A</span> · trk <span id="curTrk">A1</span></span>
+    <span class="sep hide-sm">·</span>
+    <span id="curTime">--:--</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════
+     I — SIDE A — FRONT COVER
+     ═══════════════════════════════════════════════════════ -->
+<section class="cover-stage" id="cover">
+  <div class="wrap">
+    <div class="cover">
+
+      <span class="cover__rule cover__rule--top" aria-hidden="true"></span>
+      <span class="cover__rule cover__rule--bot" aria-hidden="true"></span>
+
+      <header class="cover__head">
+        <span><b>MVHV</b> · REC</span>
+        <span>001 / 2026</span>
+      </header>
+
+      <div class="cover__main">
+
+        <!-- the hero: a properly drawn vinyl disc -->
+        <div class="cover__disc-art" aria-hidden="true">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <radialGradient id="discBody" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"  stop-color="#1A1C24"/>
+                <stop offset="55%" stop-color="#0A0B0E"/>
+                <stop offset="100%" stop-color="#05060A"/>
+              </radialGradient>
+              <radialGradient id="lbl" cx="32%" cy="32%" r="68%">
+                <stop offset="0%"  stop-color="#E04025"/>
+                <stop offset="100%" stop-color="#962515"/>
+              </radialGradient>
+              <linearGradient id="shine" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="35%" stop-color="rgba(255,255,255,0)"/>
+                <stop offset="50%" stop-color="rgba(255,255,255,0.10)"/>
+                <stop offset="65%" stop-color="rgba(255,255,255,0)"/>
+              </linearGradient>
+            </defs>
+            <!-- body -->
+            <circle cx="100" cy="100" r="98" fill="url(#discBody)"/>
+            <!-- grooves: many concentric circles drawn explicitly -->
+            <g fill="none" stroke="#3C3F49" stroke-width="0.3" opacity="0.5">
+              <circle cx="100" cy="100" r="95"/>
+              <circle cx="100" cy="100" r="92"/>
+              <circle cx="100" cy="100" r="89"/>
+              <circle cx="100" cy="100" r="86"/>
+              <circle cx="100" cy="100" r="83"/>
+              <circle cx="100" cy="100" r="80"/>
+              <circle cx="100" cy="100" r="77"/>
+              <circle cx="100" cy="100" r="74"/>
+              <circle cx="100" cy="100" r="71"/>
+              <circle cx="100" cy="100" r="68"/>
+              <circle cx="100" cy="100" r="65"/>
+              <circle cx="100" cy="100" r="62"/>
+              <circle cx="100" cy="100" r="59"/>
+              <circle cx="100" cy="100" r="56"/>
+              <circle cx="100" cy="100" r="53"/>
+              <circle cx="100" cy="100" r="50"/>
+              <circle cx="100" cy="100" r="47"/>
+              <circle cx="100" cy="100" r="44"/>
+              <circle cx="100" cy="100" r="41"/>
+              <circle cx="100" cy="100" r="38"/>
+            </g>
+            <!-- shine sweep -->
+            <circle cx="100" cy="100" r="98" fill="url(#shine)"/>
+            <!-- red label -->
+            <circle cx="100" cy="100" r="34" fill="url(#lbl)"/>
+            <!-- label text top -->
+            <defs>
+              <path id="lblTopArc" d="M 100 100 m -27 0 a 27 27 0 1 1 54 0"/>
+              <path id="lblBotArc" d="M 100 100 m -27 0 a 27 27 0 1 0 54 0"/>
+            </defs>
+            <text font-family="JetBrains Mono, monospace" font-size="2.8" fill="#EFE6CC" letter-spacing="0.35">
+              <textPath href="#lblTopArc" startOffset="50%" text-anchor="middle">MVHV · ANTHOLOGY · 001</textPath>
+            </text>
+            <text font-family="JetBrains Mono, monospace" font-size="2.8" fill="#EFE6CC" letter-spacing="0.35">
+              <textPath href="#lblBotArc" startOffset="50%" text-anchor="middle" side="right">SIDE A · 2026</textPath>
+            </text>
+            <text x="100" y="98" text-anchor="middle" font-family="Anton, sans-serif" font-size="10" fill="#EFE6CC" letter-spacing="0.2">VOL. I</text>
+            <text x="100" y="108" text-anchor="middle" font-family="Source Serif 4, serif" font-style="italic" font-size="5" fill="#EFE6CC">m.v.h.v.</text>
+            <!-- spindle hole -->
+            <circle cx="100" cy="100" r="1.6" fill="#05060A"/>
+          </svg>
+        </div>
+
+        <div class="cover__title-block">
+          <h1>Anthology</h1>
+          <div class="vol">vol. <em style="font-style: italic;">I</em></div>
+          <div class="artist">M. van Hylckama Vlieg</div>
+        </div>
+
+      </div>
+
+      <footer class="cover__foot">
+        <span><b>33⅓</b> · stereo</span>
+        <span>first pressing · ed. of one</span>
+      </footer>
+
+    </div>
+    <p class="cover__caption">scroll down — drop the needle</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     II — THE DISC — spinning record + tonearm + now playing
+     ═══════════════════════════════════════════════════════ -->
+<section class="disc-stage" id="disc">
+  <div class="wrap">
+    <div class="disc-stage__inner">
+
+      <!-- DISC -->
+      <div class="disc-area" id="discArea" data-playing="true">
+
+        <div class="disc" id="disc">
+          <svg viewBox="0 0 200 200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="discBodyBig" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"  stop-color="#1B1E27"/>
+                <stop offset="60%" stop-color="#0A0B0E"/>
+                <stop offset="100%" stop-color="#05060A"/>
+              </radialGradient>
+              <linearGradient id="shineBig" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="30%" stop-color="rgba(255,255,255,0)"/>
+                <stop offset="50%" stop-color="rgba(255,255,255,0.12)"/>
+                <stop offset="70%" stop-color="rgba(255,255,255,0)"/>
+              </linearGradient>
+              <radialGradient id="lblBig" cx="32%" cy="32%" r="68%">
+                <stop offset="0%"  stop-color="#E04025"/>
+                <stop offset="100%" stop-color="#962515"/>
+              </radialGradient>
+              <path id="lblTopBig" d="M 100 100 m -29 0 a 29 29 0 1 1 58 0"/>
+              <path id="lblBotBig" d="M 100 100 m -29 0 a 29 29 0 1 0 58 0"/>
+            </defs>
+
+            <!-- SPINNING GROUP: body + grooves + shine.  Rotates via SMIL. -->
+            <g id="discPlate">
+              <!-- body -->
+              <circle cx="100" cy="100" r="99" fill="url(#discBodyBig)"/>
+
+              <!-- grooves -->
+              <g fill="none" stroke="#363944" stroke-width="0.28" opacity="0.55">
+                <circle cx="100" cy="100" r="97"/><circle cx="100" cy="100" r="95"/>
+                <circle cx="100" cy="100" r="93"/><circle cx="100" cy="100" r="91"/>
+                <circle cx="100" cy="100" r="89"/><circle cx="100" cy="100" r="87"/>
+                <circle cx="100" cy="100" r="85"/><circle cx="100" cy="100" r="83"/>
+                <circle cx="100" cy="100" r="81"/><circle cx="100" cy="100" r="79"/>
+                <circle cx="100" cy="100" r="77"/><circle cx="100" cy="100" r="75"/>
+                <circle cx="100" cy="100" r="73"/><circle cx="100" cy="100" r="71"/>
+                <circle cx="100" cy="100" r="69"/><circle cx="100" cy="100" r="67"/>
+                <circle cx="100" cy="100" r="65"/><circle cx="100" cy="100" r="63"/>
+                <circle cx="100" cy="100" r="61"/><circle cx="100" cy="100" r="59"/>
+                <circle cx="100" cy="100" r="57"/><circle cx="100" cy="100" r="55"/>
+                <circle cx="100" cy="100" r="53"/><circle cx="100" cy="100" r="51"/>
+                <circle cx="100" cy="100" r="49"/><circle cx="100" cy="100" r="47"/>
+                <circle cx="100" cy="100" r="45"/><circle cx="100" cy="100" r="43"/>
+                <circle cx="100" cy="100" r="41"/><circle cx="100" cy="100" r="39"/>
+              </g>
+              <!-- subtle wider gap rings -->
+              <g fill="none" stroke="#1E2028" stroke-width="0.5" opacity="0.7">
+                <circle cx="100" cy="100" r="88"/>
+                <circle cx="100" cy="100" r="70"/>
+                <circle cx="100" cy="100" r="54"/>
+                <circle cx="100" cy="100" r="40"/>
+              </g>
+              <!-- one tiny radial mark so the rotation is visible -->
+              <line x1="100" y1="38" x2="100" y2="50" stroke="#6E7180" stroke-width="0.35" opacity="0.65"/>
+              <line x1="100" y1="148" x2="100" y2="160" stroke="#5A5E6A" stroke-width="0.35" opacity="0.5"/>
+              <!-- shine sweep (asymmetric so rotation is obvious) -->
+              <circle cx="100" cy="100" r="99" fill="url(#shineBig)"/>
+
+              <!-- SMIL rotation -->
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 100 100"
+                to="360 100 100"
+                dur="12s"
+                repeatCount="indefinite"/>
+            </g>
+
+            <!-- LABEL with subtle drop shadow -->
+            <circle cx="100" cy="100" r="35.5" fill="rgba(0,0,0,0.4)"/>
+            <circle cx="100" cy="100" r="35" fill="url(#lblBig)"/>
+
+            <!-- LABEL TEXT (curved) -->
+            <text font-family="JetBrains Mono, monospace" font-size="2.9" fill="#EFE6CC" letter-spacing="0.4">
+              <textPath href="#lblTopBig" startOffset="50%" text-anchor="middle">MVHV · ANTHOLOGY · 001</textPath>
+            </text>
+            <text font-family="JetBrains Mono, monospace" font-size="2.9" fill="#EFE6CC" letter-spacing="0.4">
+              <textPath href="#lblBotBig" startOffset="50%" text-anchor="middle" side="right">PORTLAND OR · 2026</textPath>
+            </text>
+
+            <!-- LABEL CENTER -->
+            <text x="100" y="93" text-anchor="middle" font-family="Anton, sans-serif" font-size="11" fill="#EFE6CC" letter-spacing="0.4">VOL. I</text>
+            <line x1="90" y1="98" x2="110" y2="98" stroke="#EFE6CC" stroke-width="0.3" opacity="0.5"/>
+            <text x="100" y="106" text-anchor="middle" font-family="Source Serif 4, serif" font-style="italic" font-size="5" fill="#EFE6CC">m.v.h.v.</text>
+            <text x="100" y="114" text-anchor="middle" font-family="Anton, sans-serif" font-size="4.5" fill="#EFE6CC" opacity="0.6" letter-spacing="0.6">33⅓ STEREO</text>
+
+            <!-- SPINDLE HOLE -->
+            <circle cx="100" cy="100" r="1.8" fill="#000"/>
+          </svg>
+        </div>
+
+        <!-- tonearm -->
+        <div class="tonearm" id="tonearm" aria-hidden="true">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="armBody" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#B8B4AC"/>
+                <stop offset="40%" stop-color="#8C887F"/>
+                <stop offset="100%" stop-color="#5A5650"/>
+              </linearGradient>
+              <radialGradient id="armBase" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#9C988F"/>
+                <stop offset="70%" stop-color="#4A4640"/>
+                <stop offset="100%" stop-color="#2A2622"/>
+              </radialGradient>
+            </defs>
+            <!-- pivot base (large outer disc) -->
+            <circle cx="172" cy="28" r="22" fill="url(#armBase)"/>
+            <circle cx="172" cy="28" r="16" fill="#2E2A26"/>
+            <circle cx="172" cy="28" r="10" fill="#1A1815"/>
+            <circle cx="172" cy="28" r="3"  fill="#E8642C"/>
+            <!-- counterweight stub -->
+            <rect x="184" y="22" width="14" height="12" rx="2" fill="#3A3633"/>
+            <circle cx="198" cy="28" r="6" fill="#5A5650"/>
+            <!-- main arm shaft -->
+            <path d="M 172 28 L 64 134" stroke="#3A3633" stroke-width="7.5" stroke-linecap="round"/>
+            <path d="M 172 28 L 64 134" stroke="url(#armBody)" stroke-width="5" stroke-linecap="round"/>
+            <!-- arm highlight -->
+            <path d="M 170 30 L 66 134" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-linecap="round"/>
+            <!-- elbow connector -->
+            <circle cx="64" cy="134" r="5" fill="#2E2A26"/>
+            <!-- headshell holder -->
+            <path d="M 64 134 L 56 148" stroke="#4A4640" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- cartridge body -->
+            <rect x="32" y="146" width="32" height="13" rx="1.5" fill="#1A1815"/>
+            <rect x="32" y="146" width="32" height="3"  fill="#2C2823"/>
+            <!-- finger lift -->
+            <rect x="58" y="139" width="3" height="11" rx="1" fill="#5A5650"/>
+            <!-- stylus needle -->
+            <line x1="42" y1="159" x2="42" y2="166" stroke="#9C988F" stroke-width="1.4"/>
+            <circle cx="42" cy="167" r="2" fill="#E8642C"/>
+            <!-- tiny cartridge dot detail -->
+            <circle cx="50" cy="153" r="1.4" fill="#E8642C" opacity="0.8"/>
+          </svg>
+        </div>
+
+      </div>
+
+      <!-- NOW PLAYING -->
+      <div class="now-playing">
+        <div class="now-playing__bar">
+          <i></i><i></i><i></i>
+          NOW&nbsp;PLAYING
+        </div>
+        <h2 class="now-playing__title" id="npTitle">
+          KOHL&rsquo;S<em>.</em>
+        </h2>
+        <p class="now-playing__sub" id="npSub">
+          Senior product designer · generative AI specialist. Cart, checkout, wallet, in-store self-checkout, plus AI tooling and enablement across the design org.
+        </p>
+        <div class="now-playing__meta" id="npMeta">
+          <span><b>side</b> A</span>
+          <span><b>track</b> A5</span>
+          <span><b>year</b> 2021—now</span>
+          <span><b>length</b> ∞</span>
+        </div>
+
+        <div class="np-controls">
+          <button type="button" class="np-btn" id="prevTrack" aria-label="previous track">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M6 4h2v16H6zM20 4 9 12l11 8z"/></svg>
+            <span>prev</span>
+          </button>
+          <button type="button" class="np-btn" id="nextTrack" aria-label="next track">
+            <span>next</span>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M16 4h2v16h-2zM4 4l11 8L4 20z"/></svg>
+          </button>
+          <span class="np-hint">↓ or hover any track below</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     III — BACK COVER — TRACK LISTING
+     ═══════════════════════════════════════════════════════ -->
+<section class="tracklist-stage" id="tracklist">
+  <div class="wrap">
+    <article class="tracklist reveal" aria-label="track listing">
+
+      <header class="tracklist__head">
+        <h2 class="tracklist__title">
+          Track Listing
+          <small>read · listen · drop in anywhere</small>
+        </h2>
+        <div class="tracklist__id">
+          <b>MVHV/REC 001</b><br/>
+          14 tracks · approx. running time: <i>2 decades</i>
+        </div>
+      </header>
+
+      <div class="sides">
+
+        <!-- SIDE A — CAREER -->
+        <div class="side" id="sideA">
+          <h3>Side <em>A</em> — The Work</h3>
+          <div class="side__sub">recorded live · 1998 — present · field tapes</div>
+
+          <div class="track" data-side="A" data-num="A1" data-year="1998 — 2005" data-title="Endemol" data-link="https://endemolshine.us/"
+               data-sub="UX &amp; engineering lead. Multilingual content systems and large&#8209;scale web platforms across an international entertainment portfolio.">
+            <div class="track__num">A1</div>
+            <div class="track__title">
+              <a href="https://endemolshine.us/" target="_blank" rel="noopener">Endemol</a>
+              <small>UX &amp; engineering lead · multilingual content systems · large&#8209;scale entertainment platforms</small>
+            </div>
+            <div class="track__dur">7:23</div>
+          </div>
+
+          <div class="track" data-side="A" data-num="A2" data-year="2005 — 2013" data-title="Yahoo!" data-link="https://yahoo.com"
+               data-sub="Director of UX prototyping &amp; senior UX manager. Led global prototyping teams across offices and product initiatives, shaped rebrand and personalization work.">
+            <div class="track__num">A2</div>
+            <div class="track__title">
+              <a href="https://yahoo.com" target="_blank" rel="noopener">Yahoo!</a>
+              <small>director of UX prototyping · senior UX manager · global teams</small>
+            </div>
+            <div class="track__dur">8:00</div>
+          </div>
+
+          <div class="track" data-side="A" data-num="A3" data-year="2013 — 2017" data-title="Google" data-link="https://google.com"
+               data-sub="Senior UX engineer / prototyper. Built high-fidelity prototypes for Google Cloud AI, Google Assistant, and Android experiences.">
+            <div class="track__num">A3</div>
+            <div class="track__title">
+              <a href="https://google.com" target="_blank" rel="noopener">Google</a>
+              <small>senior UX engineer · prototyper · cloud AI · assistant · android</small>
+            </div>
+            <div class="track__dur">4:30</div>
+          </div>
+
+          <div class="track" data-side="A" data-num="A4" data-year="2017 — 2021" data-title="Walmart Labs" data-link="https://tech.walmart.com"
+               data-sub="Principal product designer / design technologist. Mobile, voice, and personalization during Walmart's digital transformation.">
+            <div class="track__num">A4</div>
+            <div class="track__title">
+              <a href="https://tech.walmart.com" target="_blank" rel="noopener">Walmart Labs</a>
+              <small>principal product designer · design technologist · mobile · voice · ML</small>
+            </div>
+            <div class="track__dur">4:00</div>
+          </div>
+
+          <div class="track is-playing" data-side="A" data-num="A5" data-year="2021 — now" data-title="Kohl&rsquo;s" data-link="https://kohls.com"
+               data-sub="Senior product designer · generative AI specialist. Cart, checkout, wallet, in-store self-checkout, plus AI tooling and enablement across the design org.">
+            <div class="track__num">A5</div>
+            <div class="track__title">
+              <a href="https://kohls.com" target="_blank" rel="noopener">Kohl&rsquo;s</a>
+              <small>senior product designer · gen-AI specialist · cart · checkout · enablement</small>
+            </div>
+            <div class="track__dur">∞</div>
+          </div>
+        </div>
+
+        <!-- SIDE B — LAB -->
+        <div class="side" id="sideB">
+          <h3>Side <em>B</em> — The Lab</h3>
+          <div class="side__sub">recorded solo · 2024 — present · ai-created.com</div>
+
+          <div class="track" data-side="B" data-num="B1" data-year="2025" data-title="My AI Diary" data-link="https://diary.ai-created.com/"
+               data-sub="Voice-first journaling that turns raw speech into a written entry that still sounds like you. Whisper, semantic search, zero-knowledge encryption. Local-first PWA.">
+            <div class="track__num">B1</div>
+            <div class="track__title">
+              <a href="https://diary.ai-created.com/" target="_blank" rel="noopener">My AI Diary</a>
+              <small>voice-first journal · whisper · zero-knowledge · pwa</small>
+            </div>
+            <div class="track__dur">6:42</div>
+          </div>
+
+          <div class="track" data-side="B" data-num="B2" data-year="2025" data-title="Human, Actually" data-link="https://ai-created.com/products/human-actually"
+               data-sub="Tailor your resume to the job — without sounding like a robot wrote it. LLM + NLP behind a humane interface.">
+            <div class="track__num">B2</div>
+            <div class="track__title">
+              <a href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">Human, Actually</a>
+              <small>resume tailoring · llm + nlp · humane UX</small>
+            </div>
+            <div class="track__dur">3:55</div>
+          </div>
+
+          <div class="track" data-side="B" data-num="B3" data-year="2025" data-title="WatchGPT" data-link="https://ai-created.com/products/watchgpt"
+               data-sub="Realtime ChatGPT voice on your wrist. watchOS app using the Realtime API for natural conversation.">
+            <div class="track__num">B3</div>
+            <div class="track__title">
+              <a href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">WatchGPT</a>
+              <small>watchos · realtime · voice on your wrist</small>
+            </div>
+            <div class="track__dur">2:48</div>
+          </div>
+
+          <div class="track" data-side="B" data-num="B4" data-year="2025" data-title="AI Usage" data-link="https://ai-created.com/products/ai-usage"
+               data-sub="Claude Code + Codex usage on your Mac desktop. A menubar utility for devs running multiple AI assistants.">
+            <div class="track__num">B4</div>
+            <div class="track__title">
+              <a href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">AI Usage</a>
+              <small>macos · menubar · claude code · codex</small>
+            </div>
+            <div class="track__dur">3:10</div>
+          </div>
+
+          <div class="track" data-side="B" data-num="B5" data-year="2025" data-title="Calorie Counter" data-link="https://ai-created.com/products/calorie-counter"
+               data-sub="The most frictionless food intake logger ever built. Speak it or photograph it; AI handles the rest.">
+            <div class="track__num">B5</div>
+            <div class="track__title">
+              <a href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">Calorie Counter</a>
+              <small>vision · llm · zero-friction logging · pwa</small>
+            </div>
+            <div class="track__dur">4:02</div>
+          </div>
+
+          <div class="track" data-side="B" data-num="B6" data-year="2025" data-title="Vectronix" data-link="https://ai-created.com/games"
+               data-sub="Hardcore arcade space combat. No mercy. No filler. Proof of interaction design depth and systems thinking.">
+            <div class="track__num">B6</div>
+            <div class="track__title">
+              <a href="https://ai-created.com/games" target="_blank" rel="noopener">Vectronix</a>
+              <small>arcade · canvas · vector combat</small>
+            </div>
+            <div class="track__dur">5:21</div>
+          </div>
+
+          <div class="track" data-side="B" data-num="B7" data-year="2025" data-title="Radial Drift" data-link="https://ai-created.com/games"
+               data-sub="One finger. One mistake ends the run. A minimal arcade study in tension and feedback loops.">
+            <div class="track__num">B7</div>
+            <div class="track__title">
+              <a href="https://ai-created.com/games" target="_blank" rel="noopener">Radial Drift</a>
+              <small>webgl · one-tap · tension &amp; release</small>
+            </div>
+            <div class="track__dur">3:40</div>
+          </div>
+
+          <div class="track" data-side="B" data-num="B8" data-year="2025" data-title="Audio Visualizer Suite" data-link="https://ai-created.com/products/audio-visualizer-suite"
+               data-sub="Captivating video visualizations of your music. Render-quality output with hand-tuned aesthetics.">
+            <div class="track__num">B8</div>
+            <div class="track__title">
+              <a href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">Audio Visualizer Suite</a>
+              <small>webgl · fft · ffmpeg · music viz</small>
+            </div>
+            <div class="track__dur">4:55</div>
+          </div>
+
+          <div class="track" data-side="B" data-num="B9" data-year="2025" data-title="Color Clock" data-link="https://ai-created.com/products/color-clock"
+               data-sub="A 1991 clock design brought back to life. A love letter to vintage interaction craft.">
+            <div class="track__num">B9</div>
+            <div class="track__title">
+              <a href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">Color Clock</a>
+              <small>vintage 1991 · css · type</small>
+            </div>
+            <div class="track__dur">2:30</div>
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     IV — GATEFOLD — LINER NOTES
+     ═══════════════════════════════════════════════════════ -->
+<section class="gatefold-stage" id="liner">
+  <div class="wrap">
+    <article class="gatefold reveal" aria-label="liner notes">
+      <div class="gatefold__grid">
+
+        <!-- left page: essay -->
+        <div>
+          <h3 class="gatefold__lead">
+            Liner notes — <em>a short, opinionated essay</em> on twenty years of shipping.
+          </h3>
+          <div class="gatefold__essay">
+            <p>
+              I design products at the seam where intent becomes interface — where a half&#8209;formed idea has to choose what kind of <em>system</em> it wants to become. The interesting decisions live there. Pacing, posture, what shows up first, what stays hidden, what the model is allowed to assume.
+            </p>
+            <p>
+              <b>AI didn&rsquo;t shrink the design problem.</b> It made the problem about <em>judgment</em>, not output. The work is choosing what to build and how it should behave in someone&rsquo;s actual life — then shipping it before the moment passes.
+            </p>
+            <p>
+              I&rsquo;m strongest where strategy, design, interaction behavior, and the realities of implementation collide. I write the prototype, ship the build, and stay around for the slow part where the thing has to be good for real users. Side A is the record of that, in five tracks. Side B is the lab — solo work shipped through <a href="https://ai-created.com" target="_blank" rel="noopener" style="color: var(--label-red); text-decoration: underline;">AI&#8209;Created</a>. Both sides count.
+            </p>
+            <p style="font-family:'Source Serif 4', serif; font-style: italic; font-size: 16px; color: var(--ink-3); margin-top: 28px;">
+              — M. van Hylckama Vlieg<br/>
+              Portland, Oregon · May 2026
+            </p>
+          </div>
+        </div>
+
+        <!-- right page: credits -->
+        <div class="credits-col">
+          <h4>Personnel</h4>
+          <ul>
+            <li><b>Product design / engineering</b> — Marco van Hylckama Vlieg</li>
+            <li><b>Prototyping</b> — Marco van Hylckama Vlieg</li>
+            <li><b>AI strategy / enablement</b> — Marco van Hylckama Vlieg</li>
+            <li><b>Production</b> — Marco van Hylckama Vlieg</li>
+            <li><b>Mastering</b> — Marco van Hylckama Vlieg</li>
+          </ul>
+
+          <h4>Recorded at</h4>
+          <p>Various sessions, 1998 — 2026<br/>
+             Amsterdam · Bay Area · Bentonville · Portland</p>
+
+          <h4>Mixed with</h4>
+          <ul>
+            <li><b>Design</b> Figma · Figma Make · Lovable</li>
+            <li><b>Production</b> Next.js · TypeScript · Tailwind · Vercel</li>
+            <li><b>Models</b> ChatGPT · Claude · Gemini · Codex</li>
+            <li><b>Media</b> Midjourney · Runway · ElevenLabs · Suno</li>
+          </ul>
+
+          <h4>With thanks to</h4>
+          <p class="small-credit">Every engineer, PM, researcher, and designer who has shipped something with me. Every model that hallucinated something useful. The slow part of the work, where craft happens. The people who keep asking for one more iteration before launch.</p>
+
+          <h4>Distribution</h4>
+          <p>Pressed in a series of one.<br/>
+             Distributed at <a href="https://ai-created.com" target="_blank" rel="noopener" style="color: var(--label-red); text-decoration: underline;">ai&#8209;created.com</a></p>
+
+          <h4>Catalog number</h4>
+          <p style="font-family:'Anton',sans-serif; font-size: 20px; letter-spacing: 0.1em; color: var(--ink); margin-top: 4px;">MVHV/REC · 001</p>
+        </div>
+
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     V — CENTER LABEL CLOSEUP + SPECS
+     ═══════════════════════════════════════════════════════ -->
+<section class="label-stage" id="label">
+  <div class="wrap">
+    <div class="label-stage__inner">
+
+      <div class="big-label reveal" aria-label="center label">
+        <div class="big-label__inner">
+          <div class="super">MVHV / REC · 001</div>
+          <h2>Anthology<br/>Vol. I</h2>
+          <div class="vol">— twenty years, selected works —</div>
+          <div class="by">M. van Hylckama Vlieg</div>
+          <div class="row">
+            <span><b>33⅓</b> rpm</span>
+            <span>stereo</span>
+            <span><b>2026</b></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="specs reveal">
+        <h3>Technical <em>specifications.</em></h3>
+        <p class="lede">Pressed in a series of one. Mastered for headphones and meeting rooms.</p>
+
+        <ul class="specs__list">
+          <li><b>Catalog</b><span>MVHV/REC · 001</span></li>
+          <li><b>Title</b><span>Anthology, Vol. I</span></li>
+          <li><b>Artist</b><span>M. van Hylckama Vlieg</span></li>
+          <li><b>Released</b><span>May 17, 2026 · Portland, OR · USA</span></li>
+          <li><b>Genre</b><span>Product design / AI-native systems / design engineering</span></li>
+          <li><b>Format</b><span>One HTML file · no frameworks · 33⅓ RPM</span></li>
+          <li><b>Length</b><span>~ 2 decades · 14 tracks · still pressing</span></li>
+          <li><b>Status</b><span style="color: var(--orange);">● in print — open to new sessions</span></li>
+          <li><b>Find more</b><span><a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a></span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     VI — OUT-SLEEVE — order / contact / colophon
+     ═══════════════════════════════════════════════════════ -->
+<section class="outsleeve" id="contact">
+  <div class="wrap">
+
+    <header class="outsleeve__head reveal">
+      <div class="super">Out-sleeve · inquiries</div>
+      <h2>Drop the <em>needle</em>.</h2>
+    </header>
+
+    <div class="outsleeve-grid reveal">
+
+      <div class="outsleeve-card">
+        <div class="num">01 · direct</div>
+        <h3>Mailing address</h3>
+        <p>For sessions, conversations, and direct enquiries. I read every message personally.</p>
+        <div class="links">
+          <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+        </div>
+      </div>
+
+      <div class="outsleeve-card">
+        <div class="num">02 · stages</div>
+        <h3>Live appearances</h3>
+        <p>The places where work in progress is shown, demoed, and discussed.</p>
+        <div class="links">
+          <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a>
+          <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x.com/AIandDesign</a>
+          <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">youtube.com/@AIandDesign</a>
+        </div>
+      </div>
+
+      <div class="outsleeve-card">
+        <div class="num">03 · the lab</div>
+        <h3>Back catalog</h3>
+        <p>The independent lab. Eighteen artifacts, all real software, end-to-end by one person.</p>
+        <div class="links">
+          <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+          <a href="https://ai-created.com/products" target="_blank" rel="noopener">all products</a>
+          <a href="https://ai-created.com/games" target="_blank" rel="noopener">all games</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cta-row reveal">
+      <a href="mailto:marcovhv@gmail.com?subject=A%20conversation%20about%20a%20new%20session">
+        Pre-order session 002
+        <span class="glyph">↗</span>
+      </a>
+    </div>
+
+    <footer class="colophon">
+      <div>© 2026 <b>MVHV / REC</b> · all rights pressed</div>
+      <div class="center">First pressing · single HTML file · no frameworks</div>
+      <div class="right">Catalog <b>MVHV/REC · 001</b> · Portland, OR</div>
+    </footer>
+
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ───── live clock ───── */
+  function tick() {
+    const t = new Date();
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles', hour12: false,
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    const el = document.getElementById('curTime');
+    if (el) el.textContent = fmt.format(t);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ───── reveal on scroll ───── */
+  const reveals = document.querySelectorAll('.reveal');
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        ro.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+  reveals.forEach(el => ro.observe(el));
+
+  /* ───── refs ───── */
+  const disc = document.getElementById('disc');
+  const discArea = document.getElementById('discArea');
+  const tonearm = document.getElementById('tonearm');
+
+  /* ───── now-playing engine — track scroll, surface the right track ───── */
+  const tracks = Array.from(document.querySelectorAll('.track'));
+  const npTitle    = document.getElementById('npTitle');
+  const npSub      = document.getElementById('npSub');
+  const npMeta     = document.getElementById('npMeta');
+  const curSide    = document.getElementById('curSide');
+  const curTrk     = document.getElementById('curTrk');
+
+  function setNowPlaying(track) {
+    if (!track) return;
+    tracks.forEach(t => t.classList.toggle('is-playing', t === track));
+
+    const title = track.dataset.title || '';
+    const sub   = track.dataset.sub   || '';
+    const side  = track.dataset.side  || 'A';
+    const num   = track.dataset.num   || '';
+    const year  = track.dataset.year  || '';
+    const dur   = (track.querySelector('.track__dur')||{}).textContent || '';
+
+    npTitle.innerHTML = title + '<em>.</em>';
+    npSub.textContent = sub;
+    npMeta.innerHTML = `
+      <span><b>side</b> ${side}</span>
+      <span><b>track</b> ${num}</span>
+      <span><b>year</b> ${year}</span>
+      <span><b>length</b> ${dur}</span>`;
+    curSide.textContent = side;
+    curTrk.textContent  = num;
+
+    // arm position based on track index within its side.
+    // Safe range: -38° (needle on outermost groove) to -22° (just past
+    // innermost groove ring — never on the red label).
+    if (tonearm) {
+      const sideTracks = tracks.filter(t => t.dataset.side === side);
+      const idx = sideTracks.indexOf(track);
+      const total = sideTracks.length;
+      const t = total > 1 ? idx / (total - 1) : 0;
+      const angle = -38 + t * 16;
+      tonearm.style.transform = `rotate(${angle}deg)`;
+    }
+
+  }
+
+  // Hover updates Now Playing
+  tracks.forEach(t => {
+    t.addEventListener('mouseenter', () => setNowPlaying(t));
+    t.addEventListener('click', (e) => {
+      // clicking the track row scrolls to the disc
+      if (e.target.tagName !== 'A') {
+        setNowPlaying(t);
+        document.getElementById('disc').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  });
+
+  // Auto-progress: as user scrolls past tracklist, advance through tracks
+  const tracklistSection = document.getElementById('tracklist');
+  function spyTracks() {
+    if (!tracklistSection) return;
+    const rect = tracklistSection.getBoundingClientRect();
+    if (rect.top > innerHeight * 0.7 || rect.bottom < innerHeight * 0.3) return;
+    // determine which track is closest to mid-viewport
+    const mid = innerHeight / 2;
+    let closest = null, closestD = Infinity;
+    for (const t of tracks) {
+      const r = t.getBoundingClientRect();
+      const c = (r.top + r.bottom) / 2;
+      const d = Math.abs(c - mid);
+      if (d < closestD) { closestD = d; closest = t; }
+    }
+    if (closest) setNowPlaying(closest);
+  }
+  window.addEventListener('scroll', spyTracks, { passive: true });
+
+  // init with Kohl's playing
+  const initial = document.querySelector('.track.is-playing') || tracks[0];
+  setNowPlaying(initial);
+
+  // prev/next buttons
+  function currentIndex() {
+    const cur = document.querySelector('.track.is-playing');
+    return cur ? tracks.indexOf(cur) : 0;
+  }
+  document.getElementById('prevTrack').addEventListener('click', () => {
+    const i = currentIndex();
+    const next = tracks[(i - 1 + tracks.length) % tracks.length];
+    setNowPlaying(next);
+  });
+  document.getElementById('nextTrack').addEventListener('click', () => {
+    const i = currentIndex();
+    const next = tracks[(i + 1) % tracks.length];
+    setNowPlaying(next);
+  });
+
+})();
+</script>
+</body>
+</html>

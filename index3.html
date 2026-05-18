@@ -1,0 +1,1791 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>A letter from Marco van Hylckama Vlieg — Portland, Oregon, May 2026</title>
+<meta name="description" content="A personal letter from Marco van Hylckama Vlieg, regarding twenty years of product design, design engineering, and AI-native work. Posted from Portland, Oregon." />
+<meta name="theme-color" content="#D9C29A" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   A LETTER FROM MARCO — single file
+   Envelope · letter · enclosures · postscript
+   No animations for animation's sake. Every effect imitates paper.
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --kraft:        #D6BD8E;       /* envelope manila */
+  --kraft-2:      #C9AE7B;       /* darker manila */
+  --kraft-3:      #B0925E;       /* edge */
+  --kraft-shadow: #8C7245;
+
+  --paper:        #F4ECD8;       /* letter paper */
+  --paper-2:      #E9DFC3;
+  --paper-edge:   #C8BC97;
+
+  --ink:          #1A2447;       /* fountain-pen blue */
+  --ink-light:    #344063;
+  --ink-faded:    #5E6A8A;
+  --ink-mute:     #8A92AB;
+
+  --hand:         #233B7E;       /* handwriting ink */
+  --pen:          #2D4B86;
+  --pencil:       #4F4A3D;
+  --typewriter:   #161208;       /* near-black typewriter */
+  --carbon:       #443C32;
+
+  --post-red:     #A92E22;
+  --post-blue:    #2E4F8F;
+  --post-grn:     #2F5B3C;
+  --post-mauve:   #7B3A5E;
+
+  --rule:         #1A24471a;
+
+  --gutter:       clamp(20px, 5vw, 80px);
+  --max:          900px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Spectral', 'Times New Roman', serif;
+  background: #C0A573;
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  background-image:
+    /* slight vignette */
+    radial-gradient(ellipse at center, transparent 0%, rgba(110,80,40,0.25) 100%),
+    linear-gradient(to bottom, #C0A573 0%, #A98955 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  padding: 40px 16px 80px;
+}
+
+/* re-usable paper noise texture */
+.grain {
+  position: relative;
+}
+.grain::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.14 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.7;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+::selection { background: var(--post-red); color: var(--paper); }
+
+a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--post-red); }
+
+/* shared container */
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   ENVELOPE
+   ────────────────────────────────────────────────────────────── */
+.envelope {
+  position: relative;
+  background: var(--kraft);
+  border: 1px solid var(--kraft-shadow);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.4),
+    0 8px 18px rgba(0,0,0,0.25),
+    inset 0 0 0 1px rgba(255,255,255,0.08);
+  padding: 40px clamp(28px, 6vw, 60px) 40px;
+  aspect-ratio: 9 / 5;
+  transform: rotate(-1.2deg);
+  margin-bottom: 60px;
+  overflow: hidden;
+  border-radius: 1px;
+}
+@media (max-width: 700px) {
+  .envelope { aspect-ratio: auto; padding-bottom: 220px; transform: rotate(-0.5deg); }
+}
+
+/* envelope flap (top) */
+.envelope__flap {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.04), transparent 30%);
+}
+.envelope__flap::before {
+  content: '';
+  position: absolute;
+  left: -10px; right: -10px; top: 0;
+  height: 100%;
+  background: linear-gradient(180deg, var(--kraft-2) 0%, var(--kraft) 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  box-shadow: 0 8px 14px rgba(0,0,0,0.12);
+  border-bottom: 1px solid var(--kraft-shadow);
+  opacity: 0.9;
+}
+/* center seal where the flap meets — wax seal */
+.envelope__seal {
+  position: absolute;
+  left: 50%; top: calc(50% - 6px);
+  transform: translate(-50%, -50%);
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #C03525, #802018 70%, #5B1610 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.3),
+    inset -4px -6px 12px rgba(0,0,0,0.4),
+    0 4px 8px rgba(0,0,0,0.4);
+  display: grid; place-items: center;
+  z-index: 6;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-style: italic;
+  color: rgba(255,220,210,0.92);
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+}
+.envelope__seal::before {
+  /* irregular wax shape */
+  content: '';
+  position: absolute; inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(190,40,30,0.75), rgba(120,30,20,0.6) 60%, transparent 80%);
+  filter: blur(2px);
+  z-index: -1;
+  clip-path: polygon(50% 0%, 78% 5%, 92% 25%, 100% 48%, 96% 72%, 80% 88%, 62% 96%, 38% 98%, 18% 90%, 7% 76%, 0% 55%, 5% 28%, 22% 8%);
+}
+
+/* return address top-left */
+.envelope__return {
+  position: absolute;
+  top: 36px; left: clamp(30px, 5vw, 60px);
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--carbon);
+  letter-spacing: 0.02em;
+  z-index: 5;
+}
+.envelope__return b {
+  display: block;
+  font-weight: 700;
+  color: var(--typewriter);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+/* recipient address — center */
+.envelope__to {
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%, -50%) rotate(0.4deg);
+  text-align: center;
+  width: min(70%, 460px);
+  z-index: 5;
+}
+.envelope__to__meta {
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--carbon);
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--kraft-shadow);
+  padding-bottom: 4px;
+}
+.envelope__to__name {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(28px, 4.6vw, 44px);
+  color: var(--hand);
+  line-height: 1.1;
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+  transform: rotate(-0.6deg);
+}
+.envelope__to__lines {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(20px, 2.4vw, 26px);
+  color: var(--hand);
+  line-height: 1.35;
+}
+
+/* stamps */
+.stamps {
+  position: absolute;
+  top: 36px; right: clamp(30px, 5vw, 60px);
+  display: flex; gap: 8px;
+  z-index: 4;
+}
+.stamp {
+  width: 88px; height: 110px;
+  background: var(--paper);
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 4px;
+  position: relative;
+  transform: rotate(-2deg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+}
+.stamp:nth-child(2) { transform: rotate(3deg) translateY(4px); }
+.stamp:nth-child(3) { transform: rotate(-4deg) translateY(-2px); }
+/* perforated edge */
+.stamp::before, .stamp::after {
+  content: '';
+  position: absolute; left: 0; right: 0;
+  height: 4px;
+  background:
+    radial-gradient(circle at 4px 2px, var(--kraft) 1.8px, transparent 2.2px) 0 0 / 8px 4px repeat-x;
+}
+.stamp::before { top: -2px; }
+.stamp::after  { bottom: -2px; }
+.stamp__inner {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  border: 1px solid;
+  padding: 8px 6px;
+  position: relative;
+  overflow: hidden;
+}
+.stamp--blue .stamp__inner   { border-color: var(--post-blue);  color: var(--post-blue); background: #E3E9F4; }
+.stamp--red .stamp__inner    { border-color: var(--post-red);   color: var(--post-red);  background: #F7E1D9; }
+.stamp--green .stamp__inner  { border-color: var(--post-grn);   color: var(--post-grn);  background: #DDE8DD; }
+.stamp--mauve .stamp__inner  { border-color: var(--post-mauve); color: var(--post-mauve);background: #ECDFE5; }
+.stamp__title {
+  font-family: 'Playfair Display', serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.stamp__art {
+  flex: 1;
+  display: grid; place-items: center;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.stamp__art svg { width: 36px; height: 36px; }
+.stamp__denom {
+  text-align: right;
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 900;
+  font-style: italic;
+}
+.stamp__country {
+  text-align: left;
+  font-family: 'Courier Prime', monospace;
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* postmark — circular cancellation */
+.postmark {
+  position: absolute;
+  right: clamp(48px, 8vw, 110px);
+  top: 28px;
+  width: 130px; height: 130px;
+  z-index: 5;
+  pointer-events: none;
+  transform: rotate(-7deg);
+  opacity: 0.78;
+  mix-blend-mode: multiply;
+}
+.postmark svg { width: 100%; height: 100%; }
+/* cancellation wave bars stretching across stamps */
+.cancel {
+  position: absolute;
+  right: clamp(28px, 5vw, 60px);
+  top: 84px;
+  width: 260px;
+  height: 32px;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  transform: rotate(-6deg);
+}
+.cancel svg { width: 100%; height: 100%; }
+
+/* tracking barcode (bottom) */
+.envelope__barcode {
+  position: absolute;
+  bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 4;
+  gap: 6px;
+}
+.envelope__barcode .bars {
+  display: flex; align-items: end; gap: 1px;
+  height: 28px;
+}
+.envelope__barcode .bars i {
+  display: block;
+  background: var(--typewriter);
+  height: 100%;
+  width: 1px;
+}
+.envelope__barcode .num {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--carbon);
+}
+
+/* envelope: "by post" indicator stripe */
+.envelope__bypost {
+  position: absolute;
+  left: 0; bottom: 60px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--post-red);
+  padding: 4px 14px;
+  background: var(--kraft-2);
+  border-right: 1px solid var(--kraft-shadow);
+  border-top: 1px solid var(--kraft-shadow);
+  border-bottom: 1px solid var(--kraft-shadow);
+  z-index: 5;
+}
+
+/* fold marks across envelope (where paper would crease) */
+.envelope__fold-lines {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    linear-gradient(to right, transparent calc(33.33% - 0.5px), rgba(0,0,0,0.06) 33.33%, transparent calc(33.33% + 0.5px)),
+    linear-gradient(to right, transparent calc(66.67% - 0.5px), rgba(0,0,0,0.06) 66.67%, transparent calc(66.67% + 0.5px));
+}
+
+/* ──────────────────────────────────────────────────────────────
+   THE LETTER
+   ────────────────────────────────────────────────────────────── */
+.letter {
+  background: var(--paper);
+  background-image:
+    /* faint ruled lines for body — printed only inside body block */
+    repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(26,36,71,0.045) 27px, rgba(26,36,71,0.045) 28px);
+  border: 1px solid var(--paper-edge);
+  padding: clamp(36px, 6vw, 72px) clamp(28px, 6vw, 88px);
+  position: relative;
+  box-shadow:
+    0 26px 50px rgba(0,0,0,0.35),
+    0 6px 14px rgba(0,0,0,0.22),
+    inset 0 0 60px rgba(120,90,40,0.08);
+  transform: rotate(0.4deg);
+  border-radius: 1px;
+  font-family: 'Spectral', 'Times New Roman', serif;
+  font-size: 16.5px;
+  line-height: 28px; /* match ruled lines */
+  color: var(--typewriter);
+}
+.letter::after {
+  /* very faint coffee ring stain */
+  content: '';
+  position: absolute;
+  top: 30px; right: 40px;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  border: 6px solid rgba(120,80,30,0.08);
+  filter: blur(1px);
+  pointer-events: none;
+}
+@media (max-width: 700px) {
+  .letter { transform: rotate(0deg); }
+}
+
+/* letter header */
+.letter__head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 28px;
+}
+@media (min-width: 720px) {
+  .letter__head { grid-template-columns: 1fr 1fr; }
+}
+.letter__from {
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--carbon);
+  letter-spacing: 0.01em;
+}
+.letter__from b {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--typewriter);
+  letter-spacing: 0.01em;
+  margin-bottom: 4px;
+}
+.letter__date {
+  font-family: 'Spectral', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink);
+  text-align: right;
+}
+@media (max-width: 720px) { .letter__date { text-align: left; } }
+
+.letter__rule {
+  border: none;
+  border-top: 1px solid rgba(26,36,71,0.18);
+  margin: 18px 0 28px;
+}
+
+/* salutation: handwritten */
+.salutation {
+  font-family: 'Caveat', cursive;
+  font-size: 30px;
+  color: var(--hand);
+  line-height: 1.1;
+  margin-bottom: 14px;
+  letter-spacing: 0.005em;
+}
+.salutation em { font-style: italic; }
+.salutation .blank {
+  display: inline-block;
+  min-width: 180px;
+  border-bottom: 1px solid var(--hand);
+  margin: 0 6px;
+  padding: 0 4px;
+  text-align: center;
+  color: var(--pen);
+}
+
+/* letter body — printed/typed */
+.letter__body p {
+  margin: 0 0 24px;
+  font-size: 16.5px;
+  line-height: 28px;
+  color: var(--typewriter);
+  letter-spacing: 0.005em;
+  text-align: justify;
+  hyphens: auto;
+}
+.letter__body p:first-of-type::first-letter {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 4em;
+  float: left;
+  line-height: 0.82;
+  padding: 8px 12px 0 0;
+  color: var(--hand);
+}
+.letter__body em {
+  font-style: italic;
+  color: var(--ink);
+}
+.letter__body b {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* sticky-note style margin annotations */
+.margin-note {
+  position: relative;
+  margin: 24px 0 24px 24px;
+  padding: 12px 16px 16px;
+  background: #FFF5C3;
+  border: 1px solid #E8D78A;
+  font-family: 'Caveat', cursive;
+  font-size: 19px;
+  line-height: 1.3;
+  color: var(--pen);
+  transform: rotate(-1.5deg);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+  max-width: 88%;
+}
+.margin-note::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: -8px;
+  transform: translateX(-50%);
+  width: 60px; height: 14px;
+  background: rgba(228,212,140,0.6);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+.margin-note b { font-weight: 700; color: var(--hand); }
+
+/* a typed "enclosed" list */
+.enclosed-list {
+  font-family: 'Courier Prime', monospace;
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin: 24px 0;
+  padding: 16px 18px;
+  border: 1px solid rgba(26,36,71,0.15);
+  background: rgba(255,255,255,0.18);
+  color: var(--typewriter);
+  letter-spacing: 0.02em;
+}
+.enclosed-list h4 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+.enclosed-list ul { list-style: none; }
+.enclosed-list ul li {
+  position: relative;
+  padding: 4px 0 4px 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+.enclosed-list ul li::before {
+  content: '☐';
+  position: absolute;
+  left: 0; top: 4px;
+  color: var(--ink-faded);
+}
+.enclosed-list ul li b { font-weight: 700; color: var(--ink); white-space: nowrap; }
+.enclosed-list ul li i {
+  font-style: normal;
+  color: var(--ink-mute);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+/* career briefs as typed memo block */
+.memo {
+  margin: 24px 0;
+  padding: 0;
+  font-family: 'Courier Prime', monospace;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--typewriter);
+}
+.memo .memo-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  padding: 6px 0;
+  border-top: 1px dashed rgba(26,36,71,0.2);
+}
+.memo .memo-row:first-child { border-top: none; }
+.memo .memo-row b { color: var(--ink); font-weight: 700; }
+.memo .memo-yr {
+  color: var(--carbon);
+  font-style: normal;
+}
+.memo .memo-co {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink);
+  font-style: italic;
+}
+.memo .memo-role {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--carbon);
+  margin-top: 2px;
+}
+
+/* closing */
+.closing {
+  margin-top: 36px;
+  font-family: 'Spectral', serif;
+  font-style: italic;
+  font-size: 16.5px;
+  color: var(--typewriter);
+}
+.signature {
+  margin-top: 6px;
+  font-family: 'Caveat', cursive;
+  font-size: 56px;
+  color: var(--hand);
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+  transform: rotate(-1.5deg);
+  margin-bottom: 6px;
+  display: inline-block;
+}
+.signature__typed {
+  display: block;
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--carbon);
+  font-style: normal;
+}
+
+/* postscript */
+.ps {
+  margin-top: 40px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(26,36,71,0.25);
+  font-family: 'Spectral', serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.ps b { font-weight: 700; font-style: normal; color: var(--ink); font-family: 'Playfair Display', serif; letter-spacing: 0.05em; }
+.ps + .ps { margin-top: 8px; padding-top: 8px; border-top: none; }
+
+/* small editor's marks in the margin */
+.editor-mark {
+  position: absolute;
+  font-family: 'Caveat', cursive;
+  font-size: 16px;
+  color: var(--post-red);
+  pointer-events: none;
+  line-height: 1.1;
+  transform: rotate(-6deg);
+}
+.editor-mark::before {
+  content: '✕ ';
+  font-family: serif;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   ENCLOSED items below the letter
+   ────────────────────────────────────────────────────────────── */
+.enclosed-stage {
+  margin-top: 80px;
+  position: relative;
+  padding: 20px 0;
+}
+.enclosed-stage__label {
+  display: inline-block;
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #F4ECD8;
+  background: var(--typewriter);
+  padding: 4px 10px;
+  margin-bottom: 18px;
+  transform: rotate(-1deg);
+}
+
+/* a tossed-cards layout */
+.cards {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+@media (min-width: 760px) {
+  .cards {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 36px;
+  }
+}
+
+/* resume card — actual physical business card */
+.b-card {
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  padding: 28px 30px;
+  box-shadow: 0 14px 26px rgba(0,0,0,0.25), 0 3px 8px rgba(0,0,0,0.15);
+  position: relative;
+  transform: rotate(-2deg);
+  font-family: 'Spectral', serif;
+  color: var(--typewriter);
+}
+.b-card::before {
+  /* corner punch hole */
+  content: '';
+  position: absolute;
+  top: 12px; right: 16px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--kraft);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+}
+.b-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 26px;
+  line-height: 1;
+  margin-bottom: 4px;
+  letter-spacing: -0.015em;
+}
+.b-card h3 em { font-style: italic; color: var(--hand); }
+.b-card .title {
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--carbon);
+  margin-bottom: 18px;
+}
+.b-card .rule {
+  width: 30px; height: 1px;
+  background: var(--ink);
+  margin: 16px 0;
+}
+.b-card .row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 8px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 13px;
+  padding: 3px 0;
+  color: var(--typewriter);
+}
+.b-card .row b {
+  font-weight: 700;
+  color: var(--carbon);
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.b-card .row a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 0.5px; }
+
+/* clipping (newspaper press clipping) */
+.clipping {
+  background: #F1EAD4;
+  border: 1px solid #B8AB80;
+  padding: 24px 26px;
+  position: relative;
+  transform: rotate(2.5deg);
+  font-family: 'Playfair Display', serif;
+  color: var(--typewriter);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.22), 0 3px 8px rgba(0,0,0,0.14);
+}
+.clipping::before {
+  /* torn edge top */
+  content: '';
+  position: absolute;
+  top: -5px; left: 0; right: 0;
+  height: 8px;
+  background: #F1EAD4;
+  clip-path: polygon(0 100%, 3% 30%, 6% 80%, 11% 20%, 16% 70%, 22% 30%, 28% 90%, 34% 20%, 40% 70%, 46% 25%, 52% 80%, 58% 30%, 64% 70%, 70% 25%, 76% 80%, 82% 30%, 88% 70%, 94% 25%, 100% 80%, 100% 100%);
+}
+.clipping__masthead {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  color: var(--post-red);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--carbon);
+  padding-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+.clipping__masthead span:last-child {
+  font-family: 'Courier Prime', monospace;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--carbon);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.clipping h4 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--typewriter);
+  margin-bottom: 6px;
+}
+.clipping h4 em { font-style: italic; color: var(--post-red); }
+.clipping .byline {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--carbon);
+  margin-bottom: 10px;
+}
+.clipping p {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--typewriter);
+  font-family: 'Spectral', serif;
+}
+.clipping p + p { margin-top: 8px; }
+
+/* polaroids row */
+.polaroids {
+  margin-top: 64px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+@media (min-width: 720px) {
+  .polaroids { grid-template-columns: repeat(3, 1fr); gap: 22px; }
+}
+.polaroid {
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  padding: 12px 12px 38px;
+  box-shadow: 0 14px 26px rgba(0,0,0,0.28), 0 3px 8px rgba(0,0,0,0.15);
+  font-family: 'Caveat', cursive;
+  color: var(--hand);
+  position: relative;
+}
+.polaroid:nth-child(1) { transform: rotate(-3deg); }
+.polaroid:nth-child(2) { transform: rotate(2deg) translateY(-6px); }
+.polaroid:nth-child(3) { transform: rotate(-1deg) translateY(4px); }
+.polaroid__img {
+  aspect-ratio: 4 / 3;
+  background: var(--ink);
+  display: grid; place-items: center;
+  font-family: 'Courier Prime', monospace;
+  color: #C2BFB2;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 10px;
+  overflow: hidden;
+  position: relative;
+}
+.polaroid__img::before {
+  /* halftone-like dots */
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.13) 1px, transparent 1.5px);
+  background-size: 4px 4px;
+  opacity: 0.7;
+}
+.polaroid__img__title {
+  position: relative;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 28px;
+  color: #E6E2D5;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-align: center;
+}
+.polaroid__img__title small {
+  display: block;
+  font-family: 'Courier Prime', monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: #C2BFB2;
+  margin-top: 8px;
+}
+.polaroid__caption {
+  margin-top: 12px;
+  font-size: 22px;
+  line-height: 1.1;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+.polaroid__caption small {
+  display: block;
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--carbon);
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ──────── CONTACT SHEET — 35mm film strip ──────── */
+.contact-sheet {
+  margin-top: 64px;
+  background: #0F0E0B;
+  padding: 28px 22px;
+  border: 1px solid #000;
+  box-shadow: 0 18px 36px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25);
+  position: relative;
+  transform: rotate(0.5deg);
+  color: #DDD7C2;
+}
+/* sprocket holes top & bottom */
+.contact-sheet::before,
+.contact-sheet::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 16px;
+  background-image:
+    radial-gradient(circle at 14px 8px, #DDD7C2 5px, #0F0E0B 5.5px);
+  background-size: 28px 16px;
+  background-repeat: repeat-x;
+}
+.contact-sheet::before { top: 0; }
+.contact-sheet::after  { bottom: 0; }
+
+.contact-sheet__hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9C977F;
+  margin: 16px 4px 16px;
+  border-bottom: 1px solid #2A2922;
+  padding-bottom: 10px;
+}
+.contact-sheet__hdr b {
+  color: #DDD7C2;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.contact-sheet__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 0 4px 16px;
+}
+@media (max-width: 720px) {
+  .contact-sheet__grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+}
+
+.frame {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  border: none;
+}
+.frame__cell {
+  aspect-ratio: 4 / 3;
+  background: #1A1812;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #2A2620;
+  transition: transform .25s, border-color .25s, filter .25s;
+}
+.frame__cell::before {
+  /* halftone-like dot pattern */
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(221,215,194,0.10) 1px, transparent 1.4px);
+  background-size: 3px 3px;
+  opacity: 0.8;
+}
+.frame__cell::after {
+  /* frame number bottom-right (like real film frame numbers) */
+  content: attr(data-frame);
+  position: absolute;
+  right: 4px; bottom: 2px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: #FFA64F;
+  text-shadow: 0 0 4px rgba(255,166,79,0.4);
+  z-index: 3;
+}
+.frame__title {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 8px;
+}
+.frame__title b {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(14px, 1.6vw, 18px);
+  line-height: 1;
+  color: #E8E2CD;
+  letter-spacing: -0.01em;
+}
+.frame__title small {
+  display: block;
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9C977F;
+  margin-top: 6px;
+}
+.frame__label {
+  margin-top: 6px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #BAB29A;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.frame__label .arrow {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: #FFA64F;
+  font-size: 12px;
+}
+
+/* hover: red china-marker circle around the frame (like a photo editor's selection) */
+.frame:hover .frame__cell {
+  transform: scale(1.04);
+  border-color: var(--post-red);
+  filter: brightness(1.1);
+}
+.frame::after {
+  content: '';
+  position: absolute;
+  inset: -8px -8px 18px -8px;
+  border: 2px solid var(--post-red);
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity .25s, transform .35s cubic-bezier(.2,.7,.2,1);
+  transform: scale(0.92) rotate(-2deg);
+  pointer-events: none;
+}
+.frame:hover::after { opacity: 0.8; transform: scale(1) rotate(-2deg); }
+.frame:hover .frame__label { color: #E8E2CD; }
+.frame:hover .frame__label .arrow { color: #E8E2CD; }
+
+/* edge labels on the film strip (like a film maker stamp) */
+.contact-sheet__edge {
+  position: absolute;
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: #FFA64F;
+  text-shadow: 0 0 6px rgba(255,166,79,0.3);
+  pointer-events: none;
+}
+.contact-sheet__edge--top    { top: 18px; left: 50%; transform: translateX(-50%); }
+.contact-sheet__edge--bot    { bottom: 18px; right: 22px; }
+
+/* index card — "manifesto / quote" */
+.index-card {
+  margin-top: 64px;
+  background: var(--paper);
+  background-image:
+    /* ruled lines */
+    repeating-linear-gradient(to bottom, transparent 0, transparent 25px, rgba(120,90,40,0.18) 25px, rgba(120,90,40,0.18) 26px);
+  border: 1px solid var(--paper-edge);
+  padding: 50px 40px 36px;
+  box-shadow: 0 16px 30px rgba(0,0,0,0.25), 0 3px 8px rgba(0,0,0,0.15);
+  position: relative;
+  transform: rotate(-0.6deg);
+  font-family: 'Caveat', cursive;
+  color: var(--hand);
+  font-size: 26px;
+  line-height: 32px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.index-card::before {
+  /* red header rule */
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 36px;
+  height: 1px;
+  background: var(--post-red);
+}
+.index-card::after {
+  /* margin rule on left */
+  content: '';
+  position: absolute;
+  left: 30px; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--post-red);
+  opacity: 0.6;
+}
+.index-card__label {
+  position: absolute;
+  top: 10px; left: 36px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--carbon);
+}
+.index-card__signoff {
+  display: block;
+  margin-top: 16px;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--carbon);
+}
+
+/* paperclip illustration */
+.clip {
+  position: absolute;
+  top: -16px; left: 36px;
+  width: 24px;
+  height: 60px;
+  z-index: 3;
+  pointer-events: none;
+}
+.clip svg { width: 100%; height: 100%; }
+
+/* stamp on the index card */
+.received {
+  position: absolute;
+  bottom: 20px; right: 28px;
+  border: 2px solid var(--post-red);
+  color: var(--post-red);
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  transform: rotate(-12deg);
+  opacity: 0.85;
+  pointer-events: none;
+}
+.received small {
+  display: block;
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  margin-top: 2px;
+  color: var(--post-red);
+}
+
+/* tracking footer */
+.tracking {
+  margin: 80px auto 0;
+  max-width: var(--max);
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  text-align: center;
+  color: rgba(0,0,0,0.5);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+.tracking b { color: rgba(0,0,0,0.7); font-weight: 700; }
+
+/* tiny scroll cue at top */
+.cue {
+  text-align: center;
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  align-items: center;
+}
+.cue::before, .cue::after {
+  content: '';
+  width: 40px; height: 1px;
+  background: rgba(255,255,255,0.4);
+}
+
+/* reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+
+/* responsive: tighter on small screens */
+@media (max-width: 720px) {
+  body { padding: 16px 8px 60px; }
+  .envelope { padding: 30px 22px; }
+  .envelope__return, .stamps, .postmark, .cancel { position: static; transform: none; margin-bottom: 18px; }
+  .stamps { display: flex; justify-content: center; }
+  .postmark { display: none; }
+  .cancel { display: none; }
+  .envelope__to { position: static; transform: none; margin: 24px auto; width: 90%; }
+  .envelope__barcode { position: static; transform: none; margin-top: 20px; }
+  .envelope__bypost { display: none; }
+  .envelope__fold-lines { display: none; }
+  .envelope__seal { display: none; }
+  .envelope__flap::before { display: none; }
+  .letter { padding: 28px 22px; }
+  .signature { font-size: 40px; }
+  .salutation { font-size: 24px; }
+  .salutation .blank { min-width: 90px; }
+  .b-card, .clipping, .polaroid, .index-card { transform: none !important; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- scroll cue (above the envelope, on the desk) -->
+  <div class="cue">received this morning &nbsp;·&nbsp; scroll to open</div>
+
+  <!-- ─── ENVELOPE ─── -->
+  <section class="envelope grain" aria-label="envelope">
+
+    <!-- top flap with seal -->
+    <div class="envelope__flap"></div>
+    <div class="envelope__seal" aria-hidden="true">M</div>
+
+    <!-- BY POST diagonal stripe -->
+    <div class="envelope__bypost">via post · first class</div>
+
+    <!-- return address -->
+    <address class="envelope__return">
+      <b>From</b>
+      Marco van Hylckama Vlieg<br/>
+      Portland, Oregon · USA<br/>
+      ai-created.com<br/>
+      marcovhv [at] gmail
+    </address>
+
+    <!-- stamps + postmark -->
+    <div class="stamps" aria-hidden="true">
+      <div class="stamp stamp--blue">
+        <div class="stamp__inner">
+          <div class="stamp__title">Twenty&nbsp;Years</div>
+          <div class="stamp__art" aria-hidden="true">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="none" stroke="currentColor" stroke-width="3"/><text x="30" y="38" text-anchor="middle" font-family="Playfair Display" font-size="22" font-weight="900" font-style="italic" fill="currentColor">20</text></svg>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:end;">
+            <div class="stamp__country">USA</div>
+            <div class="stamp__denom">$0.20</div>
+          </div>
+        </div>
+      </div>
+      <div class="stamp stamp--red">
+        <div class="stamp__inner">
+          <div class="stamp__title">Still&nbsp;Shipping</div>
+          <div class="stamp__art" aria-hidden="true">
+            <svg viewBox="0 0 60 60"><path d="M8 40 L28 18 L42 30 L52 22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="22" r="3" fill="currentColor"/></svg>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:end;">
+            <div class="stamp__country">USA</div>
+            <div class="stamp__denom">$0.68</div>
+          </div>
+        </div>
+      </div>
+      <div class="stamp stamp--mauve">
+        <div class="stamp__inner">
+          <div class="stamp__title">AI&nbsp;Native</div>
+          <div class="stamp__art" aria-hidden="true">
+            <svg viewBox="0 0 60 60">
+              <rect x="14" y="14" width="32" height="32" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/>
+              <circle cx="30" cy="30" r="6" fill="currentColor"/>
+              <line x1="30" y1="6" x2="30" y2="14" stroke="currentColor" stroke-width="2.5"/>
+              <line x1="30" y1="46" x2="30" y2="54" stroke="currentColor" stroke-width="2.5"/>
+              <line x1="6" y1="30" x2="14" y2="30" stroke="currentColor" stroke-width="2.5"/>
+              <line x1="46" y1="30" x2="54" y2="30" stroke="currentColor" stroke-width="2.5"/>
+            </svg>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:end;">
+            <div class="stamp__country">USA</div>
+            <div class="stamp__denom">$1.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- postmark circle -->
+    <div class="postmark" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="92" fill="none" stroke="#A92E22" stroke-width="2.5"/>
+        <circle cx="100" cy="100" r="68" fill="none" stroke="#A92E22" stroke-width="1.5"/>
+        <defs>
+          <path id="topArc" d="M100,100 m-78,0 a78,78 0 1,1 156,0"/>
+          <path id="botArc" d="M100,178 m-78,0 a78,78 0 1,0 156,0"/>
+        </defs>
+        <text font-family="Courier Prime, monospace" font-size="14" fill="#A92E22" letter-spacing="4">
+          <textPath href="#topArc" startOffset="50%" text-anchor="middle">PORTLAND, OR · USPS</textPath>
+        </text>
+        <text font-family="Courier Prime, monospace" font-size="14" fill="#A92E22" letter-spacing="4">
+          <textPath href="#botArc" startOffset="50%" text-anchor="middle">2026 MAY 17 · PDX</textPath>
+        </text>
+        <text x="100" y="92" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-weight="900" font-size="26" fill="#A92E22">May 17</text>
+        <text x="100" y="116" text-anchor="middle" font-family="Courier Prime, monospace" font-size="11" fill="#A92E22" letter-spacing="2">2026</text>
+        <text x="100" y="130" text-anchor="middle" font-family="Courier Prime, monospace" font-size="9" fill="#A92E22" letter-spacing="1.5">972XX</text>
+      </svg>
+    </div>
+
+    <!-- cancellation wave bars -->
+    <div class="cancel" aria-hidden="true">
+      <svg viewBox="0 0 260 32" preserveAspectRatio="none">
+        <path d="M 0 16 Q 20 4, 40 16 T 80 16 T 120 16 T 160 16 T 200 16 T 240 16 T 260 16"
+              stroke="#A92E22" stroke-width="1.5" fill="none"/>
+        <path d="M 0 22 Q 20 10, 40 22 T 80 22 T 120 22 T 160 22 T 200 22 T 240 22 T 260 22"
+              stroke="#A92E22" stroke-width="1.5" fill="none"/>
+        <path d="M 0 10 Q 20 -2, 40 10 T 80 10 T 120 10 T 160 10 T 200 10 T 240 10 T 260 10"
+              stroke="#A92E22" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+
+    <!-- recipient address -->
+    <div class="envelope__to">
+      <div class="envelope__to__meta">Personal &nbsp;·&nbsp; please read</div>
+      <div class="envelope__to__name">To: the hiring manager</div>
+      <div class="envelope__to__lines">
+        wherever you&rsquo;re reading this from<br/>
+        somewhere on the internet<br/>
+        <span style="font-family:'Courier Prime', monospace; font-size:13px; letter-spacing:0.15em; color: var(--carbon);">— May 17, 2026 —</span>
+      </div>
+    </div>
+
+    <!-- tracking barcode -->
+    <div class="envelope__barcode" aria-hidden="true">
+      <div class="bars" id="trackingBars"></div>
+      <div class="num">MVHV · 9405 · 2026 · 0517 · PDX</div>
+    </div>
+
+    <!-- fold lines for printed appearance -->
+    <div class="envelope__fold-lines"></div>
+  </section>
+
+  <!-- ─── THE LETTER ─── -->
+  <article class="letter grain reveal" aria-label="letter inside the envelope">
+
+    <header class="letter__head">
+      <address class="letter__from">
+        <b>Marco van Hylckama Vlieg</b>
+        Portland, Oregon · USA<br/>
+        marcovhv@gmail.com<br/>
+        ai-created.com<br/>
+        linkedin.com/in/marcovhv
+      </address>
+      <div class="letter__date">
+        Sunday, May 17, 2026<br/>
+        <span style="font-family:'Courier Prime',monospace;font-style:normal;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--carbon);">written by hand · printed once</span>
+      </div>
+    </header>
+
+    <hr class="letter__rule"/>
+
+    <p class="salutation">
+      Dear&nbsp;<em>hiring manager,</em>
+    </p>
+
+    <div class="letter__body">
+
+      <p>
+        Thank you for opening this. I assume you came here looking for a senior designer, a design engineer, or somebody who can carry an AI&#8209;native product from a half&#8209;formed idea through to a thing that actually ships. I&apos;ve been doing that work for twenty years, so I thought I&rsquo;d write you directly. The portfolio version of all of this is over at <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>, but a letter felt more honest.
+      </p>
+
+      <p>
+        My practice sits at the seam where strategy, design, interaction behavior, and the realities of implementation collide. I write the prototype, ship the build, and stay around for the slow, unglamorous part where the thing has to be <em>good</em> for real users. That part is most of the work. It&rsquo;s also the part most portfolios skip, which is why I&rsquo;d rather hand you the resume below than show you another deck.
+      </p>
+
+      <div class="margin-note">
+        a quick note, in pen:
+        <br/>
+        <b>AI didn&rsquo;t shrink the design problem.</b> It made the problem about <em>judgment</em>, not output. Worth pinning on a wall somewhere.
+      </div>
+
+      <p>
+        Twenty years has meant time at Google, Yahoo!, Walmart Labs, Kohl&rsquo;s, and Endemol, plus an independent product lab that doesn&rsquo;t sleep. I&rsquo;ve led prototyping teams, mentored designers, shipped retail and AI features at enterprise scale, and built consumer apps end-to-end on my own. I&rsquo;m comfortable as a senior IC, a lead, or a director — whichever shape your team actually needs. Here&rsquo;s the short version, typed below:
+      </p>
+
+      <div class="memo">
+        <div class="memo-row">
+          <span class="memo-yr">2021&nbsp;— present</span>
+          <div>
+            <div class="memo-co">Kohl&apos;s</div>
+            <div class="memo-role">Senior product designer · generative AI specialist · UX across cart, checkout, wallet, account, in-store self-checkout; drove AI adoption inside the design org.</div>
+          </div>
+        </div>
+        <div class="memo-row">
+          <span class="memo-yr">earlier</span>
+          <div>
+            <div class="memo-co">Walmart Labs</div>
+            <div class="memo-role">Principal product designer / design technologist · mobile, voice, personalization during Walmart&rsquo;s digital transformation.</div>
+          </div>
+        </div>
+        <div class="memo-row">
+          <span class="memo-yr">earlier</span>
+          <div>
+            <div class="memo-co">Google</div>
+            <div class="memo-role">Senior UX engineer / prototyper · high&#8209;fidelity prototypes for Google Cloud AI, Google Assistant, Android.</div>
+          </div>
+        </div>
+        <div class="memo-row">
+          <span class="memo-yr">earlier</span>
+          <div>
+            <div class="memo-co">Yahoo!</div>
+            <div class="memo-role">Director of UX prototyping &amp; senior UX manager · global prototyping teams across multiple offices.</div>
+          </div>
+        </div>
+        <div class="memo-row">
+          <span class="memo-yr">earlier</span>
+          <div>
+            <div class="memo-co">Endemol</div>
+            <div class="memo-role">UX &amp; engineering lead · multilingual content systems and large&#8209;scale web platforms across an international entertainment portfolio.</div>
+          </div>
+        </div>
+        <div class="memo-row">
+          <span class="memo-yr">always</span>
+          <div>
+            <div class="memo-co">AI&#8209;Created (lab)</div>
+            <div class="memo-role">Independent product lab · eighteen+ artifacts shipped — AI tools, design utilities, music, video, arcade games. Built end&#8209;to&#8209;end by one person.</div>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        These days my focus is <em>AI&#8209;native product design</em>: systems where the model is the interaction, not a chat panel bolted onto a SaaS shell. I&rsquo;m comfortable with the whole stack the work demands — Next.js, TypeScript, Tailwind, Vercel, the major model fleets, Whisper, Web Crypto, prompt pipelines, plus Figma, Figma Make, and Lovable for the design surface. I lean on AI to collapse the distance between concept and execution. The judgment, the craft, and the responsibility for the user are still mine.
+      </p>
+
+      <p>
+        I&rsquo;ve enclosed a small dossier below — a card with my coordinates, a press clipping that gives you the second opinion, and three polaroids from the lab. If anything in there sparks a conversation, my email is on the card and your reply will reach me directly. I read everything personally.
+      </p>
+
+      <div class="enclosed-list">
+        <h4>Enclosed</h4>
+        <ul>
+          <li><b>Resume card</b><i>coordinates &amp; .docx download</i></li>
+          <li><b>Press clipping</b><i>third-party context</i></li>
+          <li><b>Three polaroids</b><i>featured projects from the lab</i></li>
+          <li><b>Contact sheet</b><i>eight more from the same roll</i></li>
+          <li><b>Index card</b><i>the working manifesto</i></li>
+        </ul>
+      </div>
+
+      <p class="closing">
+        Yours in design and engineering,
+      </p>
+      <div class="signature" aria-hidden="true">Marco</div>
+      <div class="signature__typed">M. van Hylckama Vlieg &nbsp;·&nbsp; Portland, Oregon</div>
+
+      <div class="ps">
+        <b>P.S.</b> &nbsp;If you got this far, you already know how I work. Send a note to <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a> — tell me what you&rsquo;re building, what&rsquo;s ambiguous about it, what timeline you&rsquo;re on. The fastest path is usually a direct one.
+      </div>
+      <div class="ps">
+        <b>P.P.S.</b> &nbsp;You can also reach me on <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a>, on <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">X</a>, or by watching the experiments at <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">@AIandDesign</a>. The lab is at <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>.
+      </div>
+      <div class="ps">
+        <b>P.P.P.S.</b> &nbsp;This whole page is a single HTML file. No frameworks. The envelope and the stamps are SVG. The seal is a wax circle made of CSS. The signature is real. So is the offer.
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ─── ENCLOSED ─── -->
+  <section class="enclosed-stage reveal" aria-label="enclosed materials">
+    <div class="enclosed-stage__label">↳ ENCLOSED · 04 ITEMS</div>
+
+    <div class="cards">
+
+      <!-- Business / resume card -->
+      <div class="b-card">
+        <span class="clip" aria-hidden="true">
+          <svg viewBox="0 0 24 60">
+            <path d="M6 8 C 6 4, 10 2, 12 2 C 16 2, 18 6, 18 10 L 18 48 C 18 52, 16 56, 12 56 C 10 56, 6 54, 6 50 L 6 18 C 6 14, 8 12, 12 12 C 14 12, 16 14, 16 18 L 16 44"
+                  fill="none" stroke="#7E7567" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h3>Marco van&nbsp;<em>Hylckama&nbsp;Vlieg</em></h3>
+        <div class="title">Senior product designer · AI-native builder</div>
+        <div class="rule"></div>
+        <div class="row"><b>email</b>     <span><a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a></span></div>
+        <div class="row"><b>linkedin</b>  <span><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">/in/marcovhv</a></span></div>
+        <div class="row"><b>lab</b>       <span><a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a></span></div>
+        <div class="row"><b>resume</b>    <span><a href="https://ai-created.com/downloads/Resume_Marco.docx" target="_blank" rel="noopener">~/Resume.docx</a></span></div>
+        <div class="rule"></div>
+        <div class="row"><b>locale</b>    <span>Greater Portland, OR · USA</span></div>
+        <div class="row"><b>status</b>    <span style="color:var(--post-grn);">● open — available for new work</span></div>
+        <div class="row"><b>auth</b>      <span>U.S. work authorized</span></div>
+      </div>
+
+      <!-- press clipping -->
+      <div class="clipping">
+        <div class="clipping__masthead">
+          <span>The Lab Review</span>
+          <span>Vol. XII · §003</span>
+        </div>
+        <h4>A one-person studio that <em>actually</em> ships.</h4>
+        <div class="byline">by the editors · field notes · 2026</div>
+        <p>
+          What separates Mr. van Hylckama Vlieg from the rest of the AI-design conversation isn&rsquo;t talk &mdash; it&rsquo;s output. <em>My AI Diary</em>, a voice-first journal with zero-knowledge encryption, ships as a PWA. <em>Vectronix</em>, a hardcore arcade game, runs in a browser. Eighteen artifacts. All real.
+        </p>
+        <p>
+          &ldquo;The work is choosing what to build and how it should behave in someone&rsquo;s actual life,&rdquo; he writes, &ldquo;then shipping it before the moment passes.&rdquo; A position worth taking.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Polaroids -->
+    <div class="polaroids">
+      <a class="polaroid" href="https://diary.ai-created.com/" target="_blank" rel="noopener" aria-label="My AI Diary">
+        <div class="polaroid__img">
+          <div class="polaroid__img__title">My&nbsp;AI&nbsp;Diary<small>voice · whisper · pwa</small></div>
+        </div>
+        <div class="polaroid__caption">
+          journal that listens
+          <small>shipped · 2025</small>
+        </div>
+      </a>
+      <a class="polaroid" href="https://ai-created.com/games" target="_blank" rel="noopener" aria-label="Vectronix">
+        <div class="polaroid__img">
+          <div class="polaroid__img__title">Vectronix<small>canvas · arcade</small></div>
+        </div>
+        <div class="polaroid__caption">
+          no mercy. no filler.
+          <small>arcade · web</small>
+        </div>
+      </a>
+      <a class="polaroid" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener" aria-label="WatchGPT">
+        <div class="polaroid__img">
+          <div class="polaroid__img__title">WatchGPT<small>watchos · realtime</small></div>
+        </div>
+        <div class="polaroid__caption">
+          gpt voice, on your wrist
+          <small>watchos · live</small>
+        </div>
+      </a>
+    </div>
+
+    <!-- Contact sheet — film strip with more projects -->
+    <div class="contact-sheet reveal" aria-label="contact sheet">
+      <span class="contact-sheet__edge contact-sheet__edge--top">KODAK · TRI-X 400 · MVHV/LAB</span>
+      <span class="contact-sheet__edge contact-sheet__edge--bot">→ 24</span>
+
+      <div class="contact-sheet__hdr">
+        <span><b>Contact sheet</b> &nbsp; roll · ai-created.lab</span>
+        <span>03 / printed · pdx · 26</span>
+      </div>
+
+      <div class="contact-sheet__grid">
+
+        <a class="frame" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener" aria-label="Human, Actually">
+          <div class="frame__cell" data-frame="01A">
+            <div class="frame__title"><b>Human, Actually</b><small>ai · resume</small></div>
+          </div>
+          <div class="frame__label"><span>human-actually.app</span><span class="arrow">↗</span></div>
+        </a>
+
+        <a class="frame" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener" aria-label="AI Usage">
+          <div class="frame__cell" data-frame="02A">
+            <div class="frame__title"><b>AI Usage</b><small>macos · menubar</small></div>
+          </div>
+          <div class="frame__label"><span>ai-usage.macos</span><span class="arrow">↗</span></div>
+        </a>
+
+        <a class="frame" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener" aria-label="Calorie Counter">
+          <div class="frame__cell" data-frame="03A">
+            <div class="frame__title"><b>Calorie Counter</b><small>vision · pwa</small></div>
+          </div>
+          <div class="frame__label"><span>calorie-counter.pwa</span><span class="arrow">↗</span></div>
+        </a>
+
+        <a class="frame" href="https://ai-created.com/products/thought2tweet" target="_blank" rel="noopener" aria-label="Thought2Tweet">
+          <div class="frame__cell" data-frame="04A">
+            <div class="frame__title"><b>Thought2Tweet</b><small>llm · social</small></div>
+          </div>
+          <div class="frame__label"><span>thought2tweet.app</span><span class="arrow">↗</span></div>
+        </a>
+
+        <a class="frame" href="https://ai-created.com/games" target="_blank" rel="noopener" aria-label="Radial Drift">
+          <div class="frame__cell" data-frame="05A">
+            <div class="frame__title"><b>Radial Drift</b><small>arcade · webgl</small></div>
+          </div>
+          <div class="frame__label"><span>radial-drift.webgl</span><span class="arrow">↗</span></div>
+        </a>
+
+        <a class="frame" href="https://ai-created.com/games" target="_blank" rel="noopener" aria-label="HexaX">
+          <div class="frame__cell" data-frame="06A">
+            <div class="frame__title"><b>HexaX</b><small>arcade · canvas</small></div>
+          </div>
+          <div class="frame__label"><span>hexax.canvas</span><span class="arrow">↗</span></div>
+        </a>
+
+        <a class="frame" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener" aria-label="Audio Visualizer Suite">
+          <div class="frame__cell" data-frame="07A">
+            <div class="frame__title"><b>Audio Viz</b><small>webgl · ffmpeg</small></div>
+          </div>
+          <div class="frame__label"><span>av-suite</span><span class="arrow">↗</span></div>
+        </a>
+
+        <a class="frame" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener" aria-label="Color Clock">
+          <div class="frame__cell" data-frame="08A">
+            <div class="frame__title"><b>Color Clock</b><small>vintage · css</small></div>
+          </div>
+          <div class="frame__label"><span>color-clock</span><span class="arrow">↗</span></div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Index card / manifesto -->
+    <div class="index-card reveal" aria-label="index card">
+      <div class="index-card__label">Index Card · No. 001</div>
+      I design products at the seam where intent becomes interface — where a half&#8209;formed idea has to choose what kind of <em style="color:var(--post-red);font-style:italic;font-family:'Playfair Display',serif;font-weight:700;">system</em> it wants to become. The interesting decisions live there.
+      <span class="index-card__signoff">— Marco, in pen, May 2026</span>
+      <div class="received" aria-hidden="true">
+        received
+        <small>17 may 2026 · pdx</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tracking footer -->
+  <footer class="tracking">
+    <b>Tracking</b>&nbsp;&nbsp;<span>9405&nbsp;0517&nbsp;2026&nbsp;PDX&nbsp;·&nbsp;MVHV</span><br/>
+    Delivered &nbsp;·&nbsp; opened by you &nbsp;·&nbsp; <span id="readTime">--:--</span> local<br/>
+    <span style="color: rgba(0,0,0,0.4);">© 2026 · this letter was written by a person · one HTML file · no frameworks</span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ─── live read-time ─── */
+  function tick() {
+    const t = new Date();
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit', minute: '2-digit', hour12: false
+    });
+    const e = document.getElementById('readTime');
+    if (e) e.textContent = fmt.format(t);
+  }
+  tick();
+  setInterval(tick, 30000);
+
+  /* ─── tracking barcode (deterministic from a string) ─── */
+  function buildBarcode(seed, container, count) {
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+    const widths = [1, 1, 1, 2, 3];
+    let html = '';
+    for (let i = 0; i < count; i++) {
+      h = (h * 1103515245 + 12345) | 0;
+      const r = ((h >>> 16) & 0x7fff) / 0x7fff;
+      const w = widths[Math.floor(r * widths.length)];
+      const op = 0.5 + r * 0.5;
+      html += `<i style="width:${w}px;opacity:${op.toFixed(2)};"></i>`;
+    }
+    container.innerHTML = html;
+  }
+  const bars = document.getElementById('trackingBars');
+  if (bars) buildBarcode('MVHV-2026-PORTLAND-OR-9405', bars, 90);
+
+  /* ─── personalize the "Dear" line with the visitor's referrer/source ─── */
+  // Subtle: we don't actually have the name, but we can hint at where they came from.
+  // Keeping the canonical "Dear hiring manager," for clarity.
+  // (Removed automatic referrer guessing — it created uncanny output.)
+
+  /* ─── reveal on scroll ─── */
+  const reveals = document.querySelectorAll('.reveal');
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        ro.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
+  reveals.forEach(el => ro.observe(el));
+
+  /* ─── envelope flap tilt on hover (very slight 3d) ─── */
+  const env = document.querySelector('.envelope');
+  if (env && matchMedia('(hover: hover)').matches) {
+    env.style.transition = 'transform .6s cubic-bezier(.2,.7,.2,1)';
+    env.addEventListener('mouseenter', () => {
+      env.style.transform = 'rotate(-0.5deg) translateY(-4px)';
+    });
+    env.addEventListener('mouseleave', () => {
+      env.style.transform = 'rotate(-1.2deg) translateY(0)';
+    });
+  }
+
+  /* ─── stamp peek: tiny lift on hover ─── */
+  document.querySelectorAll('.stamp').forEach((s, i) => {
+    const base = s.style.transform || s.getAttribute('data-base') || '';
+    const baseT = window.getComputedStyle(s).transform;
+    s.style.transition = 'transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s';
+    s.addEventListener('mouseenter', () => {
+      s.style.zIndex = 10;
+      s.style.transform = (baseT === 'none' ? '' : baseT + ' ') + 'translateY(-6px) scale(1.04)';
+      s.style.boxShadow = '0 10px 22px rgba(0,0,0,0.28)';
+    });
+    s.addEventListener('mouseleave', () => {
+      s.style.zIndex = '';
+      s.style.transform = '';
+      s.style.boxShadow = '';
+    });
+  });
+
+  /* ─── polaroid hover lift ─── */
+  document.querySelectorAll('.polaroid').forEach(p => {
+    const baseT = window.getComputedStyle(p).transform;
+    p.style.transition = 'transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s';
+    p.addEventListener('mouseenter', () => {
+      p.style.zIndex = 10;
+      p.style.transform = (baseT === 'none' ? '' : baseT + ' ') + 'translateY(-10px) rotate(0deg)';
+      p.style.boxShadow = '0 22px 40px rgba(0,0,0,0.35), 0 6px 12px rgba(0,0,0,0.2)';
+    });
+    p.addEventListener('mouseleave', () => {
+      p.style.zIndex = '';
+      p.style.transform = '';
+      p.style.boxShadow = '';
+    });
+  });
+
+  /* ─── easter egg: hold shift + click the wax seal to "break the seal" ─── */
+  const seal = document.querySelector('.envelope__seal');
+  if (seal) {
+    seal.style.cursor = 'pointer';
+    seal.addEventListener('click', (e) => {
+      seal.style.transition = 'transform .9s cubic-bezier(.2,.7,.2,1), opacity .9s';
+      seal.style.transform = 'translate(-50%, -50%) rotate(-25deg) scale(0.7)';
+      seal.style.opacity = '0';
+      setTimeout(() => {
+        document.querySelector('.letter').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

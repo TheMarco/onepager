@@ -1,0 +1,1821 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>OBJECT MVHV-001 / Observation Archive · Perseus-9 · 2026</title>
+<meta name="description" content="Astronomical observation of object MVHV-001 (Marco van Hylckama Vlieg). A celestial object survey of twenty years of product design, design engineering, and AI-native work. Perseus-9 Observatory, Mount Tabor, Portland, Oregon." />
+<meta name="theme-color" content="#070A14" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   OBJECT MVHV-001
+   Perseus-9 Observatory · Mount Tabor, Portland, OR
+   Astronomical observation record · single file · no frameworks
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --void:        #060914;
+  --void-2:      #0B0F1E;
+  --void-3:      #11172A;
+  --plate:       #161C30;
+  --plate-2:     #1E2540;
+
+  --rule:        #1A2342;
+  --rule-2:      #243056;
+  --grid:        #1B2645;
+
+  --text:        #E8E4D4;
+  --text-2:      #A8A89E;
+  --text-3:      #6E7080;
+  --text-4:      #444A5A;
+
+  --star:        #F7F0DA;
+  --star-warm:   #FFD79E;
+  --star-cool:   #BDD8FF;
+
+  --signal:      #FF2D7A;       /* magenta — primary brand */
+  --signal-dim:  #B22158;
+  --amber:       #FFB05A;
+  --cyan:        #5DD3FF;
+  --jade:        #5FE3A6;
+
+  --gutter:      clamp(20px, 4.4vw, 56px);
+  --max:         1320px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  background: var(--void);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* deep-space gradient background */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 70% at 70% 20%, rgba(255,45,122,0.06), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(93,211,255,0.05), transparent 60%),
+    radial-gradient(ellipse 100% 60% at 50% 40%, rgba(20,30,60,0.6), transparent 70%),
+    linear-gradient(180deg, #060914 0%, #040611 100%);
+  pointer-events: none;
+}
+
+/* starfield (canvas behind everything) */
+#stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* grid overlay (faint draft coordinate paper) */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(26,34,66,0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26,34,66,0.45) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.35;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 30%, transparent 90%);
+}
+
+::selection { background: var(--signal); color: var(--void); }
+a { color: inherit; text-decoration: none; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+
+/* ── shared type ── */
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+.h-display {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  line-height: 1;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   OBSERVATORY BAR (top, fixed)
+   ───────────────────────────────────────────────────────────── */
+.obar {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 50;
+  background: rgba(6,9,20,0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.obar__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 10px var(--gutter);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.obar__left { display: flex; gap: 14px; align-items: center; }
+.obar__right { display: flex; gap: 14px; align-items: center; justify-content: flex-end; }
+.obar__brand { color: var(--text); font-weight: 700; letter-spacing: 0.18em; }
+.obar__sep { color: var(--text-4); }
+.obar__pulse {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--signal);
+}
+.obar__pulse::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 0 0 rgba(255,45,122,0.6);
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255,45,122,0.6); }
+  70% { box-shadow: 0 0 0 9px rgba(255,45,122,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,45,122,0); }
+}
+.obar__center { text-align: center; color: var(--text-3); }
+@media (max-width: 760px) {
+  .obar__inner { grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10px; }
+  .obar__center { display: none; }
+  .obar .hide-sm { display: none; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   §1 OBJECT REPORT — the hero / "telescope view"
+   ───────────────────────────────────────────────────────────── */
+.report {
+  padding: 120px 0 100px;
+  position: relative;
+}
+.report__head {
+  display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
+  margin-bottom: 48px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.report__head .tag {
+  color: var(--signal);
+  border: 1px solid var(--signal);
+  padding: 4px 10px;
+}
+.report__head .live {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--jade);
+}
+.report__head .live::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--jade);
+  box-shadow: 0 0 8px var(--jade);
+  animation: pulse 2s infinite;
+}
+
+.report__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 60px;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .report__grid { grid-template-columns: 1.1fr 1fr; gap: 80px; }
+}
+
+.report__title h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 300;
+  font-size: clamp(48px, 8vw, 116px);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+  color: var(--star);
+  margin-bottom: 28px;
+}
+.report__title h1 em {
+  font-style: normal;
+  color: var(--signal);
+  font-weight: 700;
+}
+.report__sub {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--text-2);
+  margin-bottom: 32px;
+  max-width: 540px;
+}
+
+/* properties table */
+.props {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.prop {
+  background: var(--void);
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.prop dt {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+.prop dd {
+  color: var(--star);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+.prop dd em {
+  color: var(--signal);
+  font-style: normal;
+  font-weight: 700;
+}
+.prop dd small {
+  display: block;
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 4px;
+  letter-spacing: 0.06em;
+}
+
+/* TELESCOPE VIEW (right column) */
+.scope {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.scope::before {
+  /* outer ring */
+  content: '';
+  position: absolute; inset: -2%;
+  border-radius: 50%;
+  border: 1px solid var(--rule-2);
+  background: radial-gradient(circle at 30% 30%, rgba(255,45,122,0.04), transparent 60%);
+}
+.scope__lens {
+  position: absolute;
+  inset: 3%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(93,211,255,0.16), transparent 40%),
+    radial-gradient(circle at 70% 76%, rgba(255,45,122,0.10), transparent 50%),
+    radial-gradient(circle at 50% 50%, #0E1224 0%, #050813 80%);
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+/* glowing object (the subject) */
+.scope__object {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28%; aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FFE9C2 0%, #FFA66A 40%, #B45422 70%, #4A1810 95%);
+  box-shadow:
+    0 0 30px rgba(255,166,106,0.6),
+    0 0 80px rgba(255,45,122,0.35),
+    0 0 180px rgba(255,45,122,0.15);
+  z-index: 2;
+}
+.scope__object::after {
+  /* corona pulse */
+  content: '';
+  position: absolute; inset: -40%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,166,106,0.3), transparent 60%);
+  animation: corona 4s ease-in-out infinite;
+}
+@keyframes corona {
+  0%, 100% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.15); opacity: 0.85; }
+}
+/* small companion stars */
+.scope__lens::before, .scope__lens::after {
+  content: '';
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--star);
+  box-shadow: 0 0 6px var(--star);
+}
+.scope__lens::before { top: 22%; left: 24%; }
+.scope__lens::after  { top: 70%; left: 76%; background: var(--star-cool); box-shadow: 0 0 8px var(--star-cool); }
+
+/* reticle overlay */
+.scope__reticle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+.scope__reticle svg { width: 100%; height: 100%; }
+
+/* corner labels around the scope */
+.scope__corner {
+  position: absolute;
+  z-index: 4;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  display: flex; align-items: center; gap: 6px;
+}
+.scope__corner.tl { top: 8%; left: 6%; }
+.scope__corner.tr { top: 8%; right: 6%; }
+.scope__corner.bl { bottom: 8%; left: 6%; }
+.scope__corner.br { bottom: 8%; right: 6%; }
+.scope__corner::before {
+  content: '';
+  width: 16px; height: 1px;
+  background: var(--cyan);
+}
+.scope__corner.tr::before, .scope__corner.br::before { order: 2; }
+
+/* ─────────────────────────────────────────────────────────────
+   shared section header
+   ───────────────────────────────────────────────────────────── */
+.sect {
+  padding: 100px 0;
+  position: relative;
+  border-top: 1px solid var(--rule);
+}
+.sect__head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  margin-bottom: 56px;
+}
+@media (min-width: 900px) {
+  .sect__head { grid-template-columns: 260px 1fr 1fr; gap: 40px; align-items: end; }
+}
+.sect__id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+.sect__id b {
+  display: block;
+  color: var(--star);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  margin-top: 6px;
+}
+.sect__title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--star);
+}
+.sect__title em {
+  font-style: normal;
+  color: var(--signal);
+  font-weight: 600;
+}
+.sect__lede {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-2);
+  max-width: 460px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   §2 CONSTELLATION — career as star chart
+   ───────────────────────────────────────────────────────────── */
+.constellation {
+  position: relative;
+  background: rgba(11,15,30,0.5);
+  border: 1px solid var(--rule);
+  padding: 24px;
+  overflow: hidden;
+}
+.constellation__chart {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(20,30,60,0.4), transparent 70%),
+    repeating-linear-gradient(to right, var(--grid) 0, var(--grid) 1px, transparent 1px, transparent 80px),
+    repeating-linear-gradient(to bottom, var(--grid) 0, var(--grid) 1px, transparent 1px, transparent 60px);
+  border: 1px solid var(--rule-2);
+}
+.constellation__chart svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+}
+.constellation__axis {
+  display: flex; justify-content: space-between;
+  margin-top: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+.constellation__legend {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  margin-top: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.constellation__legend span {
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.constellation__legend span::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--star);
+}
+.constellation__legend .lab::before    { background: var(--signal); }
+.constellation__legend .past::before   { background: var(--star-cool); }
+.constellation__legend .present::before { background: var(--star-warm); box-shadow: 0 0 6px var(--star-warm); }
+
+/* hover tooltip for stars */
+.cstar-tooltip {
+  position: fixed;
+  left: 0; top: 0;
+  pointer-events: none;
+  z-index: 80;
+  background: var(--void-3);
+  border: 1px solid var(--signal);
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .15s;
+  transform: translate(-50%, calc(-100% - 18px));
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  will-change: transform, left, top;
+}
+.cstar-tooltip.is-on { opacity: 1; }
+.cstar-tooltip b { color: var(--signal); display: block; margin-bottom: 2px; }
+
+/* ─────────────────────────────────────────────────────────────
+   §3 SPECTRAL — capabilities as emission lines
+   ───────────────────────────────────────────────────────────── */
+.spectrum {
+  margin-bottom: 50px;
+  position: relative;
+}
+.spectrum__bar {
+  width: 100%;
+  height: 64px;
+  background: linear-gradient(to right,
+    #2A0B3A 0%,
+    #1B2C82 12%,
+    #1B82A8 25%,
+    #15A37C 38%,
+    #5DB52A 50%,
+    #C7B11A 62%,
+    #D9651A 75%,
+    #B82540 88%,
+    #4A0F2A 100%);
+  border-radius: 2px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(255,45,122,0.15);
+  overflow: hidden;
+}
+.spectrum__bar::after {
+  /* film grain */
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(to right, rgba(0,0,0,0.18) 0, rgba(0,0,0,0.18) 0.5px, transparent 0.5px, transparent 4px);
+}
+.spectrum__lines {
+  position: absolute; inset: 0;
+  pointer-events: none;
+}
+.spectrum__line {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: var(--star);
+  box-shadow: 0 0 8px var(--star);
+}
+.spectrum__line::after {
+  content: attr(data-label);
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--star);
+  white-space: nowrap;
+}
+.spectrum__line::before {
+  content: attr(data-wave);
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.spectrum__bar-labels {
+  display: flex; justify-content: space-between;
+  margin-top: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+}
+
+/* capability log entries */
+.log-entries {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+@media (min-width: 760px) {
+  .log-entries { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1080px) {
+  .log-entries { grid-template-columns: repeat(3, 1fr); }
+}
+.log-entry {
+  background: var(--void-2);
+  padding: 24px 22px;
+  position: relative;
+  transition: background .25s;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.log-entry:hover { background: var(--plate); }
+.log-entry__num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--signal);
+}
+.log-entry__num::before {
+  content: '◇ '; opacity: 0.7;
+}
+.log-entry__title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.1;
+  color: var(--star);
+}
+.log-entry__body {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+  flex: 1;
+}
+.log-entry__body em {
+  color: var(--star-warm);
+  font-style: normal;
+}
+.log-entry__wave {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule-2);
+}
+.log-entry__wave b { color: var(--cyan); }
+
+/* ─────────────────────────────────────────────────────────────
+   §4 ORBITS — lab artifacts
+   ───────────────────────────────────────────────────────────── */
+.orbits {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .orbits { grid-template-columns: 1.1fr 1fr; gap: 60px; }
+}
+.orbit-diagram {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+.orbit-diagram svg { width: 100%; height: 100%; display: block; }
+
+/* lab listings */
+.orbit-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.orbit-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 14px;
+  align-items: baseline;
+  padding: 14px 16px;
+  background: var(--void-2);
+  border: 1px solid var(--rule);
+  transition: border-color .25s, background .25s, transform .25s;
+  cursor: pointer;
+  position: relative;
+}
+.orbit-row:hover {
+  background: var(--plate);
+  border-color: var(--signal);
+  transform: translateX(2px);
+}
+.orbit-row.is-active {
+  background: var(--plate);
+  border-color: var(--signal);
+}
+.orbit-row.is-active::before {
+  content: '';
+  position: absolute;
+  left: -1px; top: -1px; bottom: -1px;
+  width: 3px;
+  background: var(--signal);
+  box-shadow: 0 0 8px var(--signal);
+}
+.orbit-row__id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.orbit-row__id b {
+  color: var(--signal);
+  font-weight: 700;
+}
+.orbit-row__name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--star);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.orbit-row__name small {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--text-3);
+  font-weight: 400;
+  text-transform: none;
+}
+.orbit-row__period {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  letter-spacing: 0.06em;
+}
+.orbit-row a { color: inherit; }
+.orbit-row a::after {
+  content: '  ↗';
+  font-size: 11px;
+  color: var(--text-3);
+  transition: color .2s;
+}
+.orbit-row:hover a::after { color: var(--signal); }
+
+/* ─────────────────────────────────────────────────────────────
+   §5 TELEMETRY — big numbers
+   ───────────────────────────────────────────────────────────── */
+.telemetry {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  background: var(--rule);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+@media (min-width: 760px) {
+  .telemetry { grid-template-columns: repeat(4, 1fr); gap: 1px; }
+}
+.telem {
+  background: var(--void);
+  padding: 36px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.telem__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 16px;
+}
+.telem__num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 300;
+  font-size: clamp(56px, 8vw, 96px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--star);
+  display: flex; align-items: baseline; gap: 8px;
+}
+.telem__num small {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 0.18em;
+  letter-spacing: 0.14em;
+  color: var(--signal);
+  text-transform: uppercase;
+}
+.telem__sub {
+  margin-top: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+/* tiny sparkline */
+.telem__spark {
+  position: absolute;
+  bottom: 14px; right: 16px;
+  width: 60px; height: 18px;
+  opacity: 0.5;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   §6 TRANSMISSION — contact terminal
+   ───────────────────────────────────────────────────────────── */
+.transmission {
+  background: var(--void-2);
+  border: 1px solid var(--rule);
+  padding: clamp(28px, 4vw, 52px);
+  position: relative;
+  overflow: hidden;
+}
+.transmission::before {
+  /* corner brackets */
+  content: '';
+  position: absolute;
+  top: 14px; left: 14px;
+  width: 28px; height: 28px;
+  border-top: 1px solid var(--signal);
+  border-left: 1px solid var(--signal);
+}
+.transmission::after {
+  content: '';
+  position: absolute;
+  bottom: 14px; right: 14px;
+  width: 28px; height: 28px;
+  border-bottom: 1px solid var(--signal);
+  border-right: 1px solid var(--signal);
+}
+
+.tm-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+@media (min-width: 900px) {
+  .tm-grid { grid-template-columns: 1fr 1fr; gap: 60px; }
+}
+.tm-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 80px);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  color: var(--star);
+  margin-bottom: 24px;
+}
+.tm-title em {
+  font-style: normal;
+  color: var(--signal);
+  font-weight: 600;
+}
+.tm-lede {
+  font-size: 16px;
+  color: var(--text-2);
+  line-height: 1.55;
+  margin-bottom: 28px;
+  max-width: 480px;
+}
+.tm-waveform {
+  height: 90px;
+  margin-bottom: 24px;
+  position: relative;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.tm-waveform svg { width: 100%; height: 100%; display: block; }
+.tm-channels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.tm-channel {
+  background: var(--void);
+  padding: 16px 20px;
+  display: flex; align-items: center; gap: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: background .25s, transform .2s;
+}
+.tm-channel:hover { background: var(--plate); transform: translateX(2px); }
+.tm-channel__num {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+  width: 56px;
+}
+.tm-channel__label {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  width: 90px;
+}
+.tm-channel__value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--star);
+  letter-spacing: 0.005em;
+  flex: 1;
+}
+.tm-channel__value a:hover { color: var(--signal); }
+.tm-channel__rssi {
+  font-size: 10px;
+  color: var(--jade);
+  letter-spacing: 0.08em;
+}
+@media (max-width: 600px) {
+  .tm-channel { flex-wrap: wrap; }
+  .tm-channel__label { width: auto; }
+  .tm-channel__value { font-size: 15px; }
+}
+
+.tm-cta {
+  display: inline-flex; align-items: center; gap: 14px;
+  padding: 20px 32px;
+  background: var(--signal);
+  color: var(--void);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 28px;
+  transition: background .25s, gap .25s;
+}
+.tm-cta:hover { background: var(--star); gap: 22px; }
+
+/* ─────────────────────────────────────────────────────────────
+   ARCHIVE FOOTER
+   ───────────────────────────────────────────────────────────── */
+.archive {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+@media (min-width: 720px) {
+  .archive { grid-template-columns: 1fr 1fr 1fr; }
+  .archive .c { text-align: center; }
+  .archive .r { text-align: right; }
+}
+.archive b { color: var(--text); font-weight: 700; }
+
+/* ── reveal on scroll ── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+
+/* scroll progress strip */
+.scrollbar {
+  position: fixed;
+  left: 0; top: 0;
+  height: 2px;
+  width: 0;
+  background: var(--signal);
+  z-index: 60;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px var(--signal);
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+<div class="scrollbar" id="scrollbar"></div>
+
+<!-- ── OBSERVATORY BAR ── -->
+<header class="obar" role="banner">
+  <div class="obar__inner">
+    <div class="obar__left">
+      <span class="obar__pulse">LIVE FEED</span>
+      <span class="obar__sep hide-sm">|</span>
+      <span class="obar__brand hide-sm">PERSEUS-9</span>
+      <span class="obar__sep hide-sm">|</span>
+      <span class="hide-sm">MT TABOR · PDX</span>
+    </div>
+    <div class="obar__center">
+      <span>OBJECT</span>
+      <span style="color:var(--signal);">MVHV-001</span>
+      <span>/ ARCHIVE</span>
+    </div>
+    <div class="obar__right">
+      <span>UTC</span>
+      <span id="utcTime">--:--:--</span>
+      <span class="obar__sep">|</span>
+      <span style="color: var(--jade);">●</span>
+      <span>OBS</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════
+     §1 OBJECT REPORT
+     ═══════════════════════════════════════════════════════════ -->
+<section class="report wrap" id="report">
+
+  <div class="report__head reveal">
+    <span class="tag">OBJECT REPORT</span>
+    <span>FILE №&nbsp;001-A</span>
+    <span>·</span>
+    <span>FIRST OBSERVED 1985</span>
+    <span>·</span>
+    <span class="live">LIVE / OBSERVING</span>
+  </div>
+
+  <div class="report__grid">
+
+    <div class="report__title reveal">
+      <h1>
+        <em>MVHV-001</em><br/>
+        van&nbsp;Hylckama&nbsp;Vlieg.
+      </h1>
+      <p class="report__sub">
+        Senior product designer and AI-native builder under continuous observation since 1998. Currently visible to the naked eye in the Portland sector. Open to new orbital partnerships.
+      </p>
+
+      <dl class="props">
+        <div class="prop">
+          <dt>Designation</dt>
+          <dd>MVHV<em>-001</em><small>perseus-9 catalog</small></dd>
+        </div>
+        <div class="prop">
+          <dt>R.A.</dt>
+          <dd id="propRA">12<sup style="color:var(--text-3)">h</sup> 34<sup style="color:var(--text-3)">m</sup> 56<sup style="color:var(--text-3)">s</sup><small>right ascension</small></dd>
+        </div>
+        <div class="prop">
+          <dt>Dec.</dt>
+          <dd>+45° 30′ 18″<small>declination</small></dd>
+        </div>
+        <div class="prop">
+          <dt>Magnitude</dt>
+          <dd>+1.2<small>apparent · still bright</small></dd>
+        </div>
+        <div class="prop">
+          <dt>Spectral class</dt>
+          <dd><em>O5 D-E</em><small>design-engineer hybrid</small></dd>
+        </div>
+        <div class="prop">
+          <dt>Tenure</dt>
+          <dd>20+ years<small>continuous activity</small></dd>
+        </div>
+        <div class="prop">
+          <dt>Distance</dt>
+          <dd>0.0 ly<small>local · portland, oregon</small></dd>
+        </div>
+        <div class="prop">
+          <dt>Status</dt>
+          <dd style="color: var(--jade);">● open<small>accepting transmissions</small></dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- TELESCOPE VIEW -->
+    <div class="scope reveal" aria-label="telescope view of subject">
+      <span class="scope__corner tl">N · 45.50°</span>
+      <span class="scope__corner tr">FOV 12.4′</span>
+      <span class="scope__corner bl">EXP 2.4s</span>
+      <span class="scope__corner br">f/2.8</span>
+
+      <div class="scope__lens">
+        <div class="scope__object"></div>
+      </div>
+
+      <div class="scope__reticle" aria-hidden="true">
+        <svg viewBox="0 0 200 200">
+          <!-- crosshair -->
+          <line x1="100" y1="20"  x2="100" y2="70"  stroke="rgba(93,211,255,0.4)" stroke-width="0.6"/>
+          <line x1="100" y1="130" x2="100" y2="180" stroke="rgba(93,211,255,0.4)" stroke-width="0.6"/>
+          <line x1="20"  y1="100" x2="70"  y2="100" stroke="rgba(93,211,255,0.4)" stroke-width="0.6"/>
+          <line x1="130" y1="100" x2="180" y2="100" stroke="rgba(93,211,255,0.4)" stroke-width="0.6"/>
+          <!-- ranging rings -->
+          <circle cx="100" cy="100" r="45" fill="none" stroke="rgba(93,211,255,0.18)" stroke-width="0.4" stroke-dasharray="3 2"/>
+          <circle cx="100" cy="100" r="62" fill="none" stroke="rgba(93,211,255,0.14)" stroke-width="0.4"/>
+          <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(93,211,255,0.10)" stroke-width="0.4"/>
+          <!-- N indicator -->
+          <text x="100" y="14" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="5" fill="rgba(93,211,255,0.7)">N</text>
+          <!-- bottom-right scale -->
+          <line x1="160" y1="190" x2="180" y2="190" stroke="rgba(93,211,255,0.6)" stroke-width="0.8"/>
+          <text x="170" y="186" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="4" fill="rgba(93,211,255,0.7)">2′</text>
+          <!-- tick marks -->
+          <g stroke="rgba(93,211,255,0.35)" stroke-width="0.4">
+            <line x1="100" y1="100" x2="100" y2="103" />
+            <line x1="100" y1="100" x2="100" y2="97" />
+            <line x1="100" y1="100" x2="103" y2="100" />
+            <line x1="100" y1="100" x2="97" y2="100" />
+          </g>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     §2 CONSTELLATION — career as a star chart
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sect wrap" id="constellation">
+  <header class="sect__head reveal">
+    <div class="sect__id">§ 002 / Sky Chart<b>The Constellation</b></div>
+    <h2 class="sect__title">A 20&#8209;year arc plotted as <em>fixed stars.</em></h2>
+    <p class="sect__lede">Each labeled star is a major observed position. Faint connecting lines mark the trajectory through the career sky. Hover any star for the observation log.</p>
+  </header>
+
+  <div class="constellation reveal">
+
+    <div class="constellation__chart">
+      <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet" id="constellationSVG">
+        <!-- diagonal connecting line through all stars -->
+        <g stroke="rgba(255,45,122,0.35)" stroke-width="1.2" fill="none" stroke-dasharray="2 4">
+          <line x1="120" y1="450" x2="320" y2="220"/>
+          <line x1="320" y1="220" x2="540" y2="380"/>
+          <line x1="540" y1="380" x2="740" y2="160"/>
+          <line x1="740" y1="160" x2="940" y2="320"/>
+          <line x1="940" y1="320" x2="1080" y2="100"/>
+        </g>
+        <!-- faint secondary lines forming a constellation shape -->
+        <g stroke="rgba(189,216,255,0.18)" stroke-width="0.6" fill="none">
+          <line x1="320" y1="220" x2="540" y2="380"/>
+          <line x1="540" y1="380" x2="740" y2="160"/>
+          <line x1="120" y1="450" x2="540" y2="380"/>
+          <line x1="740" y1="160" x2="940" y2="320"/>
+          <line x1="940" y1="320" x2="1080" y2="100"/>
+        </g>
+
+        <!-- tertiary milestone stars (small) -->
+        <g fill="rgba(189,216,255,0.5)">
+          <circle cx="220" cy="320" r="2"/>
+          <circle cx="430" cy="280" r="2"/>
+          <circle cx="640" cy="240" r="2"/>
+          <circle cx="850" cy="220" r="2"/>
+          <circle cx="280" cy="500" r="1.5"/>
+          <circle cx="480" cy="160" r="1.5"/>
+          <circle cx="680" cy="450" r="1.5"/>
+          <circle cx="900" cy="490" r="1.5"/>
+          <circle cx="180" cy="200" r="1"/>
+          <circle cx="400" cy="100" r="1"/>
+          <circle cx="600" cy="80" r="1"/>
+          <circle cx="820" cy="80" r="1"/>
+          <circle cx="1040" cy="220" r="1"/>
+          <circle cx="1120" cy="440" r="1"/>
+        </g>
+
+        <!-- MAIN STARS with halo + label -->
+        <!-- 1998 Endemol -->
+        <g class="cstar" data-name="Endemol" data-meta="1998 — 2005 · UX &amp; Engineering Lead">
+          <circle cx="120" cy="450" r="14" fill="rgba(189,216,255,0.10)"/>
+          <circle cx="120" cy="450" r="7" fill="rgba(189,216,255,0.30)"/>
+          <circle cx="120" cy="450" r="3" fill="#BDD8FF"/>
+          <text x="120" y="490" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="16" fill="#E8E4D4" font-weight="500">Endemol</text>
+          <text x="120" y="508" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6E7080" letter-spacing="2">1998</text>
+        </g>
+        <!-- 2005 Yahoo! -->
+        <g class="cstar" data-name="Yahoo!" data-meta="2005 — 2013 · Director, UX Prototyping">
+          <circle cx="320" cy="220" r="16" fill="rgba(189,216,255,0.10)"/>
+          <circle cx="320" cy="220" r="8" fill="rgba(189,216,255,0.35)"/>
+          <circle cx="320" cy="220" r="3.5" fill="#BDD8FF"/>
+          <text x="320" y="200" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="16" fill="#E8E4D4" font-weight="500">Yahoo!</text>
+          <text x="320" y="184" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6E7080" letter-spacing="2">2005</text>
+        </g>
+        <!-- 2013 Google -->
+        <g class="cstar" data-name="Google" data-meta="2013 — 2017 · Senior UX Engineer / Prototyper">
+          <circle cx="540" cy="380" r="16" fill="rgba(189,216,255,0.10)"/>
+          <circle cx="540" cy="380" r="8" fill="rgba(189,216,255,0.35)"/>
+          <circle cx="540" cy="380" r="3.5" fill="#BDD8FF"/>
+          <text x="540" y="420" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="16" fill="#E8E4D4" font-weight="500">Google</text>
+          <text x="540" y="438" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6E7080" letter-spacing="2">2013</text>
+        </g>
+        <!-- 2017 Walmart Labs -->
+        <g class="cstar" data-name="Walmart Labs" data-meta="2017 — 2021 · Principal Product Designer">
+          <circle cx="740" cy="160" r="16" fill="rgba(189,216,255,0.10)"/>
+          <circle cx="740" cy="160" r="8" fill="rgba(189,216,255,0.35)"/>
+          <circle cx="740" cy="160" r="3.5" fill="#BDD8FF"/>
+          <text x="740" y="140" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="16" fill="#E8E4D4" font-weight="500">Walmart Labs</text>
+          <text x="740" y="124" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6E7080" letter-spacing="2">2017</text>
+        </g>
+        <!-- 2021 Kohl's (warm — present-day) -->
+        <g class="cstar" data-name="Kohl's" data-meta="2021 — present · Senior Product Designer + Gen-AI Specialist">
+          <circle cx="940" cy="320" r="22" fill="rgba(255,215,158,0.10)"/>
+          <circle cx="940" cy="320" r="11" fill="rgba(255,215,158,0.40)"/>
+          <circle cx="940" cy="320" r="4.5" fill="#FFD79E"/>
+          <text x="940" y="360" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="18" fill="#FFD79E" font-weight="600">Kohl&rsquo;s</text>
+          <text x="940" y="380" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6E7080" letter-spacing="2">2021 — NOW</text>
+        </g>
+        <!-- AI-Created (signal — the lab) -->
+        <g class="cstar" data-name="AI-Created" data-meta="Independent lab — eighteen shipped artifacts, end-to-end">
+          <circle cx="1080" cy="100" r="20" fill="rgba(255,45,122,0.10)"/>
+          <circle cx="1080" cy="100" r="10" fill="rgba(255,45,122,0.40)"/>
+          <circle cx="1080" cy="100" r="4" fill="#FF2D7A"/>
+          <text x="1080" y="76" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="16" fill="#FF2D7A" font-weight="600">AI-Created</text>
+          <text x="1080" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6E7080" letter-spacing="2">LAB · ALWAYS</text>
+        </g>
+
+        <!-- coordinate labels (corner) -->
+        <text x="20" y="20" font-family="JetBrains Mono, monospace" font-size="10" fill="rgba(110,112,128,0.7)" letter-spacing="2">RA →</text>
+        <text x="20" y="580" font-family="JetBrains Mono, monospace" font-size="10" fill="rgba(110,112,128,0.7)" letter-spacing="2">DEC ↓</text>
+      </svg>
+    </div>
+
+    <div class="constellation__axis">
+      <span>1998 · ENTRY</span>
+      <span>2005</span>
+      <span>2013</span>
+      <span>2017</span>
+      <span>2021 · NOW</span>
+      <span>2026 →</span>
+    </div>
+
+    <div class="constellation__legend">
+      <span class="past">past observation</span>
+      <span class="present">current position</span>
+      <span class="lab">lab / signal source</span>
+      <span style="margin-left: auto; color: var(--text-3);">▲ hover any star</span>
+    </div>
+  </div>
+
+  <div class="cstar-tooltip" id="cstarTooltip"><b></b><span></span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     §3 SPECTRAL ANALYSIS — capabilities
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sect wrap" id="spectral">
+  <header class="sect__head reveal">
+    <div class="sect__id">§ 003 / Spectroscopy<b>Emission Signature</b></div>
+    <h2 class="sect__title">Six clear <em>emission lines</em> across the working spectrum.</h2>
+    <p class="sect__lede">Recurring frequencies detected across multiple observation cycles. These are the bands where the subject consistently radiates.</p>
+  </header>
+
+  <div class="spectrum reveal">
+    <div class="spectrum__bar">
+      <div class="spectrum__lines">
+        <span class="spectrum__line" style="left: 12%;"  data-label="AI-NATIVE DESIGN"   data-wave="λ 410 nm"></span>
+        <span class="spectrum__line" style="left: 24%;"  data-label="DESIGN ENGINEERING" data-wave="λ 472 nm"></span>
+        <span class="spectrum__line" style="left: 40%;"  data-label="0 → 1"               data-wave="λ 545 nm"></span>
+        <span class="spectrum__line" style="left: 56%;"  data-label="ENTERPRISE UX"      data-wave="λ 612 nm"></span>
+        <span class="spectrum__line" style="left: 72%;"  data-label="INTERNAL AI TOOLS"  data-wave="λ 680 nm"></span>
+        <span class="spectrum__line" style="left: 88%;"  data-label="LEADERSHIP"         data-wave="λ 745 nm"></span>
+      </div>
+    </div>
+    <div class="spectrum__bar-labels">
+      <span>UV ← 380 nm</span>
+      <span>VISIBLE SPECTRUM</span>
+      <span>800 nm → IR</span>
+    </div>
+  </div>
+
+  <div class="log-entries reveal">
+
+    <article class="log-entry">
+      <div class="log-entry__num">ENTRY 01 · BAND λ 410</div>
+      <h3 class="log-entry__title">AI-native product design</h3>
+      <p class="log-entry__body">Detection of systems where the <em>model is the interaction</em>, not a chat panel bolted onto a SaaS shell. Voice, agents, ambient assistance. Strong recurring signal.</p>
+      <div class="log-entry__wave"><b>STRENGTH</b> ████████░ 92%</div>
+    </article>
+
+    <article class="log-entry">
+      <div class="log-entry__num">ENTRY 02 · BAND λ 472</div>
+      <h3 class="log-entry__title">Design engineering</h3>
+      <p class="log-entry__body"><em>Production-quality prototypes</em> built end-to-end by one operator. Next.js, TypeScript, Tailwind, Vercel. Confirmed via direct observation of shipped artifacts.</p>
+      <div class="log-entry__wave"><b>STRENGTH</b> ████████░ 88%</div>
+    </article>
+
+    <article class="log-entry">
+      <div class="log-entry__num">ENTRY 03 · BAND λ 545</div>
+      <h3 class="log-entry__title">0 → 1 incubation</h3>
+      <p class="log-entry__body">Ambiguous brief → research → frame → prototype → shipped product. Comfortable <em>carrying weight</em> when the roadmap doesn&rsquo;t yet exist.</p>
+      <div class="log-entry__wave"><b>STRENGTH</b> ███████░░ 84%</div>
+    </article>
+
+    <article class="log-entry">
+      <div class="log-entry__num">ENTRY 04 · BAND λ 612</div>
+      <h3 class="log-entry__title">Enterprise UX modernization</h3>
+      <p class="log-entry__body">Untangling legacy workflows — cart, checkout, account, internal tooling — and replacing them with <em>systems people want to use.</em> Walmart, Kohl&rsquo;s.</p>
+      <div class="log-entry__wave"><b>STRENGTH</b> ███████░░ 80%</div>
+    </article>
+
+    <article class="log-entry">
+      <div class="log-entry__num">ENTRY 05 · BAND λ 680</div>
+      <h3 class="log-entry__title">Internal AI tooling</h3>
+      <p class="log-entry__body">Custom copilots, prompt libraries, synthetic research environments, workflow accelerators. <em>Used by real teams</em>, not just presented in decks.</p>
+      <div class="log-entry__wave"><b>STRENGTH</b> ████████░ 86%</div>
+    </article>
+
+    <article class="log-entry">
+      <div class="log-entry__num">ENTRY 06 · BAND λ 745</div>
+      <h3 class="log-entry__title">Leadership &amp; enablement</h3>
+      <p class="log-entry__body">Built and led prototyping teams at Yahoo. Now driving AI adoption in a design org through <em>teaching, tooling, and example.</em> Comfortable as IC, lead, or director.</p>
+      <div class="log-entry__wave"><b>STRENGTH</b> ███████░░ 82%</div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     §4 ORBITAL BODIES — lab artifacts
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sect wrap" id="orbits">
+  <header class="sect__head reveal">
+    <div class="sect__id">§ 004 / Orbital Survey<b>Companion Bodies</b></div>
+    <h2 class="sect__title">Ten <em>orbital bodies</em> tracked in the MVHV&#8209;001 system.</h2>
+    <p class="sect__lede">Independent artifacts shipped through AI&#8209;Created. Each maintains a stable orbit. Hover the diagram or scan the manifest at right.</p>
+  </header>
+
+  <div class="orbits reveal">
+
+    <!-- ORBITAL DIAGRAM -->
+    <div class="orbit-diagram" id="orbitDiagram" aria-label="orbital diagram of lab artifacts">
+      <svg viewBox="0 0 400 400">
+        <defs>
+          <radialGradient id="centralStar" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"  stop-color="#FFF2D0"/>
+            <stop offset="40%" stop-color="#FFB05A"/>
+            <stop offset="80%" stop-color="#B82540"/>
+            <stop offset="100%" stop-color="#5A0E20"/>
+          </radialGradient>
+        </defs>
+
+        <!-- orbital rings -->
+        <g fill="none" stroke="rgba(189,216,255,0.18)" stroke-width="0.5">
+          <circle cx="200" cy="200" r="55"/>
+          <circle cx="200" cy="200" r="80"/>
+          <circle cx="200" cy="200" r="110"/>
+          <circle cx="200" cy="200" r="140"/>
+          <circle cx="200" cy="200" r="170"/>
+        </g>
+        <g fill="none" stroke="rgba(255,45,122,0.14)" stroke-width="0.4" stroke-dasharray="2 3">
+          <circle cx="200" cy="200" r="55"/>
+          <circle cx="200" cy="200" r="110"/>
+          <circle cx="200" cy="200" r="170"/>
+        </g>
+
+        <!-- central star -->
+        <circle cx="200" cy="200" r="22" fill="url(#centralStar)"/>
+        <circle cx="200" cy="200" r="36" fill="none" stroke="rgba(255,176,90,0.3)" stroke-width="0.5"/>
+
+        <!-- central label -->
+        <text x="200" y="248" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#FFD79E" letter-spacing="2">CORE</text>
+        <text x="200" y="260" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#6E7080" letter-spacing="2">MVHV-001</text>
+
+        <!-- ORBITAL BODIES -->
+        <!-- Orbit 1 r=55: My AI Diary (featured, larger) -->
+        <g class="ob" data-id="diary" data-name="My AI Diary"
+           data-tag="voice-first journaling · whisper · zero-knowledge"
+           data-link="https://diary.ai-created.com/">
+          <circle cx="200" cy="145" r="9" fill="#FF2D7A" stroke="rgba(255,45,122,0.4)" stroke-width="6"/>
+          <text x="200" y="125" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10" fill="#FF2D7A" font-weight="600">My AI Diary</text>
+        </g>
+
+        <!-- Orbit 2 r=80: Human, Actually & WatchGPT -->
+        <g class="ob" data-id="human-actually" data-name="Human, Actually"
+           data-tag="resume tailoring · LLM + NLP"
+           data-link="https://ai-created.com/products/human-actually">
+          <circle cx="270" cy="160" r="6" fill="#FFB05A"/>
+          <text x="290" y="155" text-anchor="start" font-family="Space Grotesk, sans-serif" font-size="9" fill="#FFB05A" font-weight="500">Human, Actually</text>
+        </g>
+        <g class="ob" data-id="watchgpt" data-name="WatchGPT"
+           data-tag="realtime ChatGPT on watchOS"
+           data-link="https://ai-created.com/products/watchgpt">
+          <circle cx="130" cy="160" r="5" fill="#5DD3FF"/>
+          <text x="110" y="155" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="9" fill="#5DD3FF" font-weight="500">WatchGPT</text>
+        </g>
+
+        <!-- Orbit 3 r=110: AI Usage & Calorie Counter -->
+        <g class="ob" data-id="ai-usage" data-name="AI Usage"
+           data-tag="Claude Code + Codex menubar (macOS)"
+           data-link="https://ai-created.com/products/ai-usage">
+          <circle cx="295" cy="245" r="5.5" fill="#FFB05A"/>
+          <text x="315" y="252" text-anchor="start" font-family="Space Grotesk, sans-serif" font-size="9" fill="#FFB05A" font-weight="500">AI Usage</text>
+        </g>
+        <g class="ob" data-id="calorie" data-name="Calorie Counter"
+           data-tag="vision + LLM food logging (PWA)"
+           data-link="https://ai-created.com/products/calorie-counter">
+          <circle cx="100" cy="260" r="5.5" fill="#5FE3A6"/>
+          <text x="85" y="270" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="9" fill="#5FE3A6" font-weight="500">Calorie Counter</text>
+        </g>
+
+        <!-- Orbit 4 r=140: Vectronix, Radial Drift -->
+        <g class="ob" data-id="vectronix" data-name="Vectronix"
+           data-tag="hardcore arcade combat · canvas"
+           data-link="https://ai-created.com/games">
+          <circle cx="65" cy="170" r="6" fill="#FF2D7A"/>
+          <text x="45" y="175" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="9" fill="#FF2D7A" font-weight="500">Vectronix</text>
+        </g>
+        <g class="ob" data-id="radial" data-name="Radial Drift"
+           data-tag="one-tap arcade · webgl"
+           data-link="https://ai-created.com/games">
+          <circle cx="335" cy="180" r="5" fill="#FF2D7A"/>
+          <text x="346" y="174" text-anchor="start" font-family="Space Grotesk, sans-serif" font-size="9" fill="#FF2D7A" font-weight="500">Radial Drift</text>
+        </g>
+
+        <!-- Orbit 5 r=170: Audio Visualizer, Color Clock, Jumbotron -->
+        <g class="ob" data-id="avs" data-name="Audio Visualizer"
+           data-tag="webgl music visualization suite"
+           data-link="https://ai-created.com/products/audio-visualizer-suite">
+          <circle cx="80" cy="80" r="5" fill="#BDD8FF"/>
+          <text x="68" y="68" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="9" fill="#BDD8FF" font-weight="500">Audio Visualizer</text>
+        </g>
+        <g class="ob" data-id="clock" data-name="Color Clock"
+           data-tag="1991 clock · vintage interaction"
+           data-link="https://ai-created.com/products/color-clock">
+          <circle cx="320" cy="80" r="5" fill="#BDD8FF"/>
+          <text x="335" y="68" text-anchor="start" font-family="Space Grotesk, sans-serif" font-size="9" fill="#BDD8FF" font-weight="500">Color Clock</text>
+        </g>
+        <g class="ob" data-id="jumbo" data-name="Jumbotron"
+           data-tag="pixel-faithful stadium LED simulator"
+           data-link="https://ai-created.com/products">
+          <circle cx="200" cy="370" r="5" fill="#BDD8FF"/>
+          <text x="200" y="388" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="9" fill="#BDD8FF" font-weight="500">Jumbotron</text>
+        </g>
+
+        <!-- subtle directional arrows on orbits -->
+        <g fill="rgba(189,216,255,0.4)">
+          <polygon points="250,138 257,144 246,148" />
+          <polygon points="155,260 154,250 165,256" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- MANIFEST list -->
+    <div class="orbit-list">
+      <a class="orbit-row" href="https://diary.ai-created.com/" target="_blank" rel="noopener" data-id="diary">
+        <div class="orbit-row__id"><b>OB-01</b><br/>r 55</div>
+        <div class="orbit-row__name">My AI Diary <small>voice-first · whisper · zero-knowledge · pwa</small></div>
+        <div class="orbit-row__period">P 0.7y</div>
+      </a>
+      <a class="orbit-row" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener" data-id="human-actually">
+        <div class="orbit-row__id"><b>OB-02</b><br/>r 80</div>
+        <div class="orbit-row__name">Human, Actually <small>ai resume tailoring</small></div>
+        <div class="orbit-row__period">P 1.1y</div>
+      </a>
+      <a class="orbit-row" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener" data-id="watchgpt">
+        <div class="orbit-row__id"><b>OB-03</b><br/>r 80</div>
+        <div class="orbit-row__name">WatchGPT <small>realtime gpt voice · watchos</small></div>
+        <div class="orbit-row__period">P 1.1y</div>
+      </a>
+      <a class="orbit-row" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener" data-id="ai-usage">
+        <div class="orbit-row__id"><b>OB-04</b><br/>r 110</div>
+        <div class="orbit-row__name">AI Usage <small>macos menubar · claude / codex</small></div>
+        <div class="orbit-row__period">P 1.6y</div>
+      </a>
+      <a class="orbit-row" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener" data-id="calorie">
+        <div class="orbit-row__id"><b>OB-05</b><br/>r 110</div>
+        <div class="orbit-row__name">Calorie Counter <small>vision + llm · pwa</small></div>
+        <div class="orbit-row__period">P 1.6y</div>
+      </a>
+      <a class="orbit-row" href="https://ai-created.com/games" target="_blank" rel="noopener" data-id="vectronix">
+        <div class="orbit-row__id"><b>OB-06</b><br/>r 140</div>
+        <div class="orbit-row__name">Vectronix <small>arcade combat · canvas</small></div>
+        <div class="orbit-row__period">P 2.3y</div>
+      </a>
+      <a class="orbit-row" href="https://ai-created.com/games" target="_blank" rel="noopener" data-id="radial">
+        <div class="orbit-row__id"><b>OB-07</b><br/>r 140</div>
+        <div class="orbit-row__name">Radial Drift <small>one-tap arcade · webgl</small></div>
+        <div class="orbit-row__period">P 2.3y</div>
+      </a>
+      <a class="orbit-row" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener" data-id="avs">
+        <div class="orbit-row__id"><b>OB-08</b><br/>r 170</div>
+        <div class="orbit-row__name">Audio Visualizer Suite <small>webgl + fft + ffmpeg</small></div>
+        <div class="orbit-row__period">P 3.1y</div>
+      </a>
+      <a class="orbit-row" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener" data-id="clock">
+        <div class="orbit-row__id"><b>OB-09</b><br/>r 170</div>
+        <div class="orbit-row__name">Color Clock <small>vintage 1991 · css · type</small></div>
+        <div class="orbit-row__period">P 3.1y</div>
+      </a>
+      <a class="orbit-row" href="https://ai-created.com/products" target="_blank" rel="noopener" data-id="jumbo">
+        <div class="orbit-row__id"><b>OB-10</b><br/>r 170</div>
+        <div class="orbit-row__name">Jumbotron Simulator <small>stadium led sim · canvas</small></div>
+        <div class="orbit-row__period">P 3.1y</div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     §5 TELEMETRY — by the numbers
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sect wrap" id="telemetry" style="padding-bottom: 0;">
+  <header class="sect__head reveal">
+    <div class="sect__id">§ 005 / Telemetry<b>Mission Counters</b></div>
+    <h2 class="sect__title">Continuous <em>data return</em> over the survey period.</h2>
+    <p class="sect__lede">Aggregate readouts from twenty years of continuous tracking. Honest numbers — not normalized.</p>
+  </header>
+
+  <div class="telemetry reveal">
+    <div class="telem">
+      <div class="telem__label">survey duration</div>
+      <div class="telem__num" data-count="20"><span>20</span><small>+ yrs</small></div>
+      <div class="telem__sub">in continuous orbit</div>
+      <svg class="telem__spark" viewBox="0 0 60 18" aria-hidden="true"><polyline points="0,15 8,12 15,14 22,9 30,10 38,5 45,7 52,3 60,4" fill="none" stroke="#FF2D7A" stroke-width="1.2"/></svg>
+    </div>
+    <div class="telem">
+      <div class="telem__label">major installations</div>
+      <div class="telem__num" data-count="5"><span>5</span><small>cos</small></div>
+      <div class="telem__sub">google · yahoo · walmart · kohl&rsquo;s · endemol</div>
+      <svg class="telem__spark" viewBox="0 0 60 18" aria-hidden="true"><polyline points="0,14 12,12 24,10 36,8 48,5 60,3" fill="none" stroke="#FFB05A" stroke-width="1.2"/></svg>
+    </div>
+    <div class="telem">
+      <div class="telem__label">artifacts shipped</div>
+      <div class="telem__num" data-count="18"><span>18</span><small>obj</small></div>
+      <div class="telem__sub">independent ai-created lab</div>
+      <svg class="telem__spark" viewBox="0 0 60 18" aria-hidden="true"><polyline points="0,17 7,14 14,13 21,9 28,11 35,6 42,8 49,4 56,5 60,2" fill="none" stroke="#5FE3A6" stroke-width="1.2"/></svg>
+    </div>
+    <div class="telem">
+      <div class="telem__label">encoded languages</div>
+      <div class="telem__num" data-count="4"><span>4</span><small>lang</small></div>
+      <div class="telem__sub">dutch · english · german · spanish</div>
+      <svg class="telem__spark" viewBox="0 0 60 18" aria-hidden="true"><polyline points="0,12 15,8 30,11 45,5 60,8" fill="none" stroke="#5DD3FF" stroke-width="1.2"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     §6 TRANSMISSION — contact
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sect wrap" id="contact">
+  <header class="sect__head reveal">
+    <div class="sect__id">§ 006 / Transmission<b>Open the Channel</b></div>
+    <h2 class="sect__title">Send a <em>signal.</em></h2>
+    <p class="sect__lede">The object is currently receptive to incoming transmissions. All channels are open.</p>
+  </header>
+
+  <article class="transmission reveal" aria-label="transmission terminal">
+    <div class="tm-grid">
+
+      <div>
+        <h3 class="tm-title">Begin <em>transmission.</em></h3>
+        <p class="tm-lede">Tell me what you&rsquo;re building, what&rsquo;s ambiguous about it, what timeline you&rsquo;re on. Direct is fastest.</p>
+
+        <div class="tm-waveform" aria-hidden="true">
+          <svg viewBox="0 0 400 90" preserveAspectRatio="none">
+            <path id="wavepath" d="M 0 45 Q 25 8, 50 45 T 100 45 T 150 45 T 200 45 T 250 45 T 300 45 T 350 45 T 400 45"
+                  fill="none" stroke="rgba(255,45,122,0.6)" stroke-width="1.4"/>
+            <path d="M 0 45 Q 25 30, 50 45 T 100 45 T 150 45 T 200 45 T 250 45 T 300 45 T 350 45 T 400 45"
+                  fill="none" stroke="rgba(93,211,255,0.5)" stroke-width="1"/>
+            <path d="M 0 45 Q 25 60, 50 45 T 100 45 T 150 45 T 200 45 T 250 45 T 300 45 T 350 45 T 400 45"
+                  fill="none" stroke="rgba(255,176,90,0.35)" stroke-width="0.8"/>
+          </svg>
+        </div>
+
+        <a class="tm-cta" href="mailto:marcovhv@gmail.com?subject=Incoming%20transmission%20—%20MVHV-001">
+          Initiate transmission <span>↗</span>
+        </a>
+      </div>
+
+      <div class="tm-channels">
+        <a class="tm-channel" href="mailto:marcovhv@gmail.com">
+          <div class="tm-channel__num">CH·01</div>
+          <div class="tm-channel__label">direct</div>
+          <div class="tm-channel__value">marcovhv@gmail.com</div>
+          <div class="tm-channel__rssi">RSSI ▮▮▮▮▮</div>
+        </a>
+        <a class="tm-channel" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">
+          <div class="tm-channel__num">CH·02</div>
+          <div class="tm-channel__label">linkedin</div>
+          <div class="tm-channel__value">/in/marcovhv</div>
+          <div class="tm-channel__rssi">RSSI ▮▮▮▮▯</div>
+        </a>
+        <a class="tm-channel" href="https://x.com/AIandDesign" target="_blank" rel="noopener">
+          <div class="tm-channel__num">CH·03</div>
+          <div class="tm-channel__label">band x</div>
+          <div class="tm-channel__value">@AIandDesign</div>
+          <div class="tm-channel__rssi">RSSI ▮▮▮▯▯</div>
+        </a>
+        <a class="tm-channel" href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">
+          <div class="tm-channel__num">CH·04</div>
+          <div class="tm-channel__label">video</div>
+          <div class="tm-channel__value">@AIandDesign</div>
+          <div class="tm-channel__rssi">RSSI ▮▮▮▯▯</div>
+        </a>
+        <a class="tm-channel" href="https://ai-created.com" target="_blank" rel="noopener">
+          <div class="tm-channel__num">CH·05</div>
+          <div class="tm-channel__label">lab</div>
+          <div class="tm-channel__value">ai-created.com</div>
+          <div class="tm-channel__rssi">RSSI ▮▮▮▮▮</div>
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <!-- ARCHIVE FOOTER -->
+  <footer class="archive">
+    <div>© 2026 <b>PERSEUS-9 OBSERVATORY</b> · OBJECT MVHV-001 · all data retained</div>
+    <div class="c">single HTML file · no frameworks · pressed in Portland</div>
+    <div class="r">archive ref · <b>MVHV-001 / 2026.05</b></div>
+  </footer>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ───────────── LIVE TIME (UTC) ───────────── */
+  function tick() {
+    const t = new Date();
+    const fmt = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'UTC', hour12: false,
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    const el = document.getElementById('utcTime');
+    if (el) el.textContent = fmt.format(t);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ───────────── LIVE RA (right ascension drifts with time) ───────────── */
+  const propRA = document.getElementById('propRA');
+  function updateRA() {
+    if (!propRA) return;
+    const t = new Date();
+    // base RA "12h 34m 56s" — animate seconds based on real seconds
+    const baseS = 56;
+    const sec = (baseS + t.getUTCSeconds()) % 60;
+    propRA.innerHTML = `12<sup style="color:var(--text-3)">h</sup> 34<sup style="color:var(--text-3)">m</sup> ${sec.toString().padStart(2,'0')}<sup style="color:var(--text-3)">s</sup><small>right ascension</small>`;
+  }
+  updateRA(); setInterval(updateRA, 1000);
+
+  /* ───────────── STARFIELD CANVAS ───────────── */
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  let w = 0, h = 0, dpr = 1;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const r = canvas.getBoundingClientRect();
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // (re)generate stars
+    const count = Math.min(220, Math.floor((w * h) / 9000));
+    stars = [];
+    for (let i = 0; i < count; i++) {
+      const sizeRoll = Math.random();
+      let r, color, baseAlpha;
+      if (sizeRoll > 0.97) { r = 1.6 + Math.random() * 0.6; color = '#F7F0DA'; baseAlpha = 0.75; }
+      else if (sizeRoll > 0.85) { r = 1.0 + Math.random() * 0.4; color = '#FFD79E'; baseAlpha = 0.55; }
+      else if (sizeRoll > 0.7) { r = 0.8 + Math.random() * 0.3; color = '#BDD8FF'; baseAlpha = 0.45; }
+      else { r = 0.4 + Math.random() * 0.5; color = '#F7F0DA'; baseAlpha = 0.3; }
+
+      stars.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r, color, baseAlpha,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.0006 + Math.random() * 0.0012,
+        drift: 0.005 + Math.random() * 0.01
+      });
+    }
+  }
+
+  function draw(now) {
+    ctx.clearRect(0, 0, w, h);
+
+    for (const s of stars) {
+      const tw = Math.sin(now * s.speed + s.phase) * 0.4 + 0.6; // 0.2 → 1.0
+      const a = s.baseAlpha * tw;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r * tw, 0, Math.PI * 2);
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = a;
+      ctx.fill();
+
+      // halo for the brightest
+      if (s.r > 1.4) {
+        ctx.globalAlpha = a * 0.18;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 5 * tw, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // tiny lateral drift over very long time
+      s.x += Math.sin(now * 0.00002 + s.phase) * s.drift;
+      if (s.x < 0) s.x = w;
+      if (s.x > w) s.x = 0;
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener('resize', () => { clearTimeout(window._sresizeT); window._sresizeT = setTimeout(resize, 200); });
+  requestAnimationFrame(draw);
+
+  /* ───────────── SCROLL PROGRESS ───────────── */
+  const sb = document.getElementById('scrollbar');
+  function onScroll() {
+    const doc = document.documentElement;
+    const total = doc.scrollHeight - doc.clientHeight;
+    const p = total > 0 ? (window.scrollY / total) * 100 : 0;
+    if (sb) sb.style.width = p + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ───────────── REVEAL ON SCROLL ───────────── */
+  const reveals = document.querySelectorAll('.reveal');
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        ro.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+  reveals.forEach(el => ro.observe(el));
+
+  /* ───────────── CONSTELLATION TOOLTIP ───────────── */
+  const tooltip = document.getElementById('cstarTooltip');
+  const tooltipName = tooltip.querySelector('b');
+  const tooltipMeta = tooltip.querySelector('span');
+  const stars2 = document.querySelectorAll('.cstar');
+  const chart = document.querySelector('.constellation__chart');
+
+  function moveTooltip(e) {
+    tooltip.style.left = e.clientX + 'px';
+    tooltip.style.top = e.clientY + 'px';
+  }
+  stars2.forEach(s => {
+    s.style.cursor = 'pointer';
+    s.addEventListener('mouseenter', (e) => {
+      tooltipName.textContent = s.dataset.name;
+      tooltipMeta.textContent = s.dataset.meta;
+      moveTooltip(e);
+      tooltip.classList.add('is-on');
+    });
+    s.addEventListener('mousemove', moveTooltip);
+    s.addEventListener('mouseleave', () => tooltip.classList.remove('is-on'));
+  });
+
+  /* ───────────── ORBIT HIGHLIGHT (sync diagram <-> manifest) ───────────── */
+  const orbits = document.querySelectorAll('.ob');
+  const rows = document.querySelectorAll('.orbit-row');
+  function highlight(id, on) {
+    orbits.forEach(o => {
+      const c = o.querySelector('circle');
+      if (o.dataset.id === id) {
+        if (c) c.setAttribute('r', on ? parseFloat(c.getAttribute('r')) + 2 : c.getAttribute('r'));
+        o.style.opacity = on ? '1' : '';
+      } else if (on) {
+        o.style.opacity = '0.45';
+      } else {
+        o.style.opacity = '';
+      }
+    });
+    rows.forEach(r => r.classList.toggle('is-active', on && r.dataset.id === id));
+  }
+  orbits.forEach(o => {
+    o.style.cursor = 'pointer';
+    o.addEventListener('mouseenter', () => highlight(o.dataset.id, true));
+    o.addEventListener('mouseleave', () => highlight(o.dataset.id, false));
+    o.addEventListener('click', () => {
+      const link = o.dataset.link;
+      if (link) window.open(link, '_blank', 'noopener');
+    });
+  });
+  rows.forEach(r => {
+    r.addEventListener('mouseenter', () => highlight(r.dataset.id, true));
+    r.addEventListener('mouseleave', () => highlight(r.dataset.id, false));
+  });
+
+  /* ───────────── COUNT-UP METRICS ───────────── */
+  const metrics = document.querySelectorAll('.telem__num[data-count]');
+  const mo = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseInt(el.dataset.count, 10);
+      const span = el.querySelector('span');
+      const dur = 1100;
+      const start = performance.now();
+      function step(now) {
+        const p = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        span.textContent = Math.floor(eased * target);
+        if (p < 1) requestAnimationFrame(step);
+        else span.textContent = target;
+      }
+      requestAnimationFrame(step);
+      mo.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  metrics.forEach(el => mo.observe(el));
+
+  /* ───────────── TRANSMISSION WAVEFORM (subtle drift) ───────────── */
+  const wave = document.getElementById('wavepath');
+  if (wave) {
+    let t = 0;
+    function animateWave() {
+      t += 0.02;
+      const pts = [];
+      for (let i = 0; i <= 8; i++) {
+        const x = i * 50;
+        const y = 45 + Math.sin(t + i * 0.7) * (16 - i * 1.4);
+        pts.push(`${x} ${y}`);
+      }
+      wave.setAttribute('d', `M ${pts[0]} Q ${pts[1]}, ${pts[2]} T ${pts[3]} T ${pts[4]} T ${pts[5]} T ${pts[6]} T ${pts[7]} T ${pts[8]}`);
+      requestAnimationFrame(animateWave);
+    }
+    requestAnimationFrame(animateWave);
+  }
+
+})();
+</script>
+</body>
+</html>

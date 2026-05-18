@@ -1,0 +1,2140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Issue 001 — Marco van Hylckama Vlieg / Anthology, May 2026</title>
+<meta name="description" content="One-person anthology. Twenty years of product design, design engineering, and AI-native software. Personal manual, may 2026." />
+<meta name="theme-color" content="#EDE3CC" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Fraunces variable: opsz, SOFT, WONK, wght — Space Grotesk variable — JetBrains Mono -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ──────────────────────────────────────────────────────────────────
+   ANTHOLOGY / ISSUE 001 — Marco van Hylckama Vlieg
+   A printed magazine that happens to be a website.
+   Bone + ink + acid lime. Variable type. No frameworks.
+   ────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* paper system */
+  --bone:        #EDE3CC;
+  --bone-2:      #E2D7B8;
+  --bone-3:      #D5C8A4;
+  --ink:         #0F1422;
+  --ink-2:       #1A2036;
+  --ink-3:       #2B3554;
+
+  /* on bone */
+  --on-bone:     #0F1422;
+  --on-bone-2:   #353852;
+  --on-bone-3:   #6E6E6A;
+  --on-bone-4:   #9B9789;
+
+  /* on ink */
+  --on-ink:      #EDE3CC;
+  --on-ink-2:    #B7B2A1;
+  --on-ink-3:    #7E7C70;
+  --on-ink-4:    #4A4E5C;
+
+  /* accents */
+  --lime:        #D2F23A;
+  --lime-deep:   #A8C220;
+  --hot:         #E0297A;
+
+  /* rules */
+  --rule:        #0F142226;
+  --rule-on-ink: #EDE3CC26;
+
+  /* layout */
+  --gutter:      clamp(20px, 4.5vw, 64px);
+  --max:         1480px;
+  --col:         calc((100vw - var(--gutter) * 2) / 12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  background: var(--bone);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  font-feature-settings: 'ss01';
+}
+
+/* paper grain (very faint) */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+}
+.is-ink::before { mix-blend-mode: screen; opacity: 0.15; }
+
+::selection { background: var(--lime); color: var(--ink); }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+
+/* ── shared type ── */
+.f-serif    { font-family: 'Fraunces', 'Times New Roman', serif; font-style: normal; }
+.f-mono     { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+.mono-mini {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ────────── RUNNING BAR (top) ────────── */
+.bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: var(--bone);
+  border-bottom: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.is-ink-zone .bar { background: var(--ink); color: var(--on-ink); border-bottom-color: var(--rule-on-ink); }
+.bar__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 12px var(--gutter);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  text-transform: uppercase;
+}
+.bar__left, .bar__right {
+  display: flex; gap: 16px; align-items: center; min-width: 0;
+  overflow: hidden;
+}
+.bar__right { justify-content: flex-end; }
+.bar__brand {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.bar__sep {
+  width: 1px; height: 12px; background: currentColor; opacity: 0.4;
+}
+.bar__pulse {
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.bar__pulse::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 0 0 rgba(210,242,58,0.5);
+  animation: pulse 1.8s infinite;
+}
+.is-ink-zone .bar__pulse::before { background: var(--lime); }
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(210,242,58,0.5); }
+  70%  { box-shadow: 0 0 0 9px rgba(210,242,58,0); }
+  100% { box-shadow: 0 0 0 0   rgba(210,242,58,0); }
+}
+@media (max-width: 760px) {
+  .bar__inner { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .bar__center { display: none; }
+}
+
+/* ────────── COVER ────────── */
+.cover {
+  min-height: 100vh;
+  padding: 88px 0 56px;
+  position: relative;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+}
+
+.cover__head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 18px;
+  margin-bottom: 28px;
+  align-items: end;
+}
+@media (min-width: 760px) {
+  .cover__head { grid-template-columns: 1fr 1fr 1fr; }
+}
+.cover__head h2 {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(20px, 2vw, 30px);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 0;
+}
+.cover__head .col-center { text-align: center; }
+.cover__head .col-right  { text-align: right; }
+
+/* ── magazine corner cover-lines ── */
+.cover__lines {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-bottom: 32px;
+}
+@media (min-width: 800px) {
+  .cover__lines {
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+}
+.cover__line {
+  display: block;
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: clamp(16px, 1.4vw, 19px);
+  line-height: 1.3;
+  color: var(--on-bone);
+  font-variation-settings: 'opsz' 36, 'SOFT' 80, 'WONK' 0;
+  position: relative;
+  padding-left: 20px;
+  max-width: 360px;
+  transition: color .25s, transform .35s cubic-bezier(.2,.7,.2,1);
+}
+.cover__line::before {
+  content: '';
+  position: absolute; left: 0; top: 11px;
+  width: 12px; height: 1px; background: var(--lime-deep);
+  transition: width .35s cubic-bezier(.2,.7,.2,1), background .25s;
+}
+.cover__line:hover::before { width: 16px; background: var(--ink); }
+.cover__line:hover { transform: translateX(4px); }
+.cover__line em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 36, 'SOFT' 100, 'WONK' 1;
+}
+.cover__line .cover__line-tag {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-style: normal;
+  font-size: 10px;
+  font-variation-settings: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-bone-3);
+  margin-top: 6px;
+}
+.cover__right { text-align: right; }
+.cover__right .cover__line { margin-left: auto; padding-left: 0; padding-right: 20px; }
+.cover__right .cover__line::before { left: auto; right: 0; }
+
+/* ── the giant name ── */
+.cover__name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0;
+  min-height: 280px;
+  position: relative;
+}
+.cover__name h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(80px, 19vw, 320px);
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+  text-align: center;
+  color: var(--on-bone);
+  font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 0, 'wght' 700;
+  margin: 0;
+  white-space: nowrap;
+  cursor: default;
+}
+.cover__name .name-row {
+  display: block;
+  overflow: hidden;
+  padding: 0.08em 0.04em 0.34em 0.04em;
+  margin-bottom: -0.18em;
+}
+.cover__name .name-row:last-child { margin-bottom: 0; }
+.cover__name .letter {
+  display: inline-block;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 0, 'wght' 500;
+  transition: font-variation-settings 0.22s cubic-bezier(.2,.7,.2,1), color .25s;
+  will-change: font-variation-settings;
+  white-space: pre;
+}
+.cover__name .letter.acid { color: var(--lime-deep); }
+.cover__name .name-row--small {
+  font-size: 0.36em;
+  line-height: 1;
+  font-style: normal;
+  font-weight: 400;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 0, 'wght' 400;
+  letter-spacing: -0.02em;
+  margin-top: 0.18em;
+}
+
+/* hero entrance */
+.name-row > span {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+  animation: name-rise 1.2s cubic-bezier(.2,.7,.2,1) forwards;
+}
+.name-row:nth-child(1) > span { animation-delay: 0.05s; }
+.name-row:nth-child(2) > span { animation-delay: 0.15s; }
+@keyframes name-rise {
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ── foot of the cover: ISSN / barcode / stamp ── */
+.cover__foot {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  align-items: end;
+}
+@media (min-width: 800px) {
+  .cover__foot {
+    grid-template-columns: auto 1fr auto;
+    gap: 60px;
+  }
+}
+.cover__foot-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-bone-3);
+  line-height: 1.7;
+}
+.cover__foot-text b { color: var(--on-bone); font-weight: 500; letter-spacing: 0.1em; }
+
+/* barcode */
+.barcode {
+  display: flex; align-items: end; gap: 1px;
+  height: 56px;
+}
+.barcode i {
+  display: block;
+  background: var(--ink);
+  height: 100%;
+}
+.barcode__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--on-bone-3);
+  margin-top: 4px;
+}
+
+/* CTA tabs at bottom of cover */
+.cover__cta {
+  display: flex; flex-wrap: wrap; gap: 12px;
+}
+.tab {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 18px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background .25s, color .25s, transform .25s, padding .25s;
+  position: relative;
+}
+.tab:hover { background: var(--ink); color: var(--bone); padding-right: 24px; }
+.tab--lime {
+  background: var(--lime); border-color: var(--lime); color: var(--ink);
+}
+.tab--lime:hover { background: var(--ink); border-color: var(--ink); color: var(--lime); }
+.tab .arrow { transition: transform .25s; display: inline-block; }
+.tab:hover .arrow { transform: translate(4px, -4px); }
+
+/* ────────── INK SECTIONS ────────── */
+.ink {
+  background: var(--ink);
+  color: var(--on-ink);
+  position: relative;
+  z-index: 2;
+}
+.ink ::selection { background: var(--lime); color: var(--ink); }
+
+/* ────────── RUNNING HEAD (per-section) ────────── */
+.running {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  padding: 22px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--on-bone-3);
+  align-items: center;
+}
+.ink .running {
+  border-top-color: var(--rule-on-ink);
+  border-bottom-color: var(--rule-on-ink);
+  color: var(--on-ink-3);
+}
+.running__center { text-align: center; }
+.running__right  { text-align: right; }
+.running em {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  text-transform: none;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--on-bone);
+  font-size: 13px;
+  font-variation-settings: 'opsz' 36, 'SOFT' 100, 'WONK' 1;
+}
+.ink .running em { color: var(--on-ink); }
+@media (max-width: 720px) {
+  .running { grid-template-columns: 1fr auto; gap: 8px; }
+  .running__center { display: none; }
+}
+
+/* ────────── EDITORIAL SECTION BASE ────────── */
+.sect {
+  padding: 100px 0;
+  position: relative;
+}
+.sect--ink { background: var(--ink); color: var(--on-ink); }
+
+/* ── headline block (asymmetric: number + title) ── */
+.sect__head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-bottom: 64px;
+  align-items: end;
+}
+@media (min-width: 900px) {
+  .sect__head {
+    grid-template-columns: 240px 1fr 1fr;
+    gap: 48px;
+  }
+}
+.sect__num {
+  font-family: 'Fraunces', serif;
+  font-weight: 200;
+  font-style: italic;
+  font-size: clamp(72px, 11vw, 180px);
+  line-height: 0.8;
+  color: var(--on-bone);
+  letter-spacing: -0.04em;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1, 'wght' 200;
+}
+.ink .sect__num { color: var(--lime); }
+.sect__num small {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--on-bone-3);
+  margin-top: 8px;
+  font-variation-settings: normal;
+}
+.ink .sect__num small { color: var(--on-ink-3); }
+
+.sect__title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: clamp(32px, 4.4vw, 56px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  font-variation-settings: 'opsz' 96, 'SOFT' 30, 'WONK' 0, 'wght' 500;
+  text-wrap: balance;
+}
+.sect__title em {
+  font-style: italic;
+  color: var(--lime-deep);
+  font-variation-settings: 'opsz' 96, 'SOFT' 100, 'WONK' 1, 'wght' 400;
+}
+.ink .sect__title em { color: var(--lime); }
+
+.sect__lede {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--on-bone-2);
+  max-width: 480px;
+}
+.ink .sect__lede { color: var(--on-ink-2); }
+
+/* ────────── §01 MANIFESTO ────────── */
+.manifesto {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: start;
+}
+@media (min-width: 1000px) {
+  .manifesto {
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+  }
+}
+.manifesto__cap {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 200;
+  font-size: clamp(140px, 22vw, 360px);
+  line-height: 0.78;
+  letter-spacing: -0.06em;
+  color: var(--lime);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1, 'wght' 200;
+}
+.manifesto__cap span {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--on-ink-3);
+  margin-top: 16px;
+  font-variation-settings: normal;
+}
+.manifesto__body p {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.36;
+  color: var(--on-ink);
+  letter-spacing: -0.005em;
+  font-variation-settings: 'opsz' 72, 'SOFT' 30, 'WONK' 0, 'wght' 400;
+}
+.manifesto__body p + p { margin-top: 28px; }
+.manifesto__body em {
+  font-style: italic;
+  color: var(--lime);
+  font-variation-settings: 'opsz' 72, 'SOFT' 100, 'WONK' 1, 'wght' 400;
+}
+.manifesto__body .pull {
+  display: block;
+  margin: 32px 0;
+  padding-left: 24px;
+  border-left: 1px solid var(--lime);
+  font-weight: 500;
+  font-style: italic;
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.3;
+  color: var(--on-ink);
+  font-variation-settings: 'opsz' 72, 'SOFT' 100, 'WONK' 1, 'wght' 500;
+}
+.manifesto__sig {
+  margin-top: 40px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--lime);
+  letter-spacing: -0.01em;
+  font-variation-settings: 'opsz' 36, 'SOFT' 100, 'WONK' 1, 'wght' 700;
+}
+.manifesto__sig small {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--on-ink-3);
+  margin-top: 6px;
+  font-variation-settings: normal;
+}
+
+/* ────────── §02 RECORD — horizontal timeline ────────── */
+.timeline {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 24px 0 32px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.timeline::-webkit-scrollbar { height: 2px; }
+.timeline::-webkit-scrollbar-track { background: var(--rule); }
+.timeline::-webkit-scrollbar-thumb { background: var(--ink); }
+
+.timeline__inner {
+  display: flex;
+  gap: 0;
+  position: relative;
+  width: max-content;
+  padding: 0 var(--gutter);
+}
+.timeline__line {
+  position: absolute;
+  left: 0; right: 0;
+  top: 56px;
+  height: 1px;
+  background: var(--ink);
+}
+.tcard {
+  flex: 0 0 360px;
+  scroll-snap-align: start;
+  padding-top: 90px;
+  padding-right: 40px;
+  position: relative;
+  cursor: default;
+}
+.tcard__year {
+  position: absolute;
+  top: 28px; left: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--on-bone-3);
+}
+.tcard::before {
+  content: '';
+  position: absolute;
+  top: 49px; left: 0;
+  width: 14px; height: 14px;
+  background: var(--bone);
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  z-index: 2;
+  transition: background .25s, transform .25s;
+}
+.tcard:hover::before { background: var(--lime); transform: scale(1.2); }
+.tcard__company {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(36px, 4vw, 56px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  font-variation-settings: 'opsz' 96, 'SOFT' 80, 'WONK' 1, 'wght' 600;
+  transition: color .3s;
+}
+.tcard:hover .tcard__company { color: var(--lime-deep); }
+.tcard__role {
+  font-size: 13px;
+  color: var(--on-bone-2);
+  line-height: 1.55;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.tcard__role b { color: var(--on-bone); font-weight: 700; }
+.tcard__tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-bone-3);
+  padding: 4px 8px;
+  border: 1px solid var(--rule);
+  margin-top: 8px;
+}
+.timeline__hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--on-bone-3);
+  margin-top: 18px;
+  display: flex; align-items: center; gap: 12px;
+}
+.timeline__hint::before {
+  content: '↔';
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  color: var(--lime-deep);
+}
+
+/* ────────── §03 CAPABILITIES ────────── */
+.cap-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--rule-on-ink);
+  border-top: 1px solid var(--rule-on-ink);
+  border-bottom: 1px solid var(--rule-on-ink);
+}
+@media (min-width: 720px) { .cap-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1080px) { .cap-grid { grid-template-columns: repeat(3, 1fr); } }
+.cap {
+  background: var(--ink);
+  padding: 40px 32px;
+  position: relative;
+  min-height: 320px;
+  display: flex; flex-direction: column;
+  transition: background .35s;
+}
+.cap:hover { background: var(--ink-2); }
+.cap__num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 200;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--lime);
+  margin-bottom: 18px;
+  font-variation-settings: 'opsz' 96, 'SOFT' 100, 'WONK' 1, 'wght' 200;
+}
+.cap__title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-style: italic;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin-bottom: 14px;
+  font-variation-settings: 'opsz' 36, 'SOFT' 80, 'WONK' 1, 'wght' 500;
+}
+.cap__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--on-ink-2);
+  flex: 1;
+}
+.cap__body em {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--lime);
+  font-variation-settings: 'opsz' 36, 'SOFT' 100, 'WONK' 1, 'wght' 500;
+}
+.cap__chips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 22px;
+}
+.cap__chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border: 1px solid var(--rule-on-ink);
+  color: var(--on-ink-3);
+  text-transform: uppercase;
+}
+
+/* ────────── §04 LAB ────────── */
+.lab-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 900px) {
+  .lab-grid {
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(200px, auto);
+    gap: 12px;
+  }
+}
+.lab {
+  position: relative;
+  padding: 28px;
+  border: 1px solid var(--rule);
+  background: var(--bone-2);
+  transition: background .3s, border-color .3s, transform .35s cubic-bezier(.2,.7,.2,1);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  min-height: 280px;
+}
+.lab:hover { transform: translateY(-3px); border-color: var(--ink); background: var(--bone-3); }
+.lab__pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  align-self: flex-start;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-bone);
+  padding: 4px 8px;
+  border: 1px solid var(--ink);
+}
+.lab__pill::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor;
+}
+.lab__pill--ai   { color: var(--ink); }
+.lab__pill--game { color: var(--hot); border-color: var(--hot); }
+.lab__pill--exp  { color: var(--lime-deep); border-color: var(--lime-deep); }
+.lab__title {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(28px, 3.2vw, 44px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-top: 14px;
+  font-variation-settings: 'opsz' 72, 'SOFT' 30, 'WONK' 0, 'wght' 700;
+}
+.lab__tag {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--on-bone-2);
+  line-height: 1.5;
+}
+.lab__stack {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.lab__stack span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--on-bone-3);
+  letter-spacing: 0.04em;
+}
+.lab__stack span:not(:last-child)::after { content: '·'; margin-left: 6px; color: var(--on-bone-4); }
+.lab__arrow {
+  position: absolute;
+  top: 22px; right: 24px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 28px;
+  color: var(--on-bone-3);
+  transition: transform .3s, color .3s;
+  font-variation-settings: 'opsz' 36, 'SOFT' 80, 'WONK' 1, 'wght' 300;
+}
+.lab:hover .lab__arrow { transform: translate(4px, -4px); color: var(--lime-deep); }
+
+@media (min-width: 900px) {
+  .lab.is-feature { grid-column: span 7; grid-row: span 2; }
+  .lab.is-mid     { grid-column: span 5; }
+  .lab.is-narrow  { grid-column: span 4; }
+  .lab.is-third   { grid-column: span 4; }
+}
+.lab.is-feature {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-ink);
+}
+.lab.is-feature .lab__title { color: var(--lime); }
+.lab.is-feature .lab__tag   { color: var(--on-ink-2); }
+.lab.is-feature .lab__pill  { color: var(--lime); border-color: var(--lime); }
+.lab.is-feature .lab__stack span { color: var(--on-ink-3); }
+.lab.is-feature .lab__arrow { color: var(--on-ink-2); }
+.lab.is-feature:hover { background: var(--ink-2); }
+.lab.is-feature:hover .lab__arrow { color: var(--lime); }
+
+/* ────────── §05 METRICS ────────── */
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px) { .metrics { grid-template-columns: repeat(4, 1fr); } }
+.metric {
+  padding: 36px 24px;
+  border-right: 1px solid var(--rule);
+  position: relative;
+}
+.metric:last-child { border-right: none; }
+@media (max-width: 759px) {
+  .metric { border-right: none; border-bottom: 1px solid var(--rule); }
+  .metric:last-child { border-bottom: none; }
+}
+.metric__num {
+  font-family: 'Fraunces', serif;
+  font-weight: 200;
+  font-style: italic;
+  font-size: clamp(72px, 10vw, 144px);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--on-bone);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1, 'wght' 200;
+  display: flex; align-items: baseline; gap: 6px;
+}
+.metric__num small {
+  font-size: 0.18em;
+  font-style: normal;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--lime-deep);
+  letter-spacing: 0.04em;
+  font-variation-settings: normal;
+}
+.metric__label {
+  margin-top: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--on-bone-3);
+  line-height: 1.5;
+}
+
+/* ────────── §06 PROCESS — flow diagram ────────── */
+.process {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  position: relative;
+}
+@media (min-width: 900px) {
+  .process { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+}
+.proc {
+  border: 1px solid var(--rule);
+  padding: 32px 28px;
+  position: relative;
+  background: var(--bone);
+  transition: background .3s, border-color .3s;
+}
+.proc:hover { background: var(--bone-2); border-color: var(--ink); }
+.proc__step {
+  font-family: 'Fraunces', serif;
+  font-weight: 200;
+  font-style: italic;
+  font-size: 56px;
+  line-height: 0.85;
+  color: var(--lime-deep);
+  margin-bottom: 18px;
+  font-variation-settings: 'opsz' 96, 'SOFT' 100, 'WONK' 1, 'wght' 200;
+}
+.proc__title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  margin-bottom: 12px;
+  font-variation-settings: 'opsz' 36, 'SOFT' 80, 'WONK' 1, 'wght' 600;
+}
+.proc__body {
+  font-size: 14px;
+  color: var(--on-bone-2);
+  line-height: 1.55;
+}
+@media (min-width: 900px) {
+  .proc:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -16px; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Fraunces', serif;
+    color: var(--ink);
+    background: var(--bone);
+    padding: 4px 6px;
+    z-index: 2;
+    font-size: 18px;
+    font-variation-settings: 'opsz' 36, 'SOFT' 30, 'WONK' 0, 'wght' 400;
+  }
+}
+
+/* ────────── §07 NOW ────────── */
+.now {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+@media (min-width: 900px) {
+  .now { grid-template-columns: 1.3fr 1fr; gap: 60px; }
+}
+.now h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--on-ink-3);
+  margin-bottom: 28px;
+}
+.now-list { list-style: none; }
+.now-list li {
+  padding: 20px 0;
+  border-top: 1px solid var(--rule-on-ink);
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+.now-list li:last-child { border-bottom: 1px solid var(--rule-on-ink); }
+.now-list li::before {
+  content: '';
+  width: 10px; height: 10px;
+  border: 1.5px solid var(--on-ink);
+  background: transparent;
+  border-radius: 50%;
+  margin-top: 8px;
+}
+.now-list li.is-live::before {
+  background: var(--lime);
+  border-color: var(--lime);
+  box-shadow: 0 0 0 0 rgba(210,242,58,0.6);
+  animation: pulse 2s infinite;
+}
+.now-list li span {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--on-ink);
+  font-variation-settings: 'opsz' 36, 'SOFT' 80, 'WONK' 1, 'wght' 500;
+}
+.now-list li span em {
+  color: var(--lime);
+  font-variation-settings: 'opsz' 36, 'SOFT' 100, 'WONK' 1, 'wght' 700;
+}
+.now-list li small {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-style: normal;
+  color: var(--on-ink-3);
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+  font-variation-settings: normal;
+}
+
+/* ────────── §08 CONTACT ────────── */
+.contact {
+  padding: 120px 0 0;
+}
+.contact__title {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(72px, 14vw, 240px);
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+  color: var(--on-ink);
+  font-variation-settings: 'opsz' 144, 'SOFT' 80, 'WONK' 1, 'wght' 700;
+  margin-bottom: 64px;
+}
+.contact__title em {
+  color: var(--lime);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1, 'wght' 200;
+  font-weight: 200;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-bottom: 80px;
+}
+@media (min-width: 900px) {
+  .contact-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 60px; align-items: start; }
+}
+.contact-col h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-ink-3);
+  margin-bottom: 16px;
+}
+.contact-col a, .contact-col p {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--on-ink);
+  line-height: 1.35;
+  display: block;
+  font-variation-settings: 'opsz' 36, 'SOFT' 80, 'WONK' 1, 'wght' 600;
+  transition: color .25s;
+}
+.contact-col a + a { margin-top: 6px; }
+.contact-col a:hover { color: var(--lime); }
+.contact-col .small {
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--on-ink-2);
+  margin-top: 12px;
+  line-height: 1.5;
+  font-variation-settings: normal;
+}
+.contact-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 36px;
+  background: var(--lime);
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: background .25s, color .25s, gap .25s;
+}
+.contact-cta:hover { background: var(--bone); color: var(--ink); gap: 24px; }
+.contact-cta .arr {
+  font-family: 'Fraunces', serif; font-style: italic; font-size: 26px;
+  font-variation-settings: 'opsz' 36, 'SOFT' 80, 'WONK' 1, 'wght' 400;
+}
+
+/* ────────── COLOPHON ────────── */
+.colophon {
+  margin-top: 120px;
+  padding: 48px 0;
+  border-top: 1px solid var(--rule-on-ink);
+}
+.colophon__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+@media (min-width: 760px) {
+  .colophon__grid { grid-template-columns: 1.6fr 1fr 1fr; gap: 60px; }
+}
+.colophon__title {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 200;
+  font-size: 28px;
+  color: var(--on-ink);
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+  font-variation-settings: 'opsz' 36, 'SOFT' 100, 'WONK' 1, 'wght' 200;
+}
+.colophon__body {
+  font-size: 13px;
+  color: var(--on-ink-2);
+  line-height: 1.6;
+  max-width: 480px;
+}
+.colophon__body em {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--lime);
+  font-variation-settings: 'opsz' 36, 'SOFT' 100, 'WONK' 1, 'wght' 500;
+}
+.colophon h5 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--on-ink-3);
+  margin-bottom: 12px;
+}
+.colophon ul { list-style: none; font-size: 13px; line-height: 1.7; color: var(--on-ink-2); }
+.colophon ul li b { color: var(--on-ink); font-weight: 500; }
+
+.colophon__foot {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule-on-ink);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-ink-3);
+}
+@media (min-width: 720px) {
+  .colophon__foot { grid-template-columns: 1fr 1fr 1fr; }
+  .colophon__foot .center { text-align: center; }
+  .colophon__foot .right  { text-align: right; }
+}
+
+/* ── reveal on scroll ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── divider strip between sections (full-bleed typography) ── */
+.divider {
+  background: var(--ink);
+  color: var(--on-ink);
+  padding: 20px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--rule-on-ink);
+  border-bottom: 1px solid var(--rule-on-ink);
+}
+.divider__track {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  white-space: nowrap;
+  animation: scroll-left 70s linear infinite;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 200;
+  font-size: clamp(36px, 6vw, 80px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1, 'wght' 200;
+  letter-spacing: -0.02em;
+}
+.divider__track > span { display: inline-flex; align-items: center; gap: 60px; }
+.divider__track .dot {
+  width: 14px; height: 14px;
+  background: var(--lime);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+@keyframes scroll-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── scroll progress strip ── */
+.scrollbar {
+  position: fixed;
+  left: 0; top: 0;
+  height: 2px;
+  width: 0;
+  background: var(--lime);
+  z-index: 300;
+  transition: width .1s linear;
+}
+
+/* ── side rail ── */
+.rail {
+  position: fixed;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  align-items: flex-end;
+  mix-blend-mode: difference;
+  color: var(--bone);
+}
+@media (min-width: 1320px) { .rail { display: flex; } }
+.rail a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  height: 16px;
+  width: 22px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: width .35s cubic-bezier(.2,.7,.2,1);
+  opacity: 0.55;
+}
+.rail a .lab-num {
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity .25s, transform .35s cubic-bezier(.2,.7,.2,1);
+  order: 0;
+}
+.rail a .lab-tick {
+  display: block;
+  width: 18px; height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+  order: 1;
+  transition: width .35s cubic-bezier(.2,.7,.2,1), height .25s, background .25s;
+}
+.rail a.is-active {
+  width: 150px;
+  opacity: 1;
+}
+.rail a.is-active .lab-num { opacity: 1; transform: translateX(0); }
+.rail a.is-active .lab-tick { width: 22px; height: 2px; background: var(--lime); }
+.rail:hover a { width: 180px; opacity: 0.9; }
+.rail:hover a .lab-num { opacity: 1; transform: translateX(0); }
+.rail a:hover { opacity: 1; }
+
+/* mobile cover refinements */
+@media (max-width: 720px) {
+  .cover__name h1 { font-size: clamp(60px, 22vw, 140px); }
+  .cover__head h2 { font-size: 16px; }
+  .sect { padding: 70px 0; }
+  .running { padding: 16px 0; font-size: 9px; }
+}
+
+/* fix wrap on small screens for foot */
+@media (max-width: 800px) {
+  .cover__foot { grid-template-columns: 1fr; gap: 24px; }
+  .cover__foot .barcode-wrap { order: 3; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="scrollbar" id="scrollbar" aria-hidden="true"></div>
+
+<!-- ─── RUNNING BAR ─── -->
+<header class="bar" role="banner">
+  <div class="bar__inner">
+    <div class="bar__left">
+      <span class="bar__pulse"></span>
+      <span class="bar__brand">Anthology &nbsp;·&nbsp; Issue 001</span>
+    </div>
+    <div class="bar__center mono-mini">M. van Hylckama Vlieg</div>
+    <div class="bar__right">
+      <span class="mono-mini">Portland, OR</span>
+      <span class="bar__sep" aria-hidden="true"></span>
+      <span class="mono-mini" id="local-time">--:--:--</span>
+      <span class="bar__sep" aria-hidden="true"></span>
+      <span class="mono-mini" style="color: var(--lime-deep);">OPEN TO ROLES</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─── SIDE RAIL ─── -->
+<nav class="rail" aria-label="Section navigation">
+  <a href="#cover"        data-rail="cover"        class="is-active"><span class="lab-num">001 · cover</span><span class="lab-tick"></span></a>
+  <a href="#manifesto"    data-rail="manifesto"><span class="lab-num">002 · manifesto</span><span class="lab-tick"></span></a>
+  <a href="#record"       data-rail="record"><span class="lab-num">003 · record</span><span class="lab-tick"></span></a>
+  <a href="#capabilities" data-rail="capabilities"><span class="lab-num">004 · capabilities</span><span class="lab-tick"></span></a>
+  <a href="#lab"          data-rail="lab"><span class="lab-num">005 · lab</span><span class="lab-tick"></span></a>
+  <a href="#metrics"      data-rail="metrics"><span class="lab-num">006 · metrics</span><span class="lab-tick"></span></a>
+  <a href="#process"      data-rail="process"><span class="lab-num">007 · method</span><span class="lab-tick"></span></a>
+  <a href="#now"          data-rail="now"><span class="lab-num">008 · now</span><span class="lab-tick"></span></a>
+  <a href="#contact"      data-rail="contact"><span class="lab-num">009 · contact</span><span class="lab-tick"></span></a>
+</nav>
+
+<!-- ──────────────────────────────────────────────────────────
+     §000 COVER — magazine cover treatment
+     ────────────────────────────────────────────────────────── -->
+<section class="cover" id="cover">
+  <div class="wrap">
+
+    <div class="cover__head">
+      <h2>The <em>Anthology</em></h2>
+      <h2 class="col-center">A one-person periodical of work</h2>
+      <h2 class="col-right">Issue <em>001</em> · May 2026</h2>
+    </div>
+
+    <!-- cover lines: top -->
+    <div class="cover__lines">
+      <a href="#manifesto" class="cover__line">
+        On <em>twenty years</em> of finding the smallest honest version of the problem — and shipping it.
+        <span class="cover__line-tag">§002 · the manifesto</span>
+      </a>
+      <div class="cover__right">
+        <a href="#record" class="cover__line">
+          The <em>record</em>: Google, Yahoo, Walmart Labs, Kohl&rsquo;s, Endemol — plus a lab that doesn&rsquo;t sleep.
+          <span class="cover__line-tag">§003 · career</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── the giant name ── -->
+    <div class="cover__name">
+      <h1 id="coverName" aria-label="Marco van Hylckama Vlieg">
+        <span class="name-row"><span data-text="Marco"></span></span>
+        <span class="name-row name-row--small"><span data-text="van Hylckama Vlieg."></span></span>
+      </h1>
+    </div>
+
+    <!-- cover lines: bottom -->
+    <div class="cover__lines">
+      <a href="#lab" class="cover__line">
+        Eighteen <em>artifacts</em> that actually exist — AI tools, design utilities, music, video, arcade games.
+        <span class="cover__line-tag">§005 · the lab</span>
+      </a>
+      <div class="cover__right">
+        <a href="#capabilities" class="cover__line">
+          What I&rsquo;m <em>hired</em> for: product design, design engineering, AI-native systems, 0→1 incubation.
+          <span class="cover__line-tag">§004 · capabilities</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- foot -->
+    <div class="cover__foot">
+      <div class="cover__cta">
+        <a class="tab tab--lime" href="#lab">See the work <span class="arrow">↗</span></a>
+        <a class="tab" href="#contact">Reach out <span class="arrow">↗</span></a>
+        <a class="tab" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
+      </div>
+      <div class="cover__foot-text">
+        <b>SUBJECT</b> Product designer / AI-native builder<br/>
+        <b>EDITION</b> One-person anthology · Vol. I<br/>
+        <b>PRINTED IN</b> Portland, Oregon · 2026
+      </div>
+      <div class="barcode-wrap">
+        <div class="barcode" id="barcode" aria-hidden="true"></div>
+        <div class="barcode__label">ISSN 2026-001 · MVHV</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── divider ─── -->
+<div class="divider" aria-hidden="true">
+  <div class="divider__track">
+    <span>Product&nbsp;design <span class="dot"></span> Design&nbsp;engineering <span class="dot"></span> AI-native&nbsp;systems <span class="dot"></span> 0&nbsp;→&nbsp;1&nbsp;incubation <span class="dot"></span> Enterprise&nbsp;UX <span class="dot"></span> Prototyping <span class="dot"></span> Internal&nbsp;AI&nbsp;tooling <span class="dot"></span></span>
+    <span>Product&nbsp;design <span class="dot"></span> Design&nbsp;engineering <span class="dot"></span> AI-native&nbsp;systems <span class="dot"></span> 0&nbsp;→&nbsp;1&nbsp;incubation <span class="dot"></span> Enterprise&nbsp;UX <span class="dot"></span> Prototyping <span class="dot"></span> Internal&nbsp;AI&nbsp;tooling <span class="dot"></span></span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────────────────
+     §002 MANIFESTO (ink page)
+     ────────────────────────────────────────────────────────── -->
+<section class="sect sect--ink ink" id="manifesto">
+  <div class="wrap">
+    <div class="running">
+      <div>M. van Hylckama Vlieg <em>· Anthology</em></div>
+      <div class="running__center">§ 002 — Manifesto</div>
+      <div class="running__right">pg. 002</div>
+    </div>
+
+    <div class="sect__head reveal" style="padding-top:80px;">
+      <div class="sect__num">002<small>The manifesto</small></div>
+      <h2 class="sect__title">A short, <em>opinionated</em> position before the work begins.</h2>
+      <p class="sect__lede">Why this practice. Why this way. Why now. Read once, then go look at what got built.</p>
+    </div>
+
+    <div class="manifesto reveal">
+      <div class="manifesto__cap">
+        “
+        <span>opening statement</span>
+      </div>
+      <div class="manifesto__body">
+        <p>
+          I design products at the seam where intent becomes interface — where a half-formed idea has to choose what kind of <em>system</em> it wants to become. The interesting decisions live there: pacing, posture, what shows up first, what stays hidden, what the model is allowed to assume.
+        </p>
+        <p class="pull">
+          AI didn&rsquo;t shrink the design problem. It made the problem about <em>judgment</em>, not output. The work is choosing what to build and how it should behave in someone&rsquo;s actual life — then shipping it before the moment passes.
+        </p>
+        <p>
+          I&rsquo;m strongest where strategy, design, interaction behavior, and the realities of implementation collide. I write the prototype, ship the build, and stay around for the part where it has to be good for real users. The portfolio is the proof.
+        </p>
+
+        <div class="manifesto__sig">
+          M. van Hylckama Vlieg
+          <small>Portland, Oregon · May 2026</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     §003 RECORD — horizontal timeline (bone page)
+     ────────────────────────────────────────────────────────── -->
+<section class="sect" id="record">
+  <div class="wrap">
+    <div class="running">
+      <div>M. van Hylckama Vlieg <em>· Anthology</em></div>
+      <div class="running__center">§ 003 — The Record</div>
+      <div class="running__right">pg. 003</div>
+    </div>
+
+    <div class="sect__head reveal" style="padding-top:80px;">
+      <div class="sect__num">003<small>The record</small></div>
+      <h2 class="sect__title">Six chapters, mostly <em>uncool</em> companies, all the right rooms.</h2>
+      <p class="sect__lede">Twenty years across consumer scale, enterprise complexity, and quiet labs where the right call wasn&rsquo;t obvious.</p>
+    </div>
+
+    <p class="timeline__hint reveal" style="padding: 0 var(--gutter);">Drag the timeline →</p>
+  </div>
+
+  <div class="timeline reveal" id="timeline">
+    <div class="timeline__inner">
+      <div class="timeline__line"></div>
+
+      <article class="tcard">
+        <div class="tcard__year">1998 — 2005</div>
+        <h3 class="tcard__company">Endemol</h3>
+        <p class="tcard__role"><b>UX &amp; Engineering Lead.</b> Multilingual content systems and large-scale web platforms across an international entertainment portfolio. Where the technical depth that still informs current judgment got built.</p>
+        <span class="tcard__tag">entertainment</span>
+      </article>
+
+      <article class="tcard">
+        <div class="tcard__year">2005 — 2013</div>
+        <h3 class="tcard__company">Yahoo!</h3>
+        <p class="tcard__role"><b>Director of UX Prototyping &amp; Senior UX Manager.</b> Led global prototyping teams across offices and product lines. Shaped rebrand and personalization work, built scalable design processes, mentored senior designers and prototypers.</p>
+        <span class="tcard__tag">consumer · leadership</span>
+      </article>
+
+      <article class="tcard">
+        <div class="tcard__year">2013 — 2017</div>
+        <h3 class="tcard__company">Google</h3>
+        <p class="tcard__role"><b>Senior UX Engineer / Prototyper.</b> Built high-fidelity prototypes for Google Cloud AI, Google Assistant, and Android. Bridged design and engineering with prototypes that accelerated research, alignment, and decisions.</p>
+        <span class="tcard__tag">ai · cloud</span>
+      </article>
+
+      <article class="tcard">
+        <div class="tcard__year">2017 — 2021</div>
+        <h3 class="tcard__company">Walmart Labs</h3>
+        <p class="tcard__role"><b>Principal Product Designer / Design Technologist.</b> Mobile, voice, and personalization during Walmart&rsquo;s digital transformation. Translated complex recommendation systems into interfaces that didn&rsquo;t require explanation.</p>
+        <span class="tcard__tag">retail · ml</span>
+      </article>
+
+      <article class="tcard">
+        <div class="tcard__year">2021 — now</div>
+        <h3 class="tcard__company">Kohl&rsquo;s</h3>
+        <p class="tcard__role"><b>Senior Product Designer &amp; Generative AI Specialist.</b> Led UX across cart, checkout, wallet, account, and in-store self-checkout. Drove AI tooling, prompt libraries, and education across the design org.</p>
+        <span class="tcard__tag">e-comm · ai</span>
+      </article>
+
+      <article class="tcard">
+        <div class="tcard__year">always</div>
+        <h3 class="tcard__company">AI-Created</h3>
+        <p class="tcard__role"><b>Independent product lab.</b> The place where ideas get tested in public. Shipped AI tools, design utilities, music, video, and arcade games — all real software, all built end-to-end. Proof that the practice is current.</p>
+        <span class="tcard__tag">lab · solo</span>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     §004 CAPABILITIES (ink page)
+     ────────────────────────────────────────────────────────── -->
+<section class="sect sect--ink ink" id="capabilities">
+  <div class="wrap">
+    <div class="running">
+      <div>M. van Hylckama Vlieg <em>· Anthology</em></div>
+      <div class="running__center">§ 004 — Capabilities</div>
+      <div class="running__right">pg. 004</div>
+    </div>
+
+    <div class="sect__head reveal" style="padding-top:80px;">
+      <div class="sect__num">004<small>What I&rsquo;m hired for</small></div>
+      <h2 class="sect__title">Six modes of work. They <em>overlap.</em></h2>
+      <p class="sect__lede">Most interesting projects use four of these at once. The titles vary by company; the practice doesn&rsquo;t.</p>
+    </div>
+  </div>
+
+  <div class="wrap reveal">
+    <div class="cap-grid">
+
+      <article class="cap">
+        <div class="cap__num">01</div>
+        <h3 class="cap__title">AI-native product design</h3>
+        <p class="cap__body">Designing systems where the model <em>is</em> the interaction, not a chat panel bolted onto a SaaS shell. Voice, agents, ambient assistance, model-aware interfaces.</p>
+        <div class="cap__chips">
+          <span class="cap__chip">Voice UX</span>
+          <span class="cap__chip">Agent UI</span>
+          <span class="cap__chip">Prompt systems</span>
+        </div>
+      </article>
+
+      <article class="cap">
+        <div class="cap__num">02</div>
+        <h3 class="cap__title">Design engineering</h3>
+        <p class="cap__body">Production-quality prototypes that behave like real software because they <em>are</em> real software. Built end-to-end by one person, often before the team is convinced.</p>
+        <div class="cap__chips">
+          <span class="cap__chip">Next.js</span>
+          <span class="cap__chip">TypeScript</span>
+          <span class="cap__chip">Tailwind</span>
+          <span class="cap__chip">Vercel</span>
+        </div>
+      </article>
+
+      <article class="cap">
+        <div class="cap__num">03</div>
+        <h3 class="cap__title">0 → 1 incubation</h3>
+        <p class="cap__body">Taking an ambiguous brief through research, framing, design, prototype, and shipped product. Comfortable carrying the weight when there <em>isn&rsquo;t</em> a roadmap yet.</p>
+        <div class="cap__chips">
+          <span class="cap__chip">Strategy</span>
+          <span class="cap__chip">Research</span>
+          <span class="cap__chip">Prototype</span>
+        </div>
+      </article>
+
+      <article class="cap">
+        <div class="cap__num">04</div>
+        <h3 class="cap__title">Enterprise UX modernization</h3>
+        <p class="cap__body">Untangling legacy workflows in cart, checkout, account, internal tooling — and replacing them with systems people actually <em>want</em> to use. Years of this, at scale.</p>
+        <div class="cap__chips">
+          <span class="cap__chip">E-commerce</span>
+          <span class="cap__chip">Internal tools</span>
+          <span class="cap__chip">A11y</span>
+        </div>
+      </article>
+
+      <article class="cap">
+        <div class="cap__num">05</div>
+        <h3 class="cap__title">Internal AI tooling</h3>
+        <p class="cap__body">Custom copilots, prompt libraries, synthetic research environments, and workflow accelerators built for design and product orgs. <em>Used</em> by real teams.</p>
+        <div class="cap__chips">
+          <span class="cap__chip">LLM pipelines</span>
+          <span class="cap__chip">Workflows</span>
+          <span class="cap__chip">Enablement</span>
+        </div>
+      </article>
+
+      <article class="cap">
+        <div class="cap__num">06</div>
+        <h3 class="cap__title">Leadership &amp; enablement</h3>
+        <p class="cap__body">Built and led prototyping teams at Yahoo. Now drive AI adoption inside a design org through teaching, tooling, and example. Comfortable as <em>IC, lead, or director.</em></p>
+        <div class="cap__chips">
+          <span class="cap__chip">Mentorship</span>
+          <span class="cap__chip">AI education</span>
+          <span class="cap__chip">Hiring</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     §005 LAB (bone page)
+     ────────────────────────────────────────────────────────── -->
+<section class="sect" id="lab">
+  <div class="wrap">
+    <div class="running">
+      <div>M. van Hylckama Vlieg <em>· Anthology</em></div>
+      <div class="running__center">§ 005 — Lab</div>
+      <div class="running__right">pg. 005</div>
+    </div>
+
+    <div class="sect__head reveal" style="padding-top:80px;">
+      <div class="sect__num">005<small>Lab artifacts</small></div>
+      <h2 class="sect__title">Eighteen things that <em>actually exist.</em></h2>
+      <p class="sect__lede">Independent products shipped through AI-Created. Real software, end-to-end. The proof that the practice is current.</p>
+    </div>
+
+    <div class="lab-grid reveal">
+
+      <a class="lab is-feature" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--ai">● AI tool · live</span>
+        <h3 class="lab__title">My AI Diary</h3>
+        <p class="lab__tag">Voice-first journaling that turns raw speech into a written entry that still sounds like you. Whisper transcription, semantic search, weekly AI summaries, zero-knowledge encryption. Local-first PWA.</p>
+        <div class="lab__stack">
+          <span>Next.js</span><span>OpenAI</span><span>Whisper</span><span>IndexedDB</span><span>Web Crypto</span>
+        </div>
+      </a>
+
+      <a class="lab is-mid" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--ai">● AI tool · live</span>
+        <h3 class="lab__title">Human, Actually</h3>
+        <p class="lab__tag">Tailor your resume to the job — without sounding like a robot wrote it.</p>
+        <div class="lab__stack"><span>LLM</span><span>NLP</span><span>UX</span></div>
+      </a>
+
+      <a class="lab is-narrow" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--ai">● AI tool · live</span>
+        <h3 class="lab__title">WatchGPT</h3>
+        <p class="lab__tag">Realtime ChatGPT voice, on your wrist.</p>
+        <div class="lab__stack"><span>watchOS</span><span>Realtime API</span></div>
+      </a>
+
+      <a class="lab is-narrow" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--ai">● AI tool · live</span>
+        <h3 class="lab__title">AI Usage</h3>
+        <p class="lab__tag">Claude Code + Codex usage on your Mac desktop. A menubar utility for devs.</p>
+        <div class="lab__stack"><span>macOS</span><span>Swift</span><span>menubar</span></div>
+      </a>
+
+      <a class="lab is-narrow" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--ai">● AI tool · live</span>
+        <h3 class="lab__title">Calorie Counter</h3>
+        <p class="lab__tag">The most frictionless food intake logger ever built. Speak, photograph, done.</p>
+        <div class="lab__stack"><span>Vision</span><span>LLM</span><span>PWA</span></div>
+      </a>
+
+      <a class="lab is-mid" href="https://ai-created.com/games" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--game">● Game · live</span>
+        <h3 class="lab__title">Vectronix</h3>
+        <p class="lab__tag">Hardcore arcade space combat. No mercy. No filler. Built as proof of interaction design depth and systems thinking.</p>
+        <div class="lab__stack"><span>Canvas</span><span>Web Audio</span><span>Vector</span></div>
+      </a>
+
+      <a class="lab is-mid" href="https://ai-created.com/games" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--game">● Game · live</span>
+        <h3 class="lab__title">Radial Drift</h3>
+        <p class="lab__tag">One finger. One mistake ends the run. A minimal arcade study in tension and feedback loops.</p>
+        <div class="lab__stack"><span>WebGL</span><span>Touch</span><span>Haptics</span></div>
+      </a>
+
+      <a class="lab is-third" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--exp">● Experiment · live</span>
+        <h3 class="lab__title">Audio Visualizer Suite</h3>
+        <p class="lab__tag">Captivating video visualizations of your music. Render-quality output, hand-tuned aesthetics.</p>
+        <div class="lab__stack"><span>WebGL</span><span>FFT</span><span>FFmpeg</span></div>
+      </a>
+
+      <a class="lab is-third" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--exp">● Experiment · live</span>
+        <h3 class="lab__title">Color Clock</h3>
+        <p class="lab__tag">A 1991 clock design, brought to life. A small love letter to vintage interaction craft.</p>
+        <div class="lab__stack"><span>CSS</span><span>Type</span></div>
+      </a>
+
+      <a class="lab is-third" href="https://ai-created.com/products" target="_blank" rel="noopener">
+        <span class="lab__arrow">↗</span>
+        <span class="lab__pill lab__pill--exp">● Experiment · live</span>
+        <h3 class="lab__title">Jumbotron Simulator</h3>
+        <p class="lab__tag">See your name in lights at a major sporting event. Pixel-faithful arena LED simulation.</p>
+        <div class="lab__stack"><span>Canvas</span><span>WebGL</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     §006 METRICS (bone, compact)
+     ────────────────────────────────────────────────────────── -->
+<section class="sect" id="metrics" style="padding-top:0;">
+  <div class="wrap">
+    <div class="running">
+      <div>M. van Hylckama Vlieg <em>· Anthology</em></div>
+      <div class="running__center">§ 006 — By the numbers</div>
+      <div class="running__right">pg. 006</div>
+    </div>
+
+    <div class="sect__head reveal" style="padding-top:80px; margin-bottom: 32px;">
+      <div class="sect__num">006<small>Vector</small></div>
+      <h2 class="sect__title">By the <em>numbers.</em></h2>
+      <p class="sect__lede">Numbers don&rsquo;t lie. They also don&rsquo;t tell the whole story. Here are a few honest ones.</p>
+    </div>
+
+    <div class="metrics reveal" style="border-top:1px solid var(--rule); border-bottom:1px solid var(--rule);">
+      <div class="metric">
+        <div class="metric__num" data-count="20"><span>20</span><small>+ yrs</small></div>
+        <div class="metric__label">in the practice</div>
+      </div>
+      <div class="metric">
+        <div class="metric__num" data-count="5"><span>5</span><small>cos</small></div>
+        <div class="metric__label">Google · Yahoo · Walmart · Kohl&rsquo;s · Endemol</div>
+      </div>
+      <div class="metric">
+        <div class="metric__num" data-count="18"><span>18</span><small>shipped</small></div>
+        <div class="metric__label">independent products &amp; experiments</div>
+      </div>
+      <div class="metric">
+        <div class="metric__num" data-count="4"><span>4</span><small>lang.</small></div>
+        <div class="metric__label">Dutch · English · German · Spanish</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     §007 METHOD (bone)
+     ────────────────────────────────────────────────────────── -->
+<section class="sect" id="process">
+  <div class="wrap">
+    <div class="running">
+      <div>M. van Hylckama Vlieg <em>· Anthology</em></div>
+      <div class="running__center">§ 007 — Method</div>
+      <div class="running__right">pg. 007</div>
+    </div>
+
+    <div class="sect__head reveal" style="padding-top:80px;">
+      <div class="sect__num">007<small>Method</small></div>
+      <h2 class="sect__title">How the work <em>actually moves.</em></h2>
+      <p class="sect__lede">No process slides. No frameworks for sale. The four moves that show up in every project that ships.</p>
+    </div>
+
+    <div class="process reveal">
+      <div class="proc">
+        <div class="proc__step">01</div>
+        <h3 class="proc__title">Frame</h3>
+        <p class="proc__body">Find the smallest, most honest version of the problem. Strip the brief until what remains is real.</p>
+      </div>
+      <div class="proc">
+        <div class="proc__step">02</div>
+        <h3 class="proc__title">Prototype</h3>
+        <p class="proc__body">Skip the slide. Build the smallest behaving thing. Code, not comp. The product tells you what it wants to be.</p>
+      </div>
+      <div class="proc">
+        <div class="proc__step">03</div>
+        <h3 class="proc__title">Pressure-test</h3>
+        <p class="proc__body">Real users, real models, real edge cases. Watch what breaks. Decide what&rsquo;s worth keeping.</p>
+      </div>
+      <div class="proc">
+        <div class="proc__step">04</div>
+        <h3 class="proc__title">Ship</h3>
+        <p class="proc__body">Stay around for the boring part. The 1.0 only matters if it stays in the build after launch.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     §008 NOW (ink)
+     ────────────────────────────────────────────────────────── -->
+<section class="sect sect--ink ink" id="now">
+  <div class="wrap">
+    <div class="running">
+      <div>M. van Hylckama Vlieg <em>· Anthology</em></div>
+      <div class="running__center">§ 008 — Now</div>
+      <div class="running__right">pg. 008</div>
+    </div>
+
+    <div class="sect__head reveal" style="padding-top:80px;">
+      <div class="sect__num">008<small>Currently</small></div>
+      <h2 class="sect__title">What I&rsquo;m <em>actually doing</em> this week.</h2>
+      <p class="sect__lede">A live page. Updated by hand because that&rsquo;s how you can tell it&rsquo;s real.</p>
+    </div>
+
+    <div class="now reveal">
+      <div>
+        <h3>Currently</h3>
+        <ul class="now-list">
+          <li class="is-live"><span>Leading UX &amp; AI enablement at <em>Kohl&rsquo;s.</em><small>Senior product designer / generative AI specialist</small></span></li>
+          <li class="is-live"><span>Shipping new artifacts through <em>AI-Created</em> most weeks.<small>Independent product lab · solo</small></span></li>
+          <li class="is-live"><span>Open to <em>senior IC, lead, and director</em> conversations.<small>Product design · design engineering · AI</small></span></li>
+          <li><span>Speaking at <em>Imagine AI Live</em> as a founding contributor.<small>Founding member · speaker</small></span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Tools in the rotation</h3>
+        <ul class="now-list">
+          <li><span><em>Figma · Figma Make · Lovable</em><small>Design surface · prototyping</small></span></li>
+          <li><span><em>Next.js · TypeScript · Tailwind · Vercel</em><small>Production stack</small></span></li>
+          <li><span><em>ChatGPT · Claude · Gemini · Codex</em><small>Model fleet for product work</small></span></li>
+          <li><span><em>Midjourney · Runway · ElevenLabs · Suno</em><small>Media generation</small></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     §009 CONTACT (ink)
+     ────────────────────────────────────────────────────────── -->
+<section class="sect sect--ink ink" id="contact" style="padding-bottom:0;">
+  <div class="wrap">
+    <div class="running">
+      <div>M. van Hylckama Vlieg <em>· Anthology</em></div>
+      <div class="running__center">§ 009 — Contact</div>
+      <div class="running__right">pg. 009</div>
+    </div>
+
+    <div class="contact reveal">
+      <h2 class="contact__title">
+        Let&rsquo;s build<br/>
+        <em>something honest.</em>
+      </h2>
+
+      <div class="contact-grid">
+        <div class="contact-col">
+          <h4>Direct</h4>
+          <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+          <p class="small">The fastest path. Tell me what you&rsquo;re building, what&rsquo;s ambiguous about it, what timeline you&rsquo;re on.</p>
+        </div>
+        <div class="contact-col">
+          <h4>Social</h4>
+          <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">X / @AIandDesign</a>
+          <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a>
+        </div>
+        <div class="contact-col">
+          <h4>The Lab</h4>
+          <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+          <p class="small">Independent product lab. Twenty&#8209;plus real projects. The proof.</p>
+        </div>
+      </div>
+
+      <a href="mailto:marcovhv@gmail.com?subject=Let%27s%20talk" class="contact-cta">
+        Start the conversation
+        <span class="arr">↗</span>
+      </a>
+    </div>
+
+    <!-- ── colophon ── -->
+    <section class="colophon reveal" aria-labelledby="colophon-title">
+      <div class="colophon__grid">
+        <div>
+          <h5>Colophon</h5>
+          <h2 class="colophon__title" id="colophon-title">A few notes on how this document was made.</h2>
+          <p class="colophon__body">
+            Hand-set, single HTML file, no frameworks. Typography is <em>Fraunces</em> (variable, with <em>SOFT</em>, <em>WONK</em>, <em>opsz</em>, and <em>wght</em> axes wired up), <em>Space Grotesk</em>, and <em>JetBrains Mono</em>. The headline letters morph weight and wonk based on cursor proximity — try moving across the cover. Built by hand in Portland in May 2026 as a working draft of an in-progress design language. If something feels slightly off, it&rsquo;s probably intentional.
+          </p>
+        </div>
+        <div>
+          <h5>Specimen</h5>
+          <ul>
+            <li><b>Display</b><br/>Fraunces · variable</li>
+            <li><b>Body</b><br/>Space Grotesk · 400&nbsp;600</li>
+            <li><b>Mono</b><br/>JetBrains Mono</li>
+            <li><b>Palette</b><br/>Bone · Ink · Lime · Hot</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Stack</h5>
+          <ul>
+            <li><b>HTML</b><br/>One file · 1500 lines</li>
+            <li><b>CSS</b><br/>Variables · grid</li>
+            <li><b>JS</b><br/>Vanilla · no deps</li>
+            <li><b>Hosting</b><br/>Any static host</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="colophon__foot">
+        <div>© 2026 M. van Hylckama Vlieg · Issue 001 · all rights reserved</div>
+        <div class="center">Set in Fraunces, Space Grotesk &amp; JetBrains Mono</div>
+        <div class="right">Printed in Portland · OR · USA</div>
+      </div>
+    </section>
+
+  </div>
+</section>
+
+<script>
+/* ───────────────────────────────────────────────────────────────
+   Anthology / Issue 001 — interaction layer
+   ─────────────────────────────────────────────────────────────── */
+
+(function () {
+  'use strict';
+
+  /* ── live clock ── */
+  const clockEl = document.getElementById('local-time');
+  function tick() {
+    const now = new Date();
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      hour12: false,
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    if (clockEl) clockEl.textContent = fmt.format(now);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* ── scroll progress bar ── */
+  const sb = document.getElementById('scrollbar');
+  function onScroll() {
+    const doc = document.documentElement;
+    const total = doc.scrollHeight - doc.clientHeight;
+    const p = total > 0 ? (window.scrollY / total) * 100 : 0;
+    if (sb) sb.style.width = p + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ── reveal-on-scroll ── */
+  const reveals = document.querySelectorAll('.reveal');
+  const ro = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        ro.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  reveals.forEach(el => ro.observe(el));
+
+  /* ── ink-zone toggle (changes header bar styling over ink sections) ── */
+  const inkSections = document.querySelectorAll('.ink');
+  const inkObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && e.intersectionRatio > 0.15) {
+        document.documentElement.classList.add('is-ink-zone');
+      }
+    });
+    // recompute: any ink section currently >=15% visible?
+    let anyInk = false;
+    inkSections.forEach(s => {
+      const r = s.getBoundingClientRect();
+      const visible = Math.max(0, Math.min(r.bottom, innerHeight) - Math.max(r.top, 0));
+      if (visible / Math.min(innerHeight, r.height || 1) > 0.15) anyInk = true;
+    });
+    document.documentElement.classList.toggle('is-ink-zone', anyInk);
+  }, { threshold: [0, 0.15, 0.3, 0.5, 0.75, 1] });
+  inkSections.forEach(s => inkObs.observe(s));
+
+  /* ── side rail scrollspy ── */
+  const rails = document.querySelectorAll('.rail a[data-rail]');
+  const railTargets = Array.from(rails).map(a => ({
+    el: document.getElementById(a.dataset.rail),
+    link: a
+  })).filter(s => s.el);
+  function spy() {
+    const y = window.scrollY + window.innerHeight * 0.35;
+    let cur = railTargets[0];
+    for (const t of railTargets) {
+      if (t.el.offsetTop <= y) cur = t;
+    }
+    rails.forEach(a => a.classList.remove('is-active'));
+    if (cur) cur.link.classList.add('is-active');
+  }
+  window.addEventListener('scroll', spy, { passive: true });
+  spy();
+
+  /* ── BUILD HERO LETTERS as individual variable-font spans ── */
+  const nameEl = document.getElementById('coverName');
+  const letterSpans = [];
+  if (nameEl) {
+    const slots = nameEl.querySelectorAll('[data-text]');
+    slots.forEach((slot) => {
+      const text = slot.dataset.text;
+      slot.textContent = '';
+      // Build per-letter spans; preserve spaces
+      [...text].forEach((ch) => {
+        const s = document.createElement('span');
+        s.className = 'letter';
+        s.textContent = ch === ' ' ? ' ' : ch;
+        if (ch === '.') s.classList.add('acid');
+        slot.appendChild(s);
+        letterSpans.push(s);
+      });
+    });
+  }
+
+  /* ── variable-font reactive type: weight + wonk + soft on cursor proximity ── */
+  let mx = -1e4, my = -1e4;
+  let rafLetter = null;
+
+  function updateLetters() {
+    rafLetter = null;
+    if (!letterSpans.length) return;
+
+    // PHASE 1: batch read all positions first (avoids layout thrash)
+    const rects = new Array(letterSpans.length);
+    for (let i = 0; i < letterSpans.length; i++) {
+      rects[i] = letterSpans[i].getBoundingClientRect();
+    }
+
+    // PHASE 2: batch all writes
+    const radius = 280;
+    for (let i = 0; i < letterSpans.length; i++) {
+      const r = rects[i];
+      if (r.bottom < -100 || r.top > innerHeight + 100) continue;
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      const dist = Math.hypot(mx - cx, my - cy);
+      const influence = Math.max(0, 1 - dist / radius);
+
+      // rest = solid (500), near cursor = heavier + wonky + softer
+      const wght = 500 + influence * 400;       // 500..900
+      const wonk = influence;                    // 0..1
+      const soft = 30 + influence * 70;          // 30..100
+      letterSpans[i].style.fontVariationSettings =
+        `'opsz' 144, 'SOFT' ${soft.toFixed(0)}, 'WONK' ${wonk.toFixed(2)}, 'wght' ${wght.toFixed(0)}`;
+    }
+  }
+
+  function onMouseMove(e) {
+    mx = e.clientX; my = e.clientY;
+    if (!rafLetter) rafLetter = requestAnimationFrame(updateLetters);
+  }
+  function onMouseLeave() {
+    mx = -1e4; my = -1e4;
+    if (!rafLetter) rafLetter = requestAnimationFrame(updateLetters);
+  }
+
+  window.addEventListener('mousemove', onMouseMove, { passive: true });
+  window.addEventListener('mouseleave', onMouseLeave);
+
+  // initial pass with no cursor → restful state
+  requestAnimationFrame(updateLetters);
+
+  /* ── barcode ── */
+  const barcode = document.getElementById('barcode');
+  if (barcode) {
+    // deterministic pseudo-random pattern from a seed string
+    const seed = 'MVHV-ANTHOLOGY-2026';
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+    const rng = () => {
+      h = (h * 1103515245 + 12345) | 0;
+      return ((h >>> 16) & 0x7fff) / 0x7fff;
+    };
+    const widths = [1, 1, 2, 3];
+    const count = 60;
+    let html = '';
+    for (let i = 0; i < count; i++) {
+      const w = widths[Math.floor(rng() * widths.length)];
+      const op = 0.35 + rng() * 0.65;
+      html += `<i style="width:${w}px;opacity:${op.toFixed(2)};"></i>`;
+    }
+    barcode.innerHTML = html;
+  }
+
+  /* ── timeline: drag-to-scroll ── */
+  const tl = document.getElementById('timeline');
+  if (tl) {
+    let isDown = false, startX = 0, scrollStart = 0;
+    tl.addEventListener('pointerdown', (e) => {
+      isDown = true;
+      startX = e.clientX;
+      scrollStart = tl.scrollLeft;
+      tl.style.cursor = 'grabbing';
+    });
+    window.addEventListener('pointerup', () => {
+      isDown = false;
+      tl.style.cursor = '';
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      tl.scrollLeft = scrollStart - dx;
+    });
+    // shift+wheel translates to horizontal; default vertical wheel scrolls vertically (good)
+    tl.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        tl.scrollLeft += e.deltaY;
+        e.preventDefault();
+      }
+    }, { passive: false });
+  }
+
+  /* ── count-up metrics ── */
+  const metrics = document.querySelectorAll('.metric__num[data-count]');
+  const mo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseInt(el.dataset.count, 10);
+      const span = el.querySelector('span');
+      const dur = 1100;
+      const start = performance.now();
+      function step(now) {
+        const p = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        span.textContent = Math.floor(eased * target);
+        if (p < 1) requestAnimationFrame(step);
+        else span.textContent = target;
+      }
+      requestAnimationFrame(step);
+      mo.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  metrics.forEach(el => mo.observe(el));
+
+  /* ── easter egg ── */
+  let buf = '';
+  window.addEventListener('keydown', (e) => {
+    if (!e.key || e.key.length !== 1) return;
+    buf = (buf + e.key.toLowerCase()).slice(-4);
+    if (buf === 'mhvh') {
+      console.log('%c hello, you found the seam. ', 'background:#D2F23A;color:#0F1422;padding:6px 10px;font-family:JetBrains Mono;');
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

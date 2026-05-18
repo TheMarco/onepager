@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Six radical directions — an experiment in pushing AI to actually design</title>
+<meta name="description" content="Six radically different single-file portfolio designs for Marco van Hylckama Vlieg, made by pushing AI hard enough to produce genuinely original, non-conventional design work." />
+<meta name="theme-color" content="#F7F4EC" />
+<meta property="og:title" content="Six radical directions — an experiment in pushing AI to actually design" />
+<meta property="og:description" content="Six single-file portfolio designs, none of them generic. Built by refusing the first vibe-coded output and iterating until something interesting emerged." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   SHOWCASE INDEX — six radical directions
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --paper:    #F7F4EC;
+  --paper-2:  #EEE9DA;
+  --paper-3:  #E2DBC4;
+  --ink:      #0F0F12;
+  --ink-2:    #2C2C32;
+  --ink-3:    #5E5E66;
+  --ink-4:    #9A9A9F;
+  --rule:     #0F0F1220;
+  --rule-2:   #0F0F1240;
+  --hot:      #E62E5A;        /* signal */
+  --warm:     #C77E1A;        /* amber */
+  --cool:     #2E5BBD;        /* deep blue */
+  --gutter:   clamp(20px, 4.4vw, 64px);
+  --max:      1480px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.7;
+  mix-blend-mode: multiply;
+}
+
+::selection { background: var(--hot); color: var(--paper); }
+a { color: inherit; text-decoration: none; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+
+.f-serif { font-family: 'Fraunces', 'Times New Roman', serif; }
+.f-mono { font-family: 'JetBrains Mono', monospace; }
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.kicker em { font-style: normal; color: var(--hot); }
+
+/* ── top status bar ── */
+.topbar {
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+.topbar__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex; gap: 18px; align-items: center; flex-wrap: wrap;
+}
+.topbar b { color: var(--ink); font-weight: 700; letter-spacing: 0.08em; }
+.topbar__dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--hot);
+  box-shadow: 0 0 0 0 rgba(230,46,90,0.5);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(230,46,90,0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(230,46,90,0); }
+  100% { box-shadow: 0 0 0 0 rgba(230,46,90,0); }
+}
+.topbar__right { margin-left: auto; display: flex; gap: 12px; }
+.topbar__sep { color: var(--ink-4); }
+
+/* ───────────── HERO ───────────── */
+.hero {
+  padding: 80px 0 60px;
+  position: relative;
+}
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: end;
+}
+@media (min-width: 1080px) {
+  .hero__inner { grid-template-columns: 1.6fr 1fr; gap: 80px; }
+}
+.hero__title {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: clamp(56px, 9.2vw, 156px);
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  font-variation-settings: 'opsz' 144;
+}
+.hero__title em {
+  font-style: italic;
+  color: var(--hot);
+}
+.hero__title .small {
+  display: block;
+  font-size: 0.42em;
+  letter-spacing: -0.02em;
+  margin-top: 0.16em;
+  color: var(--ink-2);
+}
+
+.hero__meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+}
+.hero__meta dt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.hero__meta dd {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.hero__meta dd em {
+  font-style: italic;
+  font-family: 'Fraunces', serif;
+  color: var(--hot);
+  font-weight: 600;
+}
+
+/* ───────────── STATEMENT (the why) ───────────── */
+.statement {
+  padding: 60px 0 80px;
+  border-top: 1px solid var(--rule);
+  position: relative;
+}
+.statement__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+}
+@media (min-width: 1000px) {
+  .statement__grid { grid-template-columns: 220px 1fr 1fr; gap: 60px; }
+}
+.statement__lead {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(24px, 2.8vw, 36px);
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  font-variation-settings: 'opsz' 72;
+}
+.statement__lead em {
+  font-style: italic;
+  color: var(--hot);
+}
+.statement__body p {
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  margin-bottom: 18px;
+}
+.statement__body p em {
+  font-style: italic;
+  color: var(--ink);
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+}
+.statement__body p b {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* numbered findings */
+.findings {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin-top: 40px;
+}
+@media (min-width: 720px) {
+  .findings { grid-template-columns: repeat(3, 1fr); }
+}
+.finding {
+  background: var(--paper);
+  padding: 24px 26px;
+}
+.finding__num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--hot);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.finding h3 {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+.finding p {
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* ───────────── GALLERY — the six cards ───────────── */
+.gallery {
+  padding: 80px 0 60px;
+  border-top: 1px solid var(--rule);
+}
+.gallery__head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-bottom: 56px;
+}
+@media (min-width: 1000px) {
+  .gallery__head { grid-template-columns: 220px 1fr 1fr; gap: 60px; align-items: end; }
+}
+.gallery__title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 5vw, 72px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  font-variation-settings: 'opsz' 144;
+}
+.gallery__title em { font-style: italic; color: var(--hot); }
+.gallery__lede {
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 460px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+}
+@media (min-width: 760px)  { .cards { grid-template-columns: repeat(2, 1fr); gap: 32px; } }
+@media (min-width: 1200px) { .cards { grid-template-columns: repeat(3, 1fr); gap: 36px 32px; } }
+
+.card {
+  display: flex; flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  isolation: isolate;
+}
+.card__shot {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--paper-3);
+  border: 1px solid var(--rule-2);
+  overflow: hidden;
+  transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s;
+  box-shadow: 0 6px 0 -2px rgba(0,0,0,0.15);
+}
+.card:hover .card__shot {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.22), 0 4px 10px rgba(0,0,0,0.12);
+}
+.card__shot img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .6s cubic-bezier(.2,.7,.2,1);
+}
+.card:hover .card__shot img { transform: scale(1.03); }
+
+/* "open" tab in upper-right of card shot */
+.card__open {
+  position: absolute;
+  top: 12px; right: 12px;
+  z-index: 3;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  display: inline-flex; gap: 6px; align-items: center;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .25s, transform .25s;
+}
+.card:hover .card__open { opacity: 1; transform: translateY(0); }
+
+/* card body */
+.card__body {
+  padding-top: 18px;
+  display: flex; flex-direction: column;
+  gap: 4px;
+}
+.card__num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: flex; align-items: center; gap: 10px;
+}
+.card__num b {
+  color: var(--hot);
+  font-weight: 700;
+}
+.card__num::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule-2);
+  margin-left: 4px;
+}
+.card__title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 4px;
+  font-variation-settings: 'opsz' 96;
+}
+.card__title em { font-style: italic; color: var(--hot); }
+.card__sub {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+.card__specs {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule-2);
+}
+.card__specs span {
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.card__specs span + span::before {
+  content: '·';
+  color: var(--ink-4);
+  margin-right: 4px;
+}
+
+/* ───────────── PROMPTS section ───────────── */
+.prompts {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 100px 0 80px;
+  margin: 80px 0 0;
+}
+.prompts__head {
+  margin-bottom: 60px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+@media (min-width: 1000px) {
+  .prompts__head { grid-template-columns: 220px 1fr 1fr; gap: 60px; align-items: end; }
+}
+.prompts__title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.018em;
+}
+.prompts__title em { font-style: italic; color: var(--hot); }
+.prompts__lede {
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: #B7B0A0;
+  max-width: 480px;
+}
+
+.quotes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: rgba(247,244,236,0.12);
+  border: 1px solid rgba(247,244,236,0.12);
+}
+@media (min-width: 760px) { .quotes { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1080px) { .quotes { grid-template-columns: repeat(3, 1fr); } }
+.quote {
+  background: var(--ink);
+  padding: 26px 28px;
+}
+.quote__role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hot);
+  margin-bottom: 14px;
+}
+.quote__text {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--paper);
+}
+.quote__text::before { content: '“'; color: var(--hot); margin-right: 2px; }
+.quote__text::after  { content: '”'; color: var(--hot); margin-left: 2px; }
+
+/* ───────────── ABOUT / FOOT ───────────── */
+.about {
+  padding: 80px 0 40px;
+  border-top: 1px solid var(--rule);
+}
+.about__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+@media (min-width: 1000px) {
+  .about__grid { grid-template-columns: 1.4fr 1fr; gap: 80px; }
+}
+.about__lede {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  font-variation-settings: 'opsz' 72;
+}
+.about__lede em { font-style: italic; color: var(--hot); }
+.about__list dt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.about__list dd {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.about__list dd a {
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
+  transition: color .2s, border-color .2s;
+}
+.about__list dd a:hover { color: var(--hot); border-color: var(--hot); }
+
+/* footer */
+.foot {
+  padding: 28px 0;
+  border-top: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 720px) {
+  .foot { grid-template-columns: 1fr 1fr 1fr; }
+  .foot .c { text-align: center; }
+  .foot .r { text-align: right; }
+}
+.foot b { color: var(--ink); font-weight: 700; }
+
+/* reveal */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+
+<body>
+
+<!-- top status bar -->
+<div class="topbar">
+  <div class="topbar__inner">
+    <span class="topbar__dot" aria-hidden="true"></span>
+    <span><b>SIX RADICAL DIRECTIONS</b></span>
+    <span class="topbar__sep">·</span>
+    <span>an experiment in pushing AI to actually design</span>
+    <span class="topbar__right">
+      <span>edition <b>I</b></span>
+      <span class="topbar__sep">·</span>
+      <span id="ltime">--:--</span>
+      <span class="topbar__sep">·</span>
+      <span>portland, OR</span>
+    </span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────
+     HERO
+     ────────────────────────────────────── -->
+<section class="hero wrap">
+  <div class="hero__inner">
+
+    <h1 class="hero__title">
+      Six radical<br/>
+      <em>directions.</em>
+      <span class="small">One subject. Zero generic templates.</span>
+    </h1>
+
+    <dl class="hero__meta">
+      <div><dt>subject</dt><dd>Marco van Hylckama Vlieg</dd></div>
+      <div><dt>format</dt><dd>six single-page portfolios · <em>one HTML file each</em></dd></div>
+      <div><dt>tools</dt><dd>Claude Code &amp; one stubborn designer</dd></div>
+      <div><dt>frameworks used</dt><dd><em>zero.</em> hand-set CSS &amp; SVG</dd></div>
+      <div><dt>thesis</dt><dd>AI <em>can</em> design original work — if you refuse the first answer</dd></div>
+    </dl>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────
+     STATEMENT — the why
+     ────────────────────────────────────── -->
+<section class="statement wrap">
+  <div class="statement__grid">
+
+    <div class="kicker">§ 001 / the <em>thesis</em></div>
+
+    <p class="statement__lead">
+      The default complaint about AI&#8209;assisted design is that it produces <em>generic</em>, <em>vibe&#8209;coded</em>, Tailwind&#8209;flavoured slop. That&rsquo;s true — <em>if</em> you ask for one shot and accept it.
+    </p>
+
+    <div class="statement__body">
+      <p>
+        This page collects <b>six radically different</b> one-page portfolio designs for the same subject. They were made in a single working session by asking an AI to produce <em>genuinely original, non&#8209;conventional</em> work — and refusing every answer that read as derivative.
+      </p>
+      <p>
+        Each one is hand&#8209;set in a <b>single HTML file</b>. No frameworks, no component libraries, no design system. Just CSS, SVG, vanilla JavaScript, and a real opinion behind every typographic choice.
+      </p>
+      <p>
+        The point isn&rsquo;t that AI replaces a designer. The point is that <em>good design taste</em> — refusing the obvious answer, naming what feels generic, knowing when to push for the weirder option — turns a tool that produces template output into one that produces work worth looking at.
+      </p>
+    </div>
+  </div>
+
+  <div class="findings">
+    <div class="finding">
+      <div class="finding__num">finding 01</div>
+      <h3>The first answer is always the average answer.</h3>
+      <p>Every initial output landed near the median portfolio aesthetic. The good work only began when that draft was rejected outright.</p>
+    </div>
+    <div class="finding">
+      <div class="finding__num">finding 02</div>
+      <h3>Specificity unlocks originality.</h3>
+      <p>“Make it cool” returns mush. “A working terminal where commands actually run” or “a postmarked envelope” returns design.</p>
+    </div>
+    <div class="finding">
+      <div class="finding__num">finding 03</div>
+      <h3>Iteration is the actual craft.</h3>
+      <p>Every page was revised six to twelve times — text overflow, alignment bugs, gimmicks that didn&rsquo;t work. Hand&#8209;tuning is still the job.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────
+     GALLERY — the six cards
+     ────────────────────────────────────── -->
+<section class="gallery wrap" id="gallery">
+
+  <header class="gallery__head reveal">
+    <div class="kicker">§ 002 / the <em>work</em></div>
+    <h2 class="gallery__title">Six <em>portfolios.</em><br/>One designer.</h2>
+    <p class="gallery__lede">Each card opens a fully working, self-contained HTML page. No build step, no dependencies. Click to enter.</p>
+  </header>
+
+  <div class="cards">
+
+    <a class="card reveal" href="index1.html">
+      <div class="card__shot">
+        <span class="card__open">open ↗</span>
+        <img src="shots/shot1.png" alt="Anthology — magazine cover with massive italic name set in Fraunces" loading="lazy"/>
+      </div>
+      <div class="card__body">
+        <div class="card__num"><b>№ 01</b> the magazine</div>
+        <h3 class="card__title">The <em>Anthology.</em></h3>
+        <p class="card__sub">A printed periodical of work. Magazine cover, running heads, colophon, variable-font reactive typography.</p>
+        <div class="card__specs">
+          <span>Fraunces + Space Grotesk</span>
+          <span>editorial</span>
+          <span>cream + lime</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card reveal" href="index2.html">
+      <div class="card__shot">
+        <span class="card__open">open ↗</span>
+        <img src="shots/shot2.png" alt="A working terminal session for the portfolio" loading="lazy"/>
+      </div>
+      <div class="card__body">
+        <div class="card__num"><b>№ 02</b> the shell</div>
+        <h3 class="card__title">Marco/<em>Shell.</em></h3>
+        <p class="card__sub">A real interactive terminal. Type <code>help</code>, <code>ls</code>, <code>cat about.md</code>, <code>man marco</code>, <code>sudo hire-me</code>.</p>
+        <div class="card__specs">
+          <span>JetBrains Mono</span>
+          <span>interactive shell</span>
+          <span>phosphor</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card reveal" href="index3.html">
+      <div class="card__shot">
+        <span class="card__open">open ↗</span>
+        <img src="shots/shot3.png" alt="A piece of physical correspondence — envelope with stamps and letter" loading="lazy"/>
+      </div>
+      <div class="card__body">
+        <div class="card__num"><b>№ 03</b> the letter</div>
+        <h3 class="card__title">A <em>letter</em> from Marco.</h3>
+        <p class="card__sub">A piece of physical mail. Envelope with SVG stamps, wax seal, postmark, polaroids, contact sheet, index card.</p>
+        <div class="card__specs">
+          <span>Caveat + Spectral + Courier</span>
+          <span>print artifact</span>
+          <span>manila</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card reveal" href="index4.html">
+      <div class="card__shot">
+        <span class="card__open">open ↗</span>
+        <img src="shots/shot4.png" alt="Vinyl record album cover with spinning disc and track listing" loading="lazy"/>
+      </div>
+      <div class="card__body">
+        <div class="card__num"><b>№ 04</b> the record</div>
+        <h3 class="card__title"><em>Anthology,</em> Vol. I.</h3>
+        <p class="card__sub">A vinyl record. Cover, spinning disc with tonearm tracking, Side A career, Side B lab, liner notes, label closeup.</p>
+        <div class="card__specs">
+          <span>Anton + Source Serif</span>
+          <span>music artifact</span>
+          <span>blue note</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card reveal" href="index5.html">
+      <div class="card__shot">
+        <span class="card__open">open ↗</span>
+        <img src="shots/shot5.png" alt="Astronomical observatory — telescope view, constellation chart, spectral analysis" loading="lazy"/>
+      </div>
+      <div class="card__body">
+        <div class="card__num"><b>№ 05</b> the observatory</div>
+        <h3 class="card__title">Object <em>MVHV-001.</em></h3>
+        <p class="card__sub">An astronomical observation. Telescope view, career as a constellation, spectroscopic capabilities, orbital lab bodies.</p>
+        <div class="card__specs">
+          <span>Space Grotesk</span>
+          <span>data-rich</span>
+          <span>deep-space + hot pink</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card reveal" href="index6.html">
+      <div class="card__shot">
+        <span class="card__open">open ↗</span>
+        <img src="shots/shot6.png" alt="Subway/transit map with career as colored lines and companies as stations" loading="lazy"/>
+      </div>
+      <div class="card__body">
+        <div class="card__num"><b>№ 06</b> the transit map</div>
+        <h3 class="card__title">MVHV <em>Transit.</em></h3>
+        <p class="card__sub">A Vignelli/Beck transit map. Six colored lines, fifteen stations, project termini, line filtering, station tooltips.</p>
+        <div class="card__specs">
+          <span>Inter</span>
+          <span>infographic</span>
+          <span>cream paper</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────
+     PROMPTS — pull quotes from the actual session
+     ────────────────────────────────────── -->
+<section class="prompts">
+  <div class="wrap">
+
+    <header class="prompts__head reveal">
+      <div class="kicker" style="color: #B7B0A0;">§ 003 / what was <em style="color:var(--hot);">said</em></div>
+      <h2 class="prompts__title">The kind of <em>feedback</em> that produced the work.</h2>
+      <p class="prompts__lede">The default AI output got rejected, hard, every single time. Here are the actual things said in the room — by the human, not the model.</p>
+    </header>
+
+    <div class="quotes reveal">
+      <div class="quote">
+        <div class="quote__role">on the first attempt</div>
+        <p class="quote__text">Also, this entire design is still rather reminiscent of my website. Can you not make it more original?</p>
+      </div>
+      <div class="quote">
+        <div class="quote__role">on a half-baked effect</div>
+        <p class="quote__text">The effect with the dots in the hero is cool but doesn&rsquo;t work right. It doesn&rsquo;t show where the cursor is and initially it doesn&rsquo;t load right at all.</p>
+      </div>
+      <div class="quote">
+        <div class="quote__role">on a gimmick</div>
+        <p class="quote__text">Click and drag rotates the entire module. The record looks weird.</p>
+      </div>
+      <div class="quote">
+        <div class="quote__role">pushing for more</div>
+        <p class="quote__text">Now do one more. Yet another completely wild, different direction.</p>
+      </div>
+      <div class="quote">
+        <div class="quote__role">naming the bar</div>
+        <p class="quote__text">Make it NOT look like the average vibe-coded website. We need this to be amazing and different.</p>
+      </div>
+      <div class="quote">
+        <div class="quote__role">after the observatory</div>
+        <p class="quote__text">This is so insanely cool I want you to do another one.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────
+     ABOUT
+     ────────────────────────────────────── -->
+<section class="about wrap" id="about">
+  <div class="about__grid">
+
+    <div>
+      <div class="kicker" style="margin-bottom: 22px;">§ 004 / about the <em>subject</em></div>
+      <p class="about__lede">
+        These pages all describe the same person — <em>Marco van Hylckama Vlieg</em>, senior product designer and AI&#8209;native builder, twenty years across Google, Yahoo!, Walmart Labs, Kohl&rsquo;s, and Endemol, plus an independent product lab.
+      </p>
+      <p style="font-size: 15.5px; line-height: 1.65; color: var(--ink-2); margin-top: 22px; max-width: 640px;">
+        The six designs aren&rsquo;t directly competing with each other. They&rsquo;re a deliberate range — print, code, mail, music, science, infographic — showing that <em style="font-family: Fraunces, serif; font-style: italic; color: var(--ink);">how</em> a portfolio is framed can change <em style="font-family: Fraunces, serif; font-style: italic; color: var(--ink);">what</em> it actually communicates.
+      </p>
+    </div>
+
+    <dl class="about__list">
+      <dt>contact the subject</dt>
+      <dd><a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a></dd>
+
+      <dt>the lab</dt>
+      <dd><a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a></dd>
+
+      <dt>professional</dt>
+      <dd><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a></dd>
+
+      <dt>also</dt>
+      <dd>
+        <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x.com/AIandDesign</a><br/>
+        <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener" style="margin-top: 4px; display: inline-block;">@AIandDesign on youtube</a>
+      </dd>
+    </dl>
+
+  </div>
+</section>
+
+<!-- footer -->
+<footer class="foot wrap">
+  <div>© 2026 · <b>Six Radical Directions</b> · all six designs hand-set</div>
+  <div class="c">made with Claude Code · zero frameworks · printed in Portland, OR</div>
+  <div class="r"><b>edition I</b> · revision 2026·05·17</div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // live clock
+  function tick() {
+    const t = new Date();
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles', hour12: false,
+      hour: '2-digit', minute: '2-digit'
+    });
+    const el = document.getElementById('ltime');
+    if (el) el.textContent = fmt.format(t);
+  }
+  tick(); setInterval(tick, 30000);
+
+  // reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        ro.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+  reveals.forEach(el => ro.observe(el));
+
+})();
+</script>
+</body>
+</html>

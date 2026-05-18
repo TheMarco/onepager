@@ -1,0 +1,1629 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>marco@portfolio — zsh — 142×42</title>
+<meta name="description" content="Marco van Hylckama Vlieg / portfolio.shell — twenty years of product design and engineering, presented as a working terminal session." />
+<meta name="theme-color" content="#0A0E13" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════
+   MARCO/SHELL — a portfolio that is also a working shell.
+   Single file. No frameworks. Real interactive commands.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg:        #0A0E13;
+  --bg-2:      #11161E;
+  --bg-3:      #161C26;
+  --surface:   #1B2230;
+  --line:      #1E2533;
+  --line-2:    #2A3242;
+
+  --text:      #DCD7C7;
+  --text-2:    #ACB1BD;
+  --text-3:    #6B7180;
+  --text-4:    #444B5A;
+
+  --prompt:    #7AE6C0;   /* mint */
+  --string:    #E8B65A;   /* amber */
+  --keyword:   #82B7FF;   /* cool blue */
+  --name:      #C297FF;   /* lavender */
+  --accent:    #FF6685;   /* coral */
+  --success:   #7AE39C;
+  --warn:      #FFD24A;
+  --error:     #FF6B6B;
+
+  --traffic-r: #FF5F57;
+  --traffic-y: #FEBC2E;
+  --traffic-g: #28C840;
+
+  --row:       1.55em;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 13.5px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-variant-ligatures: contextual;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  overflow: hidden;
+  position: relative;
+}
+
+/* faint background gradient — like CRT phosphor glow */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(122,230,192,0.04), transparent 60%),
+    radial-gradient(ellipse at 0% 0%, rgba(130,183,255,0.03), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* scanlines — extremely subtle */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgba(255,255,255,0.012) 2px,
+    rgba(255,255,255,0.012) 3px
+  );
+  pointer-events: none;
+  z-index: 100;
+  mix-blend-mode: overlay;
+}
+
+::selection { background: rgba(122,230,192,0.3); color: var(--text); }
+
+/* links: solid underline, prominent color, external-arrow suffix */
+a {
+  color: var(--keyword);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0;
+  cursor: pointer;
+  transition: color .15s, background .15s;
+  position: relative;
+  z-index: 3;
+}
+a:hover {
+  color: var(--prompt);
+  background: rgba(122,230,192,0.08);
+}
+a[target="_blank"]::after {
+  content: ' ↗';
+  font-size: 0.85em;
+  opacity: 0.85;
+}
+a[href^="mailto:"]::before {
+  content: '✉ ';
+  opacity: 0.7;
+  margin-right: 2px;
+}
+
+/* ────────── WINDOW ────────── */
+.term {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  background: var(--bg);
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* titlebar with traffic lights */
+.chrome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
+  border-bottom: 1px solid var(--line);
+  padding: 9px 16px;
+  min-height: 38px;
+}
+.chrome__lights {
+  position: absolute;
+  left: 14px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; gap: 8px;
+}
+.chrome__light {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--text-4);
+  position: relative;
+  cursor: pointer;
+  transition: filter .25s;
+}
+.chrome__light--r { background: var(--traffic-r); }
+.chrome__light--y { background: var(--traffic-y); }
+.chrome__light--g { background: var(--traffic-g); }
+.chrome__light:hover { filter: brightness(1.2); }
+.chrome__title {
+  font-size: 12px;
+  color: var(--text-2);
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+.chrome__title b { color: var(--text); font-weight: 500; }
+
+/* tab strip */
+.tabs {
+  display: flex;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  overflow-x: auto;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 18px;
+  color: var(--text-3);
+  border-right: 1px solid var(--line);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .25s, background .25s;
+  position: relative;
+}
+.tab:hover { color: var(--text-2); background: var(--bg-3); }
+.tab.is-active {
+  color: var(--text);
+  background: var(--bg);
+}
+.tab.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px; background: var(--prompt);
+}
+.tab__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-4);
+}
+.tab.is-active .tab__dot { background: var(--prompt); box-shadow: 0 0 6px var(--prompt); }
+
+/* main viewport */
+.viewport {
+  overflow-y: auto;
+  overflow-x: auto;
+  padding: 20px 0 8px 0;
+  font-size: 13.5px;
+  position: relative;
+  z-index: 1;
+  scrollbar-color: var(--line-2) transparent;
+  scrollbar-width: thin;
+}
+.viewport::-webkit-scrollbar { width: 10px; height: 10px; }
+.viewport::-webkit-scrollbar-track { background: transparent; }
+.viewport::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border: 2px solid var(--bg);
+  border-radius: 5px;
+}
+.viewport::-webkit-scrollbar-thumb:hover { background: var(--text-4); }
+
+.lines {
+  padding: 0 24px;
+  max-width: 1200px;
+  position: relative;
+}
+
+/* every printed line */
+.row {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  min-height: var(--row);
+}
+.row + .row { /* default */ }
+
+/* a prompt line preface, used in output history */
+.ps {
+  color: var(--text-3);
+  user-select: none;
+}
+.ps .user    { color: var(--name); }
+.ps .at      { color: var(--text-4); }
+.ps .host    { color: var(--keyword); }
+.ps .cwd     { color: var(--text-3); }
+.ps .glyph   { color: var(--prompt); font-weight: 700; }
+
+/* command echo in history */
+.cmd-echo {
+  color: var(--text);
+}
+.cmd-echo .kw { color: var(--prompt); }
+.cmd-echo .arg { color: var(--text); }
+.cmd-echo .flag { color: var(--string); }
+.cmd-echo .str { color: var(--string); }
+
+/* output styles */
+.out-strong  { color: var(--text); font-weight: 500; }
+.out-muted   { color: var(--text-3); }
+.out-prompt  { color: var(--prompt); }
+.out-string  { color: var(--string); }
+.out-keyword { color: var(--keyword); }
+.out-name    { color: var(--name); }
+.out-accent  { color: var(--accent); }
+.out-success { color: var(--success); }
+.out-warn    { color: var(--warn); }
+.out-error   { color: var(--error); }
+.out-italic  { font-style: italic; color: var(--text-2); }
+.out-bullet  { color: var(--prompt); }
+.out-dim     { color: var(--text-4); }
+.out-rule    { color: var(--line-2); }
+
+/* banner */
+.banner {
+  color: var(--prompt);
+  text-shadow: 0 0 18px rgba(122,230,192,0.25);
+  letter-spacing: 0;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.18;
+}
+.banner__caption {
+  color: var(--text-3);
+  margin-top: 0.4em;
+  margin-bottom: 1em;
+}
+
+/* boxed panels */
+.box {
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
+  padding: 14px 18px;
+  margin: 8px 0 12px 0;
+  background: rgba(255,255,255,0.012);
+  display: inline-block;
+}
+.box--accent {
+  border-color: var(--prompt);
+  background: rgba(122,230,192,0.04);
+}
+
+/* tree output */
+.tree-row { color: var(--text-2); }
+.tree-row .tw { color: var(--text-4); }
+.tree-row .dir { color: var(--keyword); font-weight: 500; }
+.tree-row .file { color: var(--text); }
+.tree-row .star { color: var(--string); margin-left: 4px; }
+.tree-row .desc { color: var(--text-3); margin-left: 4px; }
+
+/* ls -l output */
+.ls-row { display: grid; grid-template-columns: 16px 110px 110px 90px 1fr; gap: 12px; color: var(--text-2); }
+.ls-row .perm  { color: var(--text-3); }
+.ls-row .owner { color: var(--text-3); }
+.ls-row .size  { color: var(--text-3); text-align: right; }
+.ls-row .date  { color: var(--text-3); }
+.ls-row .name  { color: var(--keyword); font-weight: 500; }
+.ls-row .name.file { color: var(--text); font-weight: 400; }
+.ls-row .name.exec { color: var(--prompt); font-weight: 600; }
+.ls-row .star  { color: var(--string); margin-left: 4px; }
+@media (max-width: 640px) {
+  .ls-row { grid-template-columns: 14px 1fr; }
+  .ls-row .perm, .ls-row .owner, .ls-row .size, .ls-row .date { display: none; }
+}
+
+/* ps aux output */
+.ps-row { display: grid; grid-template-columns: 70px 56px 1fr 90px; gap: 12px; color: var(--text-2); }
+.ps-row .pid  { color: var(--text-3); }
+.ps-row .cpu  { color: var(--prompt); text-align: right; }
+.ps-row .cmd  { color: var(--text); }
+.ps-row .stat { color: var(--text-3); }
+@media (max-width: 640px) {
+  .ps-row { grid-template-columns: 60px 1fr; }
+  .ps-row .cpu, .ps-row .stat { display: none; }
+}
+
+/* man-page output */
+.man h2 {
+  display: block;
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-top: 16px;
+  margin-bottom: 4px;
+  letter-spacing: 0.03em;
+}
+.man p, .man li { color: var(--text-2); margin: 0 0 0 4px; }
+.man ul { list-style: none; margin: 4px 0 0 0; }
+.man ul li::before { content: '·  '; color: var(--prompt); }
+
+/* hr-ish separator */
+.sep {
+  color: var(--line-2);
+  user-select: none;
+}
+
+/* keyboard hint chip */
+.kb {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--line-2);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--text-2);
+  background: var(--bg-3);
+  margin: 0 2px;
+}
+
+/* ────────── PROMPT (interactive) ────────── */
+.prompt {
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  position: relative;
+}
+.prompt__suggestion {
+  position: absolute;
+  left: 24px; top: 12px;
+  font-size: 11px;
+  color: var(--text-4);
+  letter-spacing: 0.03em;
+  animation: fadeOut 18s ease forwards;
+  pointer-events: none;
+}
+@keyframes fadeOut {
+  0%, 80% { opacity: 1; transform: translateY(0); }
+  100%    { opacity: 0; transform: translateY(-6px); }
+}
+.prompt__ps {
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+}
+.prompt__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13.5px;
+  padding: 0;
+  caret-color: transparent;
+  font-weight: 400;
+}
+.prompt__caret {
+  display: inline-block;
+  width: 8.5px;
+  height: 1.2em;
+  background: var(--prompt);
+  vertical-align: text-bottom;
+  margin-left: -2px;
+  box-shadow: 0 0 8px rgba(122,230,192,0.5);
+  animation: caret 1.05s steps(2, jump-none) infinite;
+}
+@keyframes caret { 50% { opacity: 0; } }
+
+/* ────────── STATUS BAR ────────── */
+.status {
+  display: flex;
+  align-items: center;
+  background: var(--bg-2);
+  border-top: 1px solid var(--line);
+  padding: 6px 16px;
+  font-size: 11px;
+  color: var(--text-3);
+  gap: 16px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.status::-webkit-scrollbar { display: none; }
+.status__item { display: inline-flex; align-items: center; gap: 6px; }
+.status__item b { color: var(--text-2); font-weight: 500; letter-spacing: 0.02em; }
+.status__sep { color: var(--text-4); }
+.status__pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--prompt);
+  box-shadow: 0 0 6px var(--prompt);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(122,230,192,0.5); }
+  70%  { box-shadow: 0 0 0 6px rgba(122,230,192,0); }
+  100% { box-shadow: 0 0 0 0 rgba(122,230,192,0); }
+}
+.status__spacer { flex: 1; }
+
+/* power/wifi/battery glyphs as plain text */
+.status__glyph { color: var(--text-3); font-size: 11px; }
+
+/* responsive */
+@media (max-width: 760px) {
+  .chrome__title { font-size: 10px; padding: 0 40px; text-align: center; }
+  .lines { padding: 0 14px; }
+  .prompt { padding: 12px 14px; }
+  .status { padding: 6px 10px; gap: 10px; }
+  .status .opt { display: none; }
+}
+
+/* the in-stream loader */
+.boot {
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+.boot .ok { color: var(--success); }
+.boot .err { color: var(--error); }
+.boot .wait { color: var(--warn); }
+
+/* small in-line ASCII portrait */
+.spark {
+  color: var(--prompt);
+  text-shadow: 0 0 12px rgba(122,230,192,0.4);
+}
+</style>
+</head>
+
+<body>
+
+<div class="term">
+
+  <!-- Titlebar -->
+  <header class="chrome">
+    <div class="chrome__lights">
+      <span class="chrome__light chrome__light--r" title="close"></span>
+      <span class="chrome__light chrome__light--y" title="minimize"></span>
+      <span class="chrome__light chrome__light--g" title="zoom"></span>
+    </div>
+    <div class="chrome__title">
+      <b>marco@portfolio</b> — zsh — <span id="termSize">142×42</span>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="tabs" aria-label="terminal tabs">
+    <div class="tab is-active"><span class="tab__dot"></span>~/portfolio · zsh</div>
+    <div class="tab"><span class="tab__dot"></span>~/resume · vim</div>
+    <div class="tab"><span class="tab__dot"></span>~/lab · node</div>
+    <div class="tab"><span class="tab__dot"></span>~/contact · mail</div>
+  </nav>
+
+  <!-- Viewport: scrollable terminal session -->
+  <main class="viewport" id="viewport" tabindex="0">
+    <div class="lines" id="lines">
+      <!-- content streamed by JS -->
+    </div>
+  </main>
+
+  <!-- Interactive prompt -->
+  <form class="prompt" id="prompt" autocomplete="off" spellcheck="false">
+    <span class="prompt__suggestion" id="hint">try <span class="kb">help</span> · <span class="kb">ls</span> · <span class="kb">cat about.md</span> · <span class="kb">man marco</span> · <span class="kb">↑</span> for history</span>
+    <span class="prompt__ps">
+      <span style="color:var(--name);">marco</span><span style="color:var(--text-4);">@</span><span style="color:var(--keyword);">portfolio</span><span style="color:var(--text-3);"> </span><span style="color:var(--text-3);" id="cwd">~</span><span style="color:var(--prompt);font-weight:700; margin: 0 8px 0 6px;">%</span>
+    </span>
+    <input
+      type="text"
+      class="prompt__input"
+      id="promptInput"
+      aria-label="terminal input"
+      autocapitalize="off"
+      autocorrect="off"
+    />
+    <span class="prompt__caret" id="caret" aria-hidden="true"></span>
+  </form>
+
+  <!-- Status bar -->
+  <footer class="status">
+    <div class="status__item"><span class="status__pulse"></span> <b>open to roles</b></div>
+    <span class="status__sep">│</span>
+    <div class="status__item opt"><b>marco/shell</b> v.2026.05.17</div>
+    <span class="status__sep opt">│</span>
+    <div class="status__item opt">zsh 5.9</div>
+    <span class="status__sep opt">│</span>
+    <div class="status__item opt"><b>UTF-8</b></div>
+    <div class="status__spacer"></div>
+    <div class="status__item">PDX · <span id="localTime">--:--:--</span></div>
+    <span class="status__sep">│</span>
+    <div class="status__item opt">⌁ AC</div>
+    <span class="status__sep opt">│</span>
+    <div class="status__item">100%</div>
+  </footer>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   MARCO/SHELL runtime
+   ════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  const $lines  = document.getElementById('lines');
+  const $view   = document.getElementById('viewport');
+  const $form   = document.getElementById('prompt');
+  const $input  = document.getElementById('promptInput');
+  const $hint   = document.getElementById('hint');
+  const $cwd    = document.getElementById('cwd');
+  const $time   = document.getElementById('localTime');
+  const $size   = document.getElementById('termSize');
+
+  /* ───── live clock + window size readout ───── */
+  function tickClock() {
+    const t = new Date();
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      hour12: false,
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    $time.textContent = fmt.format(t);
+  }
+  setInterval(tickClock, 1000); tickClock();
+
+  function updateSize() {
+    // approximate cells based on viewport width / font width (~7.5px) and row height (1.55 * 13.5)
+    const cols = Math.round(innerWidth / 8.1);
+    const rows = Math.round(innerHeight / 21);
+    $size.textContent = `${cols}×${rows}`;
+  }
+  updateSize();
+  window.addEventListener('resize', updateSize);
+
+  /* ───── helpers to print lines ───── */
+  function el(tag, cls, html) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  }
+  function scrollEnd(smooth) {
+    $view.scrollTo({ top: $view.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
+  }
+  function print(html, cls) {
+    const r = el('div', 'row ' + (cls || ''), html);
+    $lines.appendChild(r);
+    scrollEnd(false);
+    return r;
+  }
+  function printPS(cmd) {
+    print(
+      `<span class="ps"><span class="user">marco</span><span class="at">@</span><span class="host">portfolio</span><span class="at"> </span><span class="cwd">${cwd}</span><span class="glyph"> %</span></span> <span class="cmd-echo">${highlightCmd(cmd)}</span>`
+    );
+  }
+  function highlightCmd(cmd) {
+    // very small highlighter for the echoed command
+    const parts = cmd.split(/\s+/);
+    if (!parts[0]) return '';
+    let out = `<span class="kw">${escapeHtml(parts[0])}</span>`;
+    for (let i = 1; i < parts.length; i++) {
+      const p = parts[i];
+      if (p.startsWith('--') || p.startsWith('-')) out += ' <span class="flag">' + escapeHtml(p) + '</span>';
+      else if (p.startsWith('"') || p.startsWith("'")) out += ' <span class="str">' + escapeHtml(p) + '</span>';
+      else out += ' <span class="arg">' + escapeHtml(p) + '</span>';
+    }
+    return out;
+  }
+  function blank() { $lines.appendChild(el('div', 'row')); }
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])
+    );
+  }
+
+  /* type a single line character-by-character */
+  function typeLine(text, cls, speed) {
+    return new Promise(resolve => {
+      const r = print('', cls);
+      let i = 0;
+      const step = () => {
+        r.innerHTML = text.slice(0, i) + '<span style="color:var(--prompt);">▌</span>';
+        if (i++ >= text.length) {
+          r.innerHTML = text;
+          resolve();
+        } else {
+          setTimeout(step, speed || 14);
+        }
+      };
+      step();
+    });
+  }
+  function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  /* ════════ SIMULATED FILESYSTEM ════════ */
+  let cwd = '~';
+
+  const fs = {
+    '~': {
+      type: 'dir',
+      children: ['about.md', 'resume.txt', 'now.md', 'contact.md', 'manifesto.md', 'career/', 'lab/', 'capabilities/', '.hidden/']
+    },
+    '~/career': {
+      type: 'dir',
+      children: ['kohls.md', 'walmart-labs.md', 'google.md', 'yahoo.md', 'endemol.md', 'ai-created.md']
+    },
+    '~/lab': {
+      type: 'dir',
+      children: ['ai-tools/', 'games/', 'experiments/']
+    },
+    '~/lab/ai-tools': {
+      type: 'dir',
+      children: ['my-ai-diary.app', 'human-actually.app', 'watchgpt.watchos', 'ai-usage.macos', 'calorie-counter.pwa', 'thought2tweet.app']
+    },
+    '~/lab/games': {
+      type: 'dir',
+      children: ['vectronix.canvas', 'radial-drift.webgl', 'hexax.canvas']
+    },
+    '~/lab/experiments': {
+      type: 'dir',
+      children: ['audio-visualizer-suite', 'color-clock', 'jumbotron-simulator', 'last-weather-app']
+    },
+    '~/capabilities': {
+      type: 'dir',
+      children: ['ai-native-design.txt', 'design-engineering.txt', '0-to-1.txt', 'enterprise-ux.txt', 'internal-ai-tooling.txt', 'leadership.txt']
+    },
+    '~/.hidden': {
+      type: 'dir',
+      children: ['easter.md']
+    }
+  };
+
+  /* ════════ FILE CONTENT ════════ */
+  const files = {
+    'about.md':
+      `<span class="out-strong"># about</span>
+<span class="out-muted">───────────────────────────────────────────</span>
+
+Marco van Hylckama Vlieg. Senior product designer
+and AI-native builder, based in Portland, Oregon.
+
+Twenty years at the intersection of product design,
+engineering, and emerging technology. <span class="out-italic">Google, Yahoo,
+Walmart Labs, Kohl&apos;s, Endemol</span>, plus an independent
+product lab that doesn&apos;t sleep.
+
+<span class="out-keyword">→</span> design that ships, not just deck slides
+<span class="out-keyword">→</span> AI as a posture, not a panel
+<span class="out-keyword">→</span> the prototype is the spec
+<span class="out-keyword">→</span> stay around for the boring 1.1 work`,
+
+    'manifesto.md':
+      `<span class="out-strong"># manifesto</span>
+<span class="out-muted">───────────────────────────────────────────</span>
+
+I design products at the seam where intent becomes
+interface — where a half-formed idea has to choose
+what kind of <span class="out-string">system</span> it wants to become.
+
+The interesting decisions live there: pacing,
+posture, what shows up first, what stays hidden,
+what the model is allowed to assume.
+
+  <span class="out-prompt">┃</span> AI didn&apos;t shrink the design problem.
+  <span class="out-prompt">┃</span> It made the problem about <span class="out-italic">judgment</span>, not output.
+  <span class="out-prompt">┃</span> The work is choosing what to build and how it
+  <span class="out-prompt">┃</span> should behave in someone&apos;s actual life — then
+  <span class="out-prompt">┃</span> shipping it before the moment passes.
+
+I&apos;m strongest where strategy, design, interaction
+behavior, and the realities of implementation
+collide. I write the prototype, ship the build,
+and stay around for the part where it has to be
+good for real users.
+
+The portfolio is the proof.
+
+<span class="out-dim">—  M. van Hylckama Vlieg, Portland, May 2026</span>`,
+
+    'now.md':
+      `<span class="out-strong"># now / currently</span>
+<span class="out-muted">───────────────────────────────────────────</span>
+
+<span class="out-prompt">●</span>  Leading UX & generative AI enablement at <span class="out-string">Kohl&apos;s</span>
+<span class="out-prompt">●</span>  Shipping new artifacts through <span class="out-string">AI-Created</span> most weeks
+<span class="out-prompt">●</span>  Open to senior IC, lead, and director conversations
+<span class="out-dim">○</span>  Speaking at <span class="out-string">Imagine AI Live</span> as a founding contributor
+
+<span class="out-muted"># tools in the rotation</span>
+  design        Figma · Figma Make · Lovable
+  production    Next.js · TypeScript · Tailwind · Vercel
+  models        ChatGPT · Claude · Gemini · Codex
+  media         Midjourney · Runway · ElevenLabs · Suno
+
+<span class="out-dim">last updated by hand · 2026-05-17</span>`,
+
+    'contact.md':
+      `<span class="out-strong"># contact</span>
+<span class="out-muted">───────────────────────────────────────────</span>
+
+  email      <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+  linkedin   <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a>
+  x          <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x.com/AIandDesign</a>
+  youtube    <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">youtube.com/@AIandDesign</a>
+  lab        <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+
+  location   Greater Portland, OR · USA
+  status     <span class="out-prompt">●</span> available — open to roles
+  authorized to work in the US
+
+<span class="out-muted">tip:</span> <span class="out-string">sudo hire-me</span> <span class="out-muted">opens an email draft</span>`,
+
+    'resume.txt':
+      `<span class="out-strong"># resume / summary</span>
+<span class="out-muted">───────────────────────────────────────────</span>
+
+NAME            Marco van Hylckama Vlieg
+TITLE           Senior product designer · AI-native builder
+LOCATION        Portland, Oregon · USA
+EXPERIENCE      20+ years across product design, engineering, leadership
+LANGUAGES       Dutch (native) · English (fluent) · German (intermediate) · Spanish (reading)
+AUTHORIZED      United States
+
+CURRENT FOCUS   AI-native product design, design engineering, 0→1 incubation,
+                enterprise UX modernization, internal AI tooling
+
+DOWNLOAD        <a href="https://ai-created.com/downloads/Resume_Marco.docx" target="_blank" rel="noopener">~/Resume_Marco_van_Hylckama_Vlieg.docx</a>
+                <span class="out-muted">(or run</span> <span class="out-string">curl resume</span> <span class="out-muted">)</span>`,
+
+    'kohls.md':
+      `<span class="out-strong">## <a href="https://kohls.com" target="_blank" rel="noopener">Kohl&apos;s</a></span>          2021 — Present
+<span class="out-muted">Senior Product Designer &amp; Generative AI Specialist</span>
+
+  · Led UX across cart, checkout, wallet, account, and in-store self-checkout
+  · Drove generative AI adoption inside the design org through tools,
+    prompt libraries, and education
+  · Built high-fidelity AI prototypes and synthetic research workflows
+    with ChatGPT, Claude, Gemini, and related tooling
+  · Helped scale UX strategy, mentoring, and AI enablement across
+    multiple product lines`,
+
+    'walmart-labs.md':
+      `<span class="out-strong">## <a href="https://tech.walmart.com" target="_blank" rel="noopener">Walmart Labs</a></span>     earlier
+<span class="out-muted">Principal Product Designer / Design Technologist</span>
+
+  · Designed mobile, voice, and personalization experiences during
+    Walmart&apos;s digital transformation
+  · Worked with ML and product teams to translate complex recommendation
+    systems into intuitive interfaces
+  · Created prototyping and design-system work that supported large-scale
+    retail product development`,
+
+    'google.md':
+      `<span class="out-strong">## <a href="https://google.com" target="_blank" rel="noopener">Google</a></span>           earlier
+<span class="out-muted">Senior UX Engineer / Prototyper</span>
+
+  · Built high-fidelity prototypes for Google Cloud AI, Google Assistant,
+    and Android experiences
+  · Bridged design and engineering with interactive prototypes that
+    accelerated user testing and decision-making
+  · Collaborated with AI/ML teams on product interfaces for technically
+    complex systems`,
+
+    'yahoo.md':
+      `<span class="out-strong">## <a href="https://yahoo.com" target="_blank" rel="noopener">Yahoo!</a></span>           earlier
+<span class="out-muted">Director of UX Prototyping &amp; Senior UX Manager</span>
+
+  · Led global UX prototyping teams across multiple offices and
+    product initiatives
+  · Helped shape major rebrand and personalization work through rapid
+    prototyping and strategic UX leadership
+  · Built scalable design processes and mentored senior designers
+    and prototypers`,
+
+    'endemol.md':
+      `<span class="out-strong">## <a href="https://endemolshine.us/" target="_blank" rel="noopener">Endemol</a></span>          earlier
+<span class="out-muted">UX &amp; Engineering Lead</span>
+
+  · Built multilingual content systems and large-scale web platforms
+    across an international entertainment portfolio
+  · Led engineering teams, authored technical material, and taught
+    web development and Linux administration
+  · Where the technical depth that still informs current product
+    judgment got built`,
+
+    'ai-created.md':
+      `<span class="out-strong">## AI-Created</span>       always
+<span class="out-muted">Independent product lab · solo</span>
+
+  · Independent product lab — eighteen+ shipped artifacts: AI tools,
+    design utilities, music, video, arcade games
+  · Built end-to-end by one person — proof of systems thinking,
+    interaction design, and execution depth
+  · The place where the practice stays current
+  · <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>`,
+
+    'ai-native-design.txt':
+      `<span class="out-strong">AI-NATIVE PRODUCT DESIGN</span>
+
+Designing systems where the model <span class="out-italic">is</span> the interaction,
+not a chat panel bolted onto a SaaS shell.
+
+  · voice interfaces, agent UI, ambient assistance
+  · model-aware interaction patterns
+  · prompt systems and pipelines
+  · synthetic research environments`,
+
+    'design-engineering.txt':
+      `<span class="out-strong">DESIGN ENGINEERING</span>
+
+Production-quality prototypes that behave like real
+software because they <span class="out-italic">are</span> real software. Built
+end-to-end by one person, often before the team is
+convinced.
+
+  · Next.js / TypeScript / Tailwind / Vercel
+  · animation systems, custom interactions
+  · accessibility, performance, motion design
+  · shipping real artifacts, not flows`,
+
+    '0-to-1.txt':
+      `<span class="out-strong">0 → 1 PRODUCT INCUBATION</span>
+
+Taking an ambiguous brief through research, framing,
+design, prototype, and shipped product. Comfortable
+carrying the weight when there isn&apos;t a roadmap yet.`,
+
+    'enterprise-ux.txt':
+      `<span class="out-strong">ENTERPRISE UX MODERNIZATION</span>
+
+Untangling legacy workflows — cart, checkout,
+account, internal tooling — and replacing them with
+systems people actually want to use. Years of this,
+at scale, at Walmart and Kohl&apos;s.`,
+
+    'internal-ai-tooling.txt':
+      `<span class="out-strong">INTERNAL AI TOOLING</span>
+
+Custom copilots, prompt libraries, synthetic research
+environments, and workflow accelerators built for
+design and product orgs. Used by real teams, not
+slide decks.`,
+
+    'leadership.txt':
+      `<span class="out-strong">LEADERSHIP &amp; ENABLEMENT</span>
+
+Built and led prototyping teams at Yahoo. Now drives
+AI adoption inside a design org through teaching,
+tooling, and example. Comfortable as IC, lead, or
+director.`,
+
+    'easter.md':
+      `<span class="out-success">you found the seam.</span>
+
+if you can read shell output, you can probably read
+my work. drop a note: <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+mention you ran <span class="out-string">cat .hidden/easter.md</span>.`
+  };
+
+  /* ════════ COMMAND DEFINITIONS ════════ */
+  const commands = {
+    help: {
+      desc: 'list available commands',
+      run: () => `<span class="out-strong">available commands</span>
+<span class="sep">───────────────────────────────────────────────</span>
+  <span class="out-prompt">whoami</span>           short bio
+  <span class="out-prompt">about</span>            same as <span class="out-string">cat about.md</span>
+  <span class="out-prompt">manifesto</span>        my opinionated position
+  <span class="out-prompt">ls</span> <span class="out-muted">[-l] [path]</span>   list contents of a directory
+  <span class="out-prompt">cd</span> <span class="out-muted">&lt;path&gt;</span>        change directory (~ to go home)
+  <span class="out-prompt">cat</span> <span class="out-muted">&lt;file&gt;</span>       print a file
+  <span class="out-prompt">tree</span> <span class="out-muted">[path]</span>      tree of files
+  <span class="out-prompt">man marco</span>        manual page
+  <span class="out-prompt">ps aux</span>           what marco is currently running
+  <span class="out-prompt">now</span>              what i&apos;m working on this week
+  <span class="out-prompt">capabilities</span>     what i&apos;m hired for
+  <span class="out-prompt">work</span> | <span class="out-prompt">career</span>     career history
+  <span class="out-prompt">lab</span>              independent product lab
+  <span class="out-prompt">contact</span>          how to reach me
+  <span class="out-prompt">open</span> <span class="out-muted">&lt;target&gt;</span>     open a url / mailto
+  <span class="out-prompt">sudo hire-me</span>     <span class="out-string">¶</span> the fastest path
+  <span class="out-prompt">clear</span>            clear the screen
+  <span class="out-prompt">history</span>          previous commands
+
+<span class="out-muted">try also:</span>  <span class="out-string">vim</span>  <span class="out-string">cowsay</span>  <span class="out-string">curl resume</span>  <span class="out-string">date</span>  <span class="out-string">uname -a</span>  <span class="out-string">exit</span>
+<span class="out-muted">tip:</span>        use <span class="kb">↑</span><span class="kb">↓</span> for history · <span class="kb">tab</span> to complete`
+    },
+
+    whoami: {
+      desc: 'short bio',
+      run: () => `<span class="out-name">marco</span>  <span class="out-muted">·</span>  Marco van Hylckama Vlieg
+       <span class="out-muted">·</span>  Senior product designer / AI-native builder
+       <span class="out-muted">·</span>  Portland, OR · USA
+       <span class="out-muted">·</span>  <span class="out-prompt">●</span> open to roles`
+    },
+
+    about:     { run: () => files['about.md'] },
+    manifesto: { run: () => files['manifesto.md'] },
+    now:       { run: () => files['now.md'] },
+    contact:   { run: () => files['contact.md'] },
+    resume:    { run: () => files['resume.txt'] },
+
+    ls: {
+      desc: 'list a directory',
+      run: (args) => {
+        let long = false, hidden = false, target = cwd;
+        args.forEach(a => {
+          if (a.startsWith('-')) {
+            if (a.includes('l')) long = true;
+            if (a.includes('a')) hidden = true;
+          } else {
+            target = resolvePath(a);
+          }
+        });
+        if (!fs[target] || fs[target].type !== 'dir') {
+          return `<span class="out-error">ls: ${escapeHtml(target)}: No such file or directory</span>`;
+        }
+        let kids = fs[target].children.slice();
+        if (!hidden) kids = kids.filter(k => !k.startsWith('.'));
+
+        if (target === '~' && hidden && !kids.some(k => k.startsWith('.'))) {
+          // already filtered
+        }
+
+        if (!long) {
+          // grid-ish output
+          return kids.map(k => {
+            const isDir = k.endsWith('/');
+            const cls = isDir ? 'out-keyword' : k.endsWith('.app') || k.endsWith('.macos') || k.endsWith('.watchos') || k.endsWith('.pwa') || k.endsWith('.canvas') || k.endsWith('.webgl') ? 'out-prompt' : 'out-strong';
+            return `<span class="${cls}">${escapeHtml(k)}</span>`;
+          }).join('   ');
+        }
+
+        // long listing
+        const rows = [`<div class="out-muted">total ${kids.length}</div>`];
+        kids.forEach((k, i) => {
+          const isDir = k.endsWith('/');
+          const perm = isDir ? 'drwxr-xr-x' : '-rw-r--r--';
+          const size = isDir ? '128' : String(200 + i * 37);
+          const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][(i + 2) % 12];
+          const day = ((i * 7) % 28 + 1).toString().padStart(2, ' ');
+          const date = `${mo} ${day}  2026`;
+          const nameCls = isDir ? 'dir' : (k.endsWith('.app') || k.endsWith('.macos') || k.endsWith('.watchos') || k.endsWith('.pwa') || k.endsWith('.canvas') || k.endsWith('.webgl') ? 'name exec' : 'name file');
+          rows.push(`<div class="ls-row"><span></span><span class="perm">${perm}</span><span class="owner">marco staff</span><span class="size">${size}</span><span class="date">${date}</span><span class="${nameCls}">${escapeHtml(k)}</span></div>`);
+        });
+        return rows.join('');
+      }
+    },
+
+    cd: {
+      desc: 'change directory',
+      run: (args) => {
+        if (!args[0] || args[0] === '~') {
+          cwd = '~';
+          $cwd.textContent = cwd;
+          return '';
+        }
+        const target = resolvePath(args[0]);
+        if (fs[target] && fs[target].type === 'dir') {
+          cwd = target;
+          $cwd.textContent = cwd;
+          return '';
+        }
+        return `<span class="out-error">cd: no such directory: ${escapeHtml(args[0])}</span>`;
+      }
+    },
+
+    cat: {
+      desc: 'print a file',
+      run: (args) => {
+        if (!args[0]) return '<span class="out-error">cat: missing file operand</span>';
+        const target = resolvePath(args[0]);
+        const name = target.split('/').pop();
+        if (fs[target] && fs[target].type === 'dir') {
+          return `<span class="out-error">cat: ${escapeHtml(args[0])}: Is a directory</span>`;
+        }
+        if (files[name]) return files[name];
+        return `<span class="out-error">cat: ${escapeHtml(args[0])}: No such file or directory</span>`;
+      }
+    },
+
+    tree: {
+      desc: 'show file tree',
+      run: (args) => {
+        const target = args[0] ? resolvePath(args[0]) : cwd;
+        if (!fs[target]) return `<span class="out-error">tree: ${escapeHtml(args[0]||cwd)}: no such directory</span>`;
+        const lines = [`<span class="out-keyword">${escapeHtml(target)}</span>`];
+        function walk(path, prefix) {
+          const node = fs[path];
+          if (!node) return;
+          const kids = node.children;
+          kids.forEach((k, i) => {
+            const last = i === kids.length - 1;
+            const branch = last ? '└── ' : '├── ';
+            const childPath = path.endsWith('/') ? path + k.replace(/\/$/, '') : path + '/' + k.replace(/\/$/, '');
+            const isDir = k.endsWith('/');
+            const tag = isDir
+              ? `<span class="tree-row"><span class="tw">${prefix}${branch}</span><span class="dir">${escapeHtml(k)}</span></span>`
+              : `<span class="tree-row"><span class="tw">${prefix}${branch}</span><span class="file">${escapeHtml(k)}</span>${treeDesc(k)}</span>`;
+            lines.push(tag);
+            if (isDir && fs[childPath]) {
+              walk(childPath, prefix + (last ? '    ' : '│   '));
+            }
+          });
+        }
+        walk(target, '');
+        return lines.join('\n');
+      }
+    },
+
+    work:   { run: () => commands.career.run() },
+    career: {
+      desc: 'career history',
+      run: () => {
+        const slugs = ['kohls.md','walmart-labs.md','google.md','yahoo.md','endemol.md','ai-created.md'];
+        return [
+`<span class="out-strong"># career / record</span>
+<span class="sep">───────────────────────────────────────────</span>`,
+          ...slugs.map(s => files[s])
+        ].join('\n\n');
+      }
+    },
+
+    lab: {
+      desc: 'independent lab artifacts',
+      run: () => `<span class="out-strong"># ~/lab — independent product lab</span>
+<span class="sep">───────────────────────────────────────────</span>
+
+<span class="out-keyword">ai-tools/</span>
+  <a href="https://diary.ai-created.com/" target="_blank" rel="noopener">my-ai-diary.app</a>       <span class="out-muted">→</span>  voice-first journaling · whisper · zero-knowledge
+  <a href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">human-actually.app</a>    <span class="out-muted">→</span>  resume tailoring that doesn&apos;t sound like a robot
+  <a href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">watchgpt.watchos</a>      <span class="out-muted">→</span>  realtime ChatGPT voice on your wrist
+  <a href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">ai-usage.macos</a>        <span class="out-muted">→</span>  Claude Code + Codex usage menubar utility
+  <a href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">calorie-counter.pwa</a>   <span class="out-muted">→</span>  most frictionless food intake logger
+  <a href="https://ai-created.com/products/thought2tweet" target="_blank" rel="noopener">thought2tweet.app</a>     <span class="out-muted">→</span>  fleeting thoughts → social posts
+
+<span class="out-keyword">games/</span>
+  <a href="https://ai-created.com/games" target="_blank" rel="noopener">vectronix.canvas</a>      <span class="out-muted">→</span>  hardcore arcade space combat
+  <a href="https://ai-created.com/games" target="_blank" rel="noopener">radial-drift.webgl</a>    <span class="out-muted">→</span>  one finger. one mistake ends the run.
+  <a href="https://ai-created.com/games" target="_blank" rel="noopener">hexax.canvas</a>          <span class="out-muted">→</span>  pure arcade design. no nonsense.
+
+<span class="out-keyword">experiments/</span>
+  <a href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">audio-visualizer-suite</a> <span class="out-muted">→</span>  captivating video visualizations of music
+  <a href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">color-clock</a>            <span class="out-muted">→</span>  a 1991 clock, brought back to life
+  <a href="https://ai-created.com/products" target="_blank" rel="noopener">jumbotron-simulator</a>    <span class="out-muted">→</span>  see your name in lights at a stadium
+
+<span class="out-muted">all live at</span> <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>`
+    },
+
+    capabilities: {
+      desc: 'what marco is hired for',
+      run: () => `<span class="out-strong"># /etc/capabilities</span>
+<span class="sep">───────────────────────────────────────────</span>
+
+  <span class="out-prompt">01</span>  AI-native product design
+       <span class="out-muted">model is the interaction · agents · ambient · voice</span>
+
+  <span class="out-prompt">02</span>  Design engineering
+       <span class="out-muted">production-quality prototypes · Next.js · TS · Tailwind</span>
+
+  <span class="out-prompt">03</span>  0 → 1 incubation
+       <span class="out-muted">ambiguous brief → shipped product</span>
+
+  <span class="out-prompt">04</span>  Enterprise UX modernization
+       <span class="out-muted">cart · checkout · internal tools · a11y at scale</span>
+
+  <span class="out-prompt">05</span>  Internal AI tooling
+       <span class="out-muted">copilots · prompt libraries · synthetic research</span>
+
+  <span class="out-prompt">06</span>  Leadership &amp; enablement
+       <span class="out-muted">comfortable as IC, lead, or director</span>
+
+<span class="out-muted">cat capabilities/&lt;name&gt;.txt for any of these.</span>`
+    },
+
+    man: {
+      desc: 'manual page',
+      run: (args) => {
+        const t = (args[0] || '').toLowerCase();
+        if (!t || t === 'marco') {
+          return `<div class="man">
+<h2>NAME</h2>
+<p>marco — senior product designer · AI-native builder · shipper of real things</p>
+
+<h2>SYNOPSIS</h2>
+<p><span class="out-string">marco</span> [<span class="out-flag">--ic</span> | <span class="out-flag">--lead</span> | <span class="out-flag">--director</span>] [<span class="out-flag">--remote</span> | <span class="out-flag">--portland</span>] [problem...]</p>
+
+<h2>DESCRIPTION</h2>
+<p>Twenty years of product design and engineering. Comfortable in
+the space where strategy, design, interaction behavior, and the
+realities of implementation collide.</p>
+
+<h2>FOCUS</h2>
+<ul>
+  <li>AI-native product design</li>
+  <li>design engineering &amp; high-fidelity prototyping</li>
+  <li>0→1 product incubation</li>
+  <li>enterprise UX modernization</li>
+  <li>internal AI tooling</li>
+</ul>
+
+<h2>HISTORY</h2>
+<ul>
+  <li>Kohl&apos;s · 2021—present</li>
+  <li>Walmart Labs · earlier</li>
+  <li>Google · earlier</li>
+  <li>Yahoo! · earlier</li>
+  <li>Endemol · earlier</li>
+  <li>AI-Created · always</li>
+</ul>
+
+<h2>STATUS</h2>
+<p><span class="out-prompt">●</span> available — open to roles</p>
+
+<h2>SEE ALSO</h2>
+<p><span class="out-string">cat about.md</span>, <span class="out-string">cat manifesto.md</span>, <span class="out-string">lab</span>, <span class="out-string">capabilities</span>, <span class="out-string">contact</span></p>
+
+<h2>BUGS</h2>
+<p>Occasionally builds three side projects in one weekend. Submit reports to <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>.</p>
+</div>`;
+        }
+        return `<span class="out-error">No manual entry for ${escapeHtml(t)}</span>`;
+      }
+    },
+
+    'ps': {
+      desc: 'currently running processes',
+      run: () => {
+        const rows = [
+          ['PID', 'CPU%', 'COMMAND', 'STAT'],
+          ['1024', '92', 'kohls/ux-and-ai-enablement', 'R+'],
+          ['1108', '74', 'ai-created/lab --solo', 'R'],
+          ['1192', '38', 'imagine-ai-live/speaker-mode', 'S'],
+          ['1244', '21', 'onepager.html (this one)', 'R'],
+          ['1310', '14', 'my-ai-diary/feature-work', 'R'],
+          ['1402',  '8', 'vectronix/balance-pass', 'S'],
+          ['9001',  '∞', 'shipping-real-things.d', 'R+'],
+        ];
+        const head = `<div class="ps-row"><span class="pid">${rows[0][0]}</span><span class="cpu">${rows[0][1]}</span><span class="cmd">${rows[0][2]}</span><span class="stat">${rows[0][3]}</span></div>`;
+        const body = rows.slice(1).map(r =>
+          `<div class="ps-row"><span class="pid">${r[0]}</span><span class="cpu">${r[1]}</span><span class="cmd">${r[2]}</span><span class="stat">${r[3]}</span></div>`
+        ).join('');
+        return head + body;
+      }
+    },
+
+    clear: {
+      desc: 'clear the screen',
+      run: () => { $lines.innerHTML = ''; return null; }
+    },
+
+    open: {
+      desc: 'open a url or mailto',
+      run: (args) => {
+        const t = args[0];
+        const map = {
+          linkedin:  'https://linkedin.com/in/marcovhv',
+          x:         'https://x.com/AIandDesign',
+          twitter:   'https://x.com/AIandDesign',
+          youtube:   'https://youtube.com/@AIandDesign',
+          lab:       'https://ai-created.com',
+          diary:     'https://diary.ai-created.com',
+          email:     'mailto:marcovhv@gmail.com',
+          mail:      'mailto:marcovhv@gmail.com',
+        };
+        if (!t) return '<span class="out-error">open: missing target</span>';
+        const url = map[t.toLowerCase()] || (t.includes('://') || t.startsWith('mailto:') ? t : null);
+        if (!url) return `<span class="out-error">open: unknown target: ${escapeHtml(t)}</span>`;
+        window.open(url, '_blank', 'noopener');
+        return `<span class="out-success">→ opened ${escapeHtml(url)} in a new tab</span>`;
+      }
+    },
+
+    sudo: {
+      desc: 'elevated commands (hire-me)',
+      run: (args) => {
+        const t = (args[0] || '').toLowerCase();
+        if (t === 'hire-me' || t === 'hireme') {
+          setTimeout(() => {
+            window.location.href = 'mailto:marcovhv@gmail.com?subject=Let%27s%20talk&body=Hi%20Marco%2C%0A%0A';
+          }, 600);
+          return `<span class="out-success">[sudo] authenticating as recruiter...</span>
+<span class="out-muted">password:</span> <span class="out-dim">●●●●●●●●●</span>
+<span class="out-success">[ok] sending you to a fresh email draft...</span>
+<span class="out-muted">if nothing opens:</span> <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>`;
+        }
+        return `<span class="out-warn">marco is not in the sudoers file. This incident will not be reported.</span>`;
+      }
+    },
+
+    'hire-me': { run: () => commands.sudo.run(['hire-me']) },
+
+    history: {
+      desc: 'previous commands',
+      run: () => history.length
+        ? history.map((h, i) => `  ${String(i+1).padStart(3,' ')}  ${escapeHtml(h)}`).join('\n')
+        : '<span class="out-muted">no history yet</span>'
+    },
+
+    date: {
+      run: () => {
+        const t = new Date();
+        const fmt = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'America/Los_Angeles',
+          weekday: 'short', month: 'short', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: false, year: 'numeric', timeZoneName: 'short'
+        });
+        return fmt.format(t);
+      }
+    },
+
+    uname: {
+      run: (args) => {
+        if (args.includes('-a')) {
+          return 'Darwin marco-portfolio 25.5.0 Darwin Kernel Version 25.5.0  arm64  marco/shell v.2026.05.17';
+        }
+        return 'Darwin';
+      }
+    },
+
+    'curl': {
+      run: (args) => {
+        const t = args[0] || '';
+        if (t === 'resume' || t === 'resume.docx') {
+          setTimeout(() => window.open('https://ai-created.com/downloads/Resume_Marco.docx', '_blank'), 300);
+          return `<span class="out-muted">→ </span><span class="out-string">GET https://ai-created.com/downloads/Resume_Marco.docx</span>
+<span class="out-muted">→ </span>HTTP/2 200
+<span class="out-muted">→ </span>content-type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+<span class="out-success">downloading...</span>`;
+        }
+        return `<span class="out-error">curl: (6) Could not resolve host: ${escapeHtml(t)}</span>`;
+      }
+    },
+
+    vim: {
+      run: () => `<span class="out-muted">~                          </span>
+<span class="out-muted">~      </span><span class="out-strong">VIM</span> - Vi IMproved
+<span class="out-muted">~                          </span>
+<span class="out-muted">~       version 9.1.0001</span>
+<span class="out-muted">~       a portfolio is no place for vim</span>
+<span class="out-muted">~                          </span>
+<span class="out-muted">~       hit </span><span class="out-string">:q</span><span class="out-muted"> to exit (it works, try it)</span>`
+    },
+
+    ':q':  { run: () => '<span class="out-success">good. you escaped vim.</span>' },
+    ':wq': { run: () => '<span class="out-success">saved &amp; quit. (nothing was actually saved, but well done.)</span>' },
+    exit:  { run: () => '<span class="out-warn">there is no exit. only ship.</span>' },
+    quit:  { run: () => commands.exit.run() },
+    logout:{ run: () => commands.exit.run() },
+
+    cowsay: {
+      run: (args) => {
+        const msg = args.join(' ') || 'hire marco.';
+        const bar = '─'.repeat(msg.length + 2);
+        return `<span class="out-prompt"> ┌${bar}┐
+ │ ${escapeHtml(msg)} │
+ └${bar}┘
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||</span>`;
+      }
+    },
+
+    'rm': {
+      run: (args) => {
+        if (args.includes('-rf') && (args.includes('/') || args.includes('~'))) {
+          return `<span class="out-error">[rm] refusing to delete /</span>
+<span class="out-muted">nice try.</span>`;
+        }
+        return `<span class="out-warn">rm: this terminal is read-only. nothing to delete.</span>`;
+      }
+    },
+
+    echo: { run: (args) => escapeHtml(args.join(' ')) || '' },
+
+    pwd:  { run: () => cwd },
+
+    banner: { run: () => buildBanner() },
+  };
+
+  /* ════════ HELPERS ════════ */
+  function treeDesc(name) {
+    // small descriptive trailer for known files
+    const tags = {
+      'my-ai-diary.app':         '<span class="star">★</span><span class="desc">  voice-first journaling · pwa</span>',
+      'human-actually.app':      '<span class="desc">  resume tailoring · ai</span>',
+      'watchgpt.watchos':        '<span class="desc">  realtime gpt voice · watchOS</span>',
+      'ai-usage.macos':          '<span class="desc">  menubar utility · macOS</span>',
+      'calorie-counter.pwa':     '<span class="desc">  food logger · pwa</span>',
+      'thought2tweet.app':       '<span class="desc">  social drafts</span>',
+      'vectronix.canvas':        '<span class="star">★</span><span class="desc">  arcade combat · canvas</span>',
+      'radial-drift.webgl':      '<span class="desc">  one-tap arcade · webgl</span>',
+      'hexax.canvas':            '<span class="desc">  arcade · canvas</span>',
+      'audio-visualizer-suite':  '<span class="desc">  music viz</span>',
+      'color-clock':             '<span class="desc">  vintage clock</span>',
+      'jumbotron-simulator':     '<span class="desc">  stadium LED sim</span>',
+      'last-weather-app':        '<span class="desc">  no-nonsense weather</span>',
+    };
+    return tags[name] || '';
+  }
+
+  function resolvePath(p) {
+    if (!p) return cwd;
+    if (p === '~' || p === '~/') return '~';
+    if (p === '..') {
+      if (cwd === '~') return '~';
+      const parts = cwd.split('/');
+      parts.pop();
+      return parts.join('/') || '~';
+    }
+    if (p === '.') return cwd;
+    if (p.startsWith('~')) return p.replace(/\/$/, '');
+    // relative
+    let combined = cwd === '~' ? '~/' + p : cwd + '/' + p;
+    combined = combined.replace(/\/+/g, '/').replace(/\/$/, '');
+    // also try matching a directory variant
+    if (fs[combined]) return combined;
+    if (fs[combined + '/']) return combined + '/';
+    if (fs['~/' + p]) return '~/' + p;
+    // file name inside cwd?
+    if (cwd === '~' && fs['~'] && fs['~'].children.includes(p)) return '~/' + p;
+    if (fs[cwd] && fs[cwd].children && fs[cwd].children.includes(p)) return cwd + '/' + p;
+    return combined;
+  }
+
+  /* ════════ COMMAND RUNNER ════════ */
+  const history = [];
+  let histIdx = -1;
+
+  async function exec(line) {
+    const raw = line.trim();
+    if (!raw) { printPS(''); return; }
+
+    history.push(raw);
+    histIdx = history.length;
+
+    printPS(raw);
+
+    const [name, ...args] = raw.split(/\s+/);
+    const lookup = name.toLowerCase();
+
+    // shortcuts like `cat README` → cat readme
+    let cmd = commands[lookup];
+    // multi-word: e.g., "sudo hire-me"  is handled inside sudo
+    if (!cmd) {
+      // see if there's an alias
+      cmd = commands[name];
+    }
+
+    if (!cmd) {
+      print(`<span class="out-error">zsh: command not found: ${escapeHtml(name)}</span>
+<span class="out-muted">try </span><span class="out-string">help</span><span class="out-muted">.</span>`);
+      return;
+    }
+
+    try {
+      const out = await Promise.resolve(cmd.run(args));
+      if (out != null && out !== '') {
+        print(out);
+      }
+    } catch (e) {
+      print(`<span class="out-error">error: ${escapeHtml(e.message || String(e))}</span>`);
+    }
+  }
+
+  /* ════════ INPUT BEHAVIOR ════════ */
+  $form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = $input.value;
+    $input.value = '';
+    exec(v);
+  });
+
+  $input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (history.length && histIdx > 0) {
+        histIdx--;
+        $input.value = history[histIdx];
+        // place cursor at end
+        setTimeout(() => { $input.selectionStart = $input.selectionEnd = $input.value.length; }, 0);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (histIdx < history.length - 1) {
+        histIdx++;
+        $input.value = history[histIdx];
+      } else {
+        histIdx = history.length;
+        $input.value = '';
+      }
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const v = $input.value;
+      const parts = v.split(/\s+/);
+      if (parts.length <= 1) {
+        const opts = Object.keys(commands).filter(n => n.startsWith(parts[0]));
+        if (opts.length === 1) $input.value = opts[0] + ' ';
+        else if (opts.length > 1) {
+          print(`<span class="out-muted">${opts.join('   ')}</span>`);
+        }
+      } else {
+        // file completion in current dir
+        const last = parts[parts.length - 1];
+        const dirNode = fs[cwd];
+        if (dirNode) {
+          const opts = dirNode.children.filter(c => c.startsWith(last));
+          if (opts.length === 1) {
+            parts[parts.length - 1] = opts[0];
+            $input.value = parts.join(' ');
+          } else if (opts.length > 1) {
+            print(`<span class="out-muted">${opts.join('   ')}</span>`);
+          }
+        }
+      }
+    } else if (e.key === 'l' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      commands.clear.run();
+    }
+  });
+
+  // keep input focused; click anywhere returns focus — EXCEPT on links,
+  // form fields, buttons, or selected text the user is reading.
+  document.addEventListener('mousedown', (e) => {
+    let t = e.target;
+    if (t && t.nodeType === Node.TEXT_NODE) t = t.parentElement;
+    if (!t) return;
+    if (t.closest('a, input, button, .tab, .chrome__light')) return;
+    // also don't steal focus if the user has selected text
+    const sel = window.getSelection && window.getSelection();
+    if (sel && sel.toString().length > 0) return;
+    setTimeout(() => $input.focus(), 0);
+  });
+
+  /* ════════ BUILD CONTENT ════════ */
+
+  function buildBanner() {
+    // a tight wordmark, all text
+    return `<pre class="banner spark">
+   ███╗   ███╗  █████╗  ██████╗  ██████╗  ██████╗
+   ████╗ ████║ ██╔══██╗ ██╔══██╗ ██╔════╝ ██╔═══██╗
+   ██╔████╔██║ ███████║ ██████╔╝ ██║      ██║   ██║
+   ██║╚██╔╝██║ ██╔══██║ ██╔══██╗ ██║      ██║   ██║
+   ██║ ╚═╝ ██║ ██║  ██║ ██║  ██║ ╚██████╗ ╚██████╔╝
+   ╚═╝     ╚═╝ ╚═╝  ╚═╝ ╚═╝  ╚═╝  ╚═════╝  ╚═════╝
+</pre>
+<div class="banner__caption">M. van Hylckama Vlieg  ·  Senior product designer × AI-native builder  ·  v.2026.05.17  ·  shell session</div>`;
+  }
+
+  function bootSequence() {
+    return [
+      { d: 0,    cls: 'boot', html: '<span class="out-muted">marco/shell v.2026.05.17 (Darwin arm64) — booting...</span>' },
+      { d: 280,  cls: 'boot', html: '<span class="ok">[ok]</span> loading personality module <span class="out-muted">/etc/marco.d/judgment</span>' },
+      { d: 180,  cls: 'boot', html: '<span class="ok">[ok]</span> mounting <span class="out-keyword">~/lab</span> · 18 artifacts indexed' },
+      { d: 180,  cls: 'boot', html: '<span class="ok">[ok]</span> mounting <span class="out-keyword">~/career</span> · 6 chapters loaded' },
+      { d: 180,  cls: 'wait', html: '<span class="wait">[..]</span> warming model fleet (gpt · claude · gemini) ......' },
+      { d: 320,  cls: 'boot', html: '<span class="ok">[ok]</span> model fleet ready' },
+      { d: 160,  cls: 'boot', html: '<span class="ok">[ok]</span> tcp/ip · timezone <span class="out-string">America/Los_Angeles</span> · status <span class="out-prompt">●</span> open to roles' },
+      { d: 280,  cls: 'boot', html: '<span class="ok">[ok]</span> session attached. welcome, visitor.' },
+      { d: 100,  cls: 'boot', html: '<span class="out-muted">      hint: blue underlined text is clickable. press any key to skip intro.</span>' },
+    ];
+  }
+
+  async function intro() {
+    // skip if user presses enter during intro
+    let skipped = false;
+    function skip() { skipped = true; }
+    window.addEventListener('keydown', skip, { once: true });
+
+    const boot = bootSequence();
+    for (const b of boot) {
+      if (skipped) break;
+      await wait(b.d);
+      print(b.html, b.cls);
+    }
+    if (skipped) {
+      $lines.innerHTML = '';
+    }
+
+    blank();
+
+    // banner
+    print(buildBanner());
+    blank();
+
+    // simulate running a few opening commands
+    await typeAndRun('whoami');
+    blank();
+    await typeAndRun('cat about.md');
+    blank();
+    await typeAndRun('ls -la');
+    blank();
+    await typeAndRun('tree lab/');
+    blank();
+    await typeAndRun('cat manifesto.md');
+    blank();
+    await typeAndRun('capabilities');
+    blank();
+    await typeAndRun('ps aux');
+    blank();
+    await typeAndRun('cat now.md');
+    blank();
+    await typeAndRun('cat contact.md');
+    blank();
+
+    // closing tip line
+    print(`<span class="out-muted">────────────────────────────────────────────────────────────────────</span>
+<span class="out-italic">that&apos;s the highlight reel. the prompt below is real — try </span><span class="out-string">help</span><span class="out-italic">.</span>`);
+    blank();
+
+    // focus input
+    $input.focus();
+  }
+
+  async function typeAndRun(cmd) {
+    // type the command into a fresh prompt line, then exec
+    const r = el('div', 'row');
+    r.innerHTML = `<span class="ps"><span class="user">marco</span><span class="at">@</span><span class="host">portfolio</span><span class="at"> </span><span class="cwd">${cwd}</span><span class="glyph"> %</span></span> `;
+    const span = el('span', 'cmd-echo');
+    r.appendChild(span);
+    $lines.appendChild(r);
+
+    // type characters
+    for (let i = 0; i <= cmd.length; i++) {
+      span.innerHTML = highlightCmd(cmd.slice(0, i)) + '<span style="color:var(--prompt);">▌</span>';
+      await wait(18 + Math.random() * 22);
+      scrollEnd(false);
+    }
+    span.innerHTML = highlightCmd(cmd);
+
+    await wait(180);
+
+    // dispatch w/o re-printing the PS line
+    const [name, ...args] = cmd.trim().split(/\s+/);
+    const c = commands[name.toLowerCase()];
+    if (c) {
+      const out = await Promise.resolve(c.run(args));
+      if (out != null && out !== '') print(out);
+    }
+  }
+
+  /* ════════ KICKOFF ════════ */
+  intro();
+
+  /* ── tab strip click switches dummy state (only one shell, but the affordance is real) ── */
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('is-active'));
+      t.classList.add('is-active');
+      // optionally jump to a relevant command output
+      if (i === 1) exec('cat resume.txt');
+      else if (i === 2) exec('lab');
+      else if (i === 3) exec('cat contact.md');
+    });
+  });
+
+  /* ── chrome traffic lights ── */
+  document.querySelector('.chrome__light--r').addEventListener('click', () => {
+    print('<span class="out-warn">nice try. closing this tab is your job, not mine.</span>');
+  });
+  document.querySelector('.chrome__light--y').addEventListener('click', () => {
+    print('<span class="out-muted">window minimized to philosophy.</span>');
+  });
+  document.querySelector('.chrome__light--g').addEventListener('click', () => {
+    document.documentElement.requestFullscreen?.();
+  });
+
+})();
+</script>
+</body>
+</html>
