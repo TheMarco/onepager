@@ -1,0 +1,3284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MVHV · ARCANA — A Holographic Reading of Marco van Hylckama Vlieg</title>
+<meta name="description" content="The Arcana of MVHV — a hermetic, holographic tarot reading of twenty years of product design, design engineering, and AI-native work. A single hand-set HTML page. No frameworks." />
+<meta name="theme-color" content="#0B0518" />
+<meta property="og:title" content="MVHV · ARCANA — A Holographic Reading" />
+<meta property="og:description" content="Twenty years of design, read as a tarot spread. Holographic. Interactive. Hand-set in one HTML file." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=JetBrains+Mono:wght@300;400;500;700&family=Tangerine:wght@400;700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════════
+   MVHV · ARCANA
+   A holographic hermetic reading of Marco van Hylckama Vlieg.
+   Hand-set in a single HTML file. No frameworks. No build step.
+   The mouse becomes the angle of light that reveals the foil.
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* the void */
+  --void:        #08030F;
+  --void-2:      #0F0720;
+  --void-3:      #16092C;
+  --velvet:      #1C0A38;
+  --velvet-2:    #2A1056;
+
+  /* gilding */
+  --gold:        #D4A24C;
+  --gold-2:     #E8C063;
+  --gold-3:      #FFE6A7;
+  --gold-deep:   #8E6418;
+  --gold-shadow: #4A350C;
+
+  /* ink */
+  --ink:         #F0E4C2;
+  --ink-2:       #C9B98B;
+  --ink-3:       #847658;
+  --ink-4:       #4F4632;
+
+  /* holographic primaries */
+  --h-1: #FF3CC4;     /* magenta */
+  --h-2: #FF7A3C;     /* tangerine */
+  --h-3: #FFE03C;     /* gold */
+  --h-4: #3CFF8E;     /* mint */
+  --h-5: #3CD2FF;     /* cyan */
+  --h-6: #A23CFF;     /* violet */
+  --h-7: #FF3C8E;     /* hot pink */
+
+  --signal:      #FF5BA7;   /* a single hot pink — the live cursor */
+
+  --gutter:      clamp(20px, 4vw, 56px);
+  --max:         1380px;
+
+  /* mouse position — set by JS, falls back to centre */
+  --mx: 0.5;
+  --my: 0.5;
+  --hue: 200;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  background: var(--void);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* deep velvet cosmos backdrop */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 22% 12%, rgba(162,60,255,0.18), transparent 60%),
+    radial-gradient(ellipse 50% 60% at 78% 80%, rgba(255,60,196,0.13), transparent 65%),
+    radial-gradient(ellipse 80% 40% at 50% 50%, rgba(212,162,76,0.06), transparent 70%),
+    linear-gradient(180deg, #08030F 0%, #06020C 100%);
+  pointer-events: none;
+}
+
+/* faint starfield over everything (canvas) */
+#stars {
+  position: fixed; inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* sacred geometry grain — barely visible diagonal lines */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg,
+      rgba(212,162,76,0.018) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(-45deg,
+      rgba(255,60,196,0.012) 0 1px, transparent 1px 22px);
+  mix-blend-mode: screen;
+}
+
+::selection { background: var(--signal); color: var(--void); }
+a { color: inherit; text-decoration: none; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+
+/* ── shared type ── */
+.serif      { font-family: 'Cormorant Garamond', serif; }
+.display    { font-family: 'Cinzel', 'Trajan Pro', serif; letter-spacing: 0.08em; }
+.fraktur    { font-family: 'UnifrakturCook', 'Old English Text MT', serif; }
+.script     { font-family: 'Tangerine', cursive; font-weight: 700; }
+.mono       { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+.kicker {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.kicker .dim { color: var(--ink-3); }
+.kicker .sep {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--gold);
+  margin: 0 10px 2px;
+  transform: rotate(45deg);
+  vertical-align: middle;
+}
+
+/* gold rule */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(212,162,76,0) 4%,
+    rgba(212,162,76,0.55) 50%,
+    rgba(212,162,76,0) 96%,
+    transparent 100%);
+  border: none;
+}
+.gold-rule--solid {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(212,162,76,0.7) 50%,
+    transparent 100%);
+}
+
+/* ═════════════════════════════════════════════════════════════
+   §0  TOP BAR — codex registry
+   ═════════════════════════════════════════════════════════════ */
+.codex-bar {
+  position: relative;
+  z-index: 4;
+  border-bottom: 1px solid rgba(212,162,76,0.18);
+  background: rgba(8,3,15,0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 11px 0;
+}
+.codex-bar__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 14px;
+  align-items: center;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.codex-bar__l { display: flex; gap: 14px; align-items: center; }
+.codex-bar__r { display: flex; gap: 14px; align-items: center; justify-content: flex-end; }
+.codex-bar__c { color: var(--gold); letter-spacing: 0.5em; }
+.codex-bar__c b { color: var(--gold-2); }
+.codex-bar__dot {
+  width: 6px; height: 6px;
+  background: var(--signal);
+  display: inline-block;
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 0 rgba(255,91,167,0.6);
+  animation: bar-pulse 1.6s infinite;
+}
+@keyframes bar-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,91,167,0.7); }
+  70%  { box-shadow: 0 0 0 8px rgba(255,91,167,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,91,167,0); }
+}
+.codex-bar__sep { color: var(--ink-4); }
+@media (max-width: 820px) {
+  .codex-bar__inner { grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10px; letter-spacing: 0.24em; }
+  .codex-bar__c { display: none; }
+  .codex-bar .hide-sm { display: none; }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   §1  HERO — THE GREAT ARCANUM
+   the centerpiece holographic card with mouse-tracked foil
+   ═════════════════════════════════════════════════════════════ */
+.hero {
+  /* longhand top/bottom only — let .wrap supply the horizontal gutter */
+  padding-top: 70px;
+  padding-bottom: 80px;
+  position: relative;
+}
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+@media (min-width: 1080px) {
+  .hero__grid {
+    grid-template-columns: 1fr 1.05fr 1fr;
+    gap: 48px;
+  }
+}
+.hero__l, .hero__r {
+  display: flex; flex-direction: column;
+  gap: 22px;
+}
+.hero__l { text-align: right; }
+@media (max-width: 1080px) {
+  .hero__l, .hero__r { text-align: left; }
+  .hero__l { order: 2; }
+  .hero__r { order: 3; }
+  .hero__c { order: 1; }
+}
+
+.hero__title {
+  font-family: 'Cinzel', serif;
+  font-weight: 800;
+  font-size: clamp(40px, 5.6vw, 84px);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  color: var(--gold-2);
+  text-shadow:
+    0 0 18px rgba(212,162,76,0.25),
+    0 1px 0 rgba(0,0,0,0.7);
+}
+.hero__title .small {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-2);
+  font-size: 0.34em;
+  margin-top: 0.3em;
+  line-height: 1.3;
+}
+.hero__title .sigil {
+  display: inline-block;
+  font-family: 'Tangerine', cursive;
+  font-weight: 700;
+  font-size: 1.2em;
+  background: linear-gradient(180deg, var(--h-2), var(--h-1) 50%, var(--h-6));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 18px rgba(255,60,196,0.4));
+  line-height: 0.7;
+  vertical-align: middle;
+  letter-spacing: -0.02em;
+}
+
+.hero__meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(212,162,76,0.18);
+}
+.hero__meta dt {
+  font-family: 'Cinzel', serif;
+  font-size: 10.5px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+.hero__meta dd {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px;
+  color: var(--ink);
+  font-style: italic;
+}
+.hero__meta dd b { font-style: normal; font-weight: 600; color: var(--gold-3); }
+.hero__meta dd em { color: var(--signal); font-style: italic; }
+
+/* the centerpiece: a 3D holographic card */
+.hero__c {
+  position: relative;
+  display: flex; flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  perspective: 1600px;
+}
+
+/* card stage */
+.holo-stage {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 5 / 7.2;
+  transform-style: preserve-3d;
+}
+
+/* THE CARD */
+.holo-card {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --tilt-z: 0deg;
+  --holo-angle: 110deg;
+  --holo-pos-x: 50%;
+  --holo-pos-y: 50%;
+  --holo-strength: 0.55;
+
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 22%, #2A0E50 0%, #150728 60%, #0A0418 100%);
+  box-shadow:
+    0 30px 60px -20px rgba(0,0,0,0.7),
+    0 18px 38px -10px rgba(120,40,200,0.35),
+    0 6px 14px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(212,162,76,0.42),
+    0 0 0 6px rgba(212,162,76,0.07);
+  transform:
+    rotateX(var(--tilt-x))
+    rotateY(var(--tilt-y))
+    rotateZ(var(--tilt-z))
+    translateZ(0);
+  transition: transform .14s cubic-bezier(.2,.7,.2,1);
+  transform-style: preserve-3d;
+  overflow: hidden;
+  cursor: crosshair;
+  will-change: transform;
+}
+
+/* the GOLD FRAME */
+.holo-card__frame {
+  position: absolute;
+  inset: 12px;
+  border: 1.5px solid rgba(212,162,76,0.7);
+  border-radius: 6px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4),
+              inset 0 0 24px rgba(0,0,0,0.4);
+}
+.holo-card__frame::before,
+.holo-card__frame::after {
+  content: '';
+  position: absolute;
+  left: 4px; right: 4px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,162,76,0.55), transparent);
+}
+.holo-card__frame::before { top: 4px; }
+.holo-card__frame::after  { bottom: 4px; }
+
+/* THE HOLOGRAPHIC FOIL — the magic layer */
+.holo-card__foil {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      var(--holo-angle),
+      transparent 0%,
+      rgba(255,60,196,0.42) 14%,
+      rgba(255,122,60,0.38) 24%,
+      rgba(255,224,60,0.5)  34%,
+      rgba(60,255,142,0.45) 44%,
+      rgba(60,210,255,0.5)  54%,
+      rgba(162,60,255,0.42) 66%,
+      rgba(255,60,142,0.42) 78%,
+      transparent 100%
+    );
+  mix-blend-mode: color-dodge;
+  opacity: var(--holo-strength);
+  transition: opacity .18s;
+}
+.holo-card__foil::before {
+  /* a second, sharper rainbow streak — moves with cursor */
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle 60% at var(--holo-pos-x) var(--holo-pos-y),
+      rgba(255,255,255,0.55) 0%,
+      rgba(255,255,255,0.0) 36%);
+  mix-blend-mode: overlay;
+}
+
+/* SPARKLE pattern overlay */
+.holo-card__sparkles {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><g fill='%23ffffff'><circle cx='14' cy='22' r='0.7' opacity='0.9'/><circle cx='42' cy='8' r='0.5' opacity='0.7'/><circle cx='68' cy='30' r='0.6' opacity='0.6'/><circle cx='100' cy='14' r='0.4' opacity='0.8'/><circle cx='128' cy='28' r='0.8' opacity='0.7'/><circle cx='152' cy='10' r='0.5' opacity='0.6'/><circle cx='22' cy='56' r='0.5' opacity='0.5'/><circle cx='58' cy='62' r='0.7' opacity='0.8'/><circle cx='90' cy='48' r='0.4' opacity='0.6'/><circle cx='118' cy='72' r='0.6' opacity='0.7'/><circle cx='150' cy='58' r='0.5' opacity='0.7'/><circle cx='8' cy='88' r='0.4' opacity='0.6'/><circle cx='38' cy='96' r='0.5' opacity='0.5'/><circle cx='80' cy='84' r='0.8' opacity='0.85'/><circle cx='112' cy='102' r='0.5' opacity='0.6'/><circle cx='142' cy='90' r='0.7' opacity='0.8'/><circle cx='20' cy='126' r='0.5' opacity='0.5'/><circle cx='52' cy='118' r='0.4' opacity='0.5'/><circle cx='84' cy='134' r='0.6' opacity='0.7'/><circle cx='110' cy='128' r='0.5' opacity='0.6'/><circle cx='134' cy='148' r='0.7' opacity='0.8'/><circle cx='2' cy='148' r='0.3' opacity='0.4'/></g></svg>");
+  background-size: 180px 180px;
+  background-position: var(--holo-pos-x) var(--holo-pos-y);
+  mix-blend-mode: screen;
+  opacity: calc(var(--holo-strength) * 0.85);
+  transition: opacity .25s, background-position .15s;
+}
+
+/* GLARE — a moving white reflection */
+.holo-card__glare {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 200px at var(--holo-pos-x) var(--holo-pos-y),
+              rgba(255,255,255,0.5) 0%,
+              rgba(255,255,255,0.1) 22%,
+              rgba(255,255,255,0) 60%);
+  mix-blend-mode: overlay;
+}
+
+/* CONTENT */
+.holo-card__content {
+  position: absolute;
+  inset: 0;
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  z-index: 4;
+  transform: translateZ(12px); /* sits above foil in 3D */
+}
+.holo-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.holo-card__top .name {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--gold-3);
+}
+.holo-card__top .roman {
+  color: var(--gold-2);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+}
+
+.holo-card__art {
+  flex: 1;
+  margin: 14px -10px 10px;
+  position: relative;
+  border-radius: 4px;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 35%, rgba(255,60,196,0.18), transparent 70%),
+    linear-gradient(180deg, #1A0840 0%, #08021A 100%);
+  border: 1px solid rgba(212,162,76,0.32);
+  overflow: hidden;
+}
+.holo-card__art svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+
+.holo-card__title {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: 0.3em;
+  color: var(--gold-3);
+  text-transform: uppercase;
+  margin: 8px 0 4px;
+  text-shadow: 0 0 14px rgba(255,224,167,0.3);
+}
+.holo-card__sub {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+  margin-bottom: 10px;
+}
+.holo-card__stats {
+  border-top: 1px solid rgba(212,162,76,0.32);
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.holo-card__stats b { color: var(--gold-2); font-weight: 600; }
+.holo-card__stats .set {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+/* a hairline diamond chain at the bottom of the card */
+.holo-card__chain {
+  position: absolute;
+  left: 22px; right: 22px;
+  bottom: 64px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 5;
+}
+.holo-card__chain span {
+  width: 4px; height: 4px;
+  background: var(--gold-2);
+  transform: rotate(45deg);
+  box-shadow: 0 0 6px rgba(212,162,76,0.5);
+}
+
+/* circular set-symbol stamp */
+.holo-stamp {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,162,76,0.55);
+  background:
+    radial-gradient(circle, rgba(212,162,76,0.18), transparent 70%);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 5;
+}
+.holo-stamp svg { width: 24px; height: 24px; }
+
+/* nudge */
+.hero__nudge {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex; align-items: center; gap: 12px;
+}
+.hero__nudge::before, .hero__nudge::after {
+  content: '';
+  height: 1px;
+  width: 36px;
+  background: linear-gradient(90deg, transparent, rgba(212,162,76,0.5));
+}
+.hero__nudge::after {
+  background: linear-gradient(90deg, rgba(212,162,76,0.5), transparent);
+}
+.hero__nudge em {
+  color: var(--signal);
+  font-style: normal;
+  letter-spacing: 0.34em;
+}
+
+/* ═════════════════════════════════════════════════════════════
+   §2  INVOCATION — illuminated opening paragraph
+   ═════════════════════════════════════════════════════════════ */
+.invocation {
+  padding: 60px 0 80px;
+  position: relative;
+}
+.invocation__chrome {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: start;
+  margin-bottom: 36px;
+}
+@media (min-width: 900px) {
+  .invocation__chrome { grid-template-columns: 220px 1fr 220px; gap: 60px; align-items: end; }
+}
+.invocation__chrome .kicker { letter-spacing: 0.4em; }
+.invocation__head {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(32px, 4.4vw, 58px);
+  line-height: 0.95;
+  letter-spacing: 0.06em;
+  color: var(--gold-2);
+  text-align: center;
+  text-transform: uppercase;
+}
+.invocation__head .sub {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.36em;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-2);
+  margin-top: 12px;
+}
+
+.invocation__body {
+  max-width: 880px;
+  margin: 0 auto;
+  position: relative;
+  padding: 50px 60px 50px;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(162,60,255,0.05), transparent 70%),
+    linear-gradient(180deg, rgba(28,10,56,0.18) 0%, rgba(8,3,15,0) 100%);
+  border-top: 1px solid rgba(212,162,76,0.32);
+  border-bottom: 1px solid rgba(212,162,76,0.32);
+}
+.invocation__body::before,
+.invocation__body::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,162,76,0.4) 50%, transparent);
+}
+.invocation__body::before { top: 6px; }
+.invocation__body::after  { bottom: 6px; }
+@media (max-width: 760px) {
+  .invocation__body { padding: 38px 26px; }
+}
+@media (max-width: 460px) {
+  .invocation__body { padding: 28px 18px; }
+  .invocation__body .dropcap { font-size: 84px; margin: 4px 10px -8px 0; }
+  .invocation__body p { text-align: left; hyphens: none; font-size: 17.5px; line-height: 1.62; }
+}
+
+.invocation__body p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(19px, 1.75vw, 23px);
+  line-height: 1.7;
+  color: var(--ink);
+  margin-bottom: 18px;
+  text-align: justify;
+  hyphens: auto;
+}
+.invocation__body p:last-child { margin-bottom: 0; }
+.invocation__body p em {
+  font-style: italic;
+  color: var(--gold-3);
+}
+.invocation__body p b {
+  font-weight: 600;
+  color: var(--gold-2);
+}
+.invocation__body p .small-caps {
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--gold-2);
+  font-weight: 500;
+}
+
+/* big illuminated drop cap */
+.invocation__body .dropcap {
+  float: left;
+  font-family: 'UnifrakturCook', 'Old English Text MT', serif;
+  font-size: 108px;
+  line-height: 0.78;
+  margin: 6px 14px -8px 0;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold) 40%, var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+  font-weight: 700;
+  position: relative;
+}
+.invocation__body .dropcap::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  background:
+    radial-gradient(ellipse at center, rgba(212,162,76,0.18), transparent 70%);
+  z-index: -1;
+}
+
+/* ornament between paragraphs */
+.fleuron {
+  text-align: center;
+  margin: 14px 0;
+  color: var(--gold);
+  font-size: 24px;
+  letter-spacing: 0.4em;
+}
+.fleuron svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ═════════════════════════════════════════════════════════════
+   §3  THE READING — Celtic Cross spread
+   ═════════════════════════════════════════════════════════════ */
+.reading {
+  padding: 80px 0 110px;
+  position: relative;
+}
+.reading__head {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.reading__head .kicker { letter-spacing: 0.42em; }
+.reading__head h2 {
+  font-family: 'Cinzel', serif;
+  font-weight: 800;
+  font-size: clamp(32px, 4.6vw, 62px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  margin: 16px 0 12px;
+}
+.reading__head h2 em {
+  font-family: 'Tangerine', cursive;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.4em;
+  letter-spacing: -0.02em;
+  background: linear-gradient(180deg, var(--h-1), var(--h-6));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-transform: none;
+  vertical-align: middle;
+}
+.reading__head p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-2);
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* the spread — a clean 2×5 grid of cards (Celtic Cross as concept, not visual) */
+.spread {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(43,14,88,0.45), transparent 80%);
+  padding: 44px 28px;
+}
+.spread::before {
+  /* a Bohemian velvet inner border */
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px dashed rgba(212,162,76,0.25);
+  border-radius: 4px;
+  pointer-events: none;
+}
+@keyframes rotate-slow { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+.spread__grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+/* a card in the spread */
+.tarot {
+  position: relative;
+  aspect-ratio: 5 / 8.2;
+  perspective: 1100px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform .35s cubic-bezier(.2,.7,.2,1);
+}
+.tarot:hover { transform: translateY(-8px) scale(1.04); z-index: 9; }
+.tarot__inner {
+  position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .9s cubic-bezier(.2,.7,.2,1);
+}
+.tarot.is-flipped .tarot__inner { transform: rotateY(180deg); }
+
+.tarot__face,
+.tarot__back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow:
+    0 12px 28px -6px rgba(0,0,0,0.6),
+    0 4px 10px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(212,162,76,0.45);
+}
+.tarot__back {
+  transform: rotateY(180deg);
+}
+
+.tarot__face {
+  background: linear-gradient(160deg, #1A0840 0%, #0B0420 60%, #07020F 100%);
+  display: flex; flex-direction: column;
+  padding: 10px 9px 8px;
+}
+.tarot__face::before {
+  /* hairline gold frame */
+  content: '';
+  position: absolute; inset: 5px;
+  border: 1px solid rgba(212,162,76,0.45);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.tarot__pos {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-align: center;
+  padding: 4px 0 2px;
+}
+.tarot__roman {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  text-align: center;
+  padding: 1px 4px;
+  line-height: 1.1;
+}
+.tarot__art {
+  flex: 1;
+  margin: 6px 4px;
+  position: relative;
+  border-radius: 2px;
+  background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(255,60,196,0.10), transparent 70%);
+  border: 1px solid rgba(212,162,76,0.22);
+  overflow: hidden;
+}
+.tarot__art svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.tarot__name {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--gold-3);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 4px 3px 6px;
+  line-height: 1.15;
+}
+
+/* the BACK of every card — text content (the "reward" for flipping) */
+.tarot__back {
+  background:
+    repeating-linear-gradient(45deg, rgba(212,162,76,0.06) 0 1px, transparent 1px 8px),
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(162,60,255,0.18), transparent 70%),
+    linear-gradient(180deg, #160630 0%, #07020F 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 14px 11px 11px;
+}
+.tarot__back::before {
+  content: '';
+  position: absolute; inset: 6px;
+  border: 1px solid rgba(212,162,76,0.45);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.tarot__back::after {
+  content: '';
+  position: absolute; inset: 11px;
+  border: 1px dashed rgba(212,162,76,0.22);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.tarot__back__pos {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  text-align: center;
+  padding: 2px 0 8px;
+  border-bottom: 1px solid rgba(212,162,76,0.32);
+  margin: 0 4px 10px;
+  z-index: 2;
+  font-weight: 600;
+}
+.tarot__back__body {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.38;
+  color: var(--ink);
+  flex: 1;
+  padding: 0 4px;
+  overflow: hidden;
+  z-index: 2;
+  text-align: center;
+}
+.tarot__back__body em {
+  font-style: italic;
+  color: var(--gold-3);
+  font-weight: 500;
+}
+.tarot__back__body b {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--gold-2);
+}
+.tarot__back__links {
+  margin: 10px 4px 0;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(212,162,76,0.32);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 14px;
+  z-index: 2;
+}
+.tarot__back__links a {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--signal);
+  font-weight: 600;
+  padding: 2px 0;
+  white-space: nowrap;
+}
+.tarot__back__links a:hover { color: var(--gold-3); }
+
+/* mobile tightening for the back */
+@media (max-width: 960px) {
+  .tarot__back { padding: 12px 9px 10px; }
+  .tarot__back__pos { font-size: 10.5px; padding: 1px 0 6px; margin: 0 3px 8px; }
+  .tarot__back__body { font-size: 15px; line-height: 1.35; }
+  .tarot__back__links { gap: 4px 10px; margin-top: 7px; padding-top: 6px; }
+  .tarot__back__links a { font-size: 10px; letter-spacing: 0.12em; }
+}
+@media (max-width: 540px) {
+  .tarot__back__pos { font-size: 10px; }
+  .tarot__back__body { font-size: 14px; line-height: 1.33; }
+  .tarot__back__links a { font-size: 9.5px; }
+}
+
+/* hover gold halo */
+.tarot::after {
+  content: '';
+  position: absolute; inset: -6px;
+  border-radius: 10px;
+  background: radial-gradient(circle at 50% 50%, rgba(255,224,167,0.4), transparent 60%);
+  opacity: 0;
+  transition: opacity .3s;
+  z-index: -1;
+  pointer-events: none;
+}
+.tarot:hover::after { opacity: 1; }
+
+/* a tooltip / annotation tag for each card */
+.tarot__tip {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  transform: translateX(-50%);
+  background: rgba(8,3,15,0.95);
+  border: 1px solid rgba(212,162,76,0.4);
+  padding: 8px 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+  z-index: 20;
+}
+.tarot__tip::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: -6px;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px; height: 8px;
+  background: rgba(8,3,15,0.95);
+  border-left: 1px solid rgba(212,162,76,0.4);
+  border-top: 1px solid rgba(212,162,76,0.4);
+}
+.tarot:hover .tarot__tip { opacity: 1; }
+
+/* responsive grid — cleanly down to 2 cols on small mobile */
+@media (max-width: 960px) {
+  .spread { padding: 36px 18px; }
+  .spread__grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .tarot__tip { display: none; }
+}
+@media (max-width: 540px) {
+  .spread { padding: 26px 10px; }
+  .spread__grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+
+/* the legend beneath the spread */
+.spread__legend {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 760px) {
+  .spread__legend { grid-template-columns: 1fr 1fr; gap: 10px 36px; }
+}
+.spread__legend li {
+  display: flex; align-items: center; gap: 14px;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(212,162,76,0.22);
+  list-style: none;
+}
+.spread__legend b {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--signal);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  min-width: 26px;
+}
+.spread__legend em {
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--ink-2);
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 15px;
+  margin-left: auto;
+}
+
+/* a "shuffle" control */
+.shuffle {
+  display: inline-flex; align-items: center; gap: 12px;
+  margin: 36px auto 0;
+  padding: 12px 22px;
+  background: transparent;
+  border: 1px solid rgba(212,162,76,0.5);
+  color: var(--gold-2);
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .25s;
+}
+.shuffle:hover {
+  background: rgba(212,162,76,0.12);
+  color: var(--gold-3);
+  border-color: var(--gold-2);
+  letter-spacing: 0.38em;
+}
+.shuffle::before {
+  content: '◆';
+  font-size: 10px;
+  color: var(--signal);
+}
+.shuffle-wrap { text-align: center; }
+
+/* ═════════════════════════════════════════════════════════════
+   §4  THE MAJOR ARCANA — 8 chapter cards (companies / phases)
+   ═════════════════════════════════════════════════════════════ */
+.majors {
+  padding: 100px 0 80px;
+  border-top: 1px solid rgba(212,162,76,0.18);
+}
+.majors__head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  margin-bottom: 56px;
+}
+@media (min-width: 960px) {
+  .majors__head {
+    grid-template-columns: 220px 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+  }
+}
+.majors__head h2 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(32px, 4.4vw, 58px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  line-height: 1;
+}
+.majors__head h2 .x {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink-2);
+  display: block;
+  font-size: 0.42em;
+  margin-top: 14px;
+}
+.majors__head p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 460px;
+}
+
+.majors__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+@media (min-width: 720px)  { .majors__grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1200px) { .majors__grid { grid-template-columns: repeat(6, 1fr); gap: 20px; } }
+
+/* a major arcana card */
+.major {
+  display: block;
+  position: relative;
+  aspect-ratio: 5 / 8.2;
+  border-radius: 6px;
+  perspective: 1000px;
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  --m-1: #FF3CC4;
+  --m-2: #A23CFF;
+}
+.major__nowtag {
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  background: var(--signal);
+  color: var(--void);
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 9.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 1px;
+  box-shadow: 0 0 14px rgba(255,91,167,0.55);
+}
+/* external-link affordance on each chapter card (mirrors the pip ↗) */
+a.major::after {
+  content: '↗';
+  position: absolute;
+  top: 10px; right: 12px;
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--signal);
+  z-index: 5;
+  opacity: 0.78;
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+a.major:hover::after { opacity: 1; transform: translate(3px, -3px); }
+/* hide the old decorative "Ch. I" label — the ↗ replaces it */
+.major__chapter { display: none; }
+.major__inner {
+  position: relative;
+  width: 100%; height: 100%;
+  border-radius: 6px;
+  background:
+    linear-gradient(170deg, color-mix(in oklab, var(--m-1) 30%, #0B0420) 0%, #0B0420 55%, #07020F 100%);
+  box-shadow:
+    0 16px 30px -6px rgba(0,0,0,0.6),
+    0 4px 10px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(212,162,76,0.4);
+  overflow: hidden;
+  transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s;
+}
+.major:hover .major__inner {
+  transform: translateY(-8px) rotateZ(-1.2deg);
+  box-shadow:
+    0 28px 50px -10px rgba(0,0,0,0.75),
+    0 0 30px -2px color-mix(in oklab, var(--m-1) 60%, transparent),
+    0 0 0 1px var(--gold-2);
+}
+.major__inner::before {
+  /* gold frame */
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(212,162,76,0.55);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.major__inner::after {
+  /* per-card holographic sweep — animates */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg,
+    transparent 0%,
+    rgba(255,255,255,0) 30%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0) 70%,
+    transparent 100%);
+  background-size: 220% 220%;
+  background-position: 0% 0%;
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+.major:hover .major__inner::after {
+  opacity: 1;
+  animation: holo-sweep 1.6s ease-in-out infinite;
+}
+@keyframes holo-sweep {
+  0%   { background-position: -110% -110%; }
+  100% { background-position: 110% 110%; }
+}
+
+.major__roman {
+  position: absolute;
+  top: 14px; left: 12px;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--gold-2);
+  font-weight: 600;
+}
+.major__chapter {
+  position: absolute;
+  top: 14px; right: 12px;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.major__art {
+  position: absolute;
+  top: 38px; left: 12px; right: 12px;
+  bottom: 124px;
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 40%, color-mix(in oklab, var(--m-1) 20%, transparent), transparent 70%);
+  border: 1px solid rgba(212,162,76,0.28);
+  overflow: hidden;
+}
+.major__art svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+
+.major__title {
+  position: absolute;
+  left: 10px; right: 10px;
+  bottom: 86px;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-weight: 800;
+  font-size: 13.5px;
+  letter-spacing: 0.14em;
+  color: var(--gold-3);
+  text-transform: uppercase;
+  text-shadow: 0 0 10px color-mix(in oklab, var(--m-1) 40%, transparent);
+  line-height: 1.1;
+}
+.major__years {
+  position: absolute;
+  left: 10px; right: 10px;
+  bottom: 66px;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+.major__role {
+  position: absolute;
+  left: 10px; right: 10px;
+  bottom: 10px;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  line-height: 1.25;
+  padding-top: 8px;
+  border-top: 1px solid rgba(212,162,76,0.22);
+}
+
+/* per-card colour overrides */
+.major[data-key="fool"]      { --m-1:#FF7A3C; --m-2:#FF3CC4; }
+.major[data-key="emperor"]   { --m-1:#3CD2FF; --m-2:#3CFF8E; }
+.major[data-key="empress"]   { --m-1:#A23CFF; --m-2:#FF3CC4; }
+.major[data-key="wheel"]     { --m-1:#FFE03C; --m-2:#FF7A3C; }
+.major[data-key="hierophant"]{ --m-1:#FF3C8E; --m-2:#A23CFF; }
+.major[data-key="lovers"]    { --m-1:#FF3CC4; --m-2:#3CD2FF; }
+.major[data-key="star"]      { --m-1:#3CD2FF; --m-2:#FFE03C; }
+.major[data-key="world"]     { --m-1:#3CFF8E; --m-2:#A23CFF; }
+
+/* major cards on phones: tighten bottom block + smaller roman */
+@media (max-width: 720px) {
+  .major__title { font-size: 12.5px; bottom: 80px; letter-spacing: 0.1em; }
+  .major__years { font-size: 12px; bottom: 62px; }
+  .major__role { font-size: 12px; bottom: 8px; padding-top: 6px; line-height: 1.2; }
+  .major__role br + span { font-size: 10.5px !important; }
+  .major__art { bottom: 116px; top: 36px; }
+  .major__roman { font-size: 10.5px; top: 12px; left: 10px; letter-spacing: 0.12em; }
+  .major__chapter { font-size: 9px; top: 12px; right: 10px; letter-spacing: 0.16em; }
+  .major__nowtag { font-size: 8.5px; padding: 3px 7px; letter-spacing: 0.2em; }
+}
+@media (max-width: 460px) {
+  .major__title { font-size: 11.5px; bottom: 96px; }
+  .major__years { font-size: 11px; bottom: 80px; }
+  .major__role { font-size: 11.5px; bottom: 7px; padding-top: 5px; }
+  .major__role br + span { font-size: 9.5px !important; letter-spacing: 0.02em !important; }
+  .major__art { bottom: 132px; top: 30px; }
+  .major__chapter { display: none; }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   §5  THE MINOR ARCANA — four suits of skill
+   ═════════════════════════════════════════════════════════════ */
+.minors {
+  padding: 80px 0 100px;
+  border-top: 1px solid rgba(212,162,76,0.18);
+}
+.minors__head {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.minors__head h2 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(32px, 4.4vw, 58px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+}
+.minors__head p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-2);
+  max-width: 580px;
+  margin: 14px auto 0;
+}
+
+.minors__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+@media (min-width: 720px)  { .minors__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1080px) { .minors__grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
+
+.suit {
+  background:
+    linear-gradient(180deg, rgba(28,10,56,0.4) 0%, rgba(8,3,15,0) 100%);
+  border-top: 1px solid rgba(212,162,76,0.4);
+  border-bottom: 1px solid rgba(212,162,76,0.22);
+  padding: 22px 22px 28px;
+  position: relative;
+}
+.suit::before {
+  /* top sigil */
+  content: '';
+  position: absolute;
+  left: 50%; top: -22px;
+  transform: translateX(-50%);
+  width: 42px; height: 42px;
+  background: var(--void);
+  border: 1px solid rgba(212,162,76,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+  border-radius: 50%;
+}
+.suit__sigil {
+  position: absolute;
+  left: 50%; top: -22px;
+  transform: translateX(-50%);
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3;
+  color: var(--gold-2);
+}
+.suit__sigil svg { width: 22px; height: 22px; }
+
+.suit__name {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-3);
+  margin: 14px 0 4px;
+}
+.suit__sub {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-3);
+  margin-bottom: 22px;
+  letter-spacing: 0.06em;
+}
+
+.suit__cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.pip {
+  position: relative;
+  aspect-ratio: 5 / 7.6;
+  border-radius: 4px;
+  background: linear-gradient(170deg, #16092C 0%, #07020F 100%);
+  border: 1px solid rgba(212,162,76,0.35);
+  padding: 8px 6px;
+  display: flex; flex-direction: column;
+  text-align: center;
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+  cursor: default;
+  overflow: hidden;
+}
+.pip::before {
+  content: '';
+  position: absolute; inset: 3px;
+  border: 1px solid rgba(212,162,76,0.16);
+  border-radius: 2px;
+  pointer-events: none;
+}
+/* skill pips: subtle hover only — they are not clickable */
+.pip { cursor: default; }
+.pip:hover { border-color: rgba(212,162,76,0.55); }
+/* product pips (anchors): the bounce + glow that says "open me" */
+a.pip:hover {
+  transform: translateY(-3px) rotate(-1.4deg);
+  border-color: var(--gold-2);
+  box-shadow: 0 10px 20px -4px rgba(0,0,0,0.6),
+              0 0 24px -4px color-mix(in oklab, var(--gold-2) 60%, transparent);
+}
+.pip__roman {
+  font-family: 'Cinzel', serif;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.pip__svg {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-2);
+  margin: 6px 0;
+}
+.pip__svg svg { width: 70%; height: 70%; }
+.pip__name {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+.pip__role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+
+/* anchor-pip: a clickable product card */
+a.pip {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+a.pip::after {
+  content: '↗';
+  position: absolute;
+  top: 6px; right: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  color: var(--signal);
+  opacity: 0.65;
+  transition: opacity .25s, transform .25s;
+  z-index: 4;
+}
+a.pip:hover::after { opacity: 1; transform: translate(2px, -2px); }
+a.pip .pip__name { color: var(--gold-3); }
+a.pip:hover .pip__name { color: var(--ink); }
+a.pip .pip__live {
+  position: absolute;
+  bottom: 6px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--signal);
+  opacity: 0.85;
+  pointer-events: none;
+}
+a.pip .pip__live::before {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--signal);
+  margin-right: 5px;
+  vertical-align: 1px;
+  box-shadow: 0 0 6px rgba(255,91,167,0.7);
+}
+
+/* per-suit colour */
+.suit[data-suit="wands"]      { --suit-color: #FF7A3C; }
+.suit[data-suit="cups"]       { --suit-color: #3CD2FF; }
+.suit[data-suit="swords"]     { --suit-color: #FFE03C; }
+.suit[data-suit="pentacles"]  { --suit-color: #3CFF8E; }
+.suit[data-suit] .suit__sigil { color: var(--suit-color); filter: drop-shadow(0 0 8px color-mix(in oklab, var(--suit-color) 50%, transparent)); }
+.suit[data-suit] a.pip:hover  { border-color: var(--suit-color); box-shadow: 0 10px 20px -4px rgba(0,0,0,0.6),
+                                                                          0 0 24px -4px color-mix(in oklab, var(--suit-color) 60%, transparent); }
+
+/* ═════════════════════════════════════════════════════════════
+   §6  THE ORACLE — interpretation panel
+   ═════════════════════════════════════════════════════════════ */
+.oracle {
+  padding: 90px 0 100px;
+  position: relative;
+  border-top: 1px solid rgba(212,162,76,0.18);
+}
+.oracle__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+@media (min-width: 1000px) {
+  .oracle__grid { grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: center; }
+}
+.oracle__head h2 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(32px, 4.6vw, 62px);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  margin-bottom: 24px;
+}
+.oracle__head h2 em {
+  font-family: 'Tangerine', cursive;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: none;
+  font-size: 1.4em;
+  letter-spacing: -0.01em;
+  background: linear-gradient(180deg, var(--gold-3), var(--gold) 50%, var(--h-1));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  vertical-align: middle;
+}
+.oracle__head p.lede {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.55;
+  font-style: italic;
+  color: var(--ink);
+  max-width: 580px;
+}
+.oracle__head p.lede em {
+  color: var(--gold-3);
+  font-style: italic;
+}
+.oracle__head p.lede b { font-weight: 600; color: var(--gold-2); }
+
+/* the divination panel */
+.divination {
+  position: relative;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(162,60,255,0.13), transparent 70%),
+    linear-gradient(180deg, rgba(28,10,56,0.6) 0%, rgba(8,3,15,0.2) 100%);
+  border: 1px solid rgba(212,162,76,0.4);
+  padding: 36px 32px 28px;
+  border-radius: 4px;
+}
+.divination::before,
+.divination::after {
+  content: '';
+  position: absolute;
+  width: 24px; height: 24px;
+  border: 1px solid rgba(212,162,76,0.55);
+}
+.divination::before { top: -6px; left: -6px; border-right: none; border-bottom: none; }
+.divination::after  { bottom: -6px; right: -6px; border-left: none; border-top: none; }
+
+.divination__head {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  margin-bottom: 20px;
+  text-align: center;
+}
+.divination__head::before,
+.divination__head::after {
+  content: '◆';
+  color: var(--signal);
+  margin: 0 12px;
+  font-size: 9px;
+}
+
+.divination__readings {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: rgba(212,162,76,0.22);
+  border: 1px solid rgba(212,162,76,0.22);
+}
+.divination__row {
+  background: rgba(8,3,15,0.66);
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 600px) {
+  .divination__row { grid-template-columns: 110px 1fr; gap: 18px; align-items: baseline; }
+}
+.divination__row .pos {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--signal);
+  font-weight: 600;
+}
+.divination__row .pos b {
+  display: block;
+  color: var(--gold-3);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+.divination__row .read {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.divination__row .read em {
+  font-style: italic;
+  color: var(--gold-3);
+}
+
+.divination__seal {
+  margin-top: 22px;
+  display: flex; align-items: center; gap: 16px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(212,162,76,0.32);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.divination__seal .stamp {
+  width: 64px; height: 64px;
+  border: 1px solid var(--gold-2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-2);
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  background: radial-gradient(circle, rgba(212,162,76,0.18), transparent 70%);
+  text-align: center;
+  line-height: 1.1;
+  transform: rotate(-8deg);
+  flex-shrink: 0;
+}
+.divination__seal b { color: var(--gold-2); }
+
+/* ═════════════════════════════════════════════════════════════
+   §7  THE SUMMONING — contact section
+   ═════════════════════════════════════════════════════════════ */
+.summon {
+  padding: 90px 0 110px;
+  border-top: 1px solid rgba(212,162,76,0.18);
+  position: relative;
+  overflow: hidden;
+}
+.summon::before {
+  /* slow rotating outer sigil */
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(760px, 120vw); height: min(760px, 120vw);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%23D4A24C' stroke-width='0.4' opacity='0.55'><circle cx='100' cy='100' r='98'/><circle cx='100' cy='100' r='80'/><circle cx='100' cy='100' r='40'/><path d='M100,8 L156,176 L8,80 L192,80 L44,176 Z'/><text x='100' y='4' font-family='Cinzel' font-size='6' fill='%23D4A24C' text-anchor='middle' opacity='0.7'>HOC SIGNO MARCUS · INVOCATUR · MMXXVI · OPUS MAGNUM · IN PRINCIPIO ERAT VERBUM · DEUS EX MACHINA</text></g></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: rotate-slow 160s linear infinite;
+}
+
+.summon__inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.summon__inner .kicker {
+  letter-spacing: 0.4em;
+  color: var(--signal);
+}
+.summon__inner h2 {
+  font-family: 'Cinzel', serif;
+  font-weight: 800;
+  font-size: clamp(36px, 5.4vw, 72px);
+  letter-spacing: 0.04em;
+  color: var(--gold-3);
+  text-transform: uppercase;
+  margin: 14px 0 8px;
+  line-height: 0.95;
+}
+.summon__inner h2 .x {
+  font-family: 'Tangerine', cursive;
+  font-weight: 700;
+  text-transform: none;
+  color: var(--h-1);
+  font-size: 1.4em;
+  letter-spacing: -0.01em;
+}
+.summon__inner p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(18px, 1.9vw, 23px);
+  color: var(--ink);
+  line-height: 1.55;
+  max-width: 580px;
+  margin: 0 auto 36px;
+}
+.summon__inner p em { color: var(--gold-3); }
+
+.summon__links {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+@media (min-width: 600px) {
+  .summon__links { grid-template-columns: 1fr 1fr; }
+}
+.summon__links a {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid rgba(212,162,76,0.5);
+  background: rgba(8,3,15,0.55);
+  text-align: left;
+  transition: all .25s;
+  position: relative;
+  overflow: hidden;
+}
+.summon__links a:hover {
+  border-color: var(--gold-2);
+  background: rgba(28,10,56,0.5);
+  transform: translateY(-2px);
+}
+.summon__links a::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(115deg, transparent, rgba(255,255,255,0.16), transparent);
+  background-size: 220% 220%;
+  background-position: 0 0;
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+.summon__links a:hover::before {
+  opacity: 1;
+  animation: holo-sweep 1.4s ease-in-out infinite;
+}
+.summon__links a .glyph {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  color: var(--gold-2);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  width: 36px; height: 36px;
+  border: 1px solid var(--gold-2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  background: radial-gradient(circle, rgba(212,162,76,0.18), transparent 70%);
+}
+.summon__links a .body {
+  display: flex; flex-direction: column;
+  gap: 2px;
+}
+.summon__links a .body b {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.summon__links a .body span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.summon__back {
+  margin-top: 50px;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+.summon__back a {
+  color: var(--ink-3);
+  border-bottom: 1px solid rgba(212,162,76,0.32);
+  padding-bottom: 2px;
+  transition: color .2s, border-color .2s;
+}
+.summon__back a:hover { color: var(--signal); border-color: var(--signal); }
+
+/* ═════════════════════════════════════════════════════════════
+   §8  COLOPHON / footer
+   ═════════════════════════════════════════════════════════════ */
+.colophon {
+  border-top: 1px solid rgba(212,162,76,0.32);
+  padding-top: 36px;
+  padding-bottom: 28px;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.colophon__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 720px) {
+  .colophon__grid { grid-template-columns: 1fr 1fr 1fr; }
+  .colophon__grid > div:nth-child(2) { text-align: center; }
+  .colophon__grid > div:nth-child(3) { text-align: right; }
+}
+.colophon b { color: var(--gold-2); font-weight: 600; }
+
+/* reveal */
+.reveal { opacity: 0; transform: translateY(28px);
+  transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+
+/* the cursor leaves a soft trailing glow — mouse only */
+.cursor-glow {
+  position: fixed;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,91,167,0.18) 0%, rgba(255,91,167,0) 60%);
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+  transition: opacity .4s;
+  opacity: 0;
+}
+.cursor-glow.is-on { opacity: 1; }
+@media (hover: none) {
+  .cursor-glow { display: none; }
+}
+
+/* prevent sticky-hover effects on touchscreens */
+@media (hover: none) {
+  .tarot:hover { transform: none; z-index: auto; }
+  .major:hover .major__inner {
+    transform: none;
+    box-shadow:
+      0 16px 30px -6px rgba(0,0,0,0.6),
+      0 4px 10px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(212,162,76,0.4);
+  }
+  .major:hover .major__inner::after { animation: none; opacity: 0; }
+  .pip:hover { transform: none; }
+  a.pip:hover::after { transform: none; }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   accessibility
+   ═════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .holo-card { transform: none !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="stars" aria-hidden="true"></canvas>
+<div id="cursorGlow" class="cursor-glow" aria-hidden="true"></div>
+
+<!-- ════════════════════════════════════════════════════════════
+     §0  CODEX BAR
+     ════════════════════════════════════════════════════════════ -->
+<header class="codex-bar">
+  <div class="codex-bar__inner">
+    <span class="codex-bar__l">
+      <span class="codex-bar__dot" aria-hidden="true"></span>
+      <span>MVHV · ARCANA</span>
+      <span class="codex-bar__sep">◆</span>
+      <span class="hide-sm">codex hermeticus · vol. <b style="color:var(--gold-2);">VII</b></span>
+    </span>
+    <span class="codex-bar__c"><b>·</b> A holographic reading <b>·</b></span>
+    <span class="codex-bar__r">
+      <span class="hide-sm">moon <span id="moon">𖣘</span></span>
+      <span class="codex-bar__sep">◆</span>
+      <span id="ltime" style="color:var(--gold-2);letter-spacing:0.2em;">--:--</span>
+      <span class="codex-bar__sep">◆</span>
+      <span>portland</span>
+    </span>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════
+     §1  HERO — THE GREAT ARCANUM
+     ════════════════════════════════════════════════════════════ -->
+<section class="hero wrap">
+  <div class="hero__grid">
+
+    <div class="hero__l">
+      <div class="kicker">arcanum <span class="dim">·</span> <em style="color:var(--signal);font-style:normal;">XXIII</em></div>
+      <h1 class="hero__title">
+        The<br/><span class="sigil">Magus</span><br/>of MVHV
+        <span class="small">a holographic reading of twenty&nbsp;years in&nbsp;product design, design engineering, and&nbsp;AI‑native&nbsp;work.</span>
+      </h1>
+      <dl class="hero__meta">
+        <div><dt>subject</dt><dd><b>Marco van Hylckama Vlieg</b></dd></div>
+        <div><dt>currently</dt><dd>Sr. Product Designer &amp; <em>GenAI Specialist</em> · Kohl&rsquo;s</dd></div>
+        <div><dt>the lab</dt><dd><a href="https://ai-created.com" target="_blank" rel="noopener" style="border-bottom:1px solid rgba(212,162,76,0.4);"><em>ai‑created.com</em></a> · 9&nbsp;live products</dd></div>
+        <div><dt>edition</dt><dd>MMXXVI · <em>VII / VII</em> · one HTML file</dd></div>
+      </dl>
+    </div>
+
+    <div class="hero__c">
+
+      <div class="holo-stage">
+        <article class="holo-card" id="heroCard" aria-label="Hero card: The Magus of MVHV">
+
+          <div class="holo-card__frame" aria-hidden="true"></div>
+
+          <!-- foil & glare LAYERS (live with mouse) -->
+          <div class="holo-card__foil"     aria-hidden="true"></div>
+          <div class="holo-card__sparkles" aria-hidden="true"></div>
+          <div class="holo-card__glare"    aria-hidden="true"></div>
+
+          <div class="holo-card__content">
+
+            <div class="holo-card__top">
+              <span class="roman">· XXIII ·</span>
+              <span class="name">MVHV</span>
+            </div>
+
+            <div class="holo-card__art">
+              <!-- ornate hand-drawn SVG of "The Magus" -->
+              <svg viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                  <linearGradient id="bg-magus" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#3A1366"/>
+                    <stop offset="100%" stop-color="#0E0426"/>
+                  </linearGradient>
+                  <linearGradient id="g-gold" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#FFE6A7"/>
+                    <stop offset="50%" stop-color="#D4A24C"/>
+                    <stop offset="100%" stop-color="#8E6418"/>
+                  </linearGradient>
+                  <linearGradient id="g-pink" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#FF3CC4"/>
+                    <stop offset="100%" stop-color="#A23CFF"/>
+                  </linearGradient>
+                </defs>
+
+                <rect width="200" height="280" fill="url(#bg-magus)"/>
+
+                <!-- starry backdrop -->
+                <g fill="#FFE6A7" opacity="0.7">
+                  <circle cx="20" cy="22" r="0.7"/>
+                  <circle cx="46" cy="40" r="0.5"/>
+                  <circle cx="74" cy="20" r="0.4"/>
+                  <circle cx="92" cy="48" r="0.6"/>
+                  <circle cx="130" cy="28" r="0.4"/>
+                  <circle cx="160" cy="42" r="0.6"/>
+                  <circle cx="184" cy="22" r="0.5"/>
+                  <circle cx="32" cy="62" r="0.4"/>
+                  <circle cx="160" cy="76" r="0.5"/>
+                  <circle cx="180" cy="100" r="0.6"/>
+                  <circle cx="18" cy="118" r="0.4"/>
+                  <circle cx="186" cy="156" r="0.4"/>
+                  <circle cx="14" cy="200" r="0.5"/>
+                  <circle cx="188" cy="220" r="0.4"/>
+                </g>
+
+                <!-- sun / halo -->
+                <circle cx="100" cy="80" r="42" fill="none" stroke="url(#g-gold)" stroke-width="0.7" opacity="0.7"/>
+                <circle cx="100" cy="80" r="34" fill="none" stroke="url(#g-gold)" stroke-width="0.4" opacity="0.5"/>
+                <g stroke="url(#g-gold)" stroke-width="0.5" opacity="0.7">
+                  <line x1="100" y1="34" x2="100" y2="42"/>
+                  <line x1="100" y1="118" x2="100" y2="126"/>
+                  <line x1="54" y1="80" x2="62" y2="80"/>
+                  <line x1="138" y1="80" x2="146" y2="80"/>
+                  <line x1="67" y1="47" x2="73" y2="53"/>
+                  <line x1="127" y1="107" x2="133" y2="113"/>
+                  <line x1="133" y1="47" x2="127" y2="53"/>
+                  <line x1="73" y1="107" x2="67" y2="113"/>
+                </g>
+
+                <!-- the magus figure (stylised) -->
+                <g>
+                  <!-- robe -->
+                  <path d="M70 230 L80 130 Q100 110 120 130 L130 230 Z"
+                        fill="url(#g-pink)" opacity="0.85"/>
+                  <!-- arms (raised) -->
+                  <path d="M82 138 Q60 110 56 60 L58 60 Q70 110 88 142 Z"
+                        fill="url(#g-pink)" opacity="0.85"/>
+                  <path d="M118 138 Q140 110 144 60 L142 60 Q130 110 112 142 Z"
+                        fill="url(#g-pink)" opacity="0.85"/>
+                  <!-- head -->
+                  <circle cx="100" cy="100" r="11" fill="#FFD8A6" stroke="url(#g-gold)" stroke-width="0.6"/>
+                  <!-- crown/halo ring -->
+                  <ellipse cx="100" cy="90" rx="16" ry="3" fill="none" stroke="url(#g-gold)" stroke-width="0.8"/>
+                  <!-- staff -->
+                  <line x1="56" y1="60" x2="56" y2="36" stroke="url(#g-gold)" stroke-width="1.2"/>
+                  <circle cx="56" cy="32" r="3" fill="url(#g-gold)"/>
+                  <!-- orb in other hand -->
+                  <circle cx="144" cy="60" r="4" fill="none" stroke="url(#g-gold)" stroke-width="0.7"/>
+                  <circle cx="144" cy="60" r="2.2" fill="#FF3CC4" opacity="0.85"/>
+                </g>
+
+                <!-- altar / table with implements -->
+                <g stroke="url(#g-gold)" stroke-width="0.6" fill="none" opacity="0.85">
+                  <rect x="60" y="226" width="80" height="20"/>
+                  <line x1="60" y1="232" x2="140" y2="232"/>
+                  <!-- four implements -->
+                  <!-- wand -->
+                  <line x1="72" y1="240" x2="80" y2="232"/>
+                  <circle cx="80" cy="232" r="1.2" fill="url(#g-gold)"/>
+                  <!-- cup -->
+                  <path d="M86 240 L86 236 Q90 232 94 236 L94 240 Z" fill="rgba(60,210,255,0.6)"/>
+                  <!-- sword -->
+                  <line x1="102" y1="240" x2="110" y2="230" stroke="url(#g-gold)" stroke-width="0.8"/>
+                  <line x1="104" y1="232" x2="108" y2="232"/>
+                  <!-- pentacle -->
+                  <circle cx="124" cy="236" r="3"/>
+                  <path d="M124 233 L125.5 236 L124 239 L122.5 236 Z" fill="url(#g-gold)" opacity="0.7"/>
+                </g>
+
+                <!-- infinity above head -->
+                <path d="M93 73 q 3 -6 7 0 q 4 6 7 0 q -3 -6 -7 0 q -4 6 -7 0 z"
+                      fill="none" stroke="url(#g-gold)" stroke-width="0.8"/>
+
+                <!-- bottom ornament -->
+                <g stroke="url(#g-gold)" stroke-width="0.4" opacity="0.7" fill="none">
+                  <path d="M14 264 Q60 254 100 264 T186 264"/>
+                  <circle cx="100" cy="262" r="1.4" fill="url(#g-gold)"/>
+                </g>
+              </svg>
+            </div>
+
+            <div class="holo-card__title">The Magus</div>
+            <div class="holo-card__sub">designer · engineer · AI&#8209;native</div>
+
+            <div class="holo-card__stats">
+              <span><b>20</b> yrs</span>
+              <span class="set">MVHV ·&nbsp;XXIII</span>
+              <span class="rarity" style="color:var(--h-1);font-weight:700;">M</span>
+            </div>
+          </div>
+
+          <!-- diamond chain (decorative) -->
+          <div class="holo-card__chain" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <!-- set stamp -->
+          <div class="holo-stamp" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><g fill="none" stroke="#D4A24C" stroke-width="0.8">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2 L14.4 9.2 L22 9.2 L15.8 13.6 L18.2 21 L12 16.6 L5.8 21 L8.2 13.6 L2 9.2 L9.6 9.2 Z"/>
+            </g></svg>
+          </div>
+
+        </article>
+      </div>
+
+      <div class="hero__nudge"><em>move</em> · or tap · to tilt the card</div>
+
+    </div>
+
+    <div class="hero__r">
+      <div class="kicker" style="text-align:left;">codex <span class="dim">·</span> <em style="color:var(--signal);font-style:normal;">VII</em></div>
+
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:23px;line-height:1.5;color:var(--ink);">
+        A reading is offered here. <em style="color:var(--gold-3);">Take what is&nbsp;true.</em>
+      </p>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.16em;color:var(--ink-3);line-height:1.8;border-top:1px solid rgba(212,162,76,0.18);border-bottom:1px solid rgba(212,162,76,0.18);padding:14px 0;">
+        <div><span style="color:var(--gold);">cast</span> · 2026.05.17</div>
+        <div><span style="color:var(--gold);">querent</span> · the reader</div>
+        <div><span style="color:var(--gold);">spread</span> · celtic cross</div>
+        <div><span style="color:var(--gold);">deck</span> · opus arcanum</div>
+        <div><span style="color:var(--gold);">moon</span> · waxing crescent</div>
+      </div>
+
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;line-height:1.5;color:var(--ink-3);">
+        Each card below is <em style="color:var(--gold-3);">a real chapter</em> or <em style="color:var(--gold-3);">a live product.</em> Cards marked <span style="color:var(--signal);font-style:normal;">↗</span> open the linked page in a new tab.
+      </p>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a href="#lab" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold-3);background:rgba(212,162,76,0.08);border:1px solid var(--gold-2);padding:10px 14px;transition:all .25s;">↓ the&nbsp;lab · <span style="color:var(--signal);">9&nbsp;live</span></a>
+        <a href="#reading" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold-2);border:1px solid rgba(212,162,76,0.5);padding:10px 14px;transition:all .25s;">↓ the reading</a>
+        <a href="index.html" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;color:var(--ink-3);border:1px solid rgba(212,162,76,0.22);padding:10px 14px;transition:all .25s;">↩ index</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     §2  THE INVOCATION
+     ════════════════════════════════════════════════════════════ -->
+<section class="invocation">
+  <div class="wrap">
+
+    <div class="invocation__chrome reveal">
+      <div class="kicker" style="text-align:left;">§ 001 <span class="sep"></span> the <em style="color:var(--signal);font-style:normal;">invocation</em></div>
+      <h2 class="invocation__head">
+        Hear the Subject Named
+        <span class="sub">in the manner of an opening prayer to a working life</span>
+      </h2>
+      <div class="kicker" style="text-align:right;color:var(--ink-3);">aetatis suae <span class="sep"></span> <em style="color:var(--gold-2);font-style:normal;">XLV</em></div>
+    </div>
+
+    <div class="invocation__body reveal">
+      <p>
+        <span class="dropcap">M</span><span class="small-caps">arco van Hylckama Vlieg,</span> here invoked as the <em>Magus,</em> arcanum the twenty&#8209;third, has spent twenty years setting type, drawing systems, shipping product, and now teaching machines to ship beside him. The Netherlands gave him a language, California gave him an industry, and Oregon &mdash; where the rain falls straight and the cedars are honest &mdash; gives him a desk.
+      </p>
+
+      <div class="fleuron">
+        <svg width="120" height="14" viewBox="0 0 120 14" aria-hidden="true">
+          <g fill="none" stroke="#D4A24C" stroke-width="0.8">
+            <path d="M2 7 H44"/>
+            <path d="M76 7 H118"/>
+            <circle cx="60" cy="7" r="3"/>
+            <path d="M50 7 L57 7 M63 7 L70 7"/>
+            <path d="M60 2 L60 4 M60 10 L60 12"/>
+          </g>
+        </svg>
+      </div>
+
+      <p>
+        He has been the <span class="small-caps">designer of record</span> at Google (Cloud&nbsp;AI · Assistant · Android prototyping), Yahoo! (director of UX prototyping), Walmart Labs (principal product designer), Endemol (UX &amp; engineering lead), and now Kohl&rsquo;s &mdash; <em>senior product designer &amp; generative&#8209;AI specialist,</em> leading UX across cart, checkout, wallet, account, and in‑store self‑checkout while driving AI tooling and education across the design org. He has been the <span class="small-caps">designer of his own record,</span> too: <em>ai‑created.com,</em> an independent product lab whose recent shipments &mdash; <em>My AI Diary,</em> <em>WatchGPT,</em> <em>Human Actually,</em> <em>Calorie Counter,</em> <em>AI Usage,</em> <em>Color Clock,</em> the <em>Audio Visualizer Suite,</em> and the arcade studies <em>Vectronix</em> and <em>Radial Drift</em> &mdash; appear in the minor arcana below. Each card opens the working&nbsp;product.
+      </p>
+
+      <div class="fleuron">
+        <svg width="120" height="14" viewBox="0 0 120 14" aria-hidden="true">
+          <g fill="none" stroke="#D4A24C" stroke-width="0.8">
+            <path d="M2 7 H44"/>
+            <path d="M76 7 H118"/>
+            <circle cx="60" cy="7" r="3"/>
+            <path d="M50 7 L57 7 M63 7 L70 7"/>
+            <path d="M60 2 L60 4 M60 10 L60 12"/>
+          </g>
+        </svg>
+      </div>
+
+      <p>
+        The craft is the same it has always been &mdash; pay attention, name what is&nbsp;wrong, fix it, and then <em>fix it again, with feeling.</em> What changed is the partner at the bench: a model, a context window, a working tool. He is fluent in that conversation. He <b>refuses</b> the average answer the model would otherwise give &mdash; not in spite of the tool but in <em>full service</em> of it.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     §3  THE READING — Celtic Cross spread
+     ════════════════════════════════════════════════════════════ -->
+<section class="reading" id="reading">
+  <div class="wrap">
+
+    <header class="reading__head reveal">
+      <div class="kicker">§ 002 <span class="sep"></span> the <em style="color:var(--signal);font-style:normal;">reading</em> · a&nbsp;CV&nbsp;in&nbsp;10&nbsp;cards</div>
+      <h2>A <em>CV,</em> in 10 cards.</h2>
+      <p>The <em>Celtic Cross</em> is the classic ten-card tarot spread. Here it stands in for a&nbsp;CV: every numbered position (<span style="color:var(--gold-2);">1</span>&ndash;<span style="color:var(--gold-2);">10</span>) is one slice of a working life. The <b style="color:var(--gold-3);">bold gold label</b> on each card is <em>what the card means;</em> the small italic line is the tarot archetype it borrows from. <b style="color:var(--signal);font-weight:600;">Tap any card to flip it</b> &mdash; the back has the short reading plus links to the relevant role or working product. The longer interpretation of all ten is in <a href="#oracle" style="border-bottom:1px solid var(--gold-2);color:var(--gold-3);"><em>The Oracle Speaks</em></a> below.</p>
+    </header>
+
+    <div class="spread reveal">
+      <div class="spread__grid">
+
+        <!-- 1 — the centre / significator -->
+        <div class="tarot t1" data-key="self">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">1 · self</div>
+              <div class="tarot__roman">the Magus · XXIII</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <defs><linearGradient id="t1g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFE6A7"/><stop offset="100%" stop-color="#8E6418"/></linearGradient></defs>
+                  <circle cx="50" cy="60" r="22" fill="none" stroke="url(#t1g)" stroke-width="0.7"/>
+                  <path d="M50 38 L57 55 L75 55 L60 67 L67 84 L50 73 L33 84 L40 67 L25 55 L43 55 Z" fill="none" stroke="url(#t1g)" stroke-width="0.6"/>
+                  <path d="M30 130 Q50 100 70 130" fill="none" stroke="url(#t1g)" stroke-width="0.8"/>
+                  <circle cx="50" cy="60" r="2" fill="url(#t1g)"/>
+                </svg>
+              </div>
+              <div class="tarot__name">the maker himself</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">1 · self</div>
+              <div class="tarot__back__body">Designer, engineer, <em>AI&#8209;native.</em> Twenty years shipping product to&nbsp;scale.</div>
+              <div class="tarot__back__links"><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">↗ linkedin</a></div>
+            </div>
+          </div>
+          <div class="tarot__tip">self · the maker himself</div>
+        </div>
+
+        <!-- 2 — the cross / what stands against -->
+        <div class="tarot t2" data-key="cross">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">2 · crossing</div>
+              <div class="tarot__roman">the Tower · XVI</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" aria-hidden="true">
+                  <g fill="none" stroke="#D4A24C" stroke-width="0.7">
+                    <path d="M30 130 L30 60 L50 36 L70 60 L70 130 Z"/>
+                    <path d="M30 60 L70 60"/>
+                    <path d="M44 130 L44 100 L56 100 L56 130"/>
+                    <path d="M28 32 L50 18 L72 32"/>
+                    <path d="M22 96 L18 110 M78 96 L82 110"/>
+                  </g>
+                  <g stroke="#FF3CC4" stroke-width="0.9" fill="none" opacity="0.85">
+                    <path d="M44 20 L48 26 L42 30 L46 36"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="tarot__name">AI rebuilds the work</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">2 · crossing</div>
+              <div class="tarot__back__body">The practice rebuilds itself in the same&nbsp;week. <em>AI is the new weather,</em> not the&nbsp;obstacle.</div>
+            </div>
+          </div>
+          <div class="tarot__tip">crossing · AI rebuilds the work</div>
+        </div>
+
+        <!-- 3 — beneath / foundation -->
+        <div class="tarot t3" data-key="root">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">3 · root</div>
+              <div class="tarot__roman">the World · XXI</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" aria-hidden="true">
+                  <g fill="none" stroke="#D4A24C" stroke-width="0.6">
+                    <ellipse cx="50" cy="70" rx="34" ry="44"/>
+                    <circle cx="50" cy="70" r="8"/>
+                    <path d="M50 28 Q40 50 50 70 Q60 50 50 28"/>
+                    <path d="M16 70 Q40 60 50 70 Q60 60 84 70"/>
+                  </g>
+                  <g fill="#3CFF8E" opacity="0.8">
+                    <circle cx="22" cy="46" r="1"/>
+                    <circle cx="80" cy="48" r="1"/>
+                    <circle cx="50" cy="116" r="1.2"/>
+                  </g>
+                  <g stroke="#D4A24C" stroke-width="0.4" fill="none" opacity="0.6">
+                    <path d="M30 130 Q50 124 70 130"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="tarot__name">20 years at scale</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">3 · root</div>
+              <div class="tarot__back__body"><em>Endemol</em> &rarr; <em>Google</em> &rarr; <em>Yahoo!</em> &rarr; <em>Walmart&nbsp;Labs</em> &rarr; <em>Kohl&rsquo;s.</em> Hundreds of millions of&nbsp;users.</div>
+              <div class="tarot__back__links"><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">↗ linkedin</a></div>
+            </div>
+          </div>
+          <div class="tarot__tip">root · 20 years at scale</div>
+        </div>
+
+        <!-- 4 — past -->
+        <div class="tarot t4" data-key="past">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">4 · past</div>
+              <div class="tarot__roman">the Fool · 0</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" aria-hidden="true">
+                  <g fill="none" stroke="#D4A24C" stroke-width="0.7">
+                    <circle cx="36" cy="68" r="14"/>
+                    <path d="M36 82 L36 110 L24 130 M36 110 L48 130"/>
+                    <path d="M50 78 L62 70 L72 88"/>
+                    <path d="M40 56 Q44 50 50 54"/>
+                  </g>
+                  <path d="M70 130 Q80 110 88 130" fill="none" stroke="#FF7A3C" stroke-width="0.6"/>
+                </svg>
+              </div>
+              <div class="tarot__name">Endemol &middot; NL</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">4 · past</div>
+              <div class="tarot__back__body"><em>UX &amp; Engineering Lead.</em> Multilingual web platforms across an international entertainment portfolio. Where the technical depth got&nbsp;built.</div>
+              <div class="tarot__back__links"><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">↗ linkedin</a></div>
+            </div>
+          </div>
+          <div class="tarot__tip">past · Endemol, Netherlands</div>
+        </div>
+
+        <!-- 5 — crown / above -->
+        <div class="tarot t5" data-key="crown">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">5 · crown</div>
+              <div class="tarot__roman">the Star · XVII</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" aria-hidden="true">
+                  <g fill="#3CD2FF" opacity="0.85"><circle cx="50" cy="48" r="2.4"/></g>
+                  <g fill="none" stroke="#3CD2FF" stroke-width="0.6" opacity="0.9">
+                    <path d="M50 36 L50 60 M38 48 L62 48 M42 40 L58 56 M58 40 L42 56"/>
+                  </g>
+                  <g fill="none" stroke="#D4A24C" stroke-width="0.5">
+                    <path d="M22 100 Q50 78 78 100"/>
+                    <path d="M44 100 L56 100 L52 130 L48 130 Z"/>
+                  </g>
+                  <g fill="#FFE6A7" opacity="0.8">
+                    <circle cx="22" cy="76" r="0.8"/>
+                    <circle cx="76" cy="68" r="0.8"/>
+                    <circle cx="86" cy="92" r="0.6"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="tarot__name">the lab</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">5 · crown</div>
+              <div class="tarot__back__body"><em>ai&#8209;created.com.</em> Independent product lab. <b>Nine live products,</b> shipped end&#8209;to&#8209;end. See the suits&nbsp;below.</div>
+              <div class="tarot__back__links"><a href="https://ai-created.com" target="_blank" rel="noopener">↗ visit</a><a href="#lab">↓ the&nbsp;lab</a></div>
+            </div>
+          </div>
+          <div class="tarot__tip">crown · the lab</div>
+        </div>
+
+        <!-- 6 — future -->
+        <div class="tarot t6" data-key="future">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">6 · future</div>
+              <div class="tarot__roman">the Sun · XIX</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" aria-hidden="true">
+                  <g fill="none" stroke="#FFE03C" stroke-width="0.7">
+                    <circle cx="50" cy="56" r="14"/>
+                    <g><line x1="50" y1="30" x2="50" y2="38"/><line x1="50" y1="74" x2="50" y2="82"/><line x1="24" y1="56" x2="32" y2="56"/><line x1="68" y1="56" x2="76" y2="56"/><line x1="32" y1="38" x2="38" y2="44"/><line x1="62" y1="68" x2="68" y2="74"/><line x1="68" y1="38" x2="62" y2="44"/><line x1="38" y1="68" x2="32" y2="74"/></g>
+                  </g>
+                  <g fill="none" stroke="#D4A24C" stroke-width="0.5">
+                    <path d="M28 130 L30 100 L40 96 L46 102 L46 130"/>
+                    <path d="M54 130 L54 102 L60 96 L70 100 L72 130"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="tarot__name">AI&#8209;native, shipped</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">6 · future</div>
+              <div class="tarot__back__body"><em>WatchGPT</em> on the wrist. <em>My&nbsp;AI&nbsp;Diary</em> in the pocket. <em>Calorie&nbsp;Counter</em> in the kitchen. Shipped, not&nbsp;described.</div>
+              <div class="tarot__back__links"><a href="#lab">↓ products</a></div>
+            </div>
+          </div>
+          <div class="tarot__tip">future · AI-native, shipped</div>
+        </div>
+
+        <!-- 7 — querent -->
+        <div class="tarot t7" data-key="hand">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">7 · hand</div>
+              <div class="tarot__roman">the Maker · I</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" aria-hidden="true">
+                  <g fill="none" stroke="#D4A24C" stroke-width="0.7">
+                    <path d="M30 110 L30 56 Q30 46 38 46 L38 90 Q38 98 46 98 L46 50 Q46 40 54 40 L54 92 Q54 100 62 100 L62 56 Q62 46 70 46 L70 124 Q70 138 50 138 Q30 138 30 110 Z"/>
+                  </g>
+                  <circle cx="60" cy="36" r="3" fill="#FF3CC4" opacity="0.85"/>
+                </svg>
+              </div>
+              <div class="tarot__name">refuses the average</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">7 · hand</div>
+              <div class="tarot__back__body">Allergic to template output. Plain feedback in plain language. <em>Sr. Product Designer &amp; GenAI Specialist</em> at <em>Kohl&rsquo;s.</em></div>
+              <div class="tarot__back__links"><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">↗ linkedin</a></div>
+            </div>
+          </div>
+          <div class="tarot__tip">hand · refuses the average</div>
+        </div>
+
+        <!-- 8 — environment -->
+        <div class="tarot t8" data-key="house">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">8 · house</div>
+              <div class="tarot__roman">the Wheel · X</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" aria-hidden="true">
+                  <g fill="none" stroke="#FFE03C" stroke-width="0.7">
+                    <circle cx="50" cy="70" r="32"/>
+                    <circle cx="50" cy="70" r="22"/>
+                    <line x1="18" y1="70" x2="82" y2="70"/>
+                    <line x1="50" y1="38" x2="50" y2="102"/>
+                    <line x1="28" y1="48" x2="72" y2="92"/>
+                    <line x1="72" y1="48" x2="28" y2="92"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="tarot__name">Kohl&rsquo;s &amp; the lab</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">8 · house</div>
+              <div class="tarot__back__body"><em>Portland, Oregon.</em> <em>Kohl&rsquo;s</em> by day &mdash; cart, checkout, wallet, AI org. The <em>lab</em> by night. Both running in&nbsp;parallel.</div>
+              <div class="tarot__back__links"><a href="https://ai-created.com" target="_blank" rel="noopener">↗ the&nbsp;lab</a></div>
+            </div>
+          </div>
+          <div class="tarot__tip">house · Kohl&rsquo;s by day, lab by night</div>
+        </div>
+
+        <!-- 9 — hope / fear -->
+        <div class="tarot t9" data-key="vision">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">9 · vision</div>
+              <div class="tarot__roman">the Moon · XVIII</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" aria-hidden="true">
+                  <g fill="none" stroke="#A23CFF" stroke-width="0.7">
+                    <path d="M30 60 Q50 36 70 60"/>
+                    <circle cx="50" cy="62" r="6" fill="#FF3CC4" opacity="0.6"/>
+                    <path d="M30 100 Q50 84 70 100"/>
+                    <path d="M28 120 L72 120"/>
+                  </g>
+                  <g fill="#FFE6A7" opacity="0.85">
+                    <circle cx="50" cy="62" r="1.5"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="tarot__name">hand&#8209;set software</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">9 · vision</div>
+              <div class="tarot__back__body">Software designed by a person, with the joints visible. <em>Color Clock</em> for the love letter. <em>Vectronix</em> for the hardcore.</div>
+              <div class="tarot__back__links"><a href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">↗ color clock</a><a href="https://ai-created.com/games" target="_blank" rel="noopener">↗ vectronix</a></div>
+            </div>
+          </div>
+          <div class="tarot__tip">vision · hand-set software</div>
+        </div>
+
+        <!-- 10 — outcome -->
+        <div class="tarot t10" data-key="outcome">
+          <div class="tarot__inner">
+            <div class="tarot__face">
+              <div class="tarot__pos">10 · outcome</div>
+              <div class="tarot__roman">the Work · XXI</div>
+              <div class="tarot__art">
+                <svg viewBox="0 0 100 160" aria-hidden="true">
+                  <g fill="none" stroke="#3CFF8E" stroke-width="0.6">
+                    <ellipse cx="50" cy="70" rx="30" ry="42"/>
+                    <ellipse cx="50" cy="70" rx="18" ry="32"/>
+                    <path d="M30 50 Q50 70 70 50 M30 90 Q50 70 70 90"/>
+                    <circle cx="50" cy="70" r="3" fill="#3CFF8E"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="tarot__name">done by a person</div>
+            </div>
+            <div class="tarot__back" aria-hidden="true">
+              <div class="tarot__back__pos">10 · outcome</div>
+              <div class="tarot__back__body">Ship work that is <em>original, useful,</em> and recognisably done by a&nbsp;person. The deck is the&nbsp;receipt.</div>
+              <div class="tarot__back__links"><a href="#lab">↓ the&nbsp;lab</a><a href="#oracle">↓ the&nbsp;oracle</a></div>
+            </div>
+          </div>
+          <div class="tarot__tip">outcome · work done by a person</div>
+        </div>
+
+      </div><!-- /spread__grid -->
+    </div><!-- /spread -->
+
+    <ul class="spread__legend reveal">
+      <li><b>I.</b> the&nbsp;self <em>the maker himself</em></li>
+      <li><b>II.</b> the&nbsp;crossing <em>AI rebuilds the work</em></li>
+      <li><b>III.</b> the&nbsp;root <em>20 years at scale</em></li>
+      <li><b>IV.</b> the&nbsp;past <em>Endemol, Netherlands</em></li>
+      <li><b>V.</b> the&nbsp;crown <em>the lab</em></li>
+      <li><b>VI.</b> the&nbsp;future <em>AI&#8209;native, shipped</em></li>
+      <li><b>VII.</b> the&nbsp;hand <em>refuses the average</em></li>
+      <li><b>VIII.</b> the&nbsp;house <em>Kohl&rsquo;s &amp; the lab</em></li>
+      <li><b>IX.</b> the&nbsp;vision <em>hand&#8209;set software</em></li>
+      <li><b>X.</b> the&nbsp;outcome <em>done by a person</em></li>
+    </ul>
+
+    <div class="shuffle-wrap" style="display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;">
+      <button class="shuffle" id="shuffleBtn" type="button">turn the cards</button>
+      <a class="shuffle" href="#oracle" style="text-decoration:none;color:var(--gold-3);border-color:var(--gold-2);background:rgba(212,162,76,0.06);">↓ read the&nbsp;interpretations</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     §4  THE MAJOR ARCANA — eight chapter cards
+     ════════════════════════════════════════════════════════════ -->
+<section class="majors" id="record">
+  <div class="wrap">
+
+    <header class="majors__head reveal">
+      <div class="kicker" style="text-align:left;">§ 003 <span class="sep"></span> the <em style="color:var(--signal);font-style:normal;">major arcana</em></div>
+      <h2>Six Chapters,<br/>Six Suns.<span class="x">Each card is a real place of work — click any chapter to open the full record on LinkedIn.</span></h2>
+      <p>Each card opens the role on LinkedIn (the lab card opens <em>ai‑created.com</em>). Hover or tap to summon the foil; the colour of each card is the colour of the air in that&nbsp;room.</p>
+    </header>
+
+    <div class="majors__grid reveal">
+
+      <a class="major" data-key="fool" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" aria-label="Endemol — UX & Engineering Lead">
+        <div class="major__inner">
+          <div class="major__roman">· 0 ·</div>
+          <div class="major__chapter">Ch. I</div>
+          <div class="major__art">
+            <svg viewBox="0 0 100 140" aria-hidden="true"><defs><linearGradient id="ma1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFD8A6"/><stop offset="100%" stop-color="#8E6418"/></linearGradient></defs>
+              <g fill="none" stroke="url(#ma1)" stroke-width="0.7">
+                <circle cx="50" cy="46" r="12"/>
+                <path d="M50 58 L50 100 L36 130 M50 100 L64 130"/>
+                <path d="M68 56 L82 38 L90 60"/>
+              </g>
+              <circle cx="84" cy="42" r="2" fill="url(#ma1)"/>
+            </svg>
+          </div>
+          <div class="major__title">Endemol</div>
+          <div class="major__years">the&nbsp;beginning</div>
+          <div class="major__role">UX &amp; Engineering Lead<br/><span style="color:var(--ink-3);font-size:11.5px;letter-spacing:0.04em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;">multilingual web platforms</span></div>
+        </div>
+      </a>
+
+      <a class="major" data-key="lovers" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" aria-label="Google — Senior UX Engineer / Prototyper">
+        <div class="major__inner">
+          <div class="major__roman">· VI ·</div>
+          <div class="major__chapter">Ch. II</div>
+          <div class="major__art">
+            <svg viewBox="0 0 100 140" aria-hidden="true">
+              <g fill="none" stroke="#FF3CC4" stroke-width="0.7">
+                <circle cx="36" cy="56" r="10"/>
+                <circle cx="64" cy="56" r="10"/>
+                <path d="M36 66 L36 110 M64 66 L64 110"/>
+                <path d="M22 110 L78 110"/>
+                <path d="M40 30 Q50 18 60 30"/>
+              </g>
+              <circle cx="50" cy="24" r="2" fill="#3CD2FF"/>
+            </svg>
+          </div>
+          <div class="major__title">Google</div>
+          <div class="major__years">the&nbsp;bridge</div>
+          <div class="major__role">Sr. UX Engineer · Prototyper<br/><span style="color:var(--ink-3);font-size:11.5px;letter-spacing:0.04em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;">Cloud&nbsp;AI · Assistant · Android</span></div>
+        </div>
+      </a>
+
+      <a class="major" data-key="emperor" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" aria-label="Yahoo! — Director of UX Prototyping">
+        <div class="major__inner">
+          <div class="major__roman">· IV ·</div>
+          <div class="major__chapter">Ch. III</div>
+          <div class="major__art">
+            <svg viewBox="0 0 100 140" aria-hidden="true">
+              <g fill="none" stroke="#3CD2FF" stroke-width="0.7">
+                <path d="M30 110 L30 50 L50 30 L70 50 L70 110 Z"/>
+                <path d="M30 70 L70 70"/>
+                <path d="M40 50 L40 70 M60 50 L60 70"/>
+                <path d="M40 80 L60 80 M40 90 L60 90"/>
+                <circle cx="50" cy="40" r="3" fill="#3CD2FF"/>
+              </g>
+            </svg>
+          </div>
+          <div class="major__title">Yahoo!</div>
+          <div class="major__years">the&nbsp;throne</div>
+          <div class="major__role">Director · UX Prototyping<br/><span style="color:var(--ink-3);font-size:11.5px;letter-spacing:0.04em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;">global team · rebrand · personalization</span></div>
+        </div>
+      </a>
+
+      <a class="major" data-key="wheel" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" aria-label="Walmart Labs — Principal Product Designer / Design Technologist">
+        <div class="major__inner">
+          <div class="major__roman">· X ·</div>
+          <div class="major__chapter">Ch. IV</div>
+          <div class="major__art">
+            <svg viewBox="0 0 100 140" aria-hidden="true">
+              <g fill="none" stroke="#FFE03C" stroke-width="0.7">
+                <circle cx="50" cy="70" r="32"/>
+                <circle cx="50" cy="70" r="20"/>
+                <line x1="18" y1="70" x2="82" y2="70"/>
+                <line x1="50" y1="38" x2="50" y2="102"/>
+                <line x1="28" y1="48" x2="72" y2="92"/>
+                <line x1="72" y1="48" x2="28" y2="92"/>
+              </g>
+            </svg>
+          </div>
+          <div class="major__title">Walmart Labs</div>
+          <div class="major__years">the&nbsp;wheel</div>
+          <div class="major__role">Principal Product Designer<br/><span style="color:var(--ink-3);font-size:11.5px;letter-spacing:0.04em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;">mobile · voice · recommendations</span></div>
+        </div>
+      </a>
+
+      <a class="major" data-key="hierophant" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" aria-label="Kohl's — Senior Product Designer &amp; Generative AI Specialist (current)">
+        <div class="major__nowtag">· now ·</div>
+        <div class="major__inner">
+          <div class="major__roman">· V ·</div>
+          <div class="major__chapter">Ch. V</div>
+          <div class="major__art">
+            <svg viewBox="0 0 100 140" aria-hidden="true">
+              <g fill="none" stroke="#FF3C8E" stroke-width="0.7">
+                <path d="M40 30 L60 30 L60 110 L40 110 Z"/>
+                <path d="M30 50 L40 50 M60 50 L70 50"/>
+                <path d="M30 70 L40 70 M60 70 L70 70"/>
+                <circle cx="50" cy="44" r="4"/>
+                <path d="M44 76 L56 76 L50 88 Z"/>
+              </g>
+            </svg>
+          </div>
+          <div class="major__title">Kohl&rsquo;s</div>
+          <div class="major__years">the&nbsp;teacher</div>
+          <div class="major__role">Sr. PD &amp; GenAI Specialist<br/><span style="color:var(--ink-3);font-size:11.5px;letter-spacing:0.04em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;">cart · checkout · wallet · AI&nbsp;org</span></div>
+        </div>
+      </a>
+
+      <a class="major" data-key="star" href="https://ai-created.com" target="_blank" rel="noopener" aria-label="AI-Created — the independent product lab">
+        <div class="major__inner">
+          <div class="major__roman">· XVII ·</div>
+          <div class="major__chapter">Ch. VI</div>
+          <div class="major__art">
+            <svg viewBox="0 0 100 140" aria-hidden="true">
+              <g fill="#FFE03C" opacity="0.9"><circle cx="50" cy="50" r="3"/></g>
+              <g fill="none" stroke="#3CD2FF" stroke-width="0.7">
+                <path d="M50 30 L50 70 M30 50 L70 50 M36 36 L64 64 M64 36 L36 64"/>
+                <path d="M28 90 Q50 70 72 90"/>
+                <path d="M28 105 L72 105"/>
+              </g>
+              <g fill="#FFE6A7" opacity="0.7">
+                <circle cx="20" cy="38" r="0.8"/>
+                <circle cx="84" cy="38" r="0.8"/>
+                <circle cx="14" cy="74" r="0.5"/>
+                <circle cx="88" cy="78" r="0.6"/>
+              </g>
+            </svg>
+          </div>
+          <div class="major__title">AI&#8209;Created</div>
+          <div class="major__years">the&nbsp;lab</div>
+          <div class="major__role">Independent Product Lab<br/><span style="color:var(--ink-3);font-size:11.5px;letter-spacing:0.04em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;">ships live · see&nbsp;below</span></div>
+        </div>
+      </a>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     §5  MINOR ARCANA — four suits
+     ════════════════════════════════════════════════════════════ -->
+<section class="minors" id="lab">
+  <div class="wrap">
+
+    <header class="minors__head reveal">
+      <div class="kicker">§ 004 <span class="sep"></span> the <em style="color:var(--signal);font-style:normal;">minor arcana</em></div>
+      <h2>The Four Suits of the&nbsp;Lab</h2>
+      <p>The minor arcana is the working catalogue: <em>nine real, live products</em> shipped from the lab, and seven everyday tools that built them. Pips marked <span style="color:var(--signal);">↗</span> open the working&nbsp;product.</p>
+    </header>
+
+    <div class="minors__grid reveal">
+
+      <!-- WANDS · code & current — the everyday tools -->
+      <article class="suit" data-suit="wands">
+        <div class="suit__sigil" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4 20 L20 4"/><circle cx="20" cy="4" r="2"/><path d="M16 8 L18 6 M14 10 L16 8 M8 16 L10 14 M6 18 L8 16"/></g></svg>
+        </div>
+        <h3 class="suit__name">Wands</h3>
+        <p class="suit__sub"><em>of code &amp; current</em></p>
+        <div class="suit__cards">
+          <div class="pip">
+            <div class="pip__roman">· I ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 26 L26 6"/><circle cx="26" cy="6" r="2.5"/></g></svg></div>
+            <div class="pip__name">TypeScript</div>
+            <div class="pip__role">Next · React</div>
+          </div>
+          <div class="pip">
+            <div class="pip__roman">· II ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 26 L24 8"/><path d="M10 26 L28 8"/></g></svg></div>
+            <div class="pip__name">Swift &middot; watchOS</div>
+            <div class="pip__role">native iOS</div>
+          </div>
+          <div class="pip">
+            <div class="pip__roman">· III ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 26 L20 8"/><path d="M11 26 L26 8"/><path d="M16 30 L16 6"/></g></svg></div>
+            <div class="pip__name">prompt eng.</div>
+            <div class="pip__role">models · agents</div>
+          </div>
+          <div class="pip">
+            <div class="pip__roman">· IV ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 28 L8 4 M14 30 L14 6 M20 28 L20 4 M26 30 L26 6"/></g></svg></div>
+            <div class="pip__name">ships</div>
+            <div class="pip__role">end&nbsp;to&nbsp;end</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- CUPS · voice & ear — the AI products that converse -->
+      <article class="suit" data-suit="cups">
+        <div class="suit__sigil" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M5 6 L19 6 L17 16 Q12 19 7 16 Z"/><path d="M10 20 L14 20 M12 19 L12 22"/><path d="M9 22 L15 22"/></g></svg>
+        </div>
+        <h3 class="suit__name">Cups</h3>
+        <p class="suit__sub"><em>of voice &amp; ear</em></p>
+        <div class="suit__cards">
+          <a class="pip" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+            <div class="pip__roman">· I ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 8 L24 8 L21 22 Q16 25 11 22 Z"/></g></svg></div>
+            <div class="pip__name">My AI Diary</div>
+            <div class="pip__role">voice &middot; Whisper &middot; PWA</div>
+            <div class="pip__live">live</div>
+          </a>
+          <a class="pip" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+            <div class="pip__roman">· II ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="16" cy="16" r="9"/><rect x="13" y="3" width="6" height="4"/><rect x="13" y="25" width="6" height="4"/></g></svg></div>
+            <div class="pip__name">WatchGPT</div>
+            <div class="pip__role">watchOS &middot; realtime</div>
+            <div class="pip__live">live</div>
+          </a>
+          <a class="pip" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+            <div class="pip__roman">· III ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="16" cy="11" r="5"/><path d="M6 28 Q16 18 26 28"/></g></svg></div>
+            <div class="pip__name">Human, Actually</div>
+            <div class="pip__role">résumé &middot; LLM &middot; NLP</div>
+            <div class="pip__live">live</div>
+          </a>
+          <a class="pip" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">
+            <div class="pip__roman">· IV ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="16" cy="16" r="11"/><path d="M12 14 Q16 8 20 14 Q22 18 16 22 Q10 18 12 14 Z"/></g></svg></div>
+            <div class="pip__name">Calorie Counter</div>
+            <div class="pip__role">vision &middot; voice &middot; PWA</div>
+            <div class="pip__live">live</div>
+          </a>
+        </div>
+      </article>
+
+      <!-- SWORDS · play & blade — games + strategy -->
+      <article class="suit" data-suit="swords">
+        <div class="suit__sigil" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 3 L12 16"/><path d="M8 16 L16 16"/><path d="M9 19 L15 19"/><circle cx="12" cy="21" r="1.6"/></g></svg>
+        </div>
+        <h3 class="suit__name">Swords</h3>
+        <p class="suit__sub"><em>of play &amp; blade</em></p>
+        <div class="suit__cards">
+          <a class="pip" href="https://ai-created.com/games" target="_blank" rel="noopener">
+            <div class="pip__roman">· I ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><path d="M16 5 L22 16 L16 27 L10 16 Z"/><path d="M16 12 L18 16 L16 20 L14 16 Z"/></g></svg></div>
+            <div class="pip__name">Vectronix</div>
+            <div class="pip__role">arcade &middot; canvas</div>
+            <div class="pip__live">live</div>
+          </a>
+          <a class="pip" href="https://ai-created.com/games" target="_blank" rel="noopener">
+            <div class="pip__roman">· II ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="2" fill="currentColor"/></g></svg></div>
+            <div class="pip__name">Radial Drift</div>
+            <div class="pip__role">WebGL &middot; haptics</div>
+            <div class="pip__live">live</div>
+          </a>
+          <div class="pip">
+            <div class="pip__roman">· III ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><path d="M16 4 L16 20"/><path d="M8 12 L24 20"/><path d="M24 12 L8 20"/></g></svg></div>
+            <div class="pip__name">strategy</div>
+            <div class="pip__role">product &middot; roadmap</div>
+          </div>
+          <div class="pip">
+            <div class="pip__roman">· IV ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 6 L8 26"/><path d="M14 4 L14 28"/><path d="M20 4 L20 28"/><path d="M26 6 L26 26"/></g></svg></div>
+            <div class="pip__name">discipline</div>
+            <div class="pip__role">ship &middot; cut &middot; ship</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- PENTACLES · craft & light — visual / audio / dev craft -->
+      <article class="suit" data-suit="pentacles">
+        <div class="suit__sigil" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 5 L13.9 10.6 L20 10.6 L15 14.2 L17 19.8 L12 16.2 L7 19.8 L9 14.2 L4 10.6 L10.1 10.6 Z"/></g></svg>
+        </div>
+        <h3 class="suit__name">Pentacles</h3>
+        <p class="suit__sub"><em>of craft &amp; light</em></p>
+        <div class="suit__cards">
+          <a class="pip" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
+            <div class="pip__roman">· I ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="16" cy="16" r="11"/><path d="M16 9 L16 16 L20 19"/></g></svg></div>
+            <div class="pip__name">Color Clock</div>
+            <div class="pip__role">1991 &middot; CSS &middot; type</div>
+            <div class="pip__live">live</div>
+          </a>
+          <a class="pip" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
+            <div class="pip__roman">· II ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 20 L6 12 M10 22 L10 10 M14 24 L14 8 M18 22 L18 10 M22 20 L22 12 M26 18 L26 14"/></g></svg></div>
+            <div class="pip__name">Audio Vis. Suite</div>
+            <div class="pip__role">WebGL &middot; FFT &middot; FFmpeg</div>
+            <div class="pip__live">live</div>
+          </a>
+          <a class="pip" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">
+            <div class="pip__roman">· III ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="8" width="22" height="14" rx="1.5"/><path d="M5 14 L27 14"/><circle cx="8" cy="11" r="0.8" fill="currentColor"/></g></svg></div>
+            <div class="pip__name">AI Usage</div>
+            <div class="pip__role">macOS &middot; Swift &middot; menubar</div>
+            <div class="pip__live">live</div>
+          </a>
+          <div class="pip">
+            <div class="pip__roman">· IV ·</div>
+            <div class="pip__svg"><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 24 L8 8 M8 8 L24 8 M16 8 L16 24"/></g></svg></div>
+            <div class="pip__name">type &middot; motion</div>
+            <div class="pip__role">setting &middot; timing</div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     §6  THE ORACLE — divination panel
+     ════════════════════════════════════════════════════════════ -->
+<section class="oracle" id="oracle">
+  <div class="wrap">
+
+    <div class="oracle__grid">
+
+      <div class="oracle__head reveal">
+        <div class="kicker">§ 005 <span class="sep"></span> the <em style="color:var(--signal);font-style:normal;">oracle</em></div>
+        <h2>The Oracle <em>Speaks.</em></h2>
+        <p class="lede">
+          Each row below is a translation of one card from the spread above &mdash; <em>what the card actually means</em> about a working life. <b>This is the bio you can use.</b> A position&#8209;by&#8209;position breakdown of twenty years in product design, design engineering, and AI&#8209;native work.
+        </p>
+
+        <div style="margin-top:32px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.32em;text-transform:uppercase;color:var(--ink-3);display:flex;flex-direction:column;gap:8px;">
+          <div><span style="color:var(--signal);">read by</span> the deck itself, candidly</div>
+          <div><span style="color:var(--signal);">cast at</span> the kitchen table, no incense</div>
+          <div><span style="color:var(--signal);">witnessed by</span> the cat (mt. tabor)</div>
+        </div>
+      </div>
+
+      <div class="divination reveal">
+        <div class="divination__head">divination · the ten positions</div>
+
+        <div class="divination__readings">
+          <div class="divination__row">
+            <div class="pos">i<b>· self</b></div>
+            <div class="read">The <em>Magus</em> is not a king; he is a person at a workbench with one of each tool laid out. The subject is fluent in <em>making things</em> &mdash; design, code, words, voice &mdash; and is unromantic about which one it took to ship.</div>
+          </div>
+          <div class="divination__row">
+            <div class="pos">ii<b>· crossing</b></div>
+            <div class="read">The <em>Tower</em> is the work going through transformation in real time: AI dismantles the practice and rebuilds it in the same week. The crossing is not an obstacle &mdash; it is the new&nbsp;weather.</div>
+          </div>
+          <div class="divination__row">
+            <div class="pos">iii<b>· root</b></div>
+            <div class="read">The <em>World</em> beneath it all is the work record above: <em>Endemol</em> (UX &amp; engineering), <em>Google</em> (Cloud&nbsp;AI · Assistant · Android prototyping), <em>Yahoo!</em> (director of UX prototyping), <em>Walmart&nbsp;Labs</em> (principal product designer), <em>Kohl&rsquo;s</em> (current — senior product designer &amp; generative&#8209;AI specialist). The taste was not invented yesterday; it is the foundation that lets the new tools move&nbsp;quickly.</div>
+          </div>
+          <div class="divination__row">
+            <div class="pos">iv<b>· past</b></div>
+            <div class="read">The <em>Fool</em> is the Netherlands &mdash; a kid with a bag of nothing and a road in front of him, building multilingual web platforms at <em>Endemol.</em> The willingness to start without permission still rides in every project that&nbsp;follows.</div>
+          </div>
+          <div class="divination__row">
+            <div class="pos">v<b>· crown</b></div>
+            <div class="read">The <em>Star</em> overhead is the independent lab, <em>ai‑created.com</em> &mdash; a small north light, not a spotlight. <em>My AI Diary, WatchGPT, Calorie Counter, Color Clock, Human Actually, AI Usage</em> &mdash; all built end&#8209;to&#8209;end, all live, all in the minor&nbsp;arcana below.</div>
+          </div>
+          <div class="divination__row">
+            <div class="pos">vi<b>· future</b></div>
+            <div class="read">The <em>Sun</em> in front: an AI&#8209;native practice run by a person with taste. <em>WatchGPT</em> on the wrist, <em>My AI Diary</em> in the pocket, <em>Calorie Counter</em> in the kitchen — shipped, not described. The subject does not fear being replaced; he is too busy <em>replacing the boring parts</em> of his own&nbsp;work.</div>
+          </div>
+          <div class="divination__row">
+            <div class="pos">vii<b>· hand</b></div>
+            <div class="read">The <em>Maker</em> &mdash; the personal disposition. The subject is allergic to template output; gives feedback in plain language; refuses the first vibe&#8209;coded answer. Drives AI tooling &amp; education across the design org at <em>Kohl&rsquo;s</em> &mdash; comfortable as <em>IC, lead, or director.</em></div>
+          </div>
+          <div class="divination__row">
+            <div class="pos">viii<b>· house</b></div>
+            <div class="read">The <em>Wheel</em> &mdash; the environment. Currently <em>Portland, Oregon.</em> Currently <em>Kohl&rsquo;s</em> by day, the <em>lab</em> by night; both running in parallel, each feeding the&nbsp;other.</div>
+          </div>
+          <div class="divination__row">
+            <div class="pos">ix<b>· vision</b></div>
+            <div class="read">The <em>Moon</em> &mdash; the held image. Software that feels hand&#8209;set, designed by a person, with the joints visible and no embarrassment about&nbsp;them. <em>Color Clock</em> for the love letter; <em>Vectronix</em> for the hardcore; <em>Audio Visualizer Suite</em> for the&nbsp;craft.</div>
+          </div>
+          <div class="divination__row">
+            <div class="pos">x<b>· outcome</b></div>
+            <div class="read">The <em>Work Itself,</em> which has no number because it is its own arcanum: ship work that is original, useful, and recognisably done by a person. The deck above is the receipt &mdash; <em>click anything.</em></div>
+          </div>
+        </div>
+
+        <div class="divination__seal">
+          <div class="stamp">opus<br/>arcanum<br/>MMXXVI</div>
+          <div>
+            <div>signed <b>by his own hand</b></div>
+            <div style="margin-top:6px;color:var(--ink-2);text-transform:none;letter-spacing:0.08em;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;">&mdash; the reading is closed. the deck is to be returned to its silk.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     §7  THE SUMMONING — contact
+     ════════════════════════════════════════════════════════════ -->
+<section class="summon">
+  <div class="wrap">
+    <div class="summon__inner reveal">
+
+      <div class="kicker">§ 006 <span class="sep"></span> <span style="color:var(--gold);">the&nbsp;</span><em style="color:var(--signal);font-style:normal;">summoning</em></div>
+      <h2>Call the Subject <em class="x">by name.</em></h2>
+
+      <p>
+        Speak the address aloud or simply click. The Magus answers within&nbsp;a&nbsp;day. He prefers a clear sentence about the work; he forgives a&nbsp;long&nbsp;one.
+      </p>
+
+      <div class="summon__links">
+        <a href="mailto:marcovhv@gmail.com">
+          <span class="glyph">@</span>
+          <span class="body"><b>by post</b><span>marcovhv@gmail.com</span></span>
+        </a>
+        <a href="https://ai-created.com" target="_blank" rel="noopener">
+          <span class="glyph">⛯</span>
+          <span class="body"><b>the&nbsp;lab</b><span>ai-created.com</span></span>
+        </a>
+        <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">
+          <span class="glyph">in</span>
+          <span class="body"><b>professional</b><span>linkedin.com/in/marcovhv</span></span>
+        </a>
+        <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">
+          <span class="glyph">𝕏</span>
+          <span class="body"><b>also</b><span>x.com/AIandDesign</span></span>
+        </a>
+      </div>
+
+      <div class="summon__back">
+        <a href="index.html">↩ return to the codex of seven</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     §8  COLOPHON
+     ════════════════════════════════════════════════════════════ -->
+<footer class="colophon wrap">
+  <div class="colophon__grid">
+    <div>© MMXXVI <span style="color:var(--gold);">·</span> <b>MVHV · ARCANA</b> <span style="color:var(--gold);">·</span> opus arcanum</div>
+    <div>hand-illuminated <span style="color:var(--gold);">·</span> single HTML file <span style="color:var(--gold);">·</span> zero frameworks</div>
+    <div>edition <b>VII / VII</b> <span style="color:var(--gold);">·</span> volume <b>I</b> <span style="color:var(--gold);">·</span> printed in portland</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ────────────────────────────────────────────────────────────
+     LIVE CLOCK & MOON
+     ──────────────────────────────────────────────────────────── */
+  function tick() {
+    const t = new Date();
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles', hour12: false,
+      hour: '2-digit', minute: '2-digit'
+    });
+    const el = document.getElementById('ltime');
+    if (el) el.textContent = fmt.format(t);
+  }
+  tick(); setInterval(tick, 30000);
+
+  // approximate moon phase glyph
+  function setMoon() {
+    const moons = ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
+    const ref = new Date(2000, 0, 6, 18, 14, 0); // known new moon
+    const days = (Date.now() - ref.getTime()) / 86400000;
+    const phase = (days % 29.5306) / 29.5306;
+    const idx = Math.floor(phase * 8) % 8;
+    const el = document.getElementById('moon');
+    if (el) el.textContent = moons[idx];
+  }
+  setMoon();
+
+  /* ────────────────────────────────────────────────────────────
+     STARFIELD canvas
+     ──────────────────────────────────────────────────────────── */
+  (function stars() {
+    const c = document.getElementById('stars');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    let w = 0, h = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let pts = [];
+
+    function resize() {
+      w = c.width = innerWidth * dpr;
+      h = c.height = innerHeight * dpr;
+      c.style.width = innerWidth + 'px';
+      c.style.height = innerHeight + 'px';
+
+      pts = [];
+      const count = Math.min(220, Math.round((innerWidth * innerHeight) / 9000));
+      for (let i = 0; i < count; i++) {
+        pts.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: (Math.random() * 1.3 + 0.2) * dpr,
+          a: Math.random() * Math.PI * 2,
+          v: 0.4 + Math.random() * 1.6,
+          hue: Math.random() < 0.12 ? 'pink'
+              : Math.random() < 0.18 ? 'gold' : 'white'
+        });
+      }
+    }
+    resize();
+    addEventListener('resize', resize);
+
+    function frame(t) {
+      ctx.clearRect(0,0,w,h);
+      for (const p of pts) {
+        p.a += 0.012 * p.v;
+        const tw = 0.5 + 0.5 * Math.sin(p.a);
+        let col;
+        if (p.hue === 'pink') col = `rgba(255,91,167,${0.4 + 0.5*tw})`;
+        else if (p.hue === 'gold') col = `rgba(255,230,167,${0.4 + 0.5*tw})`;
+        else col = `rgba(255,255,255,${0.18 + 0.55*tw})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * (0.7 + 0.6 * tw), 0, Math.PI*2);
+        ctx.fillStyle = col;
+        ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  /* ────────────────────────────────────────────────────────────
+     CURSOR GLOW — soft pink follow
+     ──────────────────────────────────────────────────────────── */
+  (function () {
+    const g = document.getElementById('cursorGlow');
+    if (!g) return;
+    let tx = innerWidth/2, ty = innerHeight/2;
+    let x = tx, y = ty;
+    let raf = null;
+    function loop() {
+      x += (tx - x) * 0.18;
+      y += (ty - y) * 0.18;
+      g.style.left = x + 'px';
+      g.style.top  = y + 'px';
+      raf = requestAnimationFrame(loop);
+    }
+    addEventListener('pointermove', (e) => {
+      tx = e.clientX; ty = e.clientY;
+      g.classList.add('is-on');
+    }, { passive: true });
+    addEventListener('pointerleave', () => g.classList.remove('is-on'));
+    loop();
+  })();
+
+  /* ────────────────────────────────────────────────────────────
+     HOLOGRAPHIC HERO CARD — mouse-tracked foil + 3D tilt
+     ──────────────────────────────────────────────────────────── */
+  (function () {
+    const card = document.getElementById('heroCard');
+    if (!card) return;
+
+    let targetRX = 0, targetRY = 0, targetPX = 50, targetPY = 50, targetAngle = 110, targetStr = 0.55;
+    let rX = 0, rY = 0, pX = 50, pY = 50, angle = 110, str = 0.55;
+    let raf = null;
+
+    function loop() {
+      rX += (targetRX - rX) * 0.14;
+      rY += (targetRY - rY) * 0.14;
+      pX += (targetPX - pX) * 0.18;
+      pY += (targetPY - pY) * 0.18;
+      angle += (targetAngle - angle) * 0.14;
+      str   += (targetStr - str) * 0.14;
+
+      card.style.transform =
+        `perspective(1400px) rotateX(${rX.toFixed(2)}deg) rotateY(${rY.toFixed(2)}deg)`;
+      card.style.setProperty('--holo-pos-x', pX.toFixed(2) + '%');
+      card.style.setProperty('--holo-pos-y', pY.toFixed(2) + '%');
+      card.style.setProperty('--holo-angle', angle.toFixed(2) + 'deg');
+      card.style.setProperty('--holo-strength', str.toFixed(2));
+
+      raf = requestAnimationFrame(loop);
+    }
+    loop();
+
+    function handle(e) {
+      const r = card.getBoundingClientRect();
+      const px = e.clientX - r.left;
+      const py = e.clientY - r.top;
+      const nx = Math.max(0, Math.min(1, px / r.width));
+      const ny = Math.max(0, Math.min(1, py / r.height));
+      // negative on top for natural feel
+      targetRY = (nx - 0.5) * 26;
+      targetRX = -(ny - 0.5) * 22;
+      targetPX = nx * 100;
+      targetPY = ny * 100;
+      targetAngle = 80 + nx * 80;
+      // strength higher near edges
+      const edge = Math.max(Math.abs(nx - 0.5), Math.abs(ny - 0.5)) * 2;
+      targetStr = 0.45 + edge * 0.45;
+    }
+
+    function reset() {
+      targetRX = 0; targetRY = 0;
+      targetPX = 50; targetPY = 50;
+      targetAngle = 110;
+      targetStr = 0.55;
+    }
+
+    // gentle idle wobble — pauses while user interacts, resumes shortly after
+    let idle = true;
+    let idleTimer = null;
+    function resumeIdleSoon(ms) {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => { idle = true; }, ms || 1400);
+    }
+
+    card.addEventListener('pointerenter', () => {
+      idle = false;
+      clearTimeout(idleTimer);
+    });
+    card.addEventListener('pointermove', handle, { passive: true });
+    card.addEventListener('pointerleave', () => { reset(); resumeIdleSoon(); });
+    // touch devices: pointerleave may not fire reliably; cover both
+    card.addEventListener('pointerup', (e) => {
+      if (e.pointerType === 'touch') { reset(); resumeIdleSoon(900); }
+    });
+    card.addEventListener('pointercancel', () => { reset(); resumeIdleSoon(); });
+
+    (function wobble(t){
+      if (idle) {
+        const s = Math.sin(performance.now()/2000);
+        const c2 = Math.cos(performance.now()/2400);
+        targetRY = s * 6;
+        targetRX = c2 * 4;
+        targetPX = 50 + s*18;
+        targetPY = 50 + c2*16;
+        targetAngle = 100 + s*30;
+        targetStr = 0.55 + Math.abs(s)*0.2;
+      }
+      requestAnimationFrame(wobble);
+    })();
+  })();
+
+  /* ────────────────────────────────────────────────────────────
+     TAROT FLIP — click any card to flip
+     ──────────────────────────────────────────────────────────── */
+  (function () {
+    const cards = document.querySelectorAll('.tarot');
+    cards.forEach((c, i) => {
+      // start face-down with a stagger reveal
+      c.classList.add('is-flipped');
+      setTimeout(() => c.classList.remove('is-flipped'), 380 + i * 130);
+      c.addEventListener('click', (e) => {
+        // don't flip the card when the user clicks an actual link on the back
+        if (e.target.closest('a')) return;
+        c.classList.toggle('is-flipped');
+      });
+    });
+
+    const btn = document.getElementById('shuffleBtn');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        // flip all face-down, then face-up with stagger
+        cards.forEach(c => c.classList.add('is-flipped'));
+        setTimeout(() => {
+          cards.forEach((c, i) => {
+            setTimeout(() => c.classList.remove('is-flipped'), i * 110);
+          });
+        }, 700);
+      });
+    }
+  })();
+
+  /* ────────────────────────────────────────────────────────────
+     REVEAL on scroll
+     ──────────────────────────────────────────────────────────── */
+  const reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const ro = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-in');
+          ro.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+    reveals.forEach(el => ro.observe(el));
+  } else {
+    reveals.forEach(el => el.classList.add('is-in'));
+  }
+
+})();
+</script>
+
+</body>
+</html>
