@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Case File MVHV-20 / Evidence Room Portfolio</title>
+<meta name="description" content="A noir evidence-room one-page portfolio for Marco van Hylckama Vlieg, framing twenty years of design engineering and AI-native product work as an investigative case file." />
+<meta name="theme-color" content="#151515" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #151515;
+  --panel: #232220;
+  --paper: #ebe2cf;
+  --paper-2: #d0c1a5;
+  --ink: #151515;
+  --red: #d9342b;
+  --yellow: #f0b84b;
+  --blue: #536d9f;
+  --green: #4b8a68;
+  --muted: #8a8171;
+  --rule: rgba(235,226,207,0.2);
+  --gutter: clamp(18px, 5%, 58px);
+  --max: 1320px;
+  --mx: 50%;
+  --my: 32%;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--paper);
+  font-family: "Source Serif 4", Georgia, serif;
+  line-height: 1.52;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at var(--mx) var(--my), rgba(240,184,75,0.18), transparent 22rem),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 4px);
+  mix-blend-mode: screen;
+  z-index: 1;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--red); color: var(--paper); }
+a:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 4px;
+}
+
+.wrap {
+  width: min(var(--max), 100%);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; letter-spacing: 0; }
+.block { font-family: "Archivo Black", Impact, sans-serif; letter-spacing: 0; }
+
+.topbar {
+  border-bottom: 1px solid var(--rule);
+  background: rgba(21,21,21,0.88);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.topbar .wrap {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 700;
+}
+.back { color: var(--yellow); }
+
+.hero {
+  min-height: calc(100vh - 50px);
+  padding-top: 54px;
+  padding-bottom: 54px;
+  display: grid;
+  align-items: center;
+}
+.case-grid {
+  display: grid;
+  gap: 28px;
+}
+@media (min-width: 980px) {
+  .case-grid { grid-template-columns: 0.88fr 1.12fr; align-items: center; }
+}
+.case-title {
+  display: grid;
+  gap: 22px;
+}
+.stamp {
+  color: var(--red);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+h1 {
+  font-size: 5rem;
+  line-height: 0.9;
+  text-transform: uppercase;
+  max-width: 620px;
+}
+h1 span {
+  display: inline-block;
+  color: var(--yellow);
+}
+.hero p {
+  max-width: 560px;
+  color: rgba(235,226,207,0.78);
+  font-size: 1.1rem;
+}
+.case-meta {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+@media (min-width: 660px) {
+  .case-meta { grid-template-columns: repeat(3, 1fr); }
+}
+.case-meta div {
+  padding: 16px;
+  background: rgba(35,34,32,0.8);
+}
+.case-meta dt {
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.case-meta dd { font-weight: 800; color: var(--paper); }
+
+.board {
+  min-height: 630px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.05), transparent),
+    #292622;
+  border: 1px solid rgba(235,226,207,0.18);
+  box-shadow: 0 28px 70px rgba(0,0,0,0.45);
+  position: relative;
+  overflow: hidden;
+  padding: 30px;
+}
+.thread-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.thread {
+  stroke: var(--red);
+  stroke-width: 3;
+  fill: none;
+  stroke-dasharray: 8 8;
+  opacity: 0.75;
+}
+.evidence {
+  position: absolute;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid rgba(21,21,21,0.28);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.34);
+  padding: 18px;
+  width: 230px;
+  min-height: 150px;
+  display: block;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.evidence:hover {
+  box-shadow: 0 20px 44px rgba(0,0,0,0.48);
+}
+.evidence::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 42px;
+  height: 22px;
+  transform: translateX(-50%) rotate(-4deg);
+  background: rgba(240,184,75,0.62);
+}
+.evidence h2 {
+  font-size: 1.12rem;
+  margin-bottom: 8px;
+}
+.evidence p {
+  color: #4f493e;
+  font-size: 0.92rem;
+}
+.evidence .label {
+  color: var(--red);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  margin-bottom: 10px;
+}
+.photo {
+  min-height: 96px;
+  margin-top: 12px;
+  border: 8px solid #fff;
+  background:
+    linear-gradient(135deg, rgba(83,109,159,0.82), rgba(75,138,104,0.68)),
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.17) 0 8px, transparent 8px 16px);
+}
+.pin {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 0 5px rgba(217,52,43,0.18);
+}
+
+.section {
+  padding: 76px 0;
+}
+.section.paper {
+  background: var(--paper);
+  color: var(--ink);
+}
+.section-head {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 30px;
+}
+@media (min-width: 880px) {
+  .section-head { grid-template-columns: 220px 1fr; align-items: end; }
+}
+.section h2 {
+  font-size: 2.8rem;
+  line-height: 1.02;
+}
+.dossier {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+  gap: 1px;
+  background: rgba(21,21,21,0.22);
+  border: 1px solid rgba(21,21,21,0.22);
+}
+.file {
+  background: var(--paper);
+  padding: 24px;
+  min-height: 230px;
+  display: block;
+  transition: background 0.2s, transform 0.2s;
+}
+.file:hover {
+  background: #fff5df;
+  transform: translateY(-4px);
+}
+.file .no {
+  color: var(--red);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.file h3 {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+}
+.file p { color: #5d564a; }
+
+.matrix {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: rgba(21,21,21,0.2);
+  border: 1px solid rgba(21,21,21,0.2);
+}
+@media (min-width: 860px) {
+  .matrix { grid-template-columns: repeat(2, 1fr); }
+}
+.matrix-item {
+  background: var(--paper);
+  padding: 22px;
+  display: block;
+  transition: background 0.2s;
+}
+.matrix-item:hover { background: #fff5df; }
+.matrix-item b {
+  display: block;
+  color: var(--red);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.matrix-item p { color: #5d564a; }
+
+.chronology {
+  display: grid;
+  gap: 14px;
+}
+.chrono-item {
+  display: grid;
+  grid-template-columns: 118px 1fr;
+  gap: 20px;
+  border: 1px solid var(--rule);
+  background: rgba(35,34,32,0.76);
+  padding: 18px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.chrono-item:hover {
+  border-color: rgba(240,184,75,0.62);
+  transform: translateX(4px);
+}
+.chrono-item b {
+  color: var(--yellow);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+.chrono-item h3 {
+  margin-bottom: 6px;
+  color: var(--paper);
+}
+.chrono-item p { color: rgba(235,226,207,0.72); }
+
+.witnesses {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+@media (min-width: 760px) {
+  .witnesses { grid-template-columns: repeat(3, 1fr); }
+}
+.witness {
+  background: var(--bg);
+  padding: 24px;
+  min-height: 210px;
+  display: block;
+  transition: background 0.2s;
+}
+.witness:hover { background: #1d1d1d; }
+.witness h3 {
+  color: var(--yellow);
+  margin-bottom: 12px;
+}
+.witness p {
+  color: rgba(235,226,207,0.74);
+  font-style: italic;
+}
+
+.redacted {
+  background: var(--bg);
+  color: var(--paper);
+}
+.redacted-grid {
+  display: grid;
+  gap: 18px;
+}
+@media (min-width: 760px) {
+  .redacted-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.redact {
+  border: 1px solid var(--rule);
+  padding: 24px;
+  min-height: 190px;
+  display: block;
+  transition: border-color 0.2s, background 0.2s;
+}
+.redact:hover {
+  border-color: rgba(240,184,75,0.62);
+  background: #1d1d1d;
+}
+.bar {
+  display: inline-block;
+  background: var(--paper);
+  color: transparent;
+  height: 1em;
+  width: 130px;
+  vertical-align: -0.1em;
+  transition: color 0.2s, background 0.2s;
+}
+.redact:hover .bar {
+  color: var(--paper);
+  background: transparent;
+}
+.redact h3 {
+  color: var(--yellow);
+  margin-bottom: 12px;
+}
+.redact p { color: rgba(235,226,207,0.74); }
+
+.channels {
+  display: grid;
+  gap: 1px;
+  background: rgba(21,21,21,0.2);
+  border: 1px solid rgba(21,21,21,0.2);
+}
+@media (min-width: 760px) {
+  .channels { grid-template-columns: repeat(4,1fr); }
+}
+.channels a {
+  min-height: 94px;
+  background: var(--paper);
+  color: var(--ink);
+  display: flex;
+  align-items: end;
+  padding: 18px;
+  font-weight: 800;
+}
+
+@media (max-width: 780px) {
+  h1 { font-size: 3.25rem; }
+  .board { min-height: 820px; }
+  .evidence { width: 210px; }
+  .evidence:nth-of-type(1) { left: 8% !important; top: 9% !important; }
+  .evidence:nth-of-type(2) { left: 38% !important; top: 25% !important; }
+  .evidence:nth-of-type(3) { left: 10% !important; top: 50% !important; }
+  .evidence:nth-of-type(4) { left: 36% !important; top: 66% !important; }
+}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap mono">
+      <a class="back" href="index.html">Back to index</a>
+      <span>Case file MVHV-20 / evidence room open</span>
+      <span class="badge">OpenAI Codex</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="case-grid">
+        <div class="case-title">
+          <div class="stamp mono">Unsealed portfolio evidence</div>
+          <h1 class="block">The case for <span>Marco.</span></h1>
+          <p>Every artifact points to the same suspect profile: a senior product designer who can think like a strategist, prototype like an engineer, and make AI-native software feel unusually considered.</p>
+          <dl class="case-meta">
+            <div><dt class="mono">Known aliases</dt><dd>Designer / builder / lab operator</dd></div>
+            <div><dt class="mono">Primary pattern</dt><dd>Turns ambiguity into interfaces</dd></div>
+            <div><dt class="mono">Signal</dt><dd>Enterprise UX with experimental edge</dd></div>
+          </dl>
+        </div>
+
+        <div class="board" aria-label="Evidence board">
+          <svg class="thread-svg" viewBox="0 0 720 630" preserveAspectRatio="none" aria-hidden="true">
+            <path class="thread" d="M145 155 C250 96 344 180 462 142 S600 186 596 290"/>
+            <path class="thread" d="M173 197 C255 300 280 420 400 442 S558 390 596 290"/>
+            <path class="thread" d="M400 442 C392 324 500 254 596 290"/>
+          </svg>
+          <a class="evidence" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" style="left: 6%; top: 10%; transform: rotate(-3deg);">
+            <div class="label mono">Exhibit A</div><h2>Enterprise commerce</h2><p>Kohl's and Walmart Labs work across checkout, cart, wallet, merchant systems, and operational complexity.</p><div class="photo"></div>
+          </a>
+          <a class="evidence" href="https://google.com" target="_blank" rel="noopener" style="left: 52%; top: 8%; transform: rotate(2deg);">
+            <div class="label mono">Exhibit B</div><h2>AI interfaces</h2><p>Google assistant, cloud AI, internal AI adoption, and independent tools that treat models as material.</p><div class="photo"></div>
+          </a>
+          <a class="evidence" href="https://yahoo.com" target="_blank" rel="noopener" style="left: 11%; top: 52%; transform: rotate(4deg);">
+            <div class="label mono">Exhibit C</div><h2>Prototype velocity</h2><p>Yahoo and Endemol experience creating prototypes and second-screen systems under real traffic pressure.</p>
+          </a>
+          <a class="evidence" href="https://ai-created.com" target="_blank" rel="noopener" style="left: 48%; top: 58%; transform: rotate(-2deg);">
+            <div class="label mono">Exhibit D</div><h2>AI-Created lab</h2><p>My AI Diary, WatchGPT, Human Actually, visualizers, games, and strange useful experiments.</p>
+          </a>
+          <span class="pin" style="left: 20%; top: 25%;"></span>
+          <span class="pin" style="left: 64%; top: 22%;"></span>
+          <span class="pin" style="left: 24%; top: 60%;"></span>
+          <span class="pin" style="left: 60%; top: 70%;"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="stamp mono">Evidence index</div>
+          <h2>The pattern is not circumstantial.</h2>
+        </header>
+        <div class="dossier">
+          <a class="file" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><div class="no mono">File 01 / Foundation</div><h3>Design engineering</h3><p>Comfortable crossing from interaction model to prototype to production-aware detail, without losing the taste layer.</p></a>
+          <a class="file" href="https://tech.walmart.com" target="_blank" rel="noopener"><div class="no mono">File 02 / Scale</div><h3>High-volume UX</h3><p>Cart, checkout, wallet, and account flows where clarity compounds and sloppy decisions become expensive.</p></a>
+          <a class="file" href="https://ai-created.com/products" target="_blank" rel="noopener"><div class="no mono">File 03 / AI</div><h3>AI-native product work</h3><p>Not a chatbot wrapper reflex. A deeper interest in memory, voice, model behavior, tool ergonomics, and user trust.</p></a>
+          <a class="file" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><div class="no mono">File 04 / Leadership</div><h3>Teaching by making</h3><p>Driving adoption through examples, systems, and direct craft rather than abstract evangelism.</p></a>
+        </div>
+        <div class="matrix">
+          <a class="matrix-item" href="https://ai-created.com" target="_blank" rel="noopener"><b class="mono">Modus 01</b><p>When the situation is abstract, he turns it into a working surface: map, prototype, flow, tool, artifact, or decision model.</p></a>
+          <a class="matrix-item" href="https://kohls.com" target="_blank" rel="noopener"><b class="mono">Modus 02</b><p>When the system is heavy, he finds the small affordances that make it feel lighter without hiding operational truth.</p></a>
+          <a class="matrix-item" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><b class="mono">Modus 03</b><p>When AI enters the room, he asks what new behavior becomes possible, not which old workflow can get a shiny wrapper.</p></a>
+          <a class="matrix-item" href="https://ai-created.com/products" target="_blank" rel="noopener"><b class="mono">Modus 04</b><p>When quality slips into generic polish, he pushes the frame until the work has a reason to exist visually.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section redacted">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="stamp mono">Chronology</div>
+          <h2>The professional trail.</h2>
+        </header>
+        <div class="chronology">
+          <a class="chrono-item" href="https://endemolshine.us/" target="_blank" rel="noopener"><b class="mono">2008-2013</b><div><h3>Endemol</h3><p>Real-time second-screen and broadcast companion products, with UX and engineering living in the same evidence bag.</p></div></a>
+          <a class="chrono-item" href="https://google.com" target="_blank" rel="noopener"><b class="mono">2013-2017</b><div><h3>Google</h3><p>Assistant, Android, Cloud AI, and Material Design prototypes that shaped early conversational and AI-adjacent product behavior.</p></div></a>
+          <a class="chrono-item" href="https://yahoo.com" target="_blank" rel="noopener"><b class="mono">2017-2018</b><div><h3>Yahoo</h3><p>Rapid prototyping for portals, search, and media, where product direction had to become tangible fast.</p></div></a>
+          <a class="chrono-item" href="https://tech.walmart.com" target="_blank" rel="noopener"><b class="mono">2018-2023</b><div><h3>Walmart Labs</h3><p>Commerce flows and merchant systems at high volume: the kind of UX where correctness, speed, and trust all show up in the receipt.</p></div></a>
+          <a class="chrono-item" href="https://kohls.com" target="_blank" rel="noopener"><b class="mono">2026-now</b><div><h3>Kohl's</h3><p>Current work across cart, checkout, wallet, in-store self-checkout, and AI enablement inside an enterprise design organization.</p></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section redacted">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="stamp mono">Redacted notes</div>
+          <h2>Hover to reveal the motive.</h2>
+        </header>
+        <div class="redacted-grid">
+          <a class="redact" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><h3>Why teams call</h3><p>Because the work needs someone who can frame the problem, draw the system, make it tactile, and then <span class="bar">build the thing</span>.</p></a>
+          <a class="redact" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><h3>Why AI matters</h3><p>The opportunity is not automation theater. It is <span class="bar">new product behavior</span>, new instruments, and better human leverage.</p></a>
+          <a class="redact" href="https://ai-created.com" target="_blank" rel="noopener"><h3>Why the portfolio is weird</h3><p>Because generic presentation erases the exact trait being hired for: <span class="bar">taste under pressure</span>.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section redacted" style="padding-top: 0;">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="stamp mono">Witness statements</div>
+          <h2>What the case keeps proving.</h2>
+        </header>
+        <div class="witnesses">
+          <a class="witness" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><h3>On complexity</h3><p>"He is useful when the thing is too tangled for a normal portfolio bullet: commerce flows, AI behavior, design systems, internal pressure."</p></a>
+          <a class="witness" href="https://ai-created.com" target="_blank" rel="noopener"><h3>On craft</h3><p>"He treats the surface as evidence. Type, state, density, motion, and hierarchy all testify to whether the product understands itself."</p></a>
+          <a class="witness" href="https://ai-created.com/products" target="_blank" rel="noopener"><h3>On building</h3><p>"The clue is not just that he has ideas. The clue is that the ideas usually become working artifacts."</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="stamp mono">Contact protocol</div>
+          <h2>Open channels.</h2>
+        </header>
+        <nav class="channels">
+          <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+          <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created</a>
+          <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">@AIandDesign</a>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+<script>
+(function () {
+  window.addEventListener("pointermove", event => {
+    document.documentElement.style.setProperty("--mx", event.clientX + "px");
+    document.documentElement.style.setProperty("--my", event.clientY + "px");
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

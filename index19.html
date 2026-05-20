@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MVHV Title Sequence / Portfolio Cinema</title>
+<meta name="description" content="A kinetic cinema title-sequence one-page portfolio for Marco van Hylckama Vlieg, turning twenty years of product design and AI-native building into motion poster credits." />
+<meta name="theme-color" content="#08080a" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;700&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --black: #08080a;
+  --white: #f3f2ed;
+  --red: #f23635;
+  --cobalt: #2459ff;
+  --yellow: #ffd33d;
+  --muted: #8e8c86;
+  --panel: #111116;
+  --rule: rgba(243,242,237,0.18);
+  --gutter: clamp(18px, 5%, 62px);
+  --max: 1440px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: "Inter", system-ui, sans-serif;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.8;
+  background:
+    repeating-linear-gradient(90deg, rgba(243,242,237,0.05) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(0deg, rgba(243,242,237,0.035) 0 1px, transparent 1px 6px);
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--red); color: var(--white); }
+a:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 4px;
+}
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; letter-spacing: 0; }
+.block { font-family: "Archivo Black", Impact, sans-serif; letter-spacing: 0; }
+.wrap {
+  width: min(var(--max), 100%);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+
+.topbar {
+  border-bottom: 1px solid var(--rule);
+}
+.topbar .wrap {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--white);
+  color: var(--black);
+  padding: 7px 10px;
+  font-weight: 700;
+}
+.back { color: var(--yellow); }
+
+.hero {
+  min-height: calc(100vh - 52px);
+  display: grid;
+  align-items: center;
+  padding-top: 48px;
+  padding-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+}
+.filmstrip {
+  position: absolute;
+  inset: 6% auto 10% 4%;
+  width: 72px;
+  border-left: 8px solid var(--white);
+  border-right: 8px solid var(--white);
+  opacity: 0.16;
+  background: repeating-linear-gradient(0deg, transparent 0 22px, var(--white) 22px 34px);
+  animation: roll 18s linear infinite;
+}
+@keyframes roll { to { background-position-y: 420px; } }
+.hero-grid {
+  display: grid;
+  gap: 32px;
+  align-items: end;
+}
+@media (min-width: 980px) {
+  .hero-grid { grid-template-columns: 1.1fr 0.9fr; }
+}
+.eyebrow {
+  color: var(--red);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+h1 {
+  font-size: 6.4rem;
+  line-height: 0.82;
+  text-transform: uppercase;
+  margin: 20px 0;
+}
+h1 span {
+  display: inline-block;
+  color: var(--cobalt);
+  text-shadow: 7px 7px 0 var(--red);
+}
+.lead {
+  color: rgba(243,242,237,0.78);
+  max-width: 620px;
+  font-size: 1.08rem;
+}
+.poster {
+  border: 1px solid var(--rule);
+  background:
+    linear-gradient(135deg, rgba(36,89,255,0.32), transparent 46%),
+    linear-gradient(45deg, transparent 0 38%, rgba(242,54,53,0.8) 38% 48%, transparent 48%),
+    var(--panel);
+  min-height: 650px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  box-shadow: 0 32px 90px rgba(0,0,0,0.46);
+}
+.poster-top,
+.poster-bottom {
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+.poster-main {
+  display: grid;
+  place-items: center;
+  padding: 30px;
+  text-align: center;
+}
+.poster-main strong {
+  font-size: 4.6rem;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+.poster-main span {
+  display: block;
+  color: var(--yellow);
+  margin-top: 16px;
+}
+
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  background: var(--white);
+  color: var(--black);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+}
+.marquee a {
+  padding: 14px 24px;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+  display: inline-flex;
+}
+.marquee a:hover {
+  background: var(--yellow);
+}
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+.section { padding: 78px 0; }
+.section.light {
+  background: var(--white);
+  color: var(--black);
+}
+.section-head {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 34px;
+}
+@media (min-width: 880px) {
+  .section-head { grid-template-columns: 220px 1fr; align-items: end; }
+}
+.section h2 {
+  font-size: 4rem;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+.scenes {
+  display: grid;
+  gap: 1px;
+  background: rgba(8,8,10,0.22);
+  border: 1px solid rgba(8,8,10,0.22);
+}
+@media (min-width: 760px) {
+  .scenes { grid-template-columns: repeat(2,1fr); }
+}
+@media (min-width: 1120px) {
+  .scenes { grid-template-columns: repeat(4,1fr); }
+}
+.scene {
+  background: var(--white);
+  min-height: 310px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s, transform 0.2s;
+}
+.scene:hover {
+  background: #fff9df;
+  transform: translateY(-4px);
+}
+.scene::before {
+  content: attr(data-scene);
+  position: absolute;
+  right: -8px;
+  top: -18px;
+  font: 900 5rem "Archivo Black", sans-serif;
+  color: rgba(8,8,10,0.07);
+}
+.scene .role {
+  color: var(--red);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 26px;
+}
+.scene h3 {
+  font-size: 1.35rem;
+  margin-bottom: 10px;
+}
+.scene p { color: #5f5d58; }
+.scene b {
+  margin-top: auto;
+  padding-top: 22px;
+  color: var(--cobalt);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.production-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+@media (min-width: 760px) {
+  .production-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.production {
+  background: var(--panel);
+  padding: 24px;
+  min-height: 230px;
+  display: block;
+  transition: background 0.2s, transform 0.2s;
+}
+.production:hover {
+  background: #171720;
+  transform: translateY(-4px);
+}
+.production h3 {
+  color: var(--yellow);
+  margin-bottom: 10px;
+}
+.production p { color: rgba(243,242,237,0.72); }
+
+.credits {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.credit {
+  background: var(--panel);
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 18px;
+  transition: background 0.2s;
+}
+.credit:hover { background: #171720; }
+.credit span {
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+.credit strong { color: var(--yellow); }
+
+.screenings {
+  margin-top: 28px;
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+@media (min-width: 760px) {
+  .screenings { grid-template-columns: repeat(3, 1fr); }
+}
+.screening {
+  background: var(--panel);
+  padding: 22px;
+  min-height: 200px;
+  display: block;
+  transition: background 0.2s, transform 0.2s;
+}
+.screening:hover {
+  background: #171720;
+  transform: translateY(-4px);
+}
+.screening b {
+  display: block;
+  color: var(--red);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.screening p { color: rgba(243,242,237,0.72); }
+
+.channels {
+  display: grid;
+  gap: 1px;
+  background: rgba(8,8,10,0.22);
+  border: 1px solid rgba(8,8,10,0.22);
+}
+@media (min-width: 760px) {
+  .channels { grid-template-columns: repeat(4,1fr); }
+}
+.channels a {
+  min-height: 94px;
+  background: var(--white);
+  color: var(--black);
+  padding: 18px;
+  display: flex;
+  align-items: end;
+  font-weight: 900;
+}
+
+@media (max-width: 760px) {
+  h1 { font-size: 3.6rem; }
+  h1 span { text-shadow: 4px 4px 0 var(--red); }
+  .poster { min-height: 520px; }
+  .poster-main strong { font-size: 3rem; }
+  .filmstrip { display: none; }
+  .credit { grid-template-columns: 1fr; gap: 6px; }
+  .section h2 { font-size: 2.75rem; }
+}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap mono">
+      <a href="index.html" class="back">Back to index</a>
+      <span>MVHV title sequence / now screening</span>
+      <span class="badge">OpenAI Codex</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="filmstrip"></div>
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow mono">Portfolio direction 19 / kinetic cinema</div>
+          <h1 class="block">Opening titles for <span>a builder.</span></h1>
+          <p class="lead">A resume as a main-title sequence: hard cuts, giant credits, saturated color, and the sense that the protagonist knows how to make complicated systems move.</p>
+        </div>
+        <figure class="poster">
+          <div class="poster-top mono"><span>One-page feature</span><span>2026</span></div>
+          <div class="poster-main block"><strong>Marco<br/>van Hylckama<br/>Vlieg</strong><span class="mono">Senior product designer / AI-native builder</span></div>
+          <div class="poster-bottom mono"><span>Design</span><span>Code</span><span>AI</span></div>
+        </figure>
+      </div>
+    </section>
+
+    <div class="marquee mono">
+    <div class="marquee-track">
+        <a href="https://google.com" target="_blank" rel="noopener">Google Assistant</a><a href="https://tech.walmart.com" target="_blank" rel="noopener">Walmart Labs</a><a href="https://kohls.com" target="_blank" rel="noopener">Kohl's Checkout</a><a href="https://yahoo.com" target="_blank" rel="noopener">Yahoo Prototypes</a><a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created Lab</a><a href="https://diary.ai-created.com/" target="_blank" rel="noopener">My AI Diary</a>
+        <a href="https://google.com" target="_blank" rel="noopener">Google Assistant</a><a href="https://tech.walmart.com" target="_blank" rel="noopener">Walmart Labs</a><a href="https://kohls.com" target="_blank" rel="noopener">Kohl's Checkout</a><a href="https://yahoo.com" target="_blank" rel="noopener">Yahoo Prototypes</a><a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created Lab</a><a href="https://diary.ai-created.com/" target="_blank" rel="noopener">My AI Diary</a>
+      </div>
+    </div>
+
+    <section class="section light">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="eyebrow mono">Scene list</div>
+          <h2 class="block">Four sequences.</h2>
+        </header>
+        <div class="scenes">
+          <a class="scene" data-scene="01" href="https://endemolshine.us/" target="_blank" rel="noopener"><div class="role mono">First act</div><h3>Broadcast to platform</h3><p>Endemol second-screen systems and the early discipline of building for live behavior, not pristine mockups.</p><b class="mono">real-time UX</b></a>
+          <a class="scene" data-scene="02" href="https://google.com" target="_blank" rel="noopener"><div class="role mono">Second act</div><h3>Assistant era</h3><p>Google work across Assistant, Android, Cloud AI, and Material Design prototypes.</p><b class="mono">AI before the gold rush</b></a>
+          <a class="scene" data-scene="03" href="https://tech.walmart.com" target="_blank" rel="noopener"><div class="role mono">Third act</div><h3>Commerce pressure</h3><p>Walmart Labs and Kohl's checkout, wallet, cart, and enterprise systems that ask for calm, precise product craft.</p><b class="mono">scale and clarity</b></a>
+          <a class="scene" data-scene="04" href="https://ai-created.com" target="_blank" rel="noopener"><div class="role mono">After credits</div><h3>The independent lab</h3><p>AI-Created products: My AI Diary, WatchGPT, Human Actually, visualizers, games, and stranger things with a pulse.</p><b class="mono">experiments ship</b></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="eyebrow mono">Production notes</div>
+          <h2 class="block">How the film was made.</h2>
+        </header>
+        <div class="production-grid">
+          <a class="production" href="https://ai-created.com" target="_blank" rel="noopener"><h3>Design direction</h3><p>The work starts by finding a framing device strong enough to hold the content. A portfolio can be an atlas, a shell, a record, a terminal, or a title sequence if the metaphor clarifies the person.</p></a>
+          <a class="production" href="https://ai-created.com/products" target="_blank" rel="noopener"><h3>Technical direction</h3><p>Marco's value sits in the overlap: he can think in interaction systems, then make enough of the thing real that the team stops debating vapor.</p></a>
+          <a class="production" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><h3>AI direction</h3><p>The interesting question is not "can AI make a page?" It is "can a designer use AI as a volatile creative material and still impose taste, structure, and standards?"</p></a>
+          <a class="production" href="https://kohls.com" target="_blank" rel="noopener"><h3>Enterprise direction</h3><p>Checkout, wallet, cart, account, internal tooling, and commerce systems need restraint. The drama is in making the heavy thing feel inevitable.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="eyebrow mono">Credits</div>
+          <h2 class="block">Skills above title.</h2>
+        </header>
+        <div class="credits mono">
+          <a class="credit" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><span>Directed by</span><strong>Product judgment under ambiguity</strong></a>
+          <a class="credit" href="https://ai-created.com/products" target="_blank" rel="noopener"><span>Edited by</span><strong>Prototype velocity and production-aware detail</strong></a>
+          <a class="credit" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><span>Score by</span><strong>AI-native curiosity, design systems, and taste</strong></a>
+          <a class="credit" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><span>Location</span><strong>Portland, Oregon / global product systems</strong></a>
+        </div>
+        <div class="screenings">
+          <a class="screening" href="https://google.com" target="_blank" rel="noopener"><b class="mono">Festival cut</b><p>Google Assistant, Cloud AI, Android, and Material work: early scenes from the AI interface era before the genre became crowded.</p></a>
+          <a class="screening" href="https://tech.walmart.com" target="_blank" rel="noopener"><b class="mono">Wide release</b><p>Walmart Labs and Kohl's commerce systems: checkout and wallet work with real audience scale, real constraints, and no room for vague gestures.</p></a>
+          <a class="screening" href="https://ai-created.com" target="_blank" rel="noopener"><b class="mono">Midnight program</b><p>AI-Created experiments: diary tools, watch utilities, human-origin studies, visualizers, and game-like software that keeps the practice strange.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="eyebrow mono">Box office</div>
+          <h2 class="block">Open channels.</h2>
+        </header>
+        <nav class="channels">
+          <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+          <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created</a>
+          <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">@AIandDesign</a>
+        </nav>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

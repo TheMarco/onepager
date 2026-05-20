@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>System 95 — Marco's Desktop Retrospective</title>
+<meta name="description" content="A vintage draggable 16-bit GUI desktop operating system portfolio for Marco van Hylckama Vlieg, Senior Product Designer & AI-native Builder." />
+<meta name="theme-color" content="#008080" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   DIRECTION 13: THE RETRO 16-BIT DESKTOP GUI (Classic OS Vibe)
+   Color System: System Teal, Window Silver, Bezel Highlight, Active Blue
+   Typography: Share Tech Mono (16-bit System), Plus Jakarta Sans
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --desktop-teal: #008080;
+  --win-silver:   #C0C0C0;
+  --win-dark:     #808080;
+  --win-border-hi:#FFFFFF;
+  --win-border-lo:#404040;
+  
+  --active-blue:  #000080;
+  --active-blue-r:#1080F0;
+  --inactive-grey:#808080;
+  
+  --text-dark:    #000000;
+  --text-white:   #FFFFFF;
+  --gutter:       16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  background-color: var(--desktop-teal);
+  color: var(--text-dark);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+}
+
+/* Subtle CRT curved glass reflection overlay */
+body::before {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none; z-index: 10000;
+  background: 
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 4px, 6px 100%;
+}
+body::after {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none; z-index: 10001;
+  background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.06) 0%, transparent 60%);
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── RETRO DESKTOP SHORTCUT ICONS ── */
+.desktop-grid {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  z-index: 5;
+}
+.desktop-icon {
+  width: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-align: center;
+}
+.icon-graphic {
+  width: 32px;
+  height: 32px;
+  background: var(--win-silver);
+  border: 2px solid #000;
+  box-shadow: 
+    inset 1px 1px var(--win-border-hi), 
+    inset -1px -1px var(--win-border-lo);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-graphic::after {
+  content: '📄';
+  font-size: 18px;
+}
+.icon-graphic--folder::after { content: '📁'; }
+.icon-graphic--computer::after { content: '💻'; }
+.icon-graphic--mail::after { content: '✉'; }
+
+.icon-label {
+  font-size: 11px;
+  background: transparent;
+  color: var(--text-white);
+  padding: 2px 4px;
+  text-shadow: 1px 1px #000;
+}
+.desktop-icon:hover .icon-label {
+  background: var(--active-blue);
+}
+
+/* ── CLASSIC BEVELED WINDOW ── */
+.window {
+  position: absolute;
+  background: var(--win-silver);
+  border: 2px solid #000;
+  box-shadow: 
+    inset 1.5px 1.5px var(--win-border-hi), 
+    inset -1.5px -1.5px var(--win-border-lo),
+    4px 4px 10px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  min-width: 280px;
+  z-index: 10;
+  overflow: hidden;
+}
+.window--active {
+  z-index: 90 !important;
+}
+
+/* Header title bar */
+.window-titlebar {
+  background: var(--inactive-grey);
+  color: var(--win-silver);
+  padding: 4px 6px;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+}
+.window--active .window-titlebar {
+  background: linear-gradient(90deg, var(--active-blue) 0%, var(--active-blue-r) 100%);
+  color: var(--text-white);
+}
+.titlebar-text {
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.titlebar-controls {
+  display: flex;
+  gap: 2px;
+}
+.window-btn {
+  width: 16px;
+  height: 16px;
+  background: var(--win-silver);
+  border: 1px solid #000;
+  box-shadow: 
+    inset 1px 1px var(--win-border-hi), 
+    inset -1px -1px var(--win-border-lo);
+  font-size: 9px;
+  font-weight: bold;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+}
+.window-btn:active {
+  box-shadow: 
+    inset -1px -1px var(--win-border-hi), 
+    inset 1px 1px var(--win-border-lo);
+  padding: 1px 0 0 1px;
+}
+
+/* Scrollable Inner Client Area */
+.window-content {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+  background: var(--text-white);
+  border: 2px solid #000;
+  box-shadow: 
+    inset -1px -1px var(--win-border-hi), 
+    inset 1px 1px var(--win-border-lo);
+  margin: 4px;
+  max-height: 480px;
+}
+.window-content p {
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+/* ── TASK BAR SYSTEM ── */
+.taskbar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: var(--win-silver);
+  border-top: 2px solid #000;
+  box-shadow: inset 1px 1px var(--win-border-hi);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  justify-content: space-between;
+}
+.taskbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Start button Win95 style */
+.btn-start {
+  height: 28px;
+  padding: 0 10px;
+  background: var(--win-silver);
+  border: 2px solid #000;
+  box-shadow: 
+    inset 1.5px 1.5px var(--win-border-hi), 
+    inset -1.5px -1.5px var(--win-border-lo);
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.btn-start:active, .btn-start.active {
+  box-shadow: 
+    inset -1.5px -1.5px var(--win-border-hi), 
+    inset 1.5px 1.5px var(--win-border-lo);
+  padding: 2px 9px 0 11px;
+}
+
+.start-menu {
+  position: absolute;
+  bottom: 40px;
+  left: 6px;
+  background: var(--win-silver);
+  border: 2px solid #000;
+  box-shadow: 
+    inset 1.5px 1.5px var(--win-border-hi), 
+    inset -1.5px -1.5px var(--win-border-lo);
+  width: 220px;
+  display: none;
+  flex-direction: column;
+  z-index: 200;
+}
+.start-menu-item {
+  padding: 10px 14px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.start-menu-item:hover {
+  background: var(--active-blue);
+  color: var(--text-white);
+}
+.start-banner {
+  background: var(--win-dark);
+  color: var(--text-white);
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border-bottom: 2px solid #000;
+  text-align: center;
+}
+
+/* Clock status panel */
+.taskbar-clock {
+  height: 28px;
+  border: 2px solid #000;
+  box-shadow: 
+    inset -1.5px -1.5px var(--win-border-hi), 
+    inset 1.5px 1.5px var(--win-border-lo);
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+}
+
+/* ── TIMELINE TREE DIRECTORY (Inside File Manager) ── */
+.tree-view {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tree-node {
+  padding-left: 20px;
+  position: relative;
+  cursor: pointer;
+  font-size: 13.5px;
+}
+.tree-node::before {
+  content: '├─';
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--win-dark);
+}
+.tree-node:last-child::before {
+  content: '└─';
+}
+.tree-node.active {
+  font-weight: bold;
+  color: var(--active-blue);
+}
+
+/* Beveled spec panels */
+.well-panel {
+  border: 2px solid #000;
+  box-shadow: 
+    inset -1px -1px var(--win-border-hi), 
+    inset 1px 1px var(--win-border-lo);
+  padding: 12px;
+  background: #F0F0F0;
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.well-panel b {
+  color: var(--active-blue);
+}
+.well-panel ul {
+  list-style: none;
+  margin-top: 6px;
+}
+.well-panel li::before {
+  content: '• ';
+  color: var(--active-blue);
+}
+
+/* Matrix Pin outputs */
+.matrix-pins {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+.pin {
+  border: 1px solid var(--win-dark);
+  padding: 8px 12px;
+  background: #E5E9EE;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ── SHORTCUT SHORTCUT ICONS ── -->
+<nav class="desktop-grid">
+  
+  <div class="desktop-icon" onclick="openWindow('win-bio')">
+    <div class="icon-graphic icon-graphic--computer"></div>
+    <div class="icon-label">Biography</div>
+  </div>
+
+  <div class="desktop-icon" onclick="openWindow('win-career')">
+    <div class="icon-graphic icon-graphic--folder"></div>
+    <div class="icon-label">Experience</div>
+  </div>
+
+  <div class="desktop-icon" onclick="openWindow('win-lab')">
+    <div class="icon-graphic icon-graphic--folder"></div>
+    <div class="icon-label">Product Lab</div>
+  </div>
+
+  <div class="desktop-icon" onclick="openWindow('win-contact')">
+    <div class="icon-graphic icon-graphic--mail"></div>
+    <div class="icon-label">Address</div>
+  </div>
+
+</nav>
+
+<!-- ──────────────────────────────────────
+     BIOGRAPHY WINDOW
+     ────────────────────────────────────── -->
+<section class="window" id="win-bio" style="top: 80px; left: 160px; width: 440px;">
+  <header class="window-titlebar">
+    <span class="titlebar-text">💻 biography.txt - Notepad</span>
+    <div class="titlebar-controls">
+      <button class="window-btn" onclick="minimizeWindow('win-bio')">_</button>
+      <button class="window-btn" onclick="closeWindow('win-bio')">X</button>
+    </div>
+  </header>
+  <div class="window-content">
+    <p><b>Subject:</b> Marco van Hylckama Vlieg</p>
+    <p>Senior Product Designer and emergence systems orchestrator. Bridging the gap between conceptual visual layout structures and robust transaction code models.</p>
+    <p>Demonstrating twenty continuous years of system integration across high-volume checkout zones (Cart, Checkout, Wallet) at Kohl's and Walmart Labs, rapid portal stress-testing prototyping divisions for Yahoo!, and cloud AI assistant models for Google.</p>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────
+     CAREER TREE FILES WINDOW
+     ────────────────────────────────────── -->
+<section class="window" id="win-career" style="top: 140px; left: 240px; width: 480px;">
+  <header class="window-titlebar">
+    <span class="titlebar-text">📁 career_explorer.exe - File Manager</span>
+    <div class="titlebar-controls">
+      <button class="window-btn" onclick="minimizeWindow('win-career')">_</button>
+      <button class="window-btn" onclick="closeWindow('win-career')">X</button>
+    </div>
+  </header>
+  <div class="window-content" style="background: #FFF;">
+    <div class="tree-view">
+      <div class="tree-node active" id="node-kohls" onclick="selectCareerNode('kohls')">📂 C:\EXHIBIT\KOHLS.TXT [CURRENT]</div>
+      <div class="tree-node" id="node-walmart" onclick="selectCareerNode('walmart')">📂 C:\EXHIBIT\WALMART.TXT</div>
+      <div class="tree-node" id="node-yahoo" onclick="selectCareerNode('yahoo')">📂 C:\EXHIBIT\YAHOO.TXT</div>
+      <div class="tree-node" id="node-google" onclick="selectCareerNode('google')">📂 C:\EXHIBIT\GOOGLE.TXT</div>
+      <div class="tree-node" id="node-endemol" onclick="selectCareerNode('endemol')">📂 C:\EXHIBIT\ENDEMOL.TXT</div>
+    </div>
+
+    <!-- Active beveled file printout -->
+    <div class="well-panel" id="career-file-content">
+      <p><b>FILE: KOHLS.TXT [2026 — PRESENT]</b></p>
+      <p>Leading checkout experience visual layouts across omnichannel Cart, Checkout, Wallet, In-store Self-Checkout portals.</p>
+      <ul>
+        <li>Scaling enterprise-wide generative AI systems training.</li>
+        <li>Bridging design engineering assets directly into active production branches.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────
+     PRODUCT LAB WINDOW
+     ────────────────────────────────────── -->
+<section class="window" id="win-lab" style="top: 240px; left: 180px; width: 460px;">
+  <header class="window-titlebar">
+    <span class="titlebar-text">📁 lab_subsystems.dll - Explorer</span>
+    <div class="titlebar-controls">
+      <button class="window-btn" onclick="minimizeWindow('win-lab')">_</button>
+      <button class="window-btn" onclick="closeWindow('win-lab')">X</button>
+    </div>
+  </header>
+  <div class="window-content">
+    <p><b>Independent Lab Subsystems (ai-created.com)</b></p>
+    
+    <div class="matrix-pins">
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="pin">
+        <span>My AI Diary</span> <b>[Memory DLL]</b>
+      </a>
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="pin">
+        <span>WatchGPT</span> <b>[Miniature API]</b>
+      </a>
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="pin">
+        <span>Human Actually</span> <b>[Turing SVG]</b>
+      </a>
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="pin">
+        <span>Audio Visualizer</span> <b>[Web Audio]</b>
+      </a>
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="pin">
+        <span>Vectronix Physics</span> <b>[Procedural]</b>
+      </a>
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="pin">
+        <span>Color Clock Hex</span> <b>[Hex System]</b>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────
+     CONTACT ADDRESS WINDOW
+     ────────────────────────────────────── -->
+<section class="window" id="win-contact" style="top: 200px; left: 420px; width: 380px;">
+  <header class="window-titlebar">
+    <span class="titlebar-text">✉ contact.ini - Notepad</span>
+    <div class="titlebar-controls">
+      <button class="window-btn" onclick="minimizeWindow('win-contact')">_</button>
+      <button class="window-btn" onclick="closeWindow('win-contact')">X</button>
+    </div>
+  </header>
+  <div class="window-content">
+    <p><b>System Communication Channels:</b></p>
+    <div class="well-panel">
+      <b>PRIMARY:</b> <a href="mailto:marcovhv@gmail.com" style="text-decoration: underline;">marcovhv@gmail.com</a><br/>
+      <b>DIRECTORY:</b> <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" style="text-decoration: underline;">linkedin.com/in/marcovhv</a><br/>
+      <b>TELEMETRY X:</b> <a href="https://x.com/AIandDesign" target="_blank" rel="noopener" style="text-decoration: underline;">x.com/AIandDesign</a><br/>
+      <b>VIDEO LAB:</b> <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener" style="text-decoration: underline;">@AIandDesign on YouTube</a>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────
+     SYSTEM TASK BAR
+     ────────────────────────────────────── -->
+<footer class="taskbar">
+  <div class="taskbar-left">
+    <!-- Clickable start button Win95 style -->
+    <button class="btn-start" id="start-btn" onclick="toggleStartMenu()">
+      <span style="font-size: 16px;">💾</span> Start
+    </button>
+  </div>
+  
+  <div class="taskbar-clock" id="sys-clock">--:-- AM</div>
+</footer>
+
+<!-- ── CLICKABLE START MENU POPUP ── -->
+<div class="start-menu" id="start-popup">
+  <div class="start-banner">SYSTEM 95</div>
+  <div class="start-menu-item" onclick="openWindow('win-bio')">💻 Biography.txt</div>
+  <div class="start-menu-item" onclick="openWindow('win-career')">📁 Career Explorer</div>
+  <div class="start-menu-item" onclick="openWindow('win-lab')">📁 Lab Subsystems</div>
+  <div class="start-menu-item" onclick="openWindow('win-contact')">✉ Contact.ini</div>
+  <div class="start-menu-item" onclick="window.location.href='index.html'" style="border-top: 1px solid var(--win-dark);">🚪 Exit to Index</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // 16-bit sound chiptunes (Web Audio API)
+  let audioCtx = null;
+
+  function playSystemSynth(freqs, duration = 0.15, type = 'square') {
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      freqs.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.08);
+
+        gain.gain.setValueAtTime(0.02, audioCtx.currentTime + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.08 + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(audioCtx.currentTime + idx * 0.08);
+        osc.stop(audioCtx.currentTime + idx * 0.08 + duration);
+      });
+    } catch (e) {
+      console.log("Audio waiting initial window mouseclick validation", e);
+    }
+  }
+
+  // Play retro Startup chime on first desktop click interaction
+  window.addEventListener('click', function initialStartup() {
+    playSystemSynth([523.25, 659.25, 783.99, 1046.50], 0.25, 'sine'); // C Major retro arp chime
+    window.removeEventListener('click', initialStartup);
+  });
+
+  // Windows coordinate dragger mechanics
+  let activeDraggedWindow = null;
+  let offsetX = 0;
+  let offsetY = 0;
+  let topZIndex = 100;
+
+  document.querySelectorAll('.window').forEach(win => {
+    // Bring window to front on click
+    win.addEventListener('mousedown', () => {
+      document.querySelectorAll('.window').forEach(w => w.classList.remove('window--active'));
+      win.classList.add('window--active');
+      topZIndex += 2;
+      win.style.zIndex = topZIndex;
+      
+      // Resume audio ctx if needed
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    });
+
+    // Start drag event on header titlebar
+    const bar = win.querySelector('.window-titlebar');
+    bar.addEventListener('mousedown', e => {
+      activeDraggedWindow = win;
+      offsetX = e.clientX - win.offsetLeft;
+      offsetY = e.clientY - win.offsetTop;
+      
+      // Chiptune key drag beep
+      playSystemSynth([800], 0.02, 'triangle');
+    });
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!activeDraggedWindow) return;
+    const x = e.clientX - offsetX;
+    const y = e.clientY - offsetY;
+    
+    // Constraint check window inside viewport
+    activeDraggedWindow.style.left = `${x}px`;
+    activeDraggedWindow.style.top = `${y}px`;
+  });
+
+  window.addEventListener('mouseup', () => {
+    activeDraggedWindow = null;
+  });
+
+  // Start Menu toggle
+  window.toggleStartMenu = function () {
+    const pop = document.getElementById('start-popup');
+    const btn = document.getElementById('start-btn');
+    playSystemSynth([600, 750], 0.04, 'square');
+
+    if (pop.style.display === 'flex') {
+      pop.style.display = 'none';
+      btn.classList.remove('active');
+    } else {
+      pop.style.display = 'flex';
+      btn.classList.add('active');
+    }
+  };
+
+  // Close Start menu on outer clicks
+  window.addEventListener('click', e => {
+    if (!e.target.closest('#start-btn') && !e.target.closest('#start-popup')) {
+      document.getElementById('start-popup').style.display = 'none';
+      document.getElementById('start-btn').classList.remove('active');
+    }
+  });
+
+  // Window button utilities
+  window.closeWindow = function (id) {
+    playSystemSynth([250], 0.08, 'sawtooth'); // lower heavy error buzz
+    document.getElementById(id).style.display = 'none';
+  };
+
+  window.minimizeWindow = function (id) {
+    playSystemSynth([400, 200], 0.06, 'triangle');
+    document.getElementById(id).style.display = 'none';
+  };
+
+  window.openWindow = function (id) {
+    const win = document.getElementById(id);
+    win.style.display = 'flex';
+    document.querySelectorAll('.window').forEach(w => w.classList.remove('window--active'));
+    win.classList.add('window--active');
+    topZIndex += 2;
+    win.style.zIndex = topZIndex;
+    
+    playSystemSynth([300, 450, 600], 0.08, 'sine');
+  };
+
+  // Live System clock
+  function tickClock() {
+    const t = new Date();
+    let hours = t.getHours();
+    let mins = t.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // 12 instead of 0
+    mins = mins < 10 ? '0' + mins : mins;
+    
+    const clk = document.getElementById('sys-clock');
+    if (clk) clk.textContent = `${hours}:${mins} ${ampm}`;
+  }
+  tickClock();
+  setInterval(tickClock, 10000);
+
+  // File Manager Tree Node selection
+  const careerData = {
+    kohls: {
+      title: "FILE: KOHLS.TXT [2026 — PRESENT]",
+      desc: "<p><b>ACTIVE MISSION: KOHL'S SPECIALIST (2026 — PRESENT)</b></p><p>Leading checkout experience visual layouts across omnichannel Cart, Checkout, Wallet, In-store Self-Checkout portals.</p><ul><li>Scaling enterprise-wide generative AI systems training.</li><li>Bridging design engineering assets directly into active production branches.</li></ul>"
+    },
+    walmart: {
+      title: "FILE: WALMART.TXT [2018 — 2023]",
+      desc: "<p><b>ACTIVE MISSION: WALMART LABS (2018 — 2023)</b></p><p>Led high-volume transactional checkout and merchant visual patterns. Architected robust visual engines supporting millions of daily active endpoints.</p>"
+    },
+    yahoo: {
+      title: "FILE: YAHOO.TXT [2017 — 2018]",
+      desc: "<p><b>ACTIVE MISSION: YAHOO! PROTOTYPES (2017 — 2018)</b></p><p>Managed dedicated interactive visual prototyping teams stress-testing high-volume portals, media channels, and search pages before deployment verification.</p>"
+    },
+    google: {
+      title: "FILE: GOOGLE.TXT [2013 — 2017]",
+      desc: "<p><b>ACTIVE MISSION: GOOGLE SEARCH (2013 — 2017)</b></p><p>Constructed interactive speech assistants, proactive android interfaces, and early cloud AI models bridging functional code with Material design guidelines.</p>"
+    },
+    endemol: {
+      title: "FILE: ENDEMOL.TXT [2008 — 2013]",
+      desc: "<p><b>ACTIVE MISSION: ENDEMOL SYSTEMS (2008 — 2013)</b></p><p>UX and engineering lead crafting real-time synchronous second-screen tv viewer applications supporting massive concurrent broadcast traffic.</p>"
+    }
+  };
+
+  window.selectCareerNode = function (stopKey) {
+    playSystemSynth([750], 0.02, 'triangle');
+    
+    // Remove active nodes
+    document.querySelectorAll('.tree-node').forEach(node => {
+      node.classList.remove('active');
+    });
+
+    const targetNode = document.getElementById(`node-${stopKey}`);
+    if (targetNode) targetNode.classList.add('active');
+
+    // Load spec panel
+    const data = careerData[stopKey];
+    if (data) {
+      document.getElementById('career-file-content').innerHTML = `<p><b>${data.title}</b></p>${data.desc}`;
+    }
+  };
+
+})();
+</script>
+
+</body>
+</html>

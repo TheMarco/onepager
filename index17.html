@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MVHV Exchange / Live Product Market Terminal</title>
+<meta name="description" content="A financial-market terminal one-page portfolio for Marco van Hylckama Vlieg, translating product design, AI-native building, and enterprise UX into live signals." />
+<meta name="theme-color" content="#05070b" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #05070b;
+  --panel: #0e1219;
+  --panel-2: #161b24;
+  --grid: rgba(132,255,180,0.09);
+  --green: #84ffb4;
+  --red: #ff4b67;
+  --blue: #58a6ff;
+  --amber: #f6c65b;
+  --violet: #b983ff;
+  --text: #e7eef8;
+  --muted: #7d8898;
+  --rule: rgba(231,238,248,0.16);
+  --gutter: clamp(16px, 4%, 42px);
+  --max: 1440px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100vh;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    var(--bg);
+  background-size: 32px 32px;
+  color: var(--text);
+  font-family: "Archivo", system-ui, sans-serif;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--green); color: var(--bg); }
+a:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+}
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; letter-spacing: 0; }
+.wrap {
+  width: min(var(--max), 100%);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.terminal {
+  min-height: 100vh;
+  padding: 18px 0;
+}
+.topline {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  border: 1px solid var(--rule);
+  background: rgba(14,18,25,0.88);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+@media (min-width: 860px) {
+  .topline { grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .topline .right { justify-self: end; }
+}
+.topline span, .topline a {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.topline b { color: var(--green); }
+.badge {
+  color: var(--bg) !important;
+  background: var(--green);
+  padding: 7px 10px;
+  font-weight: 700;
+}
+.screen {
+  display: grid;
+  gap: 12px;
+}
+@media (min-width: 1080px) {
+  .screen { grid-template-columns: 1.05fr 0.95fr; }
+}
+.panel {
+  border: 1px solid var(--rule);
+  background: rgba(14,18,25,0.92);
+  overflow: hidden;
+}
+.hero-panel {
+  min-height: 560px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+.panel-head {
+  border-bottom: 1px solid var(--rule);
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hero-copy {
+  padding: 30px;
+  display: grid;
+  align-content: center;
+  gap: 24px;
+}
+h1 {
+  font-size: 5.3rem;
+  line-height: 0.88;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+h1 span { color: var(--green); }
+.lead {
+  color: var(--muted);
+  font-size: 1.05rem;
+  max-width: 660px;
+}
+.ticker-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  border-top: 1px solid var(--rule);
+}
+@media (min-width: 720px) {
+  .ticker-row { grid-template-columns: repeat(4,1fr); }
+}
+.ticker {
+  padding: 14px;
+  border-right: 1px solid var(--rule);
+}
+.ticker small {
+  display: block;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  margin-bottom: 8px;
+}
+.ticker strong {
+  display: block;
+  font-size: 1.4rem;
+}
+.up { color: var(--green); }
+.down { color: var(--red); }
+.flat { color: var(--amber); }
+
+.chart {
+  min-height: 560px;
+  position: relative;
+}
+.chart svg {
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+  display: block;
+}
+.chart-grid { stroke: rgba(231,238,248,0.08); stroke-width: 1; }
+.chart-line {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 4;
+  filter: drop-shadow(0 0 12px rgba(132,255,180,0.35));
+  stroke-dasharray: 1100;
+  stroke-dashoffset: 1100;
+  animation: draw 2.8s ease forwards;
+}
+.chart-line.alt {
+  stroke: var(--blue);
+  stroke-width: 2;
+  opacity: 0.75;
+  animation-delay: 0.35s;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.price-card {
+  position: absolute;
+  right: 18px;
+  top: 64px;
+  background: rgba(5,7,11,0.86);
+  border: 1px solid var(--green);
+  padding: 18px;
+  width: 230px;
+}
+.price-card span {
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+.price-card strong {
+  display: block;
+  color: var(--green);
+  font-size: 2.4rem;
+  margin: 4px 0;
+}
+
+.market {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+@media (min-width: 980px) {
+  .market { grid-template-columns: 1.2fr 0.8fr; }
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th, .table td {
+  border-bottom: 1px solid var(--rule);
+  padding: 13px 14px;
+  text-align: left;
+  font-size: 0.82rem;
+}
+.table a {
+  color: var(--text);
+  border-bottom: 1px solid rgba(132,255,180,0.42);
+}
+.table a:hover { color: var(--green); }
+.table th {
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+}
+.spark {
+  width: 110px;
+  height: 28px;
+}
+.spark path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+.orders {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+}
+.order {
+  background: var(--panel);
+  padding: 16px;
+  display: block;
+  transition: background 0.2s;
+}
+.order:hover { background: var(--panel-2); }
+.order h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+.order p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.indices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin-top: 12px;
+}
+.index-card {
+  background: var(--panel);
+  padding: 18px;
+  min-height: 170px;
+  display: block;
+  transition: background 0.2s, transform 0.2s;
+}
+.index-card:hover {
+  background: var(--panel-2);
+  transform: translateY(-4px);
+}
+.index-card span {
+  display: block;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  margin-bottom: 14px;
+}
+.index-card strong {
+  display: block;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+.index-card p {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.notes {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+@media (min-width: 920px) {
+  .notes { grid-template-columns: repeat(3, 1fr); }
+}
+.note {
+  border: 1px solid var(--rule);
+  background: rgba(14,18,25,0.92);
+  padding: 20px;
+  min-height: 210px;
+  display: block;
+  transition: border-color 0.2s, background 0.2s;
+}
+.note:hover {
+  border-color: rgba(132,255,180,0.5);
+  background: rgba(22,27,36,0.92);
+}
+.note h3 {
+  color: var(--amber);
+  margin-bottom: 10px;
+}
+.note p { color: var(--muted); }
+.channels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--rule);
+  margin-top: 12px;
+}
+@media (min-width: 760px) {
+  .channels { grid-template-columns: repeat(4,1fr); }
+}
+.channels a {
+  background: var(--panel);
+  min-height: 84px;
+  padding: 16px;
+  display: flex;
+  align-items: end;
+  color: var(--green);
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  h1 { font-size: 3.35rem; }
+  .hero-copy { padding: 22px; }
+  .price-card { position: static; margin: 14px; width: auto; }
+  .table th:nth-child(4), .table td:nth-child(4) { display: none; }
+}
+</style>
+</head>
+<body>
+  <main class="terminal wrap">
+    <header class="topline mono">
+      <a href="index.html">Back to index</a>
+      <span><b>MVHV-X</b> live product market terminal</span>
+      <span class="right badge">OpenAI Codex</span>
+    </header>
+
+    <section class="screen">
+      <article class="panel hero-panel">
+        <div class="panel-head mono"><span>Instrument: MVHV</span><span id="clock">--:--:--</span></div>
+        <div class="hero-copy">
+          <h1>Design alpha for <span>hard systems.</span></h1>
+          <p class="lead">A trading terminal for the parts of Marco's career that appreciate under pressure: product judgment, prototype velocity, enterprise UX, AI-native tools, and taste when the market is noisy.</p>
+        </div>
+        <div class="ticker-row mono">
+          <div class="ticker"><small>PDX</small><strong class="up">+20 yrs</strong></div>
+          <div class="ticker"><small>AI native</small><strong class="up">+84.6%</strong></div>
+          <div class="ticker"><small>Generic UX</small><strong class="down">-62.1%</strong></div>
+          <div class="ticker"><small>Prototype speed</small><strong class="flat">halted up</strong></div>
+        </div>
+      </article>
+
+      <article class="panel chart">
+        <div class="panel-head mono"><span>Capability index</span><span class="up">live</span></div>
+        <svg viewBox="0 0 760 560" preserveAspectRatio="none" aria-label="Capability line chart">
+          <g>
+            <path class="chart-grid" d="M0 90H760M0 180H760M0 270H760M0 360H760M0 450H760M120 0V560M240 0V560M360 0V560M480 0V560M600 0V560"/>
+            <path class="chart-line alt" d="M30 430 C120 380 156 420 230 320 S344 238 420 270 S550 190 620 150 S712 136 742 92"/>
+            <path class="chart-line" d="M30 462 C98 390 132 428 198 338 S316 254 384 276 S506 198 558 150 S676 104 742 72"/>
+          </g>
+        </svg>
+        <aside class="price-card mono"><span>MVHV composite</span><strong>842.19</strong><p class="up">+34.8 today / all signal</p></aside>
+      </article>
+    </section>
+
+    <section class="market">
+      <article class="panel">
+        <div class="panel-head mono"><span>Holdings</span><span>sorted by durable value</span></div>
+        <table class="table mono">
+          <thead><tr><th>Symbol</th><th>Position</th><th>Change</th><th>Signal</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://kohls.com" target="_blank" rel="noopener">KOHLS</a></td><td><a href="https://kohls.com" target="_blank" rel="noopener">Checkout, wallet, AI enablement</a></td><td class="up">+18.2</td><td><svg class="spark" viewBox="0 0 100 24"><path d="M0 19 L14 15 L28 16 L42 9 L56 12 L70 5 L84 8 L100 3"/></svg></td></tr>
+            <tr><td><a href="https://tech.walmart.com" target="_blank" rel="noopener">WMTL</a></td><td><a href="https://tech.walmart.com" target="_blank" rel="noopener">Commerce loops at scale</a></td><td class="up">+14.7</td><td><svg class="spark" viewBox="0 0 100 24"><path d="M0 20 L16 18 L28 14 L44 15 L58 9 L72 10 L86 5 L100 4"/></svg></td></tr>
+            <tr><td><a href="https://google.com" target="_blank" rel="noopener">GOOG</a></td><td><a href="https://google.com" target="_blank" rel="noopener">Assistant, cloud AI, Material</a></td><td class="up">+11.4</td><td><svg class="spark" viewBox="0 0 100 24"><path d="M0 18 L16 13 L30 15 L44 11 L58 8 L72 9 L86 5 L100 2"/></svg></td></tr>
+            <tr><td><a href="https://yahoo.com" target="_blank" rel="noopener">YHOO</a></td><td><a href="https://yahoo.com" target="_blank" rel="noopener">Prototype teams, search, media</a></td><td class="flat">+6.5</td><td><svg class="spark" viewBox="0 0 100 24"><path d="M0 14 L12 15 L24 11 L38 14 L54 10 L70 11 L84 8 L100 7"/></svg></td></tr>
+            <tr><td><a href="https://ai-created.com" target="_blank" rel="noopener">LAB</a></td><td><a href="https://ai-created.com/products" target="_blank" rel="noopener">AI-Created products</a></td><td class="up">+29.1</td><td><svg class="spark" viewBox="0 0 100 24"><path d="M0 22 L10 18 L20 19 L34 12 L46 15 L58 8 L72 9 L86 4 L100 2"/></svg></td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <aside class="panel">
+        <div class="panel-head mono"><span>Order book</span><span>open asks</span></div>
+        <div class="orders">
+          <a class="order" href="https://ai-created.com/products" target="_blank" rel="noopener"><h3>Buy: ambiguous AI product brief</h3><p>Marco turns vague model capability into an interaction pattern, prototype, and decision-ready demo.</p></a>
+          <a class="order" href="https://tech.walmart.com" target="_blank" rel="noopener"><h3>Buy: enterprise flow under load</h3><p>Cart, checkout, account, or internal tooling that needs the calm hand of someone who has shipped where volume is real.</p></a>
+          <a class="order" href="https://ai-created.com" target="_blank" rel="noopener"><h3>Sell: generic portfolio polish</h3><p>Low conviction aesthetics have no place on this exchange.</p></a>
+        </div>
+      </aside>
+    </section>
+
+    <section class="indices mono" aria-label="Capability indices">
+      <a class="index-card" href="https://google.com" target="_blank" rel="noopener"><span>Design systems index</span><strong class="up">91.4</strong><p>Material fluency, enterprise component logic, typography, state, density, and multi-surface consistency.</p></a>
+      <a class="index-card" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><span>AI behavior index</span><strong class="up">88.7</strong><p>Assistant-era experience, memory tools, voice rituals, AI education, and product patterns for model-powered software.</p></a>
+      <a class="index-card" href="https://kohls.com" target="_blank" rel="noopener"><span>Commerce clarity index</span><strong class="up">94.2</strong><p>Checkout, wallet, cart, account, merchant systems, and operational flows where confusion has measurable cost.</p></a>
+      <a class="index-card" href="https://ai-created.com/products" target="_blank" rel="noopener"><span>Prototype liquidity</span><strong class="up">99.1</strong><p>Ability to convert a vague product bet into something stakeholders can touch, critique, and improve.</p></a>
+    </section>
+
+    <section class="notes">
+      <a class="note" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><h3>Analyst note: why the chart climbs</h3><p>Marco has repeatedly worked near the edge of new product behavior: broadcast interactivity, early assistant UX, high-scale commerce, and now AI-native tools. The compounding value is not one skill; it is the habit of making the unknown usable.</p></a>
+      <a class="note" href="https://ai-created.com" target="_blank" rel="noopener"><h3>Risk note: generic UI exposure</h3><p>The largest risk in AI-assisted product work is median taste. The hedge is strong framing, unusual references, and a designer willing to reject polite-but-boring output until a real concept appears.</p></a>
+      <a class="note" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><h3>Watchlist: independent lab</h3><p>My AI Diary, WatchGPT, Human Actually, visualizers, games, and utility experiments show the same pattern outside enterprise walls: small products that make AI feel more specific and human.</p></a>
+    </section>
+
+    <nav class="channels mono">
+      <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+      <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created</a>
+      <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">@AIandDesign</a>
+    </nav>
+  </main>
+
+<script>
+(function () {
+  const el = document.getElementById("clock");
+  function tick() {
+    el.textContent = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Los_Angeles",
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    }).format(new Date());
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>

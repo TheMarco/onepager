@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Exhibition Catalog: Marco van Hylckama Vlieg — The Medium of Code & Design</title>
+<meta name="description" content="A curated fine art exhibition catalog portfolio documenting 20 years of design engineering and product architecture." />
+<meta name="theme-color" content="#F9F6F0" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   DIRECTION 09: THE FINE ART EXHIBITION CATALOG
+   Color System: Bone White, Velvet Charcoal, Yves Klein Blue
+   Typography: Cormorant Garamond, Plus Jakarta Sans, JetBrains Mono
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg-catalog:  #FAF7F2;
+  --bg-catalog-2:#F3EFE6;
+  --velvet-ink:  #1D1D21;
+  --velvet-ink-2:#3D3D42;
+  --velvet-ink-3:#6D6D73;
+  --klein-blue:  #002FA7; /* Yves Klein Blue - striking luxury */
+  --rule:        rgba(29, 29, 33, 0.08);
+  --rule-strong: rgba(29, 29, 33, 0.25);
+  --rule-double: rgba(29, 29, 33, 0.45);
+  --gutter:      clamp(24px, 6vw, 96px);
+  --max:         1200px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: var(--bg-catalog);
+  color: var(--velvet-ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Subtle canvas texture */
+body::before {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 999;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='1' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+}
+
+::selection { background: var(--klein-blue); color: var(--bg-catalog); }
+a { color: inherit; text-decoration: none; }
+
+.f-serif { font-family: 'Cormorant Garamond', serif; }
+.f-mono { font-family: 'JetBrains Mono', monospace; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Elegant back button */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--velvet-ink);
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--velvet-ink);
+  padding-bottom: 2px;
+  margin-top: 48px;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  align-self: flex-start;
+}
+.btn-back:hover {
+  color: var(--klein-blue);
+  border-color: var(--klein-blue);
+  transform: translateX(-4px);
+}
+
+/* Double hair-line rules characteristic of premium catalogs */
+.double-rule {
+  height: 6px;
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
+  margin: 24px 0 48px;
+  width: 100%;
+}
+
+.thin-rule {
+  height: 1px;
+  background: var(--rule-strong);
+  margin: 40px 0;
+  width: 100%;
+}
+
+/* ── Header System ── */
+.exhibition-header {
+  padding: 80px 0 60px;
+}
+.catalog-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--klein-blue);
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+.catalog-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.catalog-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px, 8.5vw, 110px);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+.catalog-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--klein-blue);
+}
+.catalog-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 2.5vw, 36px);
+  font-style: italic;
+  color: var(--velvet-ink-2);
+  line-height: 1.2;
+  margin-top: 8px;
+  font-weight: 400;
+  max-width: 760px;
+}
+
+.curator-note {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+  margin-top: 64px;
+}
+@media (min-width: 900px) {
+  .curator-note {
+    grid-template-columns: 240px 1fr 1fr;
+    gap: 64px;
+  }
+}
+.curator-note__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--velvet-ink-3);
+  padding-top: 6px;
+}
+.curator-note__lead {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  line-height: 1.35;
+  font-style: italic;
+  color: var(--velvet-ink-2);
+}
+.curator-note__body {
+  font-size: 14.5px;
+  color: var(--velvet-ink-2);
+  line-height: 1.75;
+}
+.curator-note__body p {
+  margin-bottom: 20px;
+}
+.curator-note__body b {
+  color: var(--velvet-ink);
+  font-weight: 600;
+}
+
+/* ── Section Title ── */
+.section-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--velvet-ink-3);
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-tag::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+/* ── Provenance Catalog (Timeline) ── */
+.provenance-entry {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.provenance-entry.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (min-width: 900px) {
+  .provenance-entry {
+    grid-template-columns: 240px 1.2fr 1fr;
+    gap: 64px;
+  }
+}
+.provenance-meta {
+  border-top: 1px solid var(--velvet-ink);
+  padding-top: 18px;
+}
+.provenance-meta__num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--klein-blue);
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+.provenance-meta__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--velvet-ink);
+  margin-bottom: 16px;
+}
+.provenance-meta__date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--velvet-ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.provenance-descr {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 25px;
+  font-weight: 300;
+  line-height: 1.35;
+  color: var(--velvet-ink);
+  padding-top: 4px;
+}
+.provenance-descr em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--klein-blue);
+}
+
+.provenance-details {
+  border-top: 1px dashed var(--rule-strong);
+  padding-top: 18px;
+  font-size: 14px;
+  color: var(--velvet-ink-2);
+}
+@media (min-width: 900px) {
+  .provenance-details {
+    border-top: none;
+    border-left: 1px dashed var(--rule-strong);
+    padding-top: 4px;
+    padding-left: 32px;
+  }
+}
+.provenance-details__title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--velvet-ink-3);
+  margin-bottom: 12px;
+}
+.provenance-details__list {
+  list-style: none;
+}
+.provenance-details__list li {
+  margin-bottom: 14px;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 14px;
+}
+.provenance-details__list li::before {
+  content: '▪';
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--klein-blue);
+  font-size: 10px;
+}
+.provenance-details__list b {
+  color: var(--velvet-ink);
+  font-weight: 600;
+}
+
+/* ── Curator Placard (Capabilities Matrix) ── */
+.placard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+}
+@media (min-width: 768px) {
+  .placard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.placard {
+  background: var(--bg-catalog-2);
+  border: 1px solid var(--rule-strong);
+  padding: 36px 32px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.placard__num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--velvet-ink-3);
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+}
+.placard__num::after {
+  content: 'CAT. II';
+  color: var(--klein-blue);
+  font-weight: bold;
+}
+.placard__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--velvet-ink);
+  margin-bottom: 16px;
+  font-style: italic;
+}
+.placard__body {
+  font-size: 14px;
+  color: var(--velvet-ink-2);
+  line-height: 1.7;
+}
+
+/* ── Selected Cataloged Studies (Lab) ── */
+.studies-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+@media (min-width: 768px) {
+  .studies-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1100px) {
+  .studies-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.study-placard {
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.3s;
+}
+.study-placard:hover {
+  transform: translateY(-2px);
+  border-bottom-color: var(--klein-blue);
+}
+.study-placard__cat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--klein-blue);
+  margin-bottom: 14px;
+}
+.study-placard__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--velvet-ink);
+  margin-bottom: 8px;
+}
+.study-placard__desc {
+  font-size: 14px;
+  color: var(--velvet-ink-2);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.study-placard__footer {
+  margin-top: auto;
+  display: flex;
+  gap: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--velvet-ink-3);
+  text-transform: uppercase;
+}
+.study-placard__link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* ── Catalog Colophon / Bottom metadata ── */
+.colophon {
+  border-top: 1px solid var(--rule-double);
+  padding: 80px 0 48px;
+  margin-top: 100px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+}
+@media (min-width: 768px) {
+  .colophon {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+  }
+}
+.colophon-lead {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--velvet-ink-2);
+}
+.colophon-body {
+  font-size: 14.5px;
+  color: var(--velvet-ink-3);
+  line-height: 1.7;
+}
+.colophon-body p {
+  margin-bottom: 18px;
+}
+.colophon-body a {
+  color: var(--velvet-ink);
+  border-bottom: 1px solid var(--velvet-ink);
+  padding-bottom: 1px;
+  transition: all 0.25s;
+}
+.colophon-body a:hover {
+  color: var(--klein-blue);
+  border-color: var(--klein-blue);
+}
+
+.catalog-footer {
+  border-top: 1px solid var(--rule-strong);
+  padding: 32px 0;
+  margin-top: 48px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--velvet-ink-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- wrap contents -->
+<main class="wrap">
+  
+  <a href="index.html" class="btn-back">← Back to Exhibition Index</a>
+
+  <!-- EXHIBITION HEADER -->
+  <header class="exhibition-header">
+    <div class="catalog-meta">
+      <span>EXHIBITION CATALOGUE NO. 09</span>
+      <span>EDITION II / GEMINI SPECIALIST</span>
+    </div>
+    
+    <div class="double-rule"></div>
+
+    <div class="catalog-title-block">
+      <h1 class="catalog-title">
+        The Medium of<br/>
+        <em>Code &amp; Architecture.</em>
+      </h1>
+      <h2 class="catalog-subtitle">
+        A twenty-year retrospection of high-scale product engineering and digital curation by Marco van Hylckama Vlieg.
+      </h2>
+    </div>
+
+    <!-- Curator's Note -->
+    <div class="curator-note">
+      <div class="curator-note__label">CURATORIAL FOREWORD</div>
+      <div class="curator-note__lead">
+        &ldquo;To treat software architecture not as a utility layer, but as a deliberate medium of sensory experience and digital provenence.&rdquo;
+      </div>
+      <div class="curator-note__body">
+        <p>This catalog compiles <b>five primary movements</b> of product engineering, detailing a career spent bridging structural visual systems with large-scale consumer networks (Google, Yahoo, Walmart, Kohl's). </p>
+        <p>In addition, it registers <b>selected studies</b> from the designer's independent laboratory (ai-created.com), documenting experiments in organic origin verification, interactive audio matrices, and kinetic mechanics.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECTION 1: PROVENANCE RECORD -->
+  <section>
+    <div class="section-tag">CATALOG SECTION 01 — EXHIBITED PROVENANCE RECORD</div>
+    
+    <!-- Kohl's -->
+    <article class="provenance-entry reveal">
+      <div class="provenance-meta">
+        <div class="provenance-meta__num">CATALOG NO. 09-05</div>
+        <h3 class="provenance-meta__title">Kohl's</h3>
+        <div class="provenance-meta__date">2026 — PRESENT / OMNICHANNEL CHECKOUT</div>
+      </div>
+      <div class="provenance-descr">
+        Senior Product Designer &amp; Generative-AI Specialist. Architecting the primary <em>transactional frameworks</em> and executing enterprise-wide AI scaling initiatives.
+      </div>
+      <div class="provenance-details">
+        <h4 class="provenance-details__title">CURATORIAL ANNOTATIONS</h4>
+        <ul class="provenance-details__list">
+          <li><b>Core Scope:</b> Direct design authority over high-volume Cart, Wallet, Checkout, Account, and In-store Self-Checkout portals.</li>
+          <li><b>AI Strategy:</b> Spearheading AI-native education pathways, custom strategic tooling, and design systems integration.</li>
+          <li><b>Execution Vibe:</b> Blending robust performance scaling with fluid checkout UX.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Walmart Labs -->
+    <article class="provenance-entry reveal">
+      <div class="provenance-meta">
+        <div class="provenance-meta__num">CATALOG NO. 09-04</div>
+        <h3 class="provenance-meta__title">Walmart Labs</h3>
+        <div class="provenance-meta__date">2018 — 2023 / ENTERPRISE SYSTEM</div>
+      </div>
+      <div class="provenance-descr">
+        Principal Product Designer. Directing <em>system architecture</em> and high-fidelity commerce models at massive scale.
+      </div>
+      <div class="provenance-details">
+        <h4 class="provenance-details__title">CURATORIAL ANNOTATIONS</h4>
+        <ul class="provenance-details__list">
+          <li><b>Core Focus:</b> Led design for advanced merchant systems, retail operations, and checkout loops.</li>
+          <li><b>System Scale:</b> Serving millions of active daily business and consumer checkout loops.</li>
+          <li><b>Visual Balance:</b> Created extremely structural toolsets designed to reduce process drag across retail.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Yahoo! -->
+    <article class="provenance-entry reveal">
+      <div class="provenance-meta">
+        <div class="provenance-meta__num">CATALOG NO. 09-03</div>
+        <h3 class="provenance-meta__title">Yahoo!</h3>
+        <div class="provenance-meta__date">2017 — 2018 / RAPID VALIDATION</div>
+      </div>
+      <div class="provenance-descr">
+        Director of UX Prototyping. Spearheading rapid prototyping squads to <em>stress-test</em> global portal and search matrices.
+      </div>
+      <div class="provenance-details">
+        <h4 class="provenance-details__title">CURATORIAL ANNOTATIONS</h4>
+        <ul class="provenance-details__list">
+          <li><b>Leadership:</b> Managed the primary design engineering and interactive prototype division.</li>
+          <li><b>Fidelity:</b> Developed robust mockups allowing high-level alignment on major product updates.</li>
+          <li><b>Cadence:</b> Pioneered quick iteration rhythms, validating visual assets and behaviors.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Google -->
+    <article class="provenance-entry reveal">
+      <div class="provenance-meta">
+        <div class="provenance-meta__num">CATALOG NO. 09-02</div>
+        <h3 class="provenance-meta__title">Google</h3>
+        <div class="provenance-meta__date">2013 — 2017 / EMERGENCE ENGINEERING</div>
+      </div>
+      <div class="provenance-descr">
+        Senior UX Engineer &amp; Prototyper. Formulating high-fidelity interactions for Google Assistant, Android, and <em>predictive Cloud AI</em> models.
+      </div>
+      <div class="provenance-details">
+        <h4 class="provenance-details__title">CURATORIAL ANNOTATIONS</h4>
+        <ul class="provenance-details__list">
+          <li><b>AI Pioneering:</b> Explored natural speech UI, conversational triggers, and early proactive assistant systems.</li>
+          <li><b>Platform Code:</b> Bridged raw user interactions with foundational Material Design structures.</li>
+          <li><b>Impact:</b> Synthesized technical feasibility vectors directly with highly aesthetic customer values.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Endemol -->
+    <article class="provenance-entry reveal">
+      <div class="provenance-meta">
+        <div class="provenance-meta__num">CATALOG NO. 09-01</div>
+        <h3 class="provenance-meta__title">Endemol</h3>
+        <div class="provenance-meta__date">2008 — 2013 / KINETIC SYSTEMS</div>
+      </div>
+      <div class="provenance-descr">
+        UX &amp; Engineering Lead. Creating synchronous web companions and <em>broadcast-scale</em> interactive media channels.
+      </div>
+      <div class="provenance-details">
+        <h4 class="provenance-details__title">CURATORIAL ANNOTATIONS</h4>
+        <ul class="provenance-details__list">
+          <li><b>Synchronous Loop:</b> Designed real-time second-screen structures linking television shows with consumer feeds.</li>
+          <li><b>Full Stack:</b> Handled visual design specs, layout grids, and raw database mechanics.</li>
+          <li><b>Volume:</b> Handled user traffic peaks of hundreds of millions of simultaneous requests.</li>
+        </ul>
+      </div>
+    </article>
+
+  </section>
+
+  <div class="thin-rule"></div>
+
+  <!-- SECTION 2: CAPABILITIES PLACARD -->
+  <section style="margin-top: 40px;">
+    <div class="section-tag">CATALOG SECTION 02 — THEORETICAL CAPABILITY PLACARDS</div>
+    
+    <div class="placard-grid">
+      
+      <!-- Placard 1 -->
+      <div class="placard">
+        <div class="placard__num">ENTRY A // MEDIUM ANALYSIS</div>
+        <h3 class="placard__title">Design Engineering</h3>
+        <p class="placard__body">
+          Approaching the digital canvas as a synthesis of pure aesthetic form and compiled structural logic. Bridging high-fidelity design specifications directly with performant code, resulting in premium, customized layout matrices.
+        </p>
+      </div>
+
+      <!-- Placard 2 -->
+      <div class="placard">
+        <div class="placard__num">ENTRY B // STRUCTURAL SCALE</div>
+        <h3 class="placard__title">Product Architecture</h3>
+        <p class="placard__body">
+          Specialized in crafting complex consumer loop structures: transactional checkout checkout fields, payment grids, wallet systems, and user profiles designed to operate under intense traffic volumes while maintaining pristine design integrity.
+        </p>
+      </div>
+
+      <!-- Placard 3 -->
+      <div class="placard">
+        <div class="placard__num">ENTRY C // EMERGENT LOGIC</div>
+        <h3 class="placard__title">Generative AI Specialist</h3>
+        <p class="placard__body">
+          Pioneering AI integrations inside organizational workflows: engineering custom prompting pipelines, building design tooling setups, and establishing active educational loops that elevate generative tools from basic templates to fine art utility.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="thin-rule"></div>
+
+  <!-- SECTION 3: SELECTED STUDIES (LAB) -->
+  <section style="margin-top: 40px;">
+    <div class="section-tag">CATALOG SECTION 03 — SELECTED STUDIES FROM THE INDEPENDENT LAB</div>
+    
+    <div class="studies-grid">
+      
+      <!-- Proj 1 -->
+      <div class="study-placard">
+        <div class="study-placard__cat">STUDY 01 — Conversational Memory</div>
+        <h4 class="study-placard__title">My AI Diary</h4>
+        <p class="study-placard__desc">An intelligent interactive journal exploring human reflection combined with conversational memory structures.</p>
+        <div class="study-placard__footer">
+          <span>AI MEMORY</span>
+          <span>·</span>
+          <span>Web</span>
+        </div>
+        <a href="https://ai-created.com" target="_blank" rel="noopener" class="study-placard__link"></a>
+      </div>
+
+      <!-- Proj 2 -->
+      <div class="study-placard">
+        <div class="study-placard__cat">STUDY 02 — Miniaturization</div>
+        <h4 class="study-placard__title">WatchGPT</h4>
+        <p class="study-placard__desc">A study in deploying conversational models inside high-constraint wearable hardware interfaces.</p>
+        <div class="study-placard__footer">
+          <span>Wearable</span>
+          <span>·</span>
+          <span>API Sync</span>
+        </div>
+        <a href="https://ai-created.com" target="_blank" rel="noopener" class="study-placard__link"></a>
+      </div>
+
+      <!-- Proj 3 -->
+      <div class="study-placard">
+        <div class="study-placard__cat">STUDY 03 — Origin Verification</div>
+        <h4 class="study-placard__title">Human Actually</h4>
+        <p class="study-placard__desc">A verification design validating organic human origin in a synthetic digital landscape.</p>
+        <div class="study-placard__footer">
+          <span>Turing Design</span>
+          <span>·</span>
+          <span>SVG</span>
+        </div>
+        <a href="https://ai-created.com" target="_blank" rel="noopener" class="study-placard__link"></a>
+      </div>
+
+      <!-- Proj 4 -->
+      <div class="study-placard">
+        <div class="study-placard__cat">STUDY 04 — Kinetic Audio</div>
+        <h4 class="study-placard__title">Audio Visualizer Suite</h4>
+        <p class="study-placard__desc">Transforming real-time sound frequencies into smooth, interactive canvas fluid dynamics.</p>
+        <div class="study-placard__footer">
+          <span>Web Audio API</span>
+          <span>·</span>
+          <span>Canvas</span>
+        </div>
+        <a href="https://ai-created.com" target="_blank" rel="noopener" class="study-placard__link"></a>
+      </div>
+
+      <!-- Proj 5 -->
+      <div class="study-placard">
+        <div class="study-placard__cat">STUDY 05 — Particle Physics</div>
+        <h4 class="study-placard__title">Vectronix</h4>
+        <p class="study-placard__desc">A retro vector graphic study modeling kinetic particle velocity and procedural coordinates.</p>
+        <div class="study-placard__footer">
+          <span>Vector JS</span>
+          <span>·</span>
+          <span>Physics</span>
+        </div>
+        <a href="https://ai-created.com" target="_blank" rel="noopener" class="study-placard__link"></a>
+      </div>
+
+      <!-- Proj 6 -->
+      <div class="study-placard">
+        <div class="study-placard__cat">STUDY 06 — Chromatic Time</div>
+        <h4 class="study-placard__title">Color Clock</h4>
+        <p class="study-placard__desc">Mapping the precise passing of time directly onto the visible 24-bit hexadecimal color spectrum.</p>
+        <div class="study-placard__footer">
+          <span>Time Math</span>
+          <span>·</span>
+          <span>Hex spectrum</span>
+        </div>
+        <a href="https://ai-created.com" target="_blank" rel="noopener" class="study-placard__link"></a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COLOPHON / CONTACTS -->
+  <section class="colophon">
+    <div class="colophon-lead">
+      &ldquo;Architecture is the art of organizing space; digital design is the art of organizing attention.&rdquo;
+    </div>
+    
+    <div class="colophon-body">
+      <div class="patent-tag" style="margin-bottom: 16px;">COLOPHON &amp; PROVENANCE CHANNELS</div>
+      <p>This exhibition catalog was hand-drafted in Portland, OR. Typography is set in <b>Cormorant Garamond</b> (a luxury editorial serif) and <b>Plus Jakarta Sans</b> (a premium neo-grotesque sans), paired with <b>JetBrains Mono</b> for technical details.</p>
+      <p>The code represents twenty years of verified work history. To initiate structural alignment, contact the curator through the channels registered below:</p>
+      
+      <p style="margin-top: 32px; font-weight: bold; color: var(--velvet-ink);">
+        Email: <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a><br/>
+        Professional: <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a><br/>
+        Broadcast Channel: <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x.com/AIandDesign</a><br/>
+        Video Archive: <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">youtube.com/@AIandDesign</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="catalog-footer">
+    <span>© 2026 EXHIBITION CAT. NO. 09</span>
+    <span>CURATED BY GEMINI 3.5 FLASH [HIGH]</span>
+    <span>ALL SINGLE-PAGE WORKS REGISTERED HAND-SET</span>
+  </footer>
+
+</main>
+
+<!-- Scroll Reveals Script -->
+<script>
+(function () {
+  'use strict';
+
+  // Reveal timeline elements on scroll
+  const entries = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(elements => {
+    elements.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('is-in');
+        observer.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  entries.forEach(el => observer.observe(el));
+
+})();
+</script>
+
+</body>
+</html>

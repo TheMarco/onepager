@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Counter Service MVHV / A Product Design Tasting Menu</title>
+<meta name="description" content="A tasting-menu one-page portfolio for Marco van Hylckama Vlieg, framed as a chef's counter for product design, AI-native building, and design engineering." />
+<meta name="theme-color" content="#fbf7ef" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --cream: #fbf7ef;
+  --ink: #171411;
+  --tomato: #e23b22;
+  --wasabi: #95b84f;
+  --steel: #a7b2bd;
+  --char: #2b2926;
+  --blue: #2f66c7;
+  --line: rgba(23,20,17,0.18);
+  --muted: #686057;
+  --gutter: clamp(18px, 5%, 60px);
+  --max: 1340px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "DM Sans", system-ui, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 14% 20%, rgba(226,59,34,0.14), transparent 26%),
+    radial-gradient(circle at 84% 78%, rgba(47,102,199,0.12), transparent 28%),
+    linear-gradient(90deg, rgba(23,20,17,0.035) 1px, transparent 1px);
+  background-size: auto, auto, 38px 38px;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--tomato); color: var(--cream); }
+a:focus-visible {
+  outline: 2px solid var(--tomato);
+  outline-offset: 4px;
+}
+
+.wrap {
+  width: min(var(--max), 100%);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+}
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; letter-spacing: 0; }
+.serif { font-family: "Instrument Serif", Georgia, serif; }
+
+.nav {
+  min-height: 54px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+}
+.nav .wrap {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--ink);
+  color: var(--cream);
+  background: var(--ink);
+  padding: 7px 10px;
+  font-weight: 700;
+}
+.back { color: var(--tomato); font-weight: 700; }
+
+.hero {
+  min-height: calc(100vh - 54px);
+  display: grid;
+  align-items: center;
+  padding-top: 52px;
+  padding-bottom: 52px;
+}
+.hero-grid {
+  display: grid;
+  gap: 30px;
+  align-items: center;
+}
+@media (min-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr 1fr; }
+}
+.kicker {
+  color: var(--tomato);
+  text-transform: uppercase;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+h1 {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 6rem;
+  line-height: 0.9;
+  font-weight: 400;
+  margin: 22px 0;
+}
+h1 em { color: var(--tomato); }
+.lead {
+  font-size: 1.08rem;
+  color: var(--muted);
+  max-width: 580px;
+}
+.reservation {
+  margin-top: 26px;
+  border: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+}
+.reservation div {
+  padding: 16px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.reservation dt {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.reservation dd {
+  font-weight: 900;
+}
+
+.plate {
+  min-height: 650px;
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 50%;
+  width: min(650px, 100%);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 35px 80px rgba(23,20,17,0.32);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.plate::before {
+  content: "";
+  position: absolute;
+  inset: 42px;
+  border: 1px solid rgba(251,247,239,0.18);
+  border-radius: 50%;
+}
+.plate::after {
+  content: "";
+  position: absolute;
+  width: 54%;
+  height: 54%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 45% 38%, var(--tomato) 0 10%, transparent 11%),
+    radial-gradient(circle at 62% 56%, var(--wasabi) 0 8%, transparent 9%),
+    radial-gradient(circle at 34% 63%, var(--blue) 0 7%, transparent 8%),
+    conic-gradient(from 30deg, rgba(251,247,239,0.08), rgba(251,247,239,0), rgba(251,247,239,0.16));
+  animation: plate-turn 22s linear infinite;
+}
+@keyframes plate-turn { to { transform: rotate(360deg); } }
+.plate-title {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 70%;
+}
+.plate-title span {
+  display: block;
+  color: var(--steel);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  margin-bottom: 12px;
+}
+.plate-title strong {
+  display: block;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 3rem;
+  font-weight: 400;
+  line-height: 0.95;
+}
+
+.section { padding: 78px 0; }
+.dark {
+  background: var(--char);
+  color: var(--cream);
+}
+.section-head {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 34px;
+}
+@media (min-width: 880px) {
+  .section-head { grid-template-columns: 220px 1fr; align-items: end; }
+}
+.section h2 {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 3.6rem;
+  line-height: 0.96;
+  font-weight: 400;
+}
+.courses {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+@media (min-width: 760px) {
+  .courses { grid-template-columns: repeat(2,1fr); }
+}
+@media (min-width: 1120px) {
+  .courses { grid-template-columns: repeat(4,1fr); }
+}
+.course {
+  background: var(--cream);
+  padding: 26px;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.2s, transform 0.2s;
+}
+.course:hover {
+  background: #fffaf0;
+  transform: translateY(-4px);
+}
+.course .no {
+  color: var(--tomato);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 26px;
+}
+.course h3 {
+  font-size: 1.35rem;
+  margin-bottom: 10px;
+}
+.course p {
+  color: var(--muted);
+}
+.pairing {
+  margin-top: auto;
+  padding-top: 20px;
+  color: var(--ink);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.pantry {
+  margin-top: 28px;
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+@media (min-width: 760px) {
+  .pantry { grid-template-columns: repeat(3, 1fr); }
+}
+.pantry-item {
+  background: var(--cream);
+  padding: 22px;
+  min-height: 190px;
+  display: block;
+  transition: background 0.2s;
+}
+.pantry-item:hover { background: #fffaf0; }
+.pantry-item b {
+  display: block;
+  color: var(--tomato);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.pantry-item p { color: var(--muted); }
+
+.ticket-wall {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (min-width: 860px) {
+  .ticket-wall { grid-template-columns: 0.9fr 1.1fr; }
+}
+.ticket {
+  background: var(--cream);
+  color: var(--ink);
+  padding: 28px;
+  border-left: 10px solid var(--tomato);
+  display: block;
+  transition: transform 0.2s;
+}
+.ticket:hover { transform: translateY(-4px); }
+.ticket h3 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+.ticket p { color: var(--muted); }
+.rail {
+  display: grid;
+  gap: 10px;
+}
+.rail a {
+  border: 1px solid rgba(251,247,239,0.22);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.rail a:hover {
+  border-color: rgba(149,184,79,0.7);
+  background: rgba(251,247,239,0.06);
+}
+.rail b { color: var(--wasabi); }
+
+.service-history {
+  margin-top: 28px;
+  display: grid;
+  gap: 12px;
+}
+.service {
+  border: 1px solid rgba(251,247,239,0.22);
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 18px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.service:hover {
+  border-color: rgba(149,184,79,0.7);
+  transform: translateX(4px);
+}
+.service b {
+  color: var(--wasabi);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+.service p {
+  color: rgba(251,247,239,0.72);
+}
+
+.lab-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.lab-dish {
+  background: var(--cream);
+  padding: 24px;
+  min-height: 210px;
+  display: block;
+  transition: background 0.2s, transform 0.2s;
+}
+.lab-dish:hover {
+  background: #fffaf0;
+  transform: translateY(-4px);
+}
+.lab-dish h3 {
+  color: var(--tomato);
+  margin-bottom: 10px;
+}
+.lab-dish p { color: var(--muted); }
+
+.channels {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+@media (min-width: 760px) {
+  .channels { grid-template-columns: repeat(4,1fr); }
+}
+.channels a {
+  min-height: 94px;
+  background: var(--cream);
+  padding: 18px;
+  display: flex;
+  align-items: end;
+  font-weight: 900;
+}
+
+@media (max-width: 760px) {
+  h1 { font-size: 3.6rem; }
+  .plate { min-height: auto; }
+  .plate-title strong { font-size: 2.2rem; }
+  .reservation { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <header class="nav mono">
+    <div class="wrap">
+      <a href="index.html" class="back">Back to index</a>
+      <span>Counter Service MVHV / one seating only</span>
+      <span class="badge">OpenAI Codex</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker mono">Portfolio direction 16 / chef's counter</div>
+          <h1>A tasting menu for <em>product craft.</em></h1>
+          <p class="lead">The resume becomes a meal: exacting prep, fast heat, clean plating, and the odd beautiful ingredient that makes the table go quiet for a second.</p>
+          <dl class="reservation">
+            <div><dt class="mono">Seat</dt><dd>Senior product designer</dd></div>
+            <div><dt class="mono">Kitchen</dt><dd>Design + AI + code</dd></div>
+            <div><dt class="mono">Service</dt><dd>20+ years</dd></div>
+            <div><dt class="mono">Special</dt><dd>Enterprise systems with taste</dd></div>
+          </dl>
+        </div>
+        <figure class="plate">
+          <figcaption class="plate-title">
+            <span class="mono">Chef's note</span>
+            <strong>Make the complex feel inevitable.</strong>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="kicker mono">The courses</div>
+          <h2>Four services from the same kitchen.</h2>
+        </header>
+        <div class="courses">
+          <a class="course" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><div class="no mono">Course 01</div><h3>Research broth</h3><p>Absorb the room: business pressure, user behavior, legacy systems, constraints, edge cases, politics, and the thing nobody wrote down.</p><div class="pairing mono">Pairs with strategy</div></a>
+          <a class="course" href="https://ai-created.com/products" target="_blank" rel="noopener"><div class="no mono">Course 02</div><h3>Prototype crudo</h3><p>Thin, sharp slices of working interface. Enough fidelity to feel the answer before the organization overcommits.</p><div class="pairing mono">Pairs with code</div></a>
+          <a class="course" href="https://tech.walmart.com" target="_blank" rel="noopener"><div class="no mono">Course 03</div><h3>Systems roast</h3><p>Cart, checkout, wallet, internal tooling, design systems, and AI education cooked through until they hold under actual load.</p><div class="pairing mono">Pairs with scale</div></a>
+          <a class="course" href="https://ai-created.com" target="_blank" rel="noopener"><div class="no mono">Course 04</div><h3>Lab dessert</h3><p>My AI Diary, WatchGPT, Human Actually, visualizers, and games: small experiments with enough finish to reveal a bigger appetite.</p><div class="pairing mono">Pairs with curiosity</div></a>
+        </div>
+        <div class="pantry">
+          <a class="pantry-item" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><b class="mono">Pantry staple</b><p>Interaction architecture: the underlying grammar of what a user can do, what the system knows, and how each state should feel.</p></a>
+          <a class="pantry-item" href="https://ai-created.com/products" target="_blank" rel="noopener"><b class="mono">Knife skill</b><p>Design engineering: slicing through ambiguity with enough code fluency to make prototypes honest instead of decorative.</p></a>
+          <a class="pantry-item" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><b class="mono">Fermentation</b><p>AI practice: letting new product behaviors develop over time through memory, voice, user trust, and model constraints.</p></a>
+          <a class="pantry-item" href="https://kohls.com" target="_blank" rel="noopener"><b class="mono">Heat control</b><p>Enterprise UX: keeping clarity and quality intact when legal, operations, scale, and revenue all enter the kitchen.</p></a>
+          <a class="pantry-item" href="https://ai-created.com" target="_blank" rel="noopener"><b class="mono">Plating</b><p>Visual taste: typography, density, layout, hierarchy, and motion composed so the work has a point of view.</p></a>
+          <a class="pantry-item" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><b class="mono">Service</b><p>Leadership by example: create the artifact, explain the thinking, teach the pattern, and raise the room's standard.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="kicker mono">Order fire</div>
+          <h2>What comes off the line.</h2>
+        </header>
+        <div class="ticket-wall">
+          <a class="ticket" href="https://kohls.com" target="_blank" rel="noopener"><h3>Current special: AI-enabled commerce</h3><p>Kohl's work across checkout, wallet, cart, and self-checkout, with generative AI enablement folded into the design organization as practice, not theater.</p></a>
+          <div class="rail mono">
+            <a href="https://google.com" target="_blank" rel="noopener"><span>Google Assistant / Cloud AI / Material</span><b>2013-2017</b></a>
+            <a href="https://yahoo.com" target="_blank" rel="noopener"><span>Yahoo prototypes / search / media</span><b>2017-2018</b></a>
+            <a href="https://tech.walmart.com" target="_blank" rel="noopener"><span>Walmart Labs / merchant and checkout</span><b>2018-2023</b></a>
+            <a href="https://kohls.com" target="_blank" rel="noopener"><span>Kohl's / omnichannel systems</span><b>2026-now</b></a>
+            <a href="https://ai-created.com" target="_blank" rel="noopener"><span>AI-Created independent lab</span><b>always open</b></a>
+          </div>
+        </div>
+        <div class="service-history">
+          <a class="service" href="https://endemolshine.us/" target="_blank" rel="noopener"><b class="mono">Endemol</b><p>Early service under pressure: broadcast-adjacent UX and second-screen systems where timing and reliability mattered.</p></a>
+          <a class="service" href="https://google.com" target="_blank" rel="noopener"><b class="mono">Google</b><p>Assistant, Android, Cloud AI, and Material Design work: learning to plate new behaviors before the category became obvious.</p></a>
+          <a class="service" href="https://yahoo.com" target="_blank" rel="noopener"><b class="mono">Yahoo</b><p>Prototype kitchen: fast experiments for search, media, and portal products with enough fidelity to change direction.</p></a>
+          <a class="service" href="https://tech.walmart.com" target="_blank" rel="noopener"><b class="mono">Walmart Labs</b><p>Large-format service: commerce loops, checkout flow, merchant systems, and design decisions repeated at massive scale.</p></a>
+          <a class="service" href="https://kohls.com" target="_blank" rel="noopener"><b class="mono">Kohl's</b><p>Current station: cart, checkout, wallet, self-checkout, and AI enablement with enterprise constraints on the pass.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="kicker mono">Lab specials</div>
+          <h2>Independent dishes from the side kitchen.</h2>
+        </header>
+        <div class="lab-menu">
+          <a class="lab-dish" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><h3>My AI Diary</h3><p>A private reflective instrument for memory, voice, and daily interaction with AI that feels intimate rather than generic.</p></a>
+          <a class="lab-dish" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener"><h3>Human Actually</h3><p>A product study around origin, authenticity, and how humans can remain legible in synthetic spaces.</p></a>
+          <a class="lab-dish" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener"><h3>WatchGPT</h3><p>AI compressed for the wrist: small, immediate, and useful without turning into a dashboard.</p></a>
+          <a class="lab-dish" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener"><h3>Audio Visualizer Suite</h3><p>Sound, motion, color, and toolmaking folded into one expressive software instrument.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="kicker mono">Reservations</div>
+          <h2>Open channels.</h2>
+        </header>
+        <nav class="channels">
+          <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+          <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created</a>
+          <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a>
+        </nav>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

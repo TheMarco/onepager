@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Consoles: MVHV-1000 — Synthesizer Portfolio of Marco van Hylckama Vlieg</title>
+<meta name="description" content="A vintage hardware analog synthesizer console portfolio for Marco van Hylckama Vlieg, Senior Product Designer & AI-native Builder." />
+<meta name="theme-color" content="#18191B" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   DIRECTION 10: THE VINTAGE ANALOG SYNTHESIZER CONSOLE
+   Color System: Dark Brushed Anodized Metal, Copper, Glowing Amber, Red, Green
+   Typography: Orbitron (LCD), JetBrains Mono (Tech Labels), Space Grotesk (Body)
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg-rack:      #121315;
+  --panel-metal:  #212327;
+  --amber-glow:   #FF9F00;
+  --amber-dim:    rgba(255, 159, 0, 0.2);
+  --red-glow:     #FF3B30;
+  --red-dim:      rgba(255, 59, 48, 0.2);
+  --green-glow:   #34C759;
+  --green-dim:    rgba(52, 199, 89, 0.2);
+  --copper:       #D38E46;
+  --white:        #E5E9EE;
+  --white-dim:    #828D99;
+  --rule:         #121315;
+  --rule-metal:   rgba(255, 255, 255, 0.08);
+  --max:          1280px;
+  --gutter:       clamp(20px, 4vw, 48px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  background-color: var(--bg-rack);
+  color: var(--white);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  padding: 40px 0;
+}
+
+::selection { background: var(--amber-glow); color: #000; }
+a { color: inherit; text-decoration: none; }
+
+.f-mono { font-family: 'JetBrains Mono', monospace; }
+.f-lcd { font-family: 'Orbitron', 'JetBrains Mono', monospace; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Back button */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--copper);
+  border: 1px solid var(--copper);
+  padding: 8px 16px;
+  background: transparent;
+  transition: all 0.25s;
+  cursor: pointer;
+  margin-bottom: 24px;
+}
+.btn-back:hover {
+  background: var(--copper);
+  color: #121315;
+  box-shadow: 0 0 12px rgba(211, 142, 70, 0.3);
+}
+
+/* ── 19-INCH RACK CHASSIS PANEL ── */
+.synth-panel {
+  background: var(--panel-metal);
+  border: 2px solid #000;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.75), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.8);
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  /* Brushed Metal texture overlay */
+  background-image: 
+    linear-gradient(90deg, rgba(255,255,255,0.015) 50%, transparent 50%),
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 4px 100%, 100% 2px;
+}
+
+/* Screw heads at corner panels */
+.screw {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #3a3f45;
+  border: 1px solid #1a1c1e;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 2px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+.screw::after {
+  content: '';
+  width: 10px;
+  height: 2px;
+  background: #1a1c1e;
+  transform: rotate(40deg); /* slightly offset screwdriver slot */
+}
+.screw--tl { top: 12px; left: 12px; }
+.screw--tr { top: 12px; right: 12px; }
+.screw--bl { bottom: 12px; left: 12px; }
+.screw--br { bottom: 12px; right: 12px; }
+
+/* Panel Header styling */
+.panel-header {
+  border-bottom: 2px solid #000;
+  padding: 32px 40px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  background: rgba(0, 0, 0, 0.15);
+}
+.panel-brand {
+  display: flex;
+  flex-direction: column;
+}
+.brand-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--copper);
+  letter-spacing: 0.18em;
+  text-shadow: 0 1px 1px #000;
+}
+.brand-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--white-dim);
+  margin-top: 2px;
+}
+.panel-model {
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-shadow: 0 0 8px rgba(255,255,255,0.15);
+}
+.model-led {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--red-glow);
+  box-shadow: 0 0 10px var(--red-glow);
+  animation: beacon 2s infinite;
+}
+@keyframes beacon {
+  0% { opacity: 0.3; box-shadow: 0 0 2px var(--red-dim); }
+  50% { opacity: 1; box-shadow: 0 0 12px var(--red-glow); }
+  100% { opacity: 0.3; box-shadow: 0 0 2px var(--red-dim); }
+}
+
+/* ── PANEL MODULES CONTAINER ── */
+.panel-modules {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: rgba(0, 0, 0, 0.2);
+}
+@media (min-width: 1024px) {
+  .panel-modules {
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 2px solid #000;
+  }
+}
+
+/* Standard Module Chassis */
+.module {
+  padding: 40px;
+  border-bottom: 2px solid #000;
+  position: relative;
+}
+.module::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  width: 1px;
+  background: var(--rule-metal);
+}
+@media (min-width: 1024px) {
+  .module:nth-child(even)::after {
+    display: none;
+  }
+}
+.module-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.18em;
+  color: var(--copper);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(213, 142, 70, 0.2);
+  padding-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.module-label::after {
+  content: '▼ SECTION';
+  opacity: 0.6;
+}
+
+/* ── MODULE 01: PREAMP / BIO ── */
+.preamp-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+@media (min-width: 600px) {
+  .preamp-grid {
+    grid-template-columns: 140px 1fr;
+    gap: 32px;
+  }
+}
+.control-rack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Synthesizer Knob (Tactile rotating circle) */
+.knob-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.knob {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #424952 0%, #1e2124 75%);
+  border: 4px solid #101112;
+  box-shadow: 
+    0 8px 16px rgba(0,0,0,0.5), 
+    inset 0 1px 2px rgba(255,255,255,0.1);
+  position: relative;
+  cursor: grab;
+  transition: transform 0.1s ease;
+  user-select: none;
+}
+.knob:active {
+  cursor: grabbing;
+}
+.knob-pointer {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 18px;
+  background: var(--amber-glow);
+  box-shadow: 0 0 6px var(--amber-glow);
+  border-radius: 2px;
+}
+.knob-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* VU Meter bouncing dynamically */
+.vu-meter {
+  width: 120px;
+  height: 56px;
+  background: #18191B;
+  border: 2px solid #000;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+.vu-arc {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 48px;
+  border-radius: 50px 50px 0 0;
+  border: 1px dashed rgba(255, 159, 0, 0.25);
+  border-bottom: none;
+}
+.vu-needle {
+  position: absolute;
+  bottom: -4px; left: 50%;
+  width: 2px;
+  height: 44px;
+  background: var(--red-glow);
+  transform-origin: bottom center;
+  transform: rotate(-45deg); /* Bounces between -55 and 55 deg */
+  transition: transform 0.15s cubic-bezier(0.1, 0.8, 0.3, 1);
+  box-shadow: 0 0 4px var(--red-glow);
+}
+.vu-label {
+  position: absolute;
+  top: 8px; left: 0; right: 0;
+  text-align: center;
+  font-family: 'Orbitron', monospace;
+  font-size: 8px;
+  color: var(--amber-glow);
+  letter-spacing: 0.1em;
+}
+
+.bio-output {
+  background: #000;
+  border: 1px solid #333;
+  padding: 16px 20px;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.9);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #BAC6D3;
+}
+.bio-output p {
+  margin-bottom: 12px;
+}
+.bio-output p:last-child {
+  margin-bottom: 0;
+}
+.bio-output em {
+  font-style: normal;
+  color: var(--amber-glow);
+}
+
+/* ── MODULE 02: CAPABILITIES MATRIX ── */
+.synth-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Custom interactive hardware toggle switch */
+.switch-module {
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 16px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.switch-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.switch-title {
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+.switch-desc {
+  font-size: 13px;
+  color: var(--white-dim);
+}
+
+.switch-control {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.led-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--green-dim);
+  border: 1px solid #000;
+  transition: all 0.25s;
+}
+.led-indicator.active {
+  background: var(--green-glow);
+  box-shadow: 0 0 10px var(--green-glow);
+}
+
+/* Actual mechanical toggle slider UI */
+.toggle-chassis {
+  width: 24px;
+  height: 48px;
+  background: #101112;
+  border: 2px solid #3a3f45;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+}
+.toggle-bat {
+  position: absolute;
+  left: 2px;
+  width: 16px;
+  height: 20px;
+  background: linear-gradient(to bottom, #d2d8df 0%, #76818e 100%);
+  border: 1px solid #1a1c1e;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  transition: top 0.15s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+/* Default OFF (bottom position) */
+.toggle-chassis.off .toggle-bat {
+  top: 22px;
+}
+/* ON (top position) */
+.toggle-chassis.on .toggle-bat {
+  top: 2px;
+  background: linear-gradient(to bottom, #76818e 0%, #d2d8df 100%);
+}
+
+/* ── MODULE 03: SEQUENCER (LCD DISPLAY & TIMELINE) ── */
+.sequencer-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+.sequencer-grid {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+.step-button {
+  flex: 0 0 72px;
+  height: 64px;
+  background: #1e2124;
+  border: 2px solid #101112;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.step-button:hover {
+  background: #2b3036;
+}
+.step-button.active {
+  background: #362e24;
+  border-color: var(--amber-glow);
+  box-shadow: 0 0 8px rgba(255, 159, 0, 0.25);
+}
+.step-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--amber-dim);
+  border: 1px solid #000;
+  transition: all 0.2s;
+}
+.step-button.active .step-led {
+  background: var(--amber-glow);
+  box-shadow: 0 0 8px var(--amber-glow);
+}
+.step-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--white-dim);
+  font-weight: bold;
+}
+.step-button.active .step-lbl {
+  color: var(--amber-glow);
+}
+
+/* Glowing amber hardware LCD Screen */
+.lcd-screen {
+  background: #1c1000; /* LCD off-color */
+  border: 3px solid #0f0b08;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.9), 0 0 15px rgba(255, 159, 0, 0.05);
+  border-radius: 3px;
+  padding: 24px;
+  min-height: 220px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+/* Screen grid overlay effect */
+.lcd-screen::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 10;
+  pointer-events: none;
+  background: 
+    linear-gradient(rgba(255, 159, 0, 0.03) 50%, transparent 50%),
+    linear-gradient(90deg, rgba(255, 159, 0, 0.03) 50%, transparent 50%);
+  background-size: 2px 2px;
+}
+.lcd-header {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  color: var(--amber-glow);
+  border-bottom: 1px dashed var(--amber-dim);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
+}
+.lcd-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--amber-glow);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+  text-shadow: 0 0 8px rgba(255, 159, 0, 0.6);
+}
+.lcd-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #ffa81e;
+  text-shadow: 0 0 3px rgba(255, 159, 0, 0.4);
+}
+.lcd-text ul {
+  list-style: none;
+  margin-top: 10px;
+}
+.lcd-text li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #e59312;
+}
+.lcd-text li::before {
+  content: '>';
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--amber-glow);
+  font-weight: bold;
+}
+
+/* ── MODULE 04: AUX MATRIX (SHIPPED LAB & LINKS) ── */
+.aux-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+@media (min-width: 600px) {
+  .aux-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.aux-module {
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 20px;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.aux-header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--copper);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+}
+.aux-jack {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #101112;
+  border: 2px solid #4a5158;
+}
+.aux-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.aux-desc {
+  font-size: 13.5px;
+  color: var(--white-dim);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.aux-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--white-dim);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  align-self: flex-start;
+}
+.aux-link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* ── Panel Bottom spec plate ── */
+.panel-footer-plate {
+  border-top: 2px solid #000;
+  padding: 32px 40px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  background: rgba(0, 0, 0, 0.25);
+}
+@media (min-width: 768px) {
+  .panel-footer-plate {
+    grid-template-columns: 1.2fr 1.5fr;
+    gap: 60px;
+  }
+}
+.system-status-lcd {
+  background: #0d1210;
+  border: 2px solid #070a08;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.9);
+  padding: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--green-glow);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 16px;
+}
+.system-status-lcd dt {
+  font-weight: bold;
+}
+
+.patchbay {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.patch-port {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.port-jack {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0f1011;
+  border: 3px solid #3c4349;
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.6), 
+    inset 0 2px 4px rgba(0,0,0,0.9);
+  position: relative;
+  transition: all 0.2s;
+}
+.port-jack::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.95);
+}
+.patch-port:hover .port-jack {
+  border-color: var(--copper);
+}
+.port-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ── RACK MOUNT EARS (Visual accents at very sides on desktop) ── */
+.rack-mount-ears {
+  display: none;
+}
+@media (min-width: 1360px) {
+  .rack-chassis {
+    position: relative;
+    padding: 0 40px;
+  }
+  .ear {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 40px;
+    background: #2d3137;
+    border: 1px solid #101112;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.4);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 40px 0;
+  }
+  .ear--left { left: 0; border-right: none; }
+  .ear--right { right: 0; border-left: none; }
+  
+  .ear-bolt {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #4e555e 0%, #1e2124 75%);
+    border: 1px solid #000;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ear-bolt::after {
+    content: '';
+    width: 10px;
+    height: 2px;
+    background: #000;
+    transform: rotate(15deg);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+  
+  <a href="index.html" class="btn-back">← Back to Console Index</a>
+
+  <div class="rack-chassis">
+    
+    <!-- Rack Mount Left Ear (Visual decoration) -->
+    <div class="ear ear--left">
+      <div class="ear-bolt"></div>
+      <div class="ear-bolt"></div>
+      <div class="ear-bolt"></div>
+    </div>
+
+    <!-- MAIN CONSOLE -->
+    <section class="synth-panel">
+      <!-- Screws on Panel corners -->
+      <div class="screw screw--tl"></div>
+      <div class="screw screw--tr"></div>
+      <div class="screw screw--bl"></div>
+      <div class="screw screw--br"></div>
+
+      <!-- Panel Header -->
+      <header class="panel-header">
+        <div class="panel-brand">
+          <span class="brand-name">MVHV CONSOLES</span>
+          <span class="brand-desc">PRODUCER MODEL · ANALOG SIGNAL CHASSIS</span>
+        </div>
+        <div class="panel-model">
+          <span class="model-led"></span>
+          <span>MVHV-1000</span>
+        </div>
+      </header>
+
+      <!-- Panel Modules -->
+      <div class="panel-modules">
+        
+        <!-- Module 1: Preamp / Bio -->
+        <div class="module">
+          <div class="module-label">MODULE 01: INPUT GAIN / PREAMP</div>
+          
+          <div class="preamp-grid">
+            <div class="control-rack">
+              <!-- Audio Knob -->
+              <div class="knob-container">
+                <div class="knob" id="knob-aesthetics" style="transform: rotate(0deg);">
+                  <div class="knob-pointer"></div>
+                </div>
+                <span class="knob-label">INFLOW GAIN</span>
+              </div>
+              
+              <!-- Bouncing VU meter -->
+              <div class="vu-meter">
+                <div class="vu-arc"></div>
+                <div class="vu-needle" id="vu-needle"></div>
+                <div class="vu-label">DB LEVEL</div>
+              </div>
+            </div>
+
+            <!-- Preamp LCD/Output -->
+            <div class="bio-output">
+              <p><b>System Master:</b> Marco van Hylckama Vlieg</p>
+              <p>Senior Product Designer and emerging technology specialist. Directing <em>20+ years</em> of runtime across major consumer pre-amplification zones.</p>
+              <p>Specialized in tuning complex <em>user transaction networks</em>, scaling operational AI design tooling, and custom hardware integration.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 2: Controls / Capabilities -->
+        <div class="module">
+          <div class="module-label">MODULE 02: CAPABILITIES MATRIX / MODULATION</div>
+          
+          <div class="synth-toggles">
+            <!-- Toggle 1 -->
+            <div class="switch-module">
+              <div class="switch-info">
+                <span class="switch-title">Design Engineering</span>
+                <span class="switch-desc">Bridging UI specifications with pristine browser execution.</span>
+              </div>
+              <div class="switch-control">
+                <div class="led-indicator active" id="led-t1"></div>
+                <div class="toggle-chassis on" id="toggle-t1" onclick="toggleSwitch('t1')">
+                  <div class="toggle-bat"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Toggle 2 -->
+            <div class="switch-module">
+              <div class="switch-info">
+                <span class="switch-title">Product Design</span>
+                <span class="switch-desc">Scale checkouts, purchase loops, and global cart systems.</span>
+              </div>
+              <div class="switch-control">
+                <div class="led-indicator active" id="led-t2"></div>
+                <div class="toggle-chassis on" id="toggle-t2" onclick="toggleSwitch('t2')">
+                  <div class="toggle-bat"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Toggle 3 -->
+            <div class="switch-module">
+              <div class="switch-info">
+                <span class="switch-title">Generative AI</span>
+                <span class="switch-desc">Strategic prompt pipelines, custom tooling, and education.</span>
+              </div>
+              <div class="switch-control">
+                <div class="led-indicator active" id="led-t3"></div>
+                <div class="toggle-chassis on" id="toggle-t3" onclick="toggleSwitch('t3')">
+                  <div class="toggle-bat"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 3: Sequencer / Timeline -->
+        <div class="module" style="grid-column: 1 / -1; border-bottom: 2px solid #000;">
+          <div class="module-label">MODULE 03: PATTERN SEQUENCER / TIME CHRONOLOGY</div>
+          
+          <div class="sequencer-layout">
+            <!-- Step triggers (horizontal grid) -->
+            <div class="sequencer-grid">
+              <!-- Kohl's -->
+              <div class="step-button active" id="step-kohls" onclick="triggerStep('kohls')">
+                <div class="step-led"></div>
+                <span class="step-lbl">KOHL'S</span>
+              </div>
+              <!-- Walmart -->
+              <div class="step-button" id="step-walmart" onclick="triggerStep('walmart')">
+                <div class="step-led"></div>
+                <span class="step-lbl">WALMART</span>
+              </div>
+              <!-- Yahoo -->
+              <div class="step-button" id="step-yahoo" onclick="triggerStep('yahoo')">
+                <div class="step-led"></div>
+                <span class="step-lbl">YAHOO!</span>
+              </div>
+              <!-- Google -->
+              <div class="step-button" id="step-google" onclick="triggerStep('google')">
+                <div class="step-led"></div>
+                <span class="step-lbl">GOOGLE</span>
+              </div>
+              <!-- Endemol -->
+              <div class="step-button" id="step-endemol" onclick="triggerStep('endemol')">
+                <div class="step-led"></div>
+                <span class="step-lbl">ENDEMOL</span>
+              </div>
+            </div>
+
+            <!-- Sequencer Amber Screen -->
+            <div class="lcd-screen" id="sequencer-screen">
+              <div class="lcd-header">
+                <span>PATTERN TRACK 05</span>
+                <span>STATUS: HIGH VOLTAGE SYSTEM</span>
+              </div>
+              <h4 class="lcd-title" id="lcd-title">KOHL'S</h4>
+              <div class="lcd-text" id="lcd-text">
+                <p><b>Senior Product Designer &amp; Generative-AI Specialist (2026 — PRESENT)</b></p>
+                <p>Architecting transactional frameworks across omnichannel Cart, Wallet, Checkout, and In-Store Self-Checkout, while establishing scalable Generative AI education and design tools.</p>
+                <ul>
+                  <li>Direct checkout experience optimization affecting millions of user carts.</li>
+                  <li>Enterprise AI integration and advanced design tool engineering.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 4: Shipped projects / aux outputs -->
+        <div class="module" style="grid-column: 1 / -1;">
+          <div class="module-label">MODULE 04: AUX MATRIX / SHIPPED LAB SUBSYSTEMS</div>
+          
+          <div class="aux-grid">
+            
+            <!-- Proj 1 -->
+            <div class="aux-module">
+              <div class="aux-header">
+                <span>AUX OUT 01</span>
+                <div class="aux-jack"></div>
+              </div>
+              <h4 class="aux-title">My AI Diary</h4>
+              <p class="aux-desc">Conversational memory structures combined with deeply reflective personal journal frameworks.</p>
+              <span class="aux-tag">AI MEMORY</span>
+              <a href="https://ai-created.com" target="_blank" rel="noopener" class="aux-link"></a>
+            </div>
+
+            <!-- Proj 2 -->
+            <div class="aux-module">
+              <div class="aux-header">
+                <span>AUX OUT 02</span>
+                <div class="aux-jack"></div>
+              </div>
+              <h4 class="aux-title">WatchGPT</h4>
+              <p class="aux-desc">Miniaturizing conversational model architectures for wearable smartwatch interfaces.</p>
+              <span class="aux-tag">WEARABLE APIS</span>
+              <a href="https://ai-created.com" target="_blank" rel="noopener" class="aux-link"></a>
+            </div>
+
+            <!-- Proj 3 -->
+            <div class="aux-module">
+              <div class="aux-header">
+                <span>AUX OUT 03</span>
+                <div class="aux-jack"></div>
+              </div>
+              <h4 class="aux-title">Human Actually</h4>
+              <p class="aux-desc">Organic human verification layout systems stressing design validation in synthetic fields.</p>
+              <span class="aux-tag">ORIGIN CHECK</span>
+              <a href="https://ai-created.com" target="_blank" rel="noopener" class="aux-link"></a>
+            </div>
+
+            <!-- Proj 4 -->
+            <div class="aux-module">
+              <div class="aux-header">
+                <span>AUX OUT 04</span>
+                <div class="aux-jack"></div>
+              </div>
+              <h4 class="aux-title">Audio Visualizer</h4>
+              <p class="aux-desc">Mapping sound frequencies directly onto real-time fluid dynamics using the Web Audio API.</p>
+              <span class="aux-tag">WEB AUDIO</span>
+              <a href="https://ai-created.com" target="_blank" rel="noopener" class="aux-link"></a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Panel Footer Plate -->
+      <footer class="panel-footer-plate">
+        <!-- Status log -->
+        <dl class="system-status-lcd">
+          <dt>CPU STATUS:</dt> <dd>ONLINE (ACTIVE COGNITION)</dd>
+          <dt>VOLTAGE:</dt>    <dd>240V / STEADY</dd>
+          <dt>THESIS:</dt>     <dd>DESIGN ENGINEERING SYNTHESIS</dd>
+          <dt>RUNTIME:</dt>    <dd>20+ YEARS INTEGRATED HISTORY</dd>
+        </dl>
+
+        <!-- Patch bay links -->
+        <div class="patchbay">
+          <!-- Patch 1: Email -->
+          <a href="mailto:marcovhv@gmail.com" class="patch-port">
+            <div class="port-jack"></div>
+            <span class="port-label">EMAIL OUT</span>
+          </a>
+          <!-- Patch 2: LinkedIn -->
+          <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" class="patch-port">
+            <div class="port-jack"></div>
+            <span class="port-label">LINKED OUT</span>
+          </a>
+          <!-- Patch 3: Twitter -->
+          <a href="https://x.com/AIandDesign" target="_blank" rel="noopener" class="patch-port">
+            <div class="port-jack"></div>
+            <span class="port-label">SYSTEM X</span>
+          </a>
+          <!-- Patch 4: YouTube -->
+          <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener" class="patch-port">
+            <div class="port-jack"></div>
+            <span class="port-label">VIDEO OUT</span>
+          </a>
+        </div>
+      </footer>
+
+    </section>
+
+    <!-- Rack Mount Right Ear (Visual decoration) -->
+    <div class="ear ear--right">
+      <div class="ear-bolt"></div>
+      <div class="ear-bolt"></div>
+      <div class="ear-bolt"></div>
+    </div>
+
+  </div>
+
+  <div style="text-align: center; margin-top: 32px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--white-dim);">
+    [ DEVICE SYSTEM CALIBRATION: II [GEMINI] · PORTLAND, OREGON FACTORY ]
+  </div>
+
+</div>
+
+<!-- Interactive Synthesizer Script -->
+<script>
+(function () {
+  'use strict';
+
+  // Mechanical Switch toggle sound synthesis (Web Audio API)
+  let audioCtx = null;
+
+  function playHardwareClick(frequency, duration, type = 'triangle') {
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+      // Fast exponential pitch drop for physical click effect
+      osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + duration);
+
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {
+      console.log("Audio feedback pending interaction permission", e);
+    }
+  }
+
+  // Toggles controller
+  window.toggleSwitch = function (id) {
+    const sw = document.getElementById(`toggle-${id}`);
+    const led = document.getElementById(`led-${id}`);
+    
+    // Toggle class
+    if (sw.classList.contains('on')) {
+      sw.classList.remove('on');
+      sw.classList.add('off');
+      led.classList.remove('active');
+      playHardwareClick(150, 0.05, 'sawtooth'); // lower heavy click for off
+    } else {
+      sw.classList.remove('off');
+      sw.classList.add('on');
+      led.classList.add('active');
+      playHardwareClick(400, 0.04, 'triangle'); // high quick pop for on
+    }
+  };
+
+  // Timeline Step Sequencer data
+  const stepsData = {
+    kohls: {
+      title: "KOHL'S",
+      dates: "2026 — PRESENT",
+      track: "PATTERN TRACK 05",
+      text: "<p><b>Senior Product Designer &amp; Generative-AI Specialist (2026 — PRESENT)</b></p><p>Architecting transactional frameworks across omnichannel Cart, Wallet, Checkout, and In-Store Self-Checkout, while establishing scalable Generative AI education and design tools.</p><ul><li>Direct checkout experience optimization affecting millions of user carts.</li><li>Enterprise AI integration and advanced design tool engineering.</li></ul>"
+    },
+    walmart: {
+      title: "WALMART LABS",
+      dates: "2018 — 2023",
+      track: "PATTERN TRACK 04",
+      text: "<p><b>Principal Product Designer (2018 — 2023)</b></p><p>Led UX layouts for enterprise commerce scale frameworks and high-volume merchant dashboard platforms.</p><ul><li>Designed workflows supporting transaction systems at national capacity.</li><li>Established cohesive retail software patterns across global operations.</li></ul>"
+    },
+    yahoo: {
+      title: "YAHOO!",
+      dates: "2017 — 2018",
+      track: "PATTERN TRACK 03",
+      text: "<p><b>Director of UX Prototyping (2017 — 2018)</b></p><p>Managed dedicated interactive design engineers building rapid validator modules for the primary media portal.</p><ul><li>Delivered robust code prototypes that stress-tested high-volume search updates.</li><li>Accelerated executive validation pipelines.</li></ul>"
+    },
+    google: {
+      title: "GOOGLE",
+      dates: "2013 — 2017",
+      track: "PATTERN TRACK 02",
+      text: "<p><b>Senior UX Engineer / Prototyper (2013 — 2017)</b></p><p>Constructed functional prototype systems for Google Cloud AI, Google Assistant, and core Android experiences.</p><ul><li>Explored proactive conversational UI matrices and speech mechanics.</li><li>Bridged structural user experience values directly with low-level platform execution.</li></ul>"
+    },
+    endemol: {
+      title: "ENDEMOL",
+      dates: "2008 — 2013",
+      track: "PATTERN TRACK 01",
+      text: "<p><b>UX &amp; Engineering Lead (2008 — 2013)</b></p><p>Engineered broadcast-integrated second-screen client applications supporting global audience interaction peaks.</p><ul><li>Developed real-time audience synchronization layers.</li><li>Bridged full-stack layouts with high-capacity databases.</li></ul>"
+    }
+  };
+
+  window.triggerStep = function (stepKey) {
+    // Hardware push button audio popup
+    playHardwareClick(600, 0.03, 'sine');
+
+    // Reset step button classes
+    document.querySelectorAll('.step-button').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    // Make target step active
+    const btn = document.getElementById(`step-${stepKey}`);
+    if (btn) btn.classList.add('active');
+
+    // Update screen data
+    const data = stepsData[stepKey];
+    if (data) {
+      document.getElementById('lcd-title').textContent = data.title;
+      document.getElementById('lcd-text').innerHTML = data.text;
+      document.getElementById('sequencer-screen').querySelector('.lcd-header span:first-child').textContent = data.track;
+    }
+
+    // Trigger high bounce on VU needle
+    bounceNeedle(50);
+  };
+
+  // Rotating Knobs dynamic mouse/drag physics
+  const knob = document.getElementById('knob-aesthetics');
+  let isDragging = false;
+  let startY = 0;
+  let currentRotation = 0;
+
+  knob.addEventListener('mousedown', e => {
+    isDragging = true;
+    startY = e.clientY;
+    document.body.style.cursor = 'grabbing';
+    
+    // Resume context if needed
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const deltaY = startY - e.clientY;
+    startY = e.clientY;
+
+    currentRotation += deltaY * 1.5;
+    // Constrain knob rotation to typical synthesizer range (-135 to 135 deg)
+    if (currentRotation < -135) currentRotation = -135;
+    if (currentRotation > 135) currentRotation = 135;
+
+    knob.style.transform = `rotate(${currentRotation}deg)`;
+
+    // Bouncing VU needle mapping rotation angle
+    const normalized = (currentRotation + 135) / 270; // 0 to 1
+    const angle = -55 + normalized * 110; // -55 to 55
+    document.getElementById('vu-needle').style.transform = `rotate(${angle}deg)`;
+
+    // Dynamic pitch buzz depending on rotation value
+    if (Math.abs(deltaY) > 2) {
+      playHardwareClick(100 + normalized * 500, 0.01, 'sine');
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      document.body.style.cursor = '';
+    }
+  });
+
+  // VU Meter bouncing micro-physics
+  const needle = document.getElementById('vu-needle');
+  function bounceNeedle(baseAngle = -35) {
+    const randomShift = (Math.random() - 0.5) * 12;
+    needle.style.transform = `rotate(${baseAngle + randomShift}deg)`;
+  }
+
+  // Periodic subtle electrical hum bouncing needle
+  setInterval(() => {
+    if (!isDragging) {
+      // Calculate a standard idling position based on active elements
+      const activeStep = document.querySelector('.step-button.active');
+      const base = activeStep ? -10 : -45;
+      bounceNeedle(base);
+    }
+  }, 350);
+
+})();
+</script>
+
+</body>
+</html>

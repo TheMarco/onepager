@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MVHV Atlas of Useful Routes</title>
+<meta name="description" content="A cartographic one-page portfolio for Marco van Hylckama Vlieg, designed as an expedition atlas of product design, AI-native building, and enterprise systems." />
+<meta name="theme-color" content="#10261F" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --deep: #10261f;
+  --sea: #1f5d63;
+  --reef: #e45d45;
+  --sun: #f2b84b;
+  --paper: #f3efe1;
+  --paper-2: #d9d1b6;
+  --ink: #151716;
+  --muted: #5a615b;
+  --line: rgba(21,23,22,0.22);
+  --line-light: rgba(243,239,225,0.26);
+  --max: 1360px;
+  --gutter: clamp(18px, 5%, 64px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100vh;
+  background: var(--deep);
+  color: var(--paper);
+  font-family: "Manrope", system-ui, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background:
+    linear-gradient(90deg, rgba(242,184,75,0.08) 1px, transparent 1px),
+    linear-gradient(rgba(242,184,75,0.07) 1px, transparent 1px),
+    radial-gradient(circle at 22% 18%, rgba(228,93,69,0.18), transparent 30%),
+    radial-gradient(circle at 84% 72%, rgba(31,93,99,0.34), transparent 38%);
+  background-size: 92px 92px, 92px 92px, auto, auto;
+}
+
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--sun); color: var(--deep); }
+a:focus-visible {
+  outline: 2px solid var(--sun);
+  outline-offset: 4px;
+}
+
+.wrap {
+  width: min(var(--max), 100%);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+.mono {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0;
+}
+.serif { font-family: "Libre Baskerville", Georgia, serif; }
+
+.topbar {
+  border-bottom: 1px solid var(--line-light);
+  color: rgba(243,239,225,0.78);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+.topbar .wrap {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(242,184,75,0.42);
+  background: rgba(242,184,75,0.11);
+  color: var(--sun);
+  padding: 7px 10px;
+  font-weight: 700;
+}
+.badge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--reef);
+  transform: rotate(45deg);
+}
+.back {
+  color: var(--paper);
+  border-bottom: 1px solid rgba(243,239,225,0.55);
+}
+
+.hero {
+  min-height: calc(100vh - 48px);
+  display: grid;
+  align-items: center;
+  padding: 54px var(--gutter) 40px;
+}
+.hero-grid {
+  width: min(var(--max), 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 34px;
+}
+@media (min-width: 980px) {
+  .hero-grid { grid-template-columns: 0.92fr 1.08fr; align-items: center; }
+}
+.hero-copy {
+  display: grid;
+  gap: 24px;
+}
+.eyebrow {
+  color: var(--sun);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+h1 {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 4.8rem;
+  line-height: 0.96;
+  font-weight: 700;
+  max-width: 680px;
+}
+h1 span { color: var(--sun); }
+.lead {
+  color: rgba(243,239,225,0.82);
+  font-size: 1.08rem;
+  max-width: 570px;
+}
+.route-card {
+  border: 1px solid var(--line-light);
+  background: rgba(243,239,225,0.08);
+  padding: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 1px;
+}
+.route-card div {
+  padding: 14px;
+  background: rgba(16,38,31,0.56);
+}
+.route-card dt {
+  color: rgba(243,239,225,0.52);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.route-card dd {
+  color: var(--paper);
+  font-weight: 800;
+}
+
+.atlas {
+  position: relative;
+  min-height: 620px;
+  background:
+    radial-gradient(circle at 40% 35%, rgba(242,184,75,0.13), transparent 24%),
+    linear-gradient(145deg, #e9dfc5, #f8f3e6);
+  color: var(--ink);
+  border: 1px solid rgba(242,184,75,0.58);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.42);
+  overflow: hidden;
+}
+.atlas::before {
+  content: "";
+  position: absolute;
+  inset: 24px;
+  border: 1px solid rgba(21,23,22,0.28);
+  pointer-events: none;
+}
+.atlas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(21,23,22,0.08) 1px, transparent 1px),
+    linear-gradient(rgba(21,23,22,0.08) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.map-title {
+  position: absolute;
+  left: 42px;
+  top: 38px;
+  z-index: 2;
+}
+.map-title b {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--reef);
+  margin-bottom: 8px;
+}
+.map-title strong {
+  display: block;
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 2rem;
+  line-height: 1.05;
+}
+.compass {
+  position: absolute;
+  right: 38px;
+  top: 36px;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+.compass::before,
+.compass::after {
+  content: "";
+  position: absolute;
+  inset: 17px;
+  border: 1px solid rgba(21,23,22,0.16);
+  border-radius: 50%;
+}
+.needle {
+  width: 16px;
+  height: 76px;
+  background: linear-gradient(var(--reef) 0 50%, var(--sea) 50% 100%);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  animation: drift 7s ease-in-out infinite;
+}
+@keyframes drift {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(10deg); }
+}
+.map-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.land { fill: rgba(31,93,99,0.18); stroke: rgba(31,93,99,0.55); stroke-width: 2; }
+.route { fill: none; stroke: var(--reef); stroke-width: 3; stroke-dasharray: 10 9; animation: march 18s linear infinite; }
+.route.alt { stroke: var(--sea); stroke-width: 2; stroke-dasharray: 4 8; }
+@keyframes march { to { stroke-dashoffset: -220; } }
+
+.pin {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--deep);
+  border: 3px solid var(--sun);
+  color: var(--paper);
+  cursor: pointer;
+}
+.pin::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 32px;
+  white-space: nowrap;
+  color: var(--ink);
+  font: 700 0.72rem "IBM Plex Mono", monospace;
+  text-transform: uppercase;
+  background: rgba(248,243,230,0.82);
+  border: 1px solid rgba(21,23,22,0.15);
+  padding: 4px 7px;
+}
+.pin.is-active {
+  background: var(--reef);
+  transform: scale(1.12);
+}
+.logbook {
+  position: absolute;
+  left: 40px;
+  bottom: 38px;
+  right: 40px;
+  z-index: 5;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+  background: rgba(16,38,31,0.94);
+  color: var(--paper);
+  border: 1px solid rgba(242,184,75,0.58);
+  padding: 20px;
+}
+@media (min-width: 780px) {
+  .logbook { grid-template-columns: 170px 1fr; }
+}
+.logbook .mono {
+  color: var(--sun);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+.logbook h2 {
+  font-size: 1.35rem;
+  margin-bottom: 6px;
+}
+.logbook p { color: rgba(243,239,225,0.78); }
+.log-link {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 10px;
+  color: var(--sun);
+  border-bottom: 1px solid rgba(242,184,75,0.55);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.section {
+  padding: 76px 0;
+}
+.section.light {
+  background: var(--paper);
+  color: var(--ink);
+}
+.section-head {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 32px;
+}
+@media (min-width: 900px) {
+  .section-head { grid-template-columns: 220px 1fr; align-items: end; }
+}
+.section h2 {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 2.7rem;
+  line-height: 1.05;
+}
+.expeditions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.expedition {
+  background: var(--paper);
+  padding: 24px;
+  min-height: 220px;
+  display: block;
+  transition: background 0.2s, transform 0.2s;
+}
+.expedition:hover {
+  background: #fff8e8;
+  transform: translateY(-4px);
+}
+.expedition .year {
+  color: var(--reef);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.expedition h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+.expedition p { color: var(--muted); }
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+.legend-item {
+  border: 1px solid var(--line);
+  background: rgba(248,243,230,0.58);
+  padding: 22px;
+  min-height: 220px;
+  position: relative;
+  display: block;
+  transition: background 0.2s, transform 0.2s;
+}
+.legend-item:hover {
+  background: rgba(248,243,230,0.84);
+  transform: translateY(-4px);
+}
+.legend-item::before {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--swatch, var(--sea));
+  box-shadow: 0 0 0 8px rgba(21,23,22,0.04);
+}
+.legend-item .code {
+  color: var(--reef);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 28px;
+}
+.legend-item h3 {
+  font-size: 1.22rem;
+  margin-bottom: 10px;
+}
+.legend-item p { color: var(--muted); }
+
+.manifest {
+  border: 1px solid var(--line-light);
+  background: rgba(243,239,225,0.08);
+}
+.manifest-row {
+  display: grid;
+  grid-template-columns: 120px 160px 1fr;
+  gap: 18px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line-light);
+  transition: background 0.2s;
+}
+.manifest-row:hover { background: rgba(243,239,225,0.1); }
+.manifest-row:last-child { border-bottom: 0; }
+.manifest-row b {
+  color: var(--sun);
+  text-transform: uppercase;
+  font-size: 0.76rem;
+}
+.manifest-row strong { color: var(--paper); }
+.manifest-row p { color: rgba(243,239,225,0.72); }
+
+.islands {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (min-width: 820px) {
+  .islands { grid-template-columns: 1fr 1fr; }
+}
+.island {
+  border: 1px solid var(--line-light);
+  background: rgba(243,239,225,0.08);
+  padding: 26px;
+  display: block;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.island:hover {
+  border-color: rgba(242,184,75,0.7);
+  background: rgba(243,239,225,0.13);
+  transform: translateY(-3px);
+}
+.island h3 {
+  color: var(--sun);
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+.island p { color: rgba(243,239,225,0.75); }
+
+.contact {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+@media (min-width: 760px) {
+  .contact { grid-template-columns: repeat(4, 1fr); }
+}
+.contact a {
+  background: var(--paper);
+  padding: 18px;
+  color: var(--ink);
+  font-weight: 800;
+  min-height: 86px;
+  display: flex;
+  align-items: end;
+}
+
+@media (max-width: 760px) {
+  h1 { font-size: 3.1rem; }
+  .atlas { min-height: 760px; }
+  .pin::after { left: auto; right: 32px; }
+  .map-title strong { font-size: 1.35rem; }
+  .compass { width: 86px; height: 86px; }
+  .route-card { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap mono">
+      <a href="index.html" class="back">Back to index</a>
+      <span>Field atlas / MVHV routes / Portland sector</span>
+      <span class="badge">OpenAI Codex</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow mono">Portfolio direction 14 / cartographic system</div>
+          <h1>The atlas of <span>useful routes.</span></h1>
+          <p class="lead">Marco's work reads like a map: enterprise terrain, hidden channels, product coastlines, and the exact hand-drawn paths that get teams from ambiguity to shipped software.</p>
+          <dl class="route-card">
+            <div><dt class="mono">Survey</dt><dd>20+ years</dd></div>
+            <div><dt class="mono">Terrain</dt><dd>AI, commerce, media</dd></div>
+            <div><dt class="mono">Method</dt><dd>Design + code</dd></div>
+            <div><dt class="mono">Base camp</dt><dd>Portland, OR</dd></div>
+          </dl>
+        </div>
+
+        <figure class="atlas" aria-label="An illustrated career atlas">
+          <div class="map-title"><b class="mono">Plate 14</b><strong>MVHV<br/>Route Survey</strong></div>
+          <div class="compass"><div class="needle" aria-hidden="true"></div></div>
+          <svg class="map-svg" viewBox="0 0 900 680" preserveAspectRatio="none" aria-hidden="true">
+            <path class="land" d="M44,488 C92,370 174,352 210,244 C248,130 330,78 438,120 C514,150 534,230 634,238 C748,248 836,324 812,440 C786,568 620,614 510,566 C396,516 312,610 210,578 C130,554 82,568 44,488 Z"/>
+            <path class="land" d="M636,92 C698,38 808,64 836,142 C862,214 788,254 730,238 C658,218 580,142 636,92 Z"/>
+            <path class="route" d="M125,490 C190,362 276,238 370,386 C434,488 520,228 640,260 C742,286 780,402 714,480"/>
+            <path class="route alt" d="M194,246 C296,206 402,142 502,184 C616,232 622,392 748,438"/>
+            <path class="route alt" d="M302,548 C378,500 430,512 492,456 C576,378 618,294 758,150"/>
+          </svg>
+          <button class="pin is-active" data-id="kohls" data-label="Kohl's" style="left: 76%; top: 68%;" aria-label="Show Kohl's route"></button>
+          <button class="pin" data-id="walmart" data-label="Walmart" style="left: 61%; top: 42%;" aria-label="Show Walmart route"></button>
+          <button class="pin" data-id="google" data-label="Google" style="left: 41%; top: 56%;" aria-label="Show Google route"></button>
+          <button class="pin" data-id="yahoo" data-label="Yahoo" style="left: 30%; top: 34%;" aria-label="Show Yahoo route"></button>
+          <button class="pin" data-id="lab" data-label="AI-Created" style="left: 83%; top: 22%;" aria-label="Show lab route"></button>
+          <aside class="logbook" id="logbook">
+            <div class="mono">Current waypoint</div>
+            <div>
+              <h2>Kohl's / checkout archipelago</h2>
+              <p>Senior product design and AI specialist work across cart, checkout, wallet, and in-store self-checkout. The current route is about making operational systems feel clear, fast, and human.</p>
+              <a class="log-link mono" href="https://kohls.com" target="_blank" rel="noopener">Open waypoint ↗</a>
+            </div>
+          </aside>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="eyebrow mono">Expedition log</div>
+          <h2>Five crossings through different weather.</h2>
+        </header>
+        <div class="expeditions">
+          <a class="expedition" href="https://endemolshine.us/" target="_blank" rel="noopener"><div class="year mono">2008-2013</div><h3>Endemol</h3><p>UX and engineering leadership for real-time second-screen broadcast experiences at scale.</p></a>
+          <a class="expedition" href="https://google.com" target="_blank" rel="noopener"><div class="year mono">2013-2017</div><h3>Google</h3><p>Interactive speech assistant, Android, cloud AI, and Material Design prototyping work.</p></a>
+          <a class="expedition" href="https://yahoo.com" target="_blank" rel="noopener"><div class="year mono">2017-2018</div><h3>Yahoo</h3><p>Rapid product prototyping across portals, media, and search surfaces.</p></a>
+          <a class="expedition" href="https://tech.walmart.com" target="_blank" rel="noopener"><div class="year mono">2018-2023</div><h3>Walmart Labs</h3><p>High-volume commerce loops and transactional UX patterns for checkout and merchant systems.</p></a>
+          <a class="expedition" href="https://kohls.com" target="_blank" rel="noopener"><div class="year mono">2026-now</div><h3>Kohl's</h3><p>Omnichannel checkout, wallet, and AI enablement for a large design organization.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light" style="padding-top: 0;">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="eyebrow mono">Map legend</div>
+          <h2>The symbols that keep reappearing.</h2>
+        </header>
+        <div class="legend-grid">
+          <a class="legend-item" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" style="--swatch:#e45d45;"><div class="code mono">red coast</div><h3>Product strategy</h3><p>Find the actual decision hidden inside a messy brief, then make the tradeoffs legible enough that teams can move.</p></a>
+          <a class="legend-item" href="https://kohls.com" target="_blank" rel="noopener" style="--swatch:#1f5d63;"><div class="code mono">blue channel</div><h3>Interaction systems</h3><p>Checkout, wallet, account, internal tooling, assistant flows, and other systems where behavior matters more than ornament.</p></a>
+          <a class="legend-item" href="https://diary.ai-created.com/" target="_blank" rel="noopener" style="--swatch:#f2b84b;"><div class="code mono">signal fire</div><h3>AI-native design</h3><p>Use models as material for new products: memory, voice, daily rituals, trust, autonomy, and tooling for real organizations.</p></a>
+          <a class="legend-item" href="https://ai-created.com/products" target="_blank" rel="noopener" style="--swatch:#6e4db5;"><div class="code mono">purple pass</div><h3>Prototyping</h3><p>Make the idea tactile early. Code, simulate, test the gesture, and let the prototype expose the truth before meetings fossilize it.</p></a>
+          <a class="legend-item" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener" style="--swatch:#3f7b50;"><div class="code mono">green field</div><h3>Design leadership</h3><p>Teach by making: create examples, show the working pattern, and help a team build taste around a new medium.</p></a>
+          <a class="legend-item" href="https://ai-created.com" target="_blank" rel="noopener" style="--swatch:#111716;"><div class="code mono">black mark</div><h3>Craft standards</h3><p>Typography, hierarchy, motion, state, density, and tiny interface decisions treated as the work, not as decoration.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="eyebrow mono">Route manifest</div>
+          <h2>What each crossing carried back.</h2>
+        </header>
+        <div class="manifest mono" aria-label="Route manifest">
+          <a class="manifest-row" href="https://endemolshine.us/" target="_blank" rel="noopener"><b>Endemol</b><strong>Broadcast terrain</strong><p>Second-screen products, live viewer behavior, and UX-engineering overlap before the phrase was fashionable.</p></a>
+          <a class="manifest-row" href="https://google.com" target="_blank" rel="noopener"><b>Google</b><strong>Assistant strait</strong><p>Speech assistant prototypes, Android interaction models, cloud AI tooling, and Material Design fluency.</p></a>
+          <a class="manifest-row" href="https://yahoo.com" target="_blank" rel="noopener"><b>Yahoo</b><strong>Media reef</strong><p>Rapid prototyping for search, media, and portal surfaces with high organizational velocity.</p></a>
+          <a class="manifest-row" href="https://tech.walmart.com" target="_blank" rel="noopener"><b>Walmart</b><strong>Commerce gulf</strong><p>Checkout and merchant systems where clarity had to survive scale, constraints, and millions of repetitions.</p></a>
+          <a class="manifest-row" href="https://kohls.com" target="_blank" rel="noopener"><b>Kohl's</b><strong>Current harbor</strong><p>Cart, checkout, wallet, self-checkout, and generative AI enablement for an enterprise design organization.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="eyebrow mono">Island chain</div>
+          <h2>Independent lab artifacts, plotted as signal fires.</h2>
+        </header>
+        <div class="islands">
+          <a class="island" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><h3>My AI Diary</h3><p>Voice-first memory, reflection, and personal AI interaction shaped like a private instrument instead of a generic chatbot.</p></a>
+          <a class="island" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener"><h3>WatchGPT</h3><p>A tiny, direct utility experiment: AI on the wrist, tuned for immediacy instead of dashboard sprawl.</p></a>
+          <a class="island" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener"><h3>Human Actually</h3><p>Explorations around origin, authenticity, and human-readable proof in an increasingly synthetic web.</p></a>
+          <a class="island" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener"><h3>Audio Visualizer Suite</h3><p>Sensory software as craft: frequency, motion, color, and toolmaking folded into a visual system.</p></a>
+          <a class="island" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener"><h3>AI Usage</h3><p>A utility lens for model consumption, cost awareness, and daily AI practice where invisible usage becomes visible behavior.</p></a>
+          <a class="island" href="https://ai-created.com/games" target="_blank" rel="noopener"><h3>Games and clocks</h3><p>Small expressive systems that keep the craft muscle awake: motion, timing, interaction, rules, and visual delight.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="eyebrow mono">Signal</div>
+          <h2>Open channels.</h2>
+        </header>
+        <nav class="contact">
+          <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+          <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a>
+          <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+          <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">@AIandDesign</a>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+<script>
+(function () {
+  const data = {
+    kohls: ["Kohl's / checkout archipelago", "Senior product design and AI specialist work across cart, checkout, wallet, and in-store self-checkout. The current route is about making operational systems feel clear, fast, and human.", "https://kohls.com"],
+    walmart: ["Walmart Labs / commerce gulf", "Large-scale transactional systems, checkout flows, and merchant experiences where every micro-decision carries real volume.", "https://tech.walmart.com"],
+    google: ["Google / assistant strait", "Speech assistants, Android interfaces, cloud AI prototypes, and Material systems work, built with the designer-engineer overlap fully active.", "https://google.com"],
+    yahoo: ["Yahoo / prototype reef", "Fast-moving prototypes for media, search, and portal surfaces, with the pressure turned up and the shipping map redrawn weekly.", "https://yahoo.com"],
+    lab: ["AI-Created / independent island", "A product lab for AI-native tools, diary systems, watch experiments, games, visualizers, and proof-of-human ideas.", "https://ai-created.com"]
+  };
+  const pins = document.querySelectorAll(".pin");
+  const log = document.getElementById("logbook");
+  pins.forEach(pin => {
+    pin.addEventListener("click", () => {
+      pins.forEach(p => p.classList.remove("is-active"));
+      pin.classList.add("is-active");
+      const item = data[pin.dataset.id];
+      log.innerHTML = '<div class="mono">Current waypoint</div><div><h2>' + item[0] + '</h2><p>' + item[1] + '</p><a class="log-link mono" href="' + item[2] + '" target="_blank" rel="noopener">Open waypoint ↗</a></div>';
+    });
+  });
+})();
+</script>
+</body>
+</html>

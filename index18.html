@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MVHV Conservatory / A Living Portfolio Herbarium</title>
+<meta name="description" content="A botanical conservatory one-page portfolio for Marco van Hylckama Vlieg, presenting product design, AI-native work, and independent lab artifacts as living specimens." />
+<meta name="theme-color" content="#17392d" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;700&family=Nunito+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --green: #17392d;
+  --leaf: #6fa15f;
+  --mint: #d7ead4;
+  --coral: #ef6b51;
+  --iris: #6b6ee8;
+  --paper: #f6f3e8;
+  --ink: #17201b;
+  --muted: #657168;
+  --line: rgba(23,32,27,0.17);
+  --glass: rgba(215,234,212,0.16);
+  --gutter: clamp(18px, 5%, 64px);
+  --max: 1380px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--green);
+  color: var(--paper);
+  font-family: "Nunito Sans", system-ui, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(215,234,212,0.08) 1px, transparent 1px),
+    linear-gradient(rgba(215,234,212,0.08) 1px, transparent 1px),
+    radial-gradient(circle at 80% 12%, rgba(239,107,81,0.2), transparent 28%),
+    radial-gradient(circle at 16% 84%, rgba(107,110,232,0.16), transparent 32%);
+  background-size: 72px 72px, 72px 72px, auto, auto;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--coral); color: var(--paper); }
+a:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 4px;
+}
+
+.wrap {
+  width: min(var(--max), 100%);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; letter-spacing: 0; }
+.serif { font-family: "Alegreya", Georgia, serif; }
+
+.topbar {
+  border-bottom: 1px solid rgba(246,243,232,0.2);
+}
+.topbar .wrap {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.73rem;
+  text-transform: uppercase;
+  color: rgba(246,243,232,0.75);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--mint);
+  color: var(--green);
+  padding: 7px 10px;
+  font-weight: 700;
+}
+.back { color: var(--coral); font-weight: 700; }
+
+.hero {
+  min-height: calc(100vh - 52px);
+  display: grid;
+  align-items: center;
+  padding-top: 58px;
+  padding-bottom: 58px;
+}
+.hero-grid {
+  display: grid;
+  gap: 34px;
+  align-items: center;
+}
+@media (min-width: 980px) {
+  .hero-grid { grid-template-columns: 0.95fr 1.05fr; }
+}
+.kicker {
+  color: var(--coral);
+  text-transform: uppercase;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+h1 {
+  font-family: "Alegreya", Georgia, serif;
+  font-size: 5.7rem;
+  line-height: 0.9;
+  margin: 22px 0;
+}
+h1 span { color: var(--mint); }
+.lead {
+  color: rgba(246,243,232,0.78);
+  font-size: 1.08rem;
+  max-width: 600px;
+}
+.specimen-case {
+  min-height: 640px;
+  background: linear-gradient(145deg, rgba(215,234,212,0.2), rgba(246,243,232,0.05));
+  border: 1px solid rgba(215,234,212,0.36);
+  box-shadow: 0 28px 80px rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.glass-bars {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0 22%, rgba(246,243,232,0.12) 22% 22.5%, transparent 22.5% 48%, rgba(246,243,232,0.12) 48% 48.5%, transparent 48.5% 74%, rgba(246,243,232,0.12) 74% 74.5%, transparent 74.5%),
+    linear-gradient(rgba(246,243,232,0.08) 1px, transparent 1px);
+  background-size: auto, 100% 70px;
+}
+.plant {
+  position: absolute;
+  left: 50%;
+  bottom: 44px;
+  width: 11px;
+  height: 490px;
+  background: linear-gradient(var(--leaf), #426b42);
+  border-radius: 99px;
+  transform: translateX(-50%);
+}
+.leaf {
+  position: absolute;
+  width: 160px;
+  height: 74px;
+  background: linear-gradient(135deg, var(--mint), var(--leaf));
+  border-radius: 100% 0 100% 0;
+  transform-origin: left center;
+  filter: drop-shadow(0 12px 22px rgba(0,0,0,0.28));
+}
+.leaf:nth-child(1) { left: 52%; top: 14%; transform: rotate(24deg); }
+.leaf:nth-child(2) { left: 49%; top: 30%; transform: rotate(154deg); }
+.leaf:nth-child(3) { left: 52%; top: 45%; transform: rotate(14deg); width: 190px; }
+.leaf:nth-child(4) { left: 48%; top: 59%; transform: rotate(165deg); width: 180px; }
+.flower {
+  position: absolute;
+  left: 50%;
+  top: 72px;
+  width: 120px;
+  height: 120px;
+  transform: translateX(-50%);
+}
+.petal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 48px;
+  height: 72px;
+  background: var(--coral);
+  border-radius: 50% 50% 0 50%;
+  transform-origin: 0 0;
+}
+.petal:nth-child(1) { transform: rotate(0deg) translate(-10px, -62px); }
+.petal:nth-child(2) { transform: rotate(72deg) translate(-10px, -62px); background: var(--iris); }
+.petal:nth-child(3) { transform: rotate(144deg) translate(-10px, -62px); }
+.petal:nth-child(4) { transform: rotate(216deg) translate(-10px, -62px); background: var(--iris); }
+.petal:nth-child(5) { transform: rotate(288deg) translate(-10px, -62px); }
+.label-card {
+  position: absolute;
+  left: 34px;
+  bottom: 34px;
+  right: 34px;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 20px;
+  display: grid;
+  gap: 8px;
+  border-left: 8px solid var(--coral);
+}
+.label-card strong {
+  font-family: "Alegreya", Georgia, serif;
+  font-size: 1.45rem;
+}
+.label-card p { color: var(--muted); }
+
+.section { padding: 78px 0; }
+.light { background: var(--paper); color: var(--ink); }
+.section-head {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 34px;
+}
+@media (min-width: 880px) {
+  .section-head { grid-template-columns: 220px 1fr; align-items: end; }
+}
+.section h2 {
+  font-family: "Alegreya", Georgia, serif;
+  font-size: 3.6rem;
+  line-height: 0.96;
+}
+.drawers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.drawer {
+  background: var(--paper);
+  padding: 24px;
+  min-height: 260px;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  transition: background 0.2s, transform 0.2s;
+}
+.drawer:hover {
+  background: #fff9eb;
+  transform: translateY(-4px);
+}
+.drawer::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 54px;
+  height: 86px;
+  border-radius: 50% 0 50% 0;
+  background: rgba(111,161,95,0.22);
+  transform: rotate(18deg);
+}
+.drawer .year {
+  color: var(--coral);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+.drawer h3 {
+  font-size: 1.28rem;
+  margin-bottom: 10px;
+}
+.drawer p { color: var(--muted); }
+
+.root-system {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+.root-card {
+  border: 1px solid var(--line);
+  background: rgba(246,243,232,0.58);
+  padding: 22px;
+  min-height: 210px;
+  display: block;
+  transition: background 0.2s, transform 0.2s;
+}
+.root-card:hover {
+  background: rgba(246,243,232,0.82);
+  transform: translateY(-3px);
+}
+.root-card b {
+  display: block;
+  color: var(--coral);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.root-card p { color: var(--muted); }
+
+.lab-grid {
+  display: grid;
+  gap: 18px;
+}
+@media (min-width: 760px) {
+  .lab-grid { grid-template-columns: repeat(3,1fr); }
+}
+.lab-card {
+  background: var(--glass);
+  border: 1px solid rgba(246,243,232,0.22);
+  padding: 24px;
+  min-height: 210px;
+  display: block;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.lab-card:hover {
+  border-color: rgba(239,107,81,0.65);
+  background: rgba(215,234,212,0.22);
+  transform: translateY(-4px);
+}
+.lab-card h3 {
+  color: var(--mint);
+  margin-bottom: 10px;
+}
+.lab-card p { color: rgba(246,243,232,0.74); }
+
+.cultivation {
+  display: grid;
+  gap: 14px;
+}
+.protocol {
+  border: 1px solid rgba(246,243,232,0.22);
+  background: rgba(215,234,212,0.12);
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 18px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.protocol:hover {
+  border-color: rgba(215,234,212,0.48);
+  background: rgba(215,234,212,0.18);
+}
+.protocol b {
+  color: var(--mint);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+.protocol p { color: rgba(246,243,232,0.74); }
+
+.channels {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+@media (min-width: 760px) {
+  .channels { grid-template-columns: repeat(4,1fr); }
+}
+.channels a {
+  min-height: 94px;
+  background: var(--paper);
+  padding: 18px;
+  display: flex;
+  align-items: end;
+  color: var(--ink);
+  font-weight: 800;
+}
+@media (max-width: 760px) {
+  h1 { font-size: 3.45rem; }
+  .specimen-case { min-height: 560px; }
+  .leaf { width: 126px; height: 58px; }
+  .section h2 { font-size: 2.6rem; }
+}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap mono">
+      <a class="back" href="index.html">Back to index</a>
+      <span>MVHV Conservatory / specimen archive</span>
+      <span class="badge">OpenAI Codex</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker mono">Portfolio direction 18 / living archive</div>
+          <h1>A conservatory for <span>rare product forms.</span></h1>
+          <p class="lead">Marco's career as a botanical collection: enterprise systems with deep roots, AI-native specimens under glass, and independent lab work throwing bright new flowers.</p>
+        </div>
+        <figure class="specimen-case" aria-label="Botanical specimen case">
+          <div class="glass-bars"></div>
+          <div class="flower"><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span></div>
+          <div class="plant"></div>
+          <span class="leaf"></span><span class="leaf"></span><span class="leaf"></span><span class="leaf"></span>
+          <figcaption class="label-card">
+            <span class="mono">Specimen MVHV-20</span>
+            <strong>Designer-engineer hybrid, perennial.</strong>
+            <p>Thrives in ambiguous product soil. Known to flower when exposed to AI, commerce systems, and unreasonable visual standards.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="kicker mono">Specimen drawers</div>
+          <h2>Growth rings from the archive.</h2>
+        </header>
+        <div class="drawers">
+          <a class="drawer" href="https://endemolshine.us/" target="_blank" rel="noopener"><div class="year mono">2008-2013</div><h3>Endemol broadcast systems</h3><p>Second-screen and real-time viewer experiences, mixing interface craft with engineering pressure.</p></a>
+          <a class="drawer" href="https://google.com" target="_blank" rel="noopener"><div class="year mono">2013-2017</div><h3>Google AI and Material</h3><p>Assistant, Android, Cloud AI, and prototyping work rooted in systems thinking.</p></a>
+          <a class="drawer" href="https://yahoo.com" target="_blank" rel="noopener"><div class="year mono">2017-2018</div><h3>Yahoo prototyping</h3><p>Prototype velocity for media, search, and portal surfaces with enough fidelity to redirect the room.</p></a>
+          <a class="drawer" href="https://tech.walmart.com" target="_blank" rel="noopener"><div class="year mono">2018-2023</div><h3>Walmart Labs commerce</h3><p>High-volume checkout and merchant experiences where product clarity had to survive scale.</p></a>
+          <a class="drawer" href="https://kohls.com" target="_blank" rel="noopener"><div class="year mono">2026-now</div><h3>Kohl's omnichannel design</h3><p>Cart, checkout, wallet, and self-checkout systems with AI enablement growing through the org.</p></a>
+        </div>
+        <div class="root-system">
+          <a class="root-card" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><b class="mono">Root 01</b><p>Product strategy: decide what the work is really about before polishing the wrong surface.</p></a>
+          <a class="root-card" href="https://kohls.com" target="_blank" rel="noopener"><b class="mono">Root 02</b><p>Interaction design: define behaviors, states, transitions, and user comprehension under pressure.</p></a>
+          <a class="root-card" href="https://ai-created.com/products" target="_blank" rel="noopener"><b class="mono">Root 03</b><p>Design engineering: prototype with enough fidelity that the system can argue back.</p></a>
+          <a class="root-card" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><b class="mono">Root 04</b><p>AI fluency: treat models as strange living material with constraints, rituals, memory, and trust issues.</p></a>
+          <a class="root-card" href="https://tech.walmart.com" target="_blank" rel="noopener"><b class="mono">Root 05</b><p>Enterprise patience: work inside large organizations without losing momentum or visual standards.</p></a>
+          <a class="root-card" href="https://ai-created.com" target="_blank" rel="noopener"><b class="mono">Root 06</b><p>Independent curiosity: keep shipping small tools that refresh the larger practice.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="kicker mono">Propagation room</div>
+          <h2>Lab cuttings that became their own plants.</h2>
+        </header>
+        <div class="lab-grid">
+          <a class="lab-card" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><h3>My AI Diary</h3><p>Private reflection, memory, and voice-first AI as a living personal instrument.</p></a>
+          <a class="lab-card" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener"><h3>Human Actually</h3><p>A study in authenticity, proof, and human origin in synthetic environments.</p></a>
+          <a class="lab-card" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener"><h3>WatchGPT</h3><p>AI compressed into the smallest useful ritual: glanceable, immediate, wearable.</p></a>
+          <a class="lab-card" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener"><h3>AI Usage</h3><p>A practical readout of how models become part of daily work, cost, rhythm, and personal infrastructure.</p></a>
+          <a class="lab-card" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener"><h3>Audio Visualizer Suite</h3><p>A sensory specimen where sound, color, and motion become an instrument for seeing frequency.</p></a>
+          <a class="lab-card" href="https://ai-created.com/games" target="_blank" rel="noopener"><h3>Games and clocks</h3><p>Small interactive organisms that keep timing, rules, visuals, and delight under active cultivation.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="kicker mono">Cultivation protocol</div>
+          <h2>How the specimen is tended.</h2>
+        </header>
+        <div class="cultivation">
+          <a class="protocol" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><b class="mono">Observe</b><p>Spend enough time in the messy system to understand the pressure, not just the screens.</p></a>
+          <a class="protocol" href="https://ai-created.com" target="_blank" rel="noopener"><b class="mono">Frame</b><p>Name the product bet, the user behavior, and the organizational tradeoff in language people can repeat.</p></a>
+          <a class="protocol" href="https://ai-created.com/products" target="_blank" rel="noopener"><b class="mono">Prototype</b><p>Make a working artifact quickly so the team can feel the answer and find the weak parts.</p></a>
+          <a class="protocol" href="https://kohls.com" target="_blank" rel="noopener"><b class="mono">Refine</b><p>Use typography, layout, state, interaction, and implementation detail to remove friction without flattening character.</p></a>
+          <a class="protocol" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener"><b class="mono">Teach</b><p>Turn the artifact into a pattern so others can use it, adapt it, and raise their own bar.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <header class="section-head">
+          <div class="kicker mono">Visitor book</div>
+          <h2>Open channels.</h2>
+        </header>
+        <nav class="channels">
+          <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+          <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created</a>
+          <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a>
+        </nav>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

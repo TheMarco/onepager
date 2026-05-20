@@ -1,0 +1,2305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Apollo Guidance Computer — DSKY Console Model MVHV-69</title>
+<meta name="description" content="A vintage 1969 Apollo Guidance Computer (DSKY) telemetry console portfolio for Marco van Hylckama Vlieg, Senior Product Designer & AI-native Builder." />
+<meta name="theme-color" content="#2C3E50" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   DIRECTION 12: THE NASA APOLLO Guidance Computer & DSKY Console
+   Color System: Spacecraft Metal, Glowing Amber Nixie, Telemetry Green/Red
+   Typography: Orbitron (7-Segment LCD), JetBrains Mono (Engraved Labels)
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg-space:     #0D1117;
+  --console-metal:#7F8C8D;
+  --console-dark: #34495E;
+  --annunc-bg:    #1A252F;
+  
+  /* Telemetry Glows */
+  --amber-glow:   #FFA500;
+  --amber-dim:    rgba(255, 165, 0, 0.15);
+  --green-glow:   #2ECC71;
+  --green-dim:    rgba(46, 204, 113, 0.15);
+  --red-glow:     #E74C3C;
+  --red-dim:      rgba(231, 76, 60, 0.15);
+  
+  --white:        #ECF0F1;
+  --white-dim:    #BDC3C7;
+  --rule:         #2C3E50;
+  --max:          1280px;
+  --gutter:       clamp(16px, 4vw, 48px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: var(--bg-space);
+  color: var(--white);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  padding: 40px 0;
+}
+
+::selection { background: var(--amber-glow); color: #000; }
+a { color: inherit; text-decoration: none; }
+
+.f-mono { font-family: 'JetBrains Mono', monospace; }
+.f-dsky { font-family: 'Orbitron', 'JetBrains Mono', monospace; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Elegant DSKY return button */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--white);
+  border: 1px solid var(--white-dim);
+  padding: 8px 16px;
+  background: rgba(52, 73, 94, 0.3);
+  backdrop-filter: blur(4px);
+  transition: all 0.25s;
+  cursor: pointer;
+  margin-bottom: 32px;
+}
+.btn-back:hover {
+  background: var(--white);
+  color: var(--bg-space);
+  box-shadow: 0 0 12px rgba(255,255,255,0.25);
+}
+
+/* ── 19-INCH INDUSTRIAL RACK CHASSIS ── */
+.dsky-panel {
+  background: var(--console-metal);
+  border: 4px solid #111;
+  box-shadow: 
+    0 30px 60px -15px rgba(0, 0, 0, 0.9), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  /* Anodized aerospace texture */
+  background-image: 
+    linear-gradient(90deg, rgba(255,255,255,0.01) 50%, transparent 50%),
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 6px 100%, 100% 3px;
+}
+
+/* Screws at bezel corners */
+.screw {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #7f8c8d;
+  border: 1px solid #2c3e50;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 2px 3px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+.screw::after {
+  content: '';
+  width: 11px;
+  height: 2px;
+  background: #2c3e50;
+  transform: rotate(115deg);
+}
+.screw--tl { top: 14px; left: 14px; }
+.screw--tr { top: 14px; right: 14px; }
+.screw--bl { bottom: 14px; left: 14px; }
+.screw--br { bottom: 14px; right: 14px; }
+
+/* Panel Brand Header */
+.dsky-header {
+  border-bottom: 3px solid #111;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+.brand-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.22em;
+  color: #2c3e50;
+}
+.brand-title span {
+  color: var(--white);
+}
+.model-led {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--green-glow);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.model-led::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green-glow);
+  box-shadow: 0 0 8px var(--green-glow);
+  animation: telemetry-pulse 1.8s infinite;
+}
+@keyframes telemetry-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6); }
+  70% { box-shadow: 0 0 0 8px rgba(46, 204, 113, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+
+/* ── DSKY DUAL GRID LAYOUT ── */
+.dsky-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: #2c3e50;
+}
+@media (min-width: 1024px) {
+  .dsky-grid {
+    grid-template-columns: 1.1fr 1fr;
+    border-bottom: 3px solid #111;
+  }
+}
+
+/* Left Section: Guidance Display Unit */
+.dsky-display-unit {
+  background: #111;
+  padding: 32px;
+  border-bottom: 3px solid #111;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 600px) {
+  .dsky-display-unit {
+    grid-template-columns: 170px 1fr;
+    gap: 24px;
+  }
+}
+@media (min-width: 1024px) {
+  .dsky-display-unit {
+    border-bottom: none;
+    border-right: 3px solid #111;
+  }
+}
+
+/* Backlit Warning Annunciator Panels */
+.annunciator-panel {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  background: #000;
+  padding: 4px;
+  border: 2px solid #222;
+}
+.annunc-box {
+  background: var(--annunc-bg);
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: bold;
+  text-align: center;
+  color: rgba(255,255,255,0.06);
+  text-transform: uppercase;
+  border-radius: 1px;
+}
+/* States active status warning lights */
+.annunc-box.active-green { color: var(--green-glow); text-shadow: 0 0 8px var(--green-glow); background: var(--green-dim); }
+.annunc-box.active-amber { color: var(--amber-glow); text-shadow: 0 0 8px var(--amber-glow); background: var(--amber-dim); }
+.annunc-box.active-red   { color: var(--red-glow); text-shadow: 0 0 8px var(--red-glow); background: var(--red-dim); }
+
+/* Glowing DSKY 7-Segment Screen Matrix */
+.dsky-screen {
+  background: #180F05;
+  border: 3px solid #2c3e50;
+  box-shadow: inset 0 3px 12px rgba(0,0,0,0.95);
+  border-radius: 4px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+.dsky-screen::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 10;
+  pointer-events: none;
+  background: 
+    linear-gradient(rgba(255, 165, 0, 0.02) 50%, transparent 50%),
+    linear-gradient(90deg, rgba(255, 165, 0, 0.02) 50%, transparent 50%);
+  background-size: 2px 2px;
+}
+
+.screen-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Orbitron', monospace;
+  color: var(--amber-glow);
+  text-shadow: 0 0 8px rgba(255, 165, 0, 0.65);
+}
+.row-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--white-dim);
+  text-shadow: none;
+  font-weight: bold;
+}
+.row-digits {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* Key Data rows (+00000) */
+.dsky-data-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px dashed var(--amber-dim);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.data-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  color: var(--amber-glow);
+  text-shadow: 0 0 8px rgba(255, 165, 0, 0.65);
+  letter-spacing: 0.05em;
+}
+.data-sign {
+  font-size: 20px;
+  margin-right: 4px;
+}
+
+/* Right Section: Telemetry Keypad */
+.dsky-keypad {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.keypad-matrix {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.key {
+  height: 56px;
+  background: #1e272c;
+  border: 2px solid #000;
+  box-shadow: 
+    0 3px 5px rgba(0,0,0,0.6), 
+    inset 0 1px 1px rgba(255,255,255,0.1);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: bold;
+  font-size: 13px;
+  color: var(--white);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s;
+}
+.key:hover {
+  background: #2d3b43;
+}
+.key:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  background: #111;
+  color: var(--amber-glow);
+}
+.key--verb, .key--noun {
+  background: #111;
+  border-color: var(--white-dim);
+}
+
+/* ── PROGRAM LOGS CHRONOLOGY SCREEN ── */
+.telem-logs {
+  background: rgba(0,0,0,0.25);
+  border-bottom: 3px solid #111;
+  padding: 40px;
+}
+.logs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+@media (min-width: 900px) {
+  .logs-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+@media (min-width: 1200px) {
+  .logs-grid {
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 32px;
+  }
+}
+
+.guidance-report {
+  background: #0a0d10;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 24px;
+  border-radius: 3px;
+}
+.guidance-report h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--amber-glow);
+  border-bottom: 1px dashed rgba(255,165,0,0.2);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.guidance-body {
+  font-size: 14.5px;
+  color: var(--white-dim);
+  line-height: 1.65;
+}
+.guidance-body p {
+  margin-bottom: 14px;
+}
+.guidance-body b {
+  color: var(--white);
+}
+
+/* Radar Sweep SVG Visualizer */
+.radar-console {
+  border: 2px solid #222;
+  background: #090e0c;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.radar-grid {
+  width: 100%;
+  height: 100%;
+}
+.radar-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform-origin: 50% 50%;
+  background: conic-gradient(from 0deg at 50% 50%, rgba(46, 204, 113, 0.3) 0deg, transparent 90deg, transparent 360deg);
+  animation: radar-sweep 4s linear infinite;
+  pointer-events: none;
+}
+@keyframes radar-sweep {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); } /* Clockwise sweep */
+}
+.radar-blip {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green-glow);
+  box-shadow: 0 0 10px var(--green-glow);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s;
+}
+.radar-blip:hover {
+  background: var(--white);
+  box-shadow: 0 0 14px var(--white);
+  transform: translate(-50%, -50%) scale(1.3);
+}
+.radar-blip.active-blip {
+  background: var(--amber-glow);
+  box-shadow: 0 0 15px var(--amber-glow);
+  animation: blip-pulse 1s infinite alternate;
+}
+@keyframes blip-pulse {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  100% { transform: translate(-50%, -50%) scale(1.4); }
+}
+
+/* Simulated keypress classes */
+.key.key-pressed {
+  transform: translateY(2px);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  background: var(--amber-glow) !important;
+  color: #000 !important;
+  text-shadow: none !important;
+}
+
+/* Live clock and hardware panel */
+.dsky-bezel-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #111;
+  padding: 12px 32px;
+  background: rgba(0,0,0,0.3);
+}
+.met-timer {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  color: var(--amber-glow);
+  text-shadow: 0 0 5px rgba(255,165,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.met-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--white-dim);
+}
+
+.cockpit-controls {
+  display: flex;
+  gap: 16px;
+}
+.vintage-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vintage-switch-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.vintage-switch {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  background: #111;
+  border: 1.5px solid #444;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+}
+.vintage-switch::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #bdc3c7, #7f8c8d);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.vintage-switch.active {
+  background: var(--green-dim);
+  border-color: var(--green-glow);
+}
+.vintage-switch.active::after {
+  left: 15px;
+  background: linear-gradient(135deg, var(--green-glow), #27ae60);
+  box-shadow: 0 0 6px var(--green-glow);
+}
+
+/* ── FLIGHT HANDBOOK & DOSSIER SECTION ── */
+.flight-handbook {
+  border-top: 3px solid #111;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 48px var(--gutter);
+}
+.handbook-header {
+  text-align: center;
+  margin-bottom: 40px;
+  border-bottom: 1px dashed rgba(255,255,255,0.08);
+  padding-bottom: 24px;
+}
+.handbook-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--green-glow);
+  text-transform: uppercase;
+}
+.handbook-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(20px, 3.5vw, 32px);
+  color: var(--white);
+  margin-top: 8px;
+  letter-spacing: 0.05em;
+}
+.handbook-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+@media (min-width: 1024px) {
+  .handbook-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+}
+
+.handbook-section {
+  border: 1px dashed rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.25);
+  border-radius: 4px;
+  padding: 24px;
+  position: relative;
+}
+.handbook-section-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--amber-glow);
+  border-bottom: 1px dashed rgba(255,165,0,0.2);
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* Section I: Philosophy */
+.philosophy-body {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--white-dim);
+}
+.philosophy-body p {
+  margin-bottom: 14px;
+}
+.philosophy-body em {
+  color: var(--amber-glow);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* Section II: Chronology stops */
+.mission-card {
+  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.01);
+  padding: 18px;
+  border-radius: 3px;
+  margin-bottom: 14px;
+  transition: all 0.25s;
+  cursor: pointer;
+  position: relative;
+}
+.mission-card:hover {
+  border-color: var(--amber-glow);
+  background: rgba(255,165,0,0.02);
+}
+.mission-card.active-mission {
+  border-color: var(--green-glow);
+  background: rgba(46,204,113,0.03);
+  box-shadow: inset 0 0 10px rgba(46,204,113,0.05);
+}
+.mission-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.mission-code-badge {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 2px;
+  color: var(--white);
+}
+.mission-card.active-mission .mission-code-badge {
+  border-color: var(--green-glow);
+  color: var(--green-glow);
+}
+.mission-company {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+}
+.mission-card.active-mission .mission-company {
+  color: var(--green-glow);
+}
+.mission-role {
+  font-size: 12px;
+  color: var(--white-dim);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.mission-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(236, 240, 241, 0.7);
+}
+.mission-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.mission-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  background: rgba(255,255,255,0.05);
+  color: var(--white-dim);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+/* Section III: Capabilities */
+.cap-dsky-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 600px) {
+  .cap-dsky-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.cap-dsky-node {
+  border: 1px solid rgba(255,255,255,0.04);
+  background: rgba(0,0,0,0.15);
+  padding: 14px;
+  border-radius: 3px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.cap-dsky-node:hover {
+  border-color: var(--amber-glow);
+  background: rgba(255,165,0,0.015);
+}
+.cap-dsky-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.cap-dsky-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  color: var(--amber-glow);
+}
+.cap-dsky-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--white);
+}
+.cap-dsky-body {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--white-dim);
+}
+
+/* Section IV: Payload details */
+.payload-item {
+  border-bottom: 1px dashed rgba(255,255,255,0.06);
+  padding: 14px 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.payload-item:last-child {
+  border-bottom: none;
+}
+.payload-item:hover {
+  background: rgba(255,255,255,0.01);
+  padding-left: 8px;
+}
+.payload-item.active-payload {
+  background: rgba(46,204,113,0.02);
+  border-left: 3px solid var(--green-glow);
+  padding-left: 12px;
+}
+.payload-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.payload-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+}
+.payload-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  color: var(--green-glow);
+  background: rgba(46,204,113,0.1);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+.payload-desc {
+  font-size: 12px;
+  color: var(--white-dim);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.payload-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--amber-glow);
+}
+
+/* Numbers LCD panels */
+.metrics-hud {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.hud-card {
+  background: #111;
+  border: 1.5px solid #222;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.9);
+  padding: 14px;
+  border-radius: 3px;
+  text-align: center;
+}
+.hud-val {
+  font-family: 'Orbitron', monospace;
+  font-size: 26px;
+  color: var(--amber-glow);
+  text-shadow: 0 0 8px rgba(255,165,0,0.6);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.hud-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  text-transform: uppercase;
+  color: var(--white-dim);
+  letter-spacing: 0.05em;
+}
+
+/* Method sequence styling */
+.method-chain {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 600px) {
+  .method-chain {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+}
+.method-node {
+  border: 1px solid rgba(255,255,255,0.04);
+  background: rgba(0,0,0,0.15);
+  padding: 14px;
+  border-radius: 3px;
+  text-align: center;
+}
+.method-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  color: var(--green-glow);
+  margin-bottom: 4px;
+}
+.method-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.method-body {
+  font-size: 11px;
+  color: var(--white-dim);
+  line-height: 1.4;
+}
+
+/* Now section status indicators */
+.now-dsky-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.now-dsky-item:last-child {
+  margin-bottom: 0;
+}
+.now-dsky-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green-glow);
+  box-shadow: 0 0 6px var(--green-glow);
+  margin-top: 6px;
+  flex-shrink: 0;
+  animation: telemetry-pulse 1.8s infinite;
+}
+.now-dsky-body {
+  font-size: 12.5px;
+  color: var(--white-dim);
+  line-height: 1.45;
+}
+.now-dsky-body strong {
+  color: var(--white);
+}
+
+/* Colophon specs */
+.colophon-specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--white-dim);
+}
+.colophon-spec-item {
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 8px;
+  border-radius: 2px;
+}
+
+/* ── Bezel Screws and Brand Footer ── */
+.dsky-footer-plate {
+  padding: 32px 40px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  background: rgba(0, 0, 0, 0.3);
+}
+@media (min-width: 768px) {
+  .dsky-footer-plate {
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+}
+.telem-stats dt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+.telem-stats dd {
+  font-size: 15px;
+  color: var(--white);
+  margin-bottom: 18px;
+}
+.telem-stats dd a {
+  border-bottom: 1px solid var(--white-dim);
+  padding-bottom: 1px;
+}
+.telem-stats dd a:hover {
+  color: var(--amber-glow);
+  border-color: var(--amber-glow);
+}
+
+/* Patchbay coordinates links */
+.telem-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.matrix-node {
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.2);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s;
+}
+.matrix-node:hover {
+  border-color: var(--amber-glow);
+  background: rgba(255, 165, 0, 0.04);
+}
+.matrix-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--white-dim);
+  margin-bottom: 4px;
+}
+.matrix-node:hover .matrix-label {
+  color: var(--amber-glow);
+}
+.matrix-val {
+  font-size: 13.5px;
+  font-weight: 500;
+  word-break: break-all;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+  
+  <a href="index.html" class="btn-back">← Back to Console Matrix</a>
+
+  <main class="dsky-panel">
+    <!-- Bezel Screws -->
+    <div class="screw screw--tl"></div>
+    <div class="screw screw--tr"></div>
+    <div class="screw screw--bl"></div>
+    <div class="screw screw--br"></div>
+
+    <!-- Brand Bezel Header -->
+    <header class="dsky-header">
+      <h1 class="brand-title">GUIDANCE TELEMETRY CONSOLE // <span>AGC-69</span></h1>
+      <div class="model-led">SYSTEM STATUS: NOMINAL</div>
+    </header>
+
+    <!-- Bezel sub-deck (MET & controls) -->
+    <div class="dsky-bezel-sub">
+      <div class="met-timer">
+        <span class="met-label">MET:</span>
+        <span id="met-clock">000000:00:00:00</span>
+      </div>
+      <div class="cockpit-controls">
+        <div class="vintage-switch-container">
+          <span class="vintage-switch-label">Audio Signal</span>
+          <div class="vintage-switch active" id="switch-audio" onclick="toggleSwitch('audio')"></div>
+        </div>
+        <div class="vintage-switch-container">
+          <span class="vintage-switch-label">Telemetry Mode</span>
+          <div class="vintage-switch active" id="switch-telemetry" onclick="toggleSwitch('telemetry')"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Bezel Grid -->
+    <section class="dsky-grid">
+      
+      <!-- Left: Display unit -->
+      <div class="dsky-display-unit">
+        
+        <!-- Warning light panels -->
+        <div class="annunciator-panel">
+          <div class="annunc-box active-green" id="an-uact">UPLINK ACTY</div>
+          <div class="annunc-box" id="an-temp">TEMP HIG</div>
+          <div class="annunc-box" id="an-keyr">KEY REL</div>
+          <div class="annunc-box active-green" id="an-comp">COMP ACTY</div>
+          <div class="annunc-box" id="an-opr">OPR ERR</div>
+          <div class="annunc-box active-amber" id="an-prog">PROG AUTO</div>
+        </div>
+
+        <!-- segment display screen -->
+        <div class="dsky-screen">
+          <div class="screen-row">
+            <span class="row-label">PROG</span>
+            <span class="row-digits" id="scr-prog">11</span>
+          </div>
+          <div class="screen-row">
+            <span class="row-label">VERB</span>
+            <span class="row-digits" id="scr-verb">37</span>
+          </div>
+          <div class="screen-row">
+            <span class="row-label">NOUN</span>
+            <span class="row-digits" id="scr-noun">88</span>
+          </div>
+
+          <!-- data rows -->
+          <div class="dsky-data-list">
+            <div class="data-line">
+              <span class="row-label">R1</span>
+              <div><span class="data-sign" id="scr-r1-sign">+</span><span id="scr-r1-val">02021</span></div>
+            </div>
+            <div class="data-line">
+              <span class="row-label">R2</span>
+              <div><span class="data-sign" id="scr-r2-sign">+</span><span id="scr-r2-val">00005</span></div>
+            </div>
+            <div class="data-line">
+              <span class="row-label">R3</span>
+              <div><span class="data-sign" id="scr-r3-sign">+</span><span id="scr-r3-val">00100</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Numeric keypad -->
+      <div class="dsky-keypad">
+        <div class="keypad-matrix">
+          <div class="key key--verb" id="key-verb" onclick="pressKey('VERB')">VERB</div>
+          <div class="key key--noun" id="key-noun" onclick="pressKey('NOUN')">NOUN</div>
+          <div class="key" id="key-prog" onclick="pressKey('PROG')">PROG</div>
+          
+          <div class="key" id="key-7" onclick="pressKey('7')">7</div>
+          <div class="key" id="key-8" onclick="pressKey('8')">8</div>
+          <div class="key" id="key-9" onclick="pressKey('9')">9</div>
+          
+          <div class="key" id="key-4" onclick="pressKey('4')">4</div>
+          <div class="key" id="key-5" onclick="pressKey('5')">5</div>
+          <div class="key" id="key-6" onclick="pressKey('6')">6</div>
+          
+          <div class="key" id="key-1" onclick="pressKey('1')">1</div>
+          <div class="key" id="key-2" onclick="pressKey('2')">2</div>
+          <div class="key" id="key-3" onclick="pressKey('3')">3</div>
+          
+          <div class="key" id="key-plus" onclick="pressKey('+')">+</div>
+          <div class="key" id="key-0" onclick="pressKey('0')">0</div>
+          <div class="key" id="key-minus" onclick="pressKey('-')">-</div>
+          
+          <div class="key" id="key-clr" onclick="pressKey('CLR')">CLR</div>
+          <div class="key key--verb" id="key-rst" style="background:#8b0000;" onclick="pressKey('RST')">RESET</div>
+          <div class="key key--noun" id="key-ent" style="background:#2e8b57;" onclick="pressKey('ENT')">ENTER</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Program logs & Operations Row -->
+    <section class="telem-logs">
+      <div class="logs-grid">
+        
+        <!-- Operations Manual Bezel -->
+        <div class="guidance-report" style="border-color: rgba(255, 165, 0, 0.25); background: rgba(255, 165, 0, 0.015);">
+          <h3 style="color: var(--amber-glow); border-color: rgba(255, 165, 0, 0.15);">DSKY OPERATIONS MANUAL</h3>
+          <div class="guidance-body" style="font-size: 12px; line-height: 1.5; color: var(--white-dim);">
+            <p style="margin-bottom: 6px;"><b>I. LOAD CHRONOLOGY MISSION:</b></p>
+            <p style="margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; color: var(--amber-glow);">
+              1. Press <b>[PROG]</b> key (display shows — —)<br>
+              2. Key in mission digit: [11] to [15]<br>
+              3. Press <b>[ENTER]</b> key to display stats.
+            </p>
+            
+            <p style="margin-bottom: 6px;"><b>II. DIRECTORY PROGRAM INDEX:</b></p>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+              <li style="margin-bottom: 2px;">• <b>PROG 11:</b> Kohl's Corp [Current]</li>
+              <li style="margin-bottom: 2px;">• <b>PROG 12:</b> Walmart Labs</li>
+              <li style="margin-bottom: 2px;">• <b>PROG 13:</b> Yahoo! Portals</li>
+              <li style="margin-bottom: 2px;">• <b>PROG 14:</b> Google Inc.</li>
+              <li style="margin-bottom: 2px;">• <b>PROG 15:</b> Endemol Broadcast</li>
+            </ul>
+
+            <p style="margin-bottom: 6px;"><b>III. CONSOLE CODES (EASTER EGGS):</b></p>
+            <p style="margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; color: var(--green-glow);">
+              • [VERB] + [3] + [5] + [ENT]: Run Bezel Self-Test<br>
+              • [VERB] + [9] + [9] + [ENT]: Overload System Alert
+            </p>
+
+            <p style="margin-bottom: 0;"><b>IV. AUTOMATED TELEMETRY:</b></p>
+            <p style="margin-top: 2px; font-size: 11px;">Click any card or radar target in the Technical Manual below to remotely program the console.</p>
+          </div>
+        </div>
+
+        <div class="guidance-report">
+          <h3>COMPUTER TELEMETRY DEBRIEF</h3>
+          <div class="guidance-body" id="guidance-output">
+            <p><b>SYSTEM STATUS: ACTIVE CHRONOLOGY stop // PROG 11 LOADED</b></p>
+            <p><b>MISSION: KOHL'S SPECIALIST (2021 — PRESENT)</b></p>
+            <p>Directing high-frequency transactional pipelines across core checkout nodes: Cart, Wallet, Checkout, and physical In-store Self-Checkout portals.</p>
+            <p>Architecting enterprise generative prompt libraries, visual AI pipelines, and design-to-development guidelines. Driving next-generation technology adoption across multi-disciplinary teams.</p>
+            <p><i>Telemetry Registers: R1 = Launch Year (2021) | R2 = Team Count (5) | R3 = Performance Index (100%)</i></p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- NASA TECHNICAL MANUAL DOSSIER -->
+    <section class="flight-handbook">
+      <div class="handbook-header">
+        <span class="handbook-kicker">APOLLO FLIGHT DECK MANUAL // MISSION DOSSIER</span>
+        <h2 class="handbook-title">TECHNICAL OPERATIONS MANUAL</h2>
+      </div>
+
+      <div class="handbook-grid">
+        
+        <!-- SECTION I: MISSION MANIFESTO & PHILOSOPHY -->
+        <div class="handbook-section" id="sect-manifesto">
+          <div class="handbook-section-title">SECTION I: MISSION MANIFESTO &amp; PHILOSOPHY (VERB 35: SELF-TEST)</div>
+          <div class="philosophy-body">
+            <p>
+              I design products at the seam where intent becomes interface — where a half-formed idea has to choose what kind of <em>system</em> it wants to become. The interesting decisions live there: pacing, posture, what shows up first, what stays hidden, what the model is allowed to assume.
+            </p>
+            <p style="border-left: 2px solid var(--amber-glow); padding-left: 14px; margin: 16px 0; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--amber-glow); line-height: 1.5;">
+              “AI didn't shrink the design problem. It made the problem about <em>judgment</em>, not output. The work is choosing what to build and how it should behave in someone's actual life — then shipping it before the moment passes.”
+            </p>
+            <p>
+              I'm strongest where strategy, design, interaction behavior, and the realities of implementation collide. I write the prototype, ship the build, and stay around for the part where it has to be good for real users. The portfolio is the proof.
+            </p>
+            <div style="margin-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-align: right; color: var(--white-dim);">
+              M. van Hylckama Vlieg &middot; Portland, Oregon &middot; May 2026
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION II: CHRONOLOGY OF ENTERPRISE FLIGHTS -->
+        <div class="handbook-section" id="sect-chronology">
+          <div class="handbook-section-title">SECTION II: CHRONOLOGY OF ENTERPRISE FLIGHTS (PROG 11-15)</div>
+          <p style="font-size: 12px; color: var(--white-dim); margin-bottom: 16px;">
+            Click on any mission flight below to remotely execute the DSKY program loading sequence.
+          </p>
+
+          <!-- PROG 11: Kohl's -->
+          <div class="mission-card active-mission" id="mission-11" onclick="autoProgram('PROG_11')">
+            <div class="mission-card-header">
+              <span class="mission-company">KOHL'S CORP</span>
+              <span class="mission-code-badge">PROG 11</span>
+            </div>
+            <div class="mission-role">Senior Product Designer &amp; Generative AI Specialist (2021 — PRESENT)</div>
+            <p class="mission-desc">
+              Led UX across cart, checkout, wallet, account, and in-store self-checkout. Drove AI adoption, prompt libraries, and tools across the design organization.
+            </p>
+            <div class="mission-tags">
+              <span class="mission-tag">e-comm</span><span class="mission-tag">generative-ai</span><span class="mission-tag">checkout</span>
+            </div>
+          </div>
+
+          <!-- PROG 12: Walmart Labs -->
+          <div class="mission-card" id="mission-12" onclick="autoProgram('PROG_12')">
+            <div class="mission-card-header">
+              <span class="mission-company">WALMART LABS</span>
+              <span class="mission-code-badge">PROG 12</span>
+            </div>
+            <div class="mission-role">Principal Product Designer / Design Technologist (2017 — 2021)</div>
+            <p class="mission-desc">
+              Headed voice commerce, recommendations, and personalization. Translated massive predictive ML pipelines into plain-spoken interfaces during digital transformation.
+            </p>
+            <div class="mission-tags">
+              <span class="mission-tag">retail-tech</span><span class="mission-tag">ML-ux</span><span class="mission-tag">voice-commerce</span>
+            </div>
+          </div>
+
+          <!-- PROG 13: Yahoo! -->
+          <div class="mission-card" id="mission-13" onclick="autoProgram('PROG_13')">
+            <div class="mission-card-header">
+              <span class="mission-company">YAHOO! PORTALS</span>
+              <span class="mission-code-badge">PROG 13</span>
+            </div>
+            <div class="mission-role">Director of UX Prototyping &amp; Senior UX Manager (2005 — 2013)</div>
+            <p class="mission-desc">
+              Led global design technologist and UX prototyping organizations across multiple international hubs. Directed homepage personalization, media networks, and rapid prototyping workflows.
+            </p>
+            <div class="mission-tags">
+              <span class="mission-tag">leadership</span><span class="mission-tag">prototyping</span><span class="mission-tag">scale</span>
+            </div>
+          </div>
+
+          <!-- PROG 14: Google -->
+          <div class="mission-card" id="mission-14" onclick="autoProgram('PROG_14')">
+            <div class="mission-card-header">
+              <span class="mission-company">GOOGLE INC.</span>
+              <span class="mission-code-badge">PROG 14</span>
+            </div>
+            <div class="mission-role">Senior UX Engineer / Prototyper (2013 — 2017)</div>
+            <p class="mission-desc">
+              Built high-fidelity working concepts for Google Cloud AI, Assistant, and Google Android OS. Bridged design intent and engineering reality through fully interactive software.
+            </p>
+            <div class="mission-tags">
+              <span class="mission-tag">cloud-ai</span><span class="mission-tag">assistant-ux</span><span class="mission-tag">android</span>
+            </div>
+          </div>
+
+          <!-- PROG 15: Endemol -->
+          <div class="mission-card" id="mission-15" onclick="autoProgram('PROG_15')">
+            <div class="mission-card-header">
+              <span class="mission-company">ENDEMOL BROADCAST</span>
+              <span class="mission-code-badge">PROG 15</span>
+            </div>
+            <div class="mission-role">UX &amp; Engineering Lead (1998 — 2005)</div>
+            <p class="mission-desc">
+              Crafted real-time synchronous second-screen companion applications and multilingual web content platforms under high broadcast traffic.
+            </p>
+            <div class="mission-tags">
+              <span class="mission-tag">live-media</span><span class="mission-tag">full-stack</span><span class="mission-tag">performance</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SECTION III: DSKY SUBSYSTEM CODES & CAPABILITIES -->
+        <div class="handbook-section" id="sect-capabilities">
+          <div class="handbook-section-title">SECTION III: DSKY SUBSYSTEM CODES &amp; CAPABILITIES (NOUN 88)</div>
+          <p style="font-size: 12px; color: var(--white-dim); margin-bottom: 16px;">
+            Click on any subsystem capability below to upload telemetry coordinates to the console.
+          </p>
+          <div class="cap-dsky-grid">
+            
+            <div class="cap-dsky-node" id="cap-1" onclick="autoProgram('CAP_1')">
+              <div class="cap-dsky-header">
+                <span class="cap-dsky-title">AI-Native Product Design</span>
+                <span class="cap-dsky-num">CODE 01</span>
+              </div>
+              <p class="cap-dsky-body">Designing systems where the model is the interaction. Voice, agents, model-aware interfaces.</p>
+              <div class="mission-tags" style="margin-top: 6px;">
+                <span class="mission-tag">Voice UX</span><span class="mission-tag">Agent UI</span><span class="mission-tag">Prompts</span>
+              </div>
+            </div>
+
+            <div class="cap-dsky-node" id="cap-2" onclick="autoProgram('CAP_2')">
+              <div class="cap-dsky-header">
+                <span class="cap-dsky-title">Design Engineering</span>
+                <span class="cap-dsky-num">CODE 02</span>
+              </div>
+              <p class="cap-dsky-body">Production-quality prototypes that behave like real software because they are. Built end-to-end.</p>
+              <div class="mission-tags" style="margin-top: 6px;">
+                <span class="mission-tag">Next.js</span><span class="mission-tag">TypeScript</span><span class="mission-tag">Tailwind</span>
+              </div>
+            </div>
+
+            <div class="cap-dsky-node" id="cap-3" onclick="autoProgram('CAP_3')">
+              <div class="cap-dsky-header">
+                <span class="cap-dsky-title">0 → 1 Incubation</span>
+                <span class="cap-dsky-num">CODE 03</span>
+              </div>
+              <p class="cap-dsky-body">Taking ambiguous briefs from research to shipped builds. Driving structure from scratch.</p>
+              <div class="mission-tags" style="margin-top: 6px;">
+                <span class="mission-tag">Strategy</span><span class="mission-tag">Research</span><span class="mission-tag">Prototyping</span>
+              </div>
+            </div>
+
+            <div class="cap-dsky-node" id="cap-4" onclick="autoProgram('CAP_4')">
+              <div class="cap-dsky-header">
+                <span class="cap-dsky-title">Enterprise UX Modernization</span>
+                <span class="cap-dsky-num">CODE 04</span>
+              </div>
+              <p class="cap-dsky-body">Untangling legacy checkout, cart, account, and internal systems into clean, highly useful flows.</p>
+              <div class="mission-tags" style="margin-top: 6px;">
+                <span class="mission-tag">E-Commerce</span><span class="mission-tag">A11y</span><span class="mission-tag">Workflows</span>
+              </div>
+            </div>
+
+            <div class="cap-dsky-node" id="cap-5" onclick="autoProgram('CAP_5')">
+              <div class="cap-dsky-header">
+                <span class="cap-dsky-title">Internal AI Tooling</span>
+                <span class="cap-dsky-num">CODE 05</span>
+              </div>
+              <p class="cap-dsky-body">Custom copilots, prompt libraries, synthetic research platforms built for product design organizations.</p>
+              <div class="mission-tags" style="margin-top: 6px;">
+                <span class="mission-tag">LLMs</span><span class="mission-tag">Workflow Accelerators</span>
+              </div>
+            </div>
+
+            <div class="cap-dsky-node" id="cap-6" onclick="autoProgram('CAP_6')">
+              <div class="cap-dsky-header">
+                <span class="cap-dsky-title">Leadership &amp; Enablement</span>
+                <span class="cap-dsky-num">CODE 06</span>
+              </div>
+              <p class="cap-dsky-body">Built prototyping teams at Yahoo. Advancing AI tool adoption and education across large design systems.</p>
+              <div class="mission-tags" style="margin-top: 6px;">
+                <span class="mission-tag">Mentorship</span><span class="mission-tag">AI Training</span><span class="mission-tag">Strategy</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECTION IV: LUNAR PAYLOAD MANIFEST -->
+        <div class="handbook-section" id="sect-payload">
+          <div class="handbook-section-title">SECTION IV: LUNAR PAYLOAD MANIFEST (RADAR TARGET OBJECTS 01-10)</div>
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 24px;">
+            <div>
+              <p style="font-size: 12px; color: var(--white-dim); margin-bottom: 12px;">
+                The independent product lab (AI-Created.com) maintains 10 orbital radar targets. Click any target here or any active blip on the radar scope below to command console telemetries.
+              </p>
+              
+              <div style="max-height: 280px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.06); padding: 0 12px; background: rgba(0,0,0,0.15);">
+                <!-- Project 1 -->
+                <div class="payload-item" id="payload-diary" onclick="autoProgram('PAYLOAD_DIARY')">
+                  <div class="payload-meta">
+                    <span class="payload-title">01. My AI Diary</span>
+                    <span class="payload-status">● Live AI</span>
+                  </div>
+                  <p class="payload-desc">Voice-first journaling turning raw speech into written entries that retain your authentic voice. Whispers, encryption, semantic search.</p>
+                  <span class="payload-tech">Next.js · OpenAI · Whisper · IndexedDB</span>
+                </div>
+                <!-- Project 2 -->
+                <div class="payload-item" id="payload-watch" onclick="autoProgram('PAYLOAD_WATCH')">
+                  <div class="payload-meta">
+                    <span class="payload-title">02. WatchGPT</span>
+                    <span class="payload-status">● Live AI</span>
+                  </div>
+                  <p class="payload-desc">Realtime ChatGPT vocal interaction directly on your Apple Watch device face.</p>
+                  <span class="payload-tech">watchOS · Realtime API</span>
+                </div>
+                <!-- Project 3 -->
+                <div class="payload-item" id="payload-human" onclick="autoProgram('PAYLOAD_HUMAN')">
+                  <div class="payload-meta">
+                    <span class="payload-title">03. Human, Actually</span>
+                    <span class="payload-status">● Live AI</span>
+                  </div>
+                  <p class="payload-desc">Dynamic resume tailoring engine designed to match professional profiles cleanly to custom descriptions without synthetic voice cues.</p>
+                  <span class="payload-tech">LLM · NLP · UX</span>
+                </div>
+                <!-- Project 4 -->
+                <div class="payload-item" id="payload-usage" onclick="autoProgram('PAYLOAD_USAGE')">
+                  <div class="payload-meta">
+                    <span class="payload-title">04. AI Usage</span>
+                    <span class="payload-status">● Live AI</span>
+                  </div>
+                  <p class="payload-desc">Mac desktop menu utility helping developers monitor and optimize budget limits across Claude Code and Codex APIs.</p>
+                  <span class="payload-tech">macOS · Swift · Menubar</span>
+                </div>
+                <!-- Project 5 -->
+                <div class="payload-item" id="payload-calorie" onclick="autoProgram('PAYLOAD_CALORIE')">
+                  <div class="payload-meta">
+                    <span class="payload-title">05. Calorie Counter</span>
+                    <span class="payload-status">● Live AI</span>
+                  </div>
+                  <p class="payload-desc">Frictionless diet logging system utilizing photography and speech for fast tracking.</p>
+                  <span class="payload-tech">Vision · LLM · PWA</span>
+                </div>
+                <!-- Project 6 -->
+                <div class="payload-item" id="payload-vector" onclick="autoProgram('PAYLOAD_VECTOR')">
+                  <div class="payload-meta">
+                    <span class="payload-title">06. Vectronix</span>
+                    <span class="payload-status" style="color: var(--amber-glow); background: rgba(255,165,0,0.1);">● Live Game</span>
+                  </div>
+                  <p class="payload-desc">Hardcore retro vector arcade space combat testing physics models and Web Audio synthesis.</p>
+                  <span class="payload-tech">Canvas · Web Audio · Vector</span>
+                </div>
+                <!-- Project 7 -->
+                <div class="payload-item" id="payload-drift" onclick="autoProgram('PAYLOAD_DRIFT')">
+                  <div class="payload-meta">
+                    <span class="payload-title">07. Radial Drift</span>
+                    <span class="payload-status" style="color: var(--amber-glow); background: rgba(255,165,0,0.1);">● Live Game</span>
+                  </div>
+                  <p class="payload-desc">One-finger minimalist tension game testing haptic feedback loops and hyper-fine touch coordinates.</p>
+                  <span class="payload-tech">WebGL · Touch · Haptics</span>
+                </div>
+                <!-- Project 8 -->
+                <div class="payload-item" id="payload-audio" onclick="autoProgram('PAYLOAD_AUDIO')">
+                  <div class="payload-meta">
+                    <span class="payload-title">08. Audio Visualizer Suite</span>
+                    <span class="payload-status" style="color: #3498db; background: rgba(52,152,219,0.1);">● Experiment</span>
+                  </div>
+                  <p class="payload-desc">WebGL music video visualizer mapping sound frequencies to high-definition rendering pipelines.</p>
+                  <span class="payload-tech">WebGL · FFT · FFmpeg</span>
+                </div>
+                <!-- Project 9 -->
+                <div class="payload-item" id="payload-color" onclick="autoProgram('PAYLOAD_COLOR')">
+                  <div class="payload-meta">
+                    <span class="payload-title">09. Color Clock</span>
+                    <span class="payload-status" style="color: #3498db; background: rgba(52,152,219,0.1);">● Experiment</span>
+                  </div>
+                  <p class="payload-desc">A digital recreation of a classic 1991 color-spectrum clock face using CSS typography.</p>
+                  <span class="payload-tech">CSS · Type</span>
+                </div>
+                <!-- Project 10 -->
+                <div class="payload-item" id="payload-jumbo" onclick="autoProgram('PAYLOAD_JUMBO')">
+                  <div class="payload-meta">
+                    <span class="payload-title">10. Jumbotron Simulator</span>
+                    <span class="payload-status" style="color: #3498db; background: rgba(52,152,219,0.1);">● Experiment</span>
+                  </div>
+                  <p class="payload-desc">Pixel-faithful stadium led scoreboard canvas simulator for custom text overlays.</p>
+                  <span class="payload-tech">Canvas · WebGL</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sweeping Radar Scope -->
+            <div style="border: 1px dashed rgba(255,255,255,0.06); padding: 16px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green-glow); text-align: center; margin-bottom: 12px; letter-spacing: 0.1em;">
+                [ RADAR SPACE BODY INTERCEPT MODULE ]
+              </div>
+              <div class="radar-console">
+                <svg class="radar-grid" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(46,204,113,0.15)" stroke-width="1"/>
+                  <circle cx="50" cy="50" r="30" fill="none" stroke="rgba(46,204,113,0.15)" stroke-width="1"/>
+                  <circle cx="50" cy="50" r="15" fill="none" stroke="rgba(46,204,113,0.15)" stroke-width="1"/>
+                  <line x1="50" y1="5" x2="50" y2="95" stroke="rgba(46,204,113,0.12)" stroke-width="1"/>
+                  <line x1="5" y1="50" x2="95" y2="50" stroke="rgba(46,204,113,0.12)" stroke-width="1"/>
+                </svg>
+                <div class="radar-beam"></div>
+                <!-- 10 Radar blips representing all 10 lab projects -->
+                <div class="radar-blip" id="blip-diary" style="top: 25%; left: 35%;" onclick="autoProgram('PAYLOAD_DIARY')" title="01. My AI Diary"></div>
+                <div class="radar-blip" id="blip-watch" style="top: 38%; left: 68%;" onclick="autoProgram('PAYLOAD_WATCH')" title="02. WatchGPT"></div>
+                <div class="radar-blip" id="blip-human" style="top: 65%; left: 28%;" onclick="autoProgram('PAYLOAD_HUMAN')" title="03. Human, Actually"></div>
+                <div class="radar-blip" id="blip-usage" style="top: 48%; left: 18%;" onclick="autoProgram('PAYLOAD_USAGE')" title="04. AI Usage"></div>
+                <div class="radar-blip" id="blip-calorie" style="top: 15%; left: 55%;" onclick="autoProgram('PAYLOAD_CALORIE')" title="05. Calorie Counter"></div>
+                <div class="radar-blip" id="blip-vector" style="top: 78%; left: 52%;" onclick="autoProgram('PAYLOAD_VECTOR')" title="06. Vectronix"></div>
+                <div class="radar-blip" id="blip-drift" style="top: 52%; left: 45%;" onclick="autoProgram('PAYLOAD_DRIFT')" title="07. Radial Drift"></div>
+                <div class="radar-blip" id="blip-audio" style="top: 55%; left: 75%;" onclick="autoProgram('PAYLOAD_AUDIO')" title="08. Audio Visualizer Suite"></div>
+                <div class="radar-blip" id="blip-color" style="top: 85%; left: 82%;" onclick="autoProgram('PAYLOAD_COLOR')" title="09. Color Clock"></div>
+                <div class="radar-blip" id="blip-jumbo" style="top: 30%; left: 80%;" onclick="autoProgram('PAYLOAD_JUMBO')" title="10. Jumbotron Simulator"></div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <!-- SECTION V: FLIGHT CONTROL SEQUENCING -->
+        <div class="handbook-section" id="sect-process">
+          <div class="handbook-section-title">SECTION V: FLIGHT CONTROL SEQUENCING (THE 4-STAGE METHOD)</div>
+          <div class="method-chain">
+            <div class="method-node">
+              <div class="method-num">01</div>
+              <div class="method-title">Frame</div>
+              <p class="method-body">Find the smallest, most honest version of the problem. Strip the brief until what remains is real.</p>
+            </div>
+            <div class="method-node">
+              <div class="method-num">02</div>
+              <div class="method-title">Prototype</div>
+              <p class="method-body">Skip the slide. Build the smallest behaving thing. Code, not comp. The product tells you what it wants to be.</p>
+            </div>
+            <div class="method-node">
+              <div class="method-num">03</div>
+              <div class="method-title">Pressure-Test</div>
+              <p class="method-body">Real users, real models, real edge cases. Watch what breaks. Decide what's worth keeping.</p>
+            </div>
+            <div class="method-node">
+              <div class="method-num">04</div>
+              <div class="method-title">Ship</div>
+              <p class="method-body">Stay around for the boring part. The 1.0 only matters if it stays in the build after launch.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION VI: TRANSACTIONAL TELEMETRY DATA -->
+        <div class="handbook-section" id="sect-telemetry">
+          <div class="handbook-section-title">SECTION VI: TRANSACTIONAL TELEMETRY DATA (BY THE NUMBERS)</div>
+          <div class="metrics-hud">
+            <div class="hud-card">
+              <div class="hud-val">20+</div>
+              <span class="hud-label">Years in Practice</span>
+            </div>
+            <div class="hud-card">
+              <div class="hud-val">5</div>
+              <span class="hud-label">Enterprise Modules</span>
+            </div>
+            <div class="hud-card">
+              <div class="hud-val">18</div>
+              <span class="hud-label">Shipped Lab Products</span>
+            </div>
+            <div class="hud-card">
+              <div class="hud-val">4</div>
+              <span class="hud-label">Fluent Languages</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION VII: ACTIVE ORBITAL PARAMETERS -->
+        <div class="handbook-section" id="sect-now">
+          <div class="handbook-section-title">SECTION VII: ACTIVE ORBITAL PARAMETERS (NOW)</div>
+          <div class="now-dsky-item">
+            <div class="now-dsky-dot"></div>
+            <div class="now-dsky-body">
+              <strong>Kohl's UX Lead:</strong> Directing prompt systems, AI-native checkout portals, and cart modernization.
+            </div>
+          </div>
+          <div class="now-dsky-item">
+            <div class="now-dsky-dot"></div>
+            <div class="now-dsky-body">
+              <strong>Independent Shipments:</strong> Shipping new iterations through AI-Created product labs weekly.
+            </div>
+          </div>
+          <div class="now-dsky-item">
+            <div class="now-dsky-dot"></div>
+            <div class="now-dsky-body">
+              <strong>Speaking Engagement:</strong> Founding contributor and featured speaker at Imagine AI Live.
+            </div>
+          </div>
+          <div class="now-dsky-item">
+            <div class="now-dsky-dot"></div>
+            <div class="now-dsky-body">
+              <strong>Active Stack:</strong> Figma Make, Next.js, WebGL, Swift macOS, LLM prompt engineering, and Web Audio.
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION VIII: TELEMETRY JUNCTION & COLOPHON -->
+        <div class="handbook-section" id="sect-colophon">
+          <div class="handbook-section-title">SECTION VIII: TELEMETRY JUNCTION &amp; COLOPHON</div>
+          <div class="colophon-specs">
+            <div class="colophon-spec-item">
+              <strong>Display Font:</strong><br>Orbitron (7-Segment)
+            </div>
+            <div class="colophon-spec-item">
+              <strong>Technical Font:</strong><br>JetBrains Mono
+            </div>
+            <div class="colophon-spec-item">
+              <strong>System Palette:</strong><br>Amber Glow &amp; Telemetry Green
+            </div>
+            <div class="colophon-spec-item">
+              <strong>Code Core:</strong><br>Vanilla Single-File HTML5
+            </div>
+          </div>
+          <div style="margin-top: 16px; font-size: 11px; color: var(--white-dim); line-height: 1.5;">
+            Hand-wired with pure vanilla Javascript, standard CSS custom variables, and Web Audio API oscillators. Modeled on standard specifications for the 1969 Raytheon Block II Apollo Guidance Computer. Made in Portland, OR, USA.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer specs plate -->
+    <footer class="dsky-footer-plate">
+      <dl class="telem-stats">
+        <dt>CONSOLE PILOT</dt>
+        <dd>Marco van Hylckama Vlieg</dd>
+
+        <dt>CONTACT SPECIFICATION</dt>
+        <dd><a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a></dd>
+
+        <dt>DIRECTORY RETRIEVAL</dt>
+        <dd><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a></dd>
+      </dl>
+
+      <div class="telem-matrix">
+        <a href="https://x.com/AIandDesign" target="_blank" rel="noopener" class="matrix-node">
+          <span class="matrix-label">TELEMETRY BAND X</span>
+          <span class="matrix-val">x.com/AIandDesign</span>
+        </a>
+        <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener" class="matrix-node">
+          <span class="matrix-label">VIDEO DEBRIEF CAP</span>
+          <span class="matrix-val">youtube.com/@AIandDesign</span>
+        </a>
+        <div class="matrix-node" style="grid-column: 1/-1;">
+          <span class="matrix-label">LAB SUBSYSTEM HUB</span>
+          <span class="matrix-val"><a href="https://ai-created.com" target="_blank" rel="noopener" style="text-decoration: underline;">ai-created.com</a></span>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <div style="text-align: center; margin-top: 32px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--white-dim);">
+    [ SPACECRAFT GUIDANCE TERMINAL SYSTEM CALIBRATION: III [GEMINI] ]
+  </div>
+
+</div>
+
+<!-- DSKY Keypad Input Logic & Audio Synthesis -->
+<script>
+(function () {
+  'use strict';
+
+  // State parameters
+  let audioEnabled = true;
+  let telemetryAuto = true;
+  let currentInput = "";
+  let activeKeystrokeTimeout = null;
+  let typingQueue = [];
+  let isTyping = false;
+
+  // Nixie screens elements
+  const scrProg = document.getElementById('scr-prog');
+  const scrVerb = document.getElementById('scr-verb');
+  const scrNoun = document.getElementById('scr-noun');
+  const scrR1 = document.getElementById('scr-r1-val');
+  const scrR2 = document.getElementById('scr-r2-val');
+  const scrR3 = document.getElementById('scr-r3-val');
+  const scrR1Sign = document.getElementById('scr-r1-sign');
+  const scrR2Sign = document.getElementById('scr-r2-sign');
+  const scrR3Sign = document.getElementById('scr-r3-sign');
+  const guidanceOutput = document.getElementById('guidance-output');
+
+  // Quindar space capsule beeps (Web Audio API)
+  let audioCtx = null;
+
+  function playQuindarBeep(frequency = 2525, duration = 0.08) {
+    if (!audioEnabled) return;
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {
+      console.log("Audio awaiting user interaction confirmation", e);
+    }
+  }
+
+  // Live Mission Elapsed Time clock (tick function)
+  const careerStartDate = new Date("1998-06-01T08:00:00Z");
+  function updateMetClock() {
+    const now = new Date();
+    const diffMs = now - careerStartDate;
+    
+    let totalSecs = Math.floor(diffMs / 1000);
+    
+    const days = Math.floor(totalSecs / 86400);
+    totalSecs %= 86400;
+    
+    const hours = Math.floor(totalSecs / 3600);
+    totalSecs %= 3600;
+    
+    const minutes = Math.floor(totalSecs / 60);
+    const seconds = totalSecs % 60;
+    
+    const pad = (num, size = 2) => String(num).padStart(size, '0');
+    
+    const clockEl = document.getElementById('met-clock');
+    if (clockEl) {
+      clockEl.textContent = `${pad(days, 6)}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    }
+  }
+  updateMetClock();
+  setInterval(updateMetClock, 1000);
+
+  // Cockpit switch controls
+  window.toggleSwitch = function (type) {
+    if (type === 'audio') {
+      audioEnabled = !audioEnabled;
+      const el = document.getElementById('switch-audio');
+      if (audioEnabled) {
+        el.classList.add('active');
+        playQuindarBeep(2000, 0.05);
+      } else {
+        el.classList.remove('active');
+      }
+    } else if (type === 'telemetry') {
+      telemetryAuto = !telemetryAuto;
+      const el = document.getElementById('switch-telemetry');
+      if (telemetryAuto) {
+        el.classList.add('active');
+        if (audioEnabled) playQuindarBeep(2400, 0.05);
+      } else {
+        el.classList.remove('active');
+        if (audioEnabled) playQuindarBeep(1200, 0.05);
+      }
+    }
+  };
+
+  // Annunciator blinking active indicators
+  const anComp = document.getElementById('an-comp');
+  setInterval(() => {
+    if (anComp) anComp.classList.toggle('active-green');
+  }, 900);
+
+  // Database stops for automated loading
+  const telemetryData = {
+    // Chronology stops
+    PROG_11: {
+      prog: "11", verb: "37", noun: "88",
+      r1: "02021", r2: "00005", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "mission-11",
+      html: `<p><b>SYSTEM STATUS: ACTIVE CHRONOLOGY stop // PROG 11 LOADED</b></p>
+             <p><b>MISSION: KOHL'S SPECIALIST (2021 — PRESENT)</b></p>
+             <p>Directing high-frequency transactional pipelines across core checkout nodes: Cart, Wallet, Checkout, and physical In-store Self-Checkout portals.</p>
+             <p>Architecting enterprise generative prompt libraries, visual AI pipelines, and design-to-development guidelines. Driving next-generation technology adoption across multi-disciplinary teams.</p>
+             <p><i>Telemetry Registers: R1 = Launch Year (2021) | R2 = Team Count (5) | R3 = Performance Index (100%)</i></p>`
+    },
+    PROG_12: {
+      prog: "12", verb: "37", noun: "88",
+      r1: "02017", r2: "00004", r3: "00085", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "mission-12",
+      html: `<p><b>SYSTEM STATUS: HISTORICAL RECORD VERIFIED // PROG 12 LOADED</b></p>
+             <p><b>MISSION: WALMART LABS principal (2017 — 2021)</b></p>
+             <p>Commanded UX strategy for mobile voice commerce, personalization, and customer recommendation engines during Walmart's massive digital transformation.</p>
+             <p>Translated complex predictive machine learning data models into clear, friction-free transactional checkout flows handling millions of daily endpoints.</p>
+             <p><i>Telemetry Registers: R1 = Launch Year (2017) | R2 = Team Count (4) | R3 = Efficiency Index (85%)</i></p>`
+    },
+    PROG_13: {
+      prog: "13", verb: "37", noun: "88",
+      r1: "02005", r2: "00003", r3: "00072", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "mission-13",
+      html: `<p><b>SYSTEM STATUS: HISTORICAL RECORD VERIFIED // PROG 13 LOADED</b></p>
+             <p><b>MISSION: YAHOO! UX DIRECTOR (2005 — 2013)</b></p>
+             <p>Led global design technologist and UX prototyping organizations across multiple international hubs.</p>
+             <p>Directed homepage personalization, media networks, and large-scale web platform design architectures. Formulated rapid prototyping frameworks to de-risk high-volume consumer portals.</p>
+             <p><i>Telemetry Registers: R1 = Launch Year (2005) | R2 = Team Count (3) | R3 = Volume Index (72%)</i></p>`
+    },
+    PROG_14: {
+      prog: "14", verb: "37", noun: "88",
+      r1: "02013", r2: "00002", r3: "00060", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "mission-14",
+      html: `<p><b>SYSTEM STATUS: HISTORICAL RECORD VERIFIED // PROG 14 LOADED</b></p>
+             <p><b>MISSION: GOOGLE UX ENGINEER (2013 — 2017)</b></p>
+             <p>Designed and built high-fidelity interactive proof-of-concept models for Google Cloud AI, Assistant, and Google Android OS.</p>
+             <p>Bridged advanced design intent with engineering capabilities, delivering live-behaving software prototypes that catalyzed product direction and research alignment.</p>
+             <p><i>Telemetry Registers: R1 = Launch Year (2013) | R2 = Team Count (2) | R3 = Integration Index (60%)</i></p>`
+    },
+    PROG_15: {
+      prog: "15", verb: "37", noun: "88",
+      r1: "01998", r2: "00001", r3: "00035", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "mission-15",
+      html: `<p><b>SYSTEM STATUS: HISTORICAL RECORD VERIFIED // PROG 15 LOADED</b></p>
+             <p><b>MISSION: ENDEMOL UX &amp; ENGINEERING LEAD (1998 — 2005)</b></p>
+             <p>Pioneered early real-time synchronous second-screen companion systems for international television broadcast networks.</p>
+             <p>Crafted high-concurrency content management servers and interactive consumer web portals, merging visual UX with robust database architectures before standard terms existed.</p>
+             <p><i>Telemetry Registers: R1 = Launch Year (1998) | R2 = Team Count (1) | R3 = Concurrency Index (35%)</i></p>`
+    },
+    // Capabilities Noun 88 codes
+    CAP_1: {
+      prog: "88", verb: "01", noun: "88",
+      r1: "00088", r2: "00001", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "cap-1",
+      html: `<p><b>SYSTEM STATUS: SUBSYSTEM DIAGNOSTICS // NOUN 88 CODE 01 LOADED</b></p>
+             <p><b>CAPABILITY: AI-NATIVE PRODUCT DESIGN</b></p>
+             <p>Formulating systems where artificial intelligence models form the core interface rather than an afterthought chat panel. Specializing in voice agents, contextual ambient assistance, model-aware layouts, and real-time state management.</p>
+             <p><i>Status: Nominal | Subsystems: Voice UX, Agent UI, Prompt Engineering</i></p>`
+    },
+    CAP_2: {
+      prog: "88", verb: "01", noun: "88",
+      r1: "00088", r2: "00002", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "cap-2",
+      html: `<p><b>SYSTEM STATUS: SUBSYSTEM DIAGNOSTICS // NOUN 88 CODE 02 LOADED</b></p>
+             <p><b>CAPABILITY: DESIGN ENGINEERING</b></p>
+             <p>Developing production-quality interactive prototypes that look, feel, and behave exactly like real software because they are built on modern production codebases. Proven ability to bridge design concepts with concrete technical execution.</p>
+             <p><i>Status: Nominal | Subsystems: Next.js, TypeScript, Tailwind CSS, Vercel</i></p>`
+    },
+    CAP_3: {
+      prog: "88", verb: "01", noun: "88",
+      r1: "00088", r2: "00003", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "cap-3",
+      html: `<p><b>SYSTEM STATUS: SUBSYSTEM DIAGNOSTICS // NOUN 88 CODE 03 LOADED</b></p>
+             <p><b>CAPABILITY: 0 → 1 PRODUCT INCUBATION</b></p>
+             <p>Navigating highly ambiguous, complex briefs from early discovery to polished, shipped applications. Providing executive framing, interactive prototypes, and production roadmaps where none exist.</p>
+             <p><i>Status: Nominal | Subsystems: Product Strategy, High-Fidelity Prototyping</i></p>`
+    },
+    CAP_4: {
+      prog: "88", verb: "01", noun: "88",
+      r1: "00088", r2: "00004", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "cap-4",
+      html: `<p><b>SYSTEM STATUS: SUBSYSTEM DIAGNOSTICS // NOUN 88 CODE 04 LOADED</b></p>
+             <p><b>CAPABILITY: ENTERPRISE UX MODERNIZATION</b></p>
+             <p>Untangling legacy transaction flows, merchant dashboards, checkout pipelines, and complex back-office systems. Replacing technical debt with elegant, streamlined user workflows that scale seamlessly.</p>
+             <p><i>Status: Nominal | Subsystems: Checkout Systems, Cart UX, Account Modernization</i></p>`
+    },
+    CAP_5: {
+      prog: "88", verb: "01", noun: "88",
+      r1: "00088", r2: "00005", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "cap-5",
+      html: `<p><b>SYSTEM STATUS: SUBSYSTEM DIAGNOSTICS // NOUN 88 CODE 05 LOADED</b></p>
+             <p><b>CAPABILITY: INTERNAL AI TOOLING</b></p>
+             <p>Building specialized internal copilots, prompt libraries, synthetic customer persona playgrounds, and workflow automated accelerators tailored for modern product design organizations.</p>
+             <p><i>Status: Nominal | Subsystems: Large Language Model Pipelines, Workflow Orchestration</i></p>`
+    },
+    CAP_6: {
+      prog: "88", verb: "01", noun: "88",
+      r1: "00088", r2: "00006", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "cap-6",
+      html: `<p><b>SYSTEM STATUS: SUBSYSTEM DIAGNOSTICS // NOUN 88 CODE 06 LOADED</b></p>
+             <p><b>CAPABILITY: LEADERSHIP &amp; TEAM ENABLEMENT</b></p>
+             <p>Shaping high-performing prototyping and engineering-adjacent design departments. Driving large-scale organizational adoption of cutting-edge AI technologies through active mentoring, custom tools, and leading by direct shipping.</p>
+             <p><i>Status: Nominal | Subsystems: Prototyping Leadership, AI Adoption Strategy</i></p>`
+    },
+    // Payload manifest codes
+    PAYLOAD_DIARY: {
+      prog: "05", verb: "02", noun: "01",
+      r1: "00001", r2: "02024", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-diary", blipId: "blip-diary",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 01 LOADED</b></p>
+             <p><b>PROJECT: MY AI DIARY (LUNAR TARGET 01)</b></p>
+             <p>Voice-first journaling application that transforms raw conversational speech into beautifully structured written entries while retaining the user's voice. Features Whisper transcription, semantic vector search, weekly AI reflection digests, and zero-knowledge encryption in a local-first PWA.</p>
+             <p><i>Stack: Next.js · OpenAI · Whisper · IndexedDB · Web Crypto | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://diary.ai-created.com/" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Product ↗</a></p>`
+    },
+    PAYLOAD_WATCH: {
+      prog: "05", verb: "02", noun: "02",
+      r1: "00002", r2: "02023", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-watch", blipId: "blip-watch",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 02 LOADED</b></p>
+             <p><b>PROJECT: WATCHGPT (LUNAR TARGET 02)</b></p>
+             <p>Real-time conversational AI assistant that compresses large speech models to execute fluid, vocal feedback loops on watchOS wearable wrist terminals.</p>
+             <p><i>Stack: watchOS · Realtime API | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Product ↗</a></p>`
+    },
+    PAYLOAD_HUMAN: {
+      prog: "05", verb: "02", noun: "03",
+      r1: "00003", r2: "02024", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-human", blipId: "blip-human",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 03 LOADED</b></p>
+             <p><b>PROJECT: HUMAN, ACTUALLY (LUNAR TARGET 03)</b></p>
+             <p>Interactive platform that matches and tailors professional resumes to custom role specs while avoiding automated robot language patterns. Uses origin validation algorithms to stress-test human vs synthetic text indicators.</p>
+             <p><i>Stack: LLM · NLP · UX | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Product ↗</a></p>`
+    },
+    PAYLOAD_USAGE: {
+      prog: "05", verb: "02", noun: "04",
+      r1: "00004", r2: "02025", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-usage", blipId: "blip-usage",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 04 LOADED</b></p>
+             <p><b>PROJECT: AI USAGE (LUNAR TARGET 04)</b></p>
+             <p>Mac desktop menu bar application providing real-time tracking of developer token costs across Claude Code, Codex, and OpenAI APIs.</p>
+             <p><i>Stack: macOS · Swift · Menubar | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Product ↗</a></p>`
+    },
+    PAYLOAD_CALORIE: {
+      prog: "05", verb: "02", noun: "05",
+      r1: "00005", r2: "02024", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-calorie", blipId: "blip-calorie",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 05 LOADED</b></p>
+             <p><b>PROJECT: CALORIE COUNTER (LUNAR TARGET 05)</b></p>
+             <p>An ultra-frictionless nutrition diary. Users speak or photograph meals, and AI handles instant volume, caloric, and nutritional analysis on the fly.</p>
+             <p><i>Stack: Vision · LLM · PWA | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Product ↗</a></p>`
+    },
+    PAYLOAD_VECTOR: {
+      prog: "05", verb: "02", noun: "06",
+      r1: "00006", r2: "02022", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-vector", blipId: "blip-vector",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 06 LOADED</b></p>
+             <p><b>PROJECT: VECTRONIX (LUNAR TARGET 06)</b></p>
+             <p>Hardcore vector-based arcade space combat simulation built to demonstrate depth in physics modeling, responsive particle coordinates, and canvas-based game loop engines.</p>
+             <p><i>Stack: Canvas · Web Audio · Vector | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://ai-created.com/games" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Game ↗</a></p>`
+    },
+    PAYLOAD_DRIFT: {
+      prog: "05", verb: "02", noun: "07",
+      r1: "00007", r2: "02023", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-drift", blipId: "blip-drift",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 07 LOADED</b></p>
+             <p><b>PROJECT: RADIAL DRIFT (LUNAR TARGET 07)</b></p>
+             <p>Minimalist one-touch arcade drift study testing precision coordinate touch points, WebGL render performance, and satisfying micro-haptics feedback loops.</p>
+             <p><i>Stack: WebGL · Touch · Haptics | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://ai-created.com/games" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Game ↗</a></p>`
+    },
+    PAYLOAD_AUDIO: {
+      prog: "05", verb: "02", noun: "08",
+      r1: "00008", r2: "02022", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-audio", blipId: "blip-audio",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 08 LOADED</b></p>
+             <p><b>PROJECT: AUDIO VISUALIZER SUITE (LUNAR TARGET 08)</b></p>
+             <p>Stunning musical canvas visualizing sound waves. Uses Fast Fourier Transform frequency analysis to map fluid, responsive WebGL particle systems in real-time.</p>
+             <p><i>Stack: WebGL · FFT · FFmpeg | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Experiment ↗</a></p>`
+    },
+    PAYLOAD_COLOR: {
+      prog: "05", verb: "02", noun: "09",
+      r1: "00009", r2: "02021", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-color", blipId: "blip-color",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 09 LOADED</b></p>
+             <p><b>PROJECT: COLOR CLOCK (LUNAR TARGET 09)</b></p>
+             <p>Interactive web implementation of a classic 1991 chromatic clockface, transitioning backgrounds across spectrums to map time passage in custom typography.</p>
+             <p><i>Stack: CSS · Type | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Experiment ↗</a></p>`
+    },
+    PAYLOAD_JUMBO: {
+      prog: "05", verb: "02", noun: "10",
+      r1: "00010", r2: "02024", r3: "00100", r1s: "+", r2s: "+", r3s: "+",
+      cardId: "payload-jumbo", blipId: "blip-jumbo",
+      html: `<p><b>SYSTEM STATUS: PAYLOAD INTERCEPT VERIFIED // NOUN 10 LOADED</b></p>
+             <p><b>PROJECT: JUMBRON SIMULATOR (LUNAR TARGET 10)</b></p>
+             <p>A canvas led simulator that models massive sports scoreboard LEDs to render custom user texts and custom color filters dynamically.</p>
+             <p><i>Stack: Canvas · WebGL | Status: Active &amp; Shipped</i></p>
+             <p><a href="https://ai-created.com/products" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Experiment ↗</a></p>`
+    }
+  };
+
+  // Keyboard mapping for auto-press sequences
+  const actionKeystrokes = {
+    PROG_11: ['PROG', '1', '1', 'ENT'],
+    PROG_12: ['PROG', '1', '2', 'ENT'],
+    PROG_13: ['PROG', '1', '3', 'ENT'],
+    PROG_14: ['PROG', '1', '4', 'ENT'],
+    PROG_15: ['PROG', '1', '5', 'ENT'],
+    CAP_1:   ['NOUN', '8', '8', 'ENT'],
+    CAP_2:   ['NOUN', '8', '8', 'ENT'],
+    CAP_3:   ['NOUN', '8', '8', 'ENT'],
+    CAP_4:   ['NOUN', '8', '8', 'ENT'],
+    CAP_5:   ['NOUN', '8', '8', 'ENT'],
+    CAP_6:   ['NOUN', '8', '8', 'ENT'],
+    PAYLOAD_DIARY:  ['NOUN', '0', '1', 'ENT'],
+    PAYLOAD_WATCH:  ['NOUN', '0', '2', 'ENT'],
+    PAYLOAD_HUMAN:  ['NOUN', '0', '3', 'ENT'],
+    PAYLOAD_USAGE:  ['NOUN', '0', '4', 'ENT'],
+    PAYLOAD_CALORIE:['NOUN', '0', '5', 'ENT'],
+    PAYLOAD_VECTOR: ['NOUN', '0', '6', 'ENT'],
+    PAYLOAD_DRIFT:  ['NOUN', '0', '7', 'ENT'],
+    PAYLOAD_AUDIO:  ['NOUN', '0', '8', 'ENT'],
+    PAYLOAD_COLOR:  ['NOUN', '0', '9', 'ENT'],
+    PAYLOAD_JUMBO:  ['NOUN', '1', '0', 'ENT']
+  };
+
+  // Automatic telemetries bridge execution
+  window.autoProgram = function (actionKey) {
+    const data = telemetryData[actionKey];
+    if (!data) return;
+
+    if (!telemetryAuto) {
+      // Direct load
+      loadTelemetryDirect(data, actionKey);
+      return;
+    }
+
+    cancelActiveTyping();
+
+    const keys = actionKeystrokes[actionKey];
+    if (!keys) return;
+
+    typingQueue = keys;
+    isTyping = true;
+
+    // Pulse uplink active warning
+    const uplink = document.getElementById('an-uact');
+    if (uplink) uplink.classList.add('active-green');
+
+    typeNextKey(0, actionKey, data);
+  };
+
+  function cancelActiveTyping() {
+    isTyping = false;
+    typingQueue = [];
+    if (activeKeystrokeTimeout) {
+      clearTimeout(activeKeystrokeTimeout);
+      activeKeystrokeTimeout = null;
+    }
+    document.querySelectorAll('.key.key-pressed').forEach(k => k.classList.remove('key-pressed'));
+    const uplink = document.getElementById('an-uact');
+    if (uplink) uplink.classList.remove('active-green');
+  }
+
+  function typeNextKey(index, actionKey, data) {
+    if (!isTyping || index >= typingQueue.length) {
+      isTyping = false;
+      const uplink = document.getElementById('an-uact');
+      if (uplink) uplink.classList.remove('active-green');
+      
+      runRollingDigits(data, actionKey);
+      return;
+    }
+
+    const keyChar = typingQueue[index];
+    let keyId = `key-${keyChar.toLowerCase()}`;
+    if (keyChar === '+') keyId = 'key-plus';
+    if (keyChar === '-') keyId = 'key-minus';
+
+    const keyEl = document.getElementById(keyId);
+    if (keyEl) keyEl.classList.add('key-pressed');
+
+    playQuindarBeep(keyChar === 'ENT' ? 2200 : 2525, keyChar === 'ENT' ? 0.16 : 0.08);
+
+    activeKeystrokeTimeout = setTimeout(() => {
+      if (keyEl) keyEl.classList.remove('key-pressed');
+
+      activeKeystrokeTimeout = setTimeout(() => {
+        typeNextKey(index + 1, actionKey, data);
+      }, 100);
+    }, 180);
+  }
+
+  function loadTelemetryDirect(data, actionKey) {
+    // Immediate state lock
+    scrProg.textContent = data.prog;
+    scrVerb.textContent = data.verb;
+    scrNoun.textContent = data.noun;
+    
+    scrR1Sign.textContent = data.r1s;
+    scrR1.textContent = data.r1;
+    
+    scrR2Sign.textContent = data.r2s;
+    scrR2.textContent = data.r2;
+    
+    scrR3Sign.textContent = data.r3s;
+    scrR3.textContent = data.r3;
+
+    guidanceOutput.innerHTML = data.html;
+    highlightManualCards(data, actionKey);
+    playQuindarBeep(2200, 0.16);
+  }
+
+  function runRollingDigits(data, actionKey) {
+    let elapsed = 0;
+    const duration = 600;
+    const intervalTime = 60;
+    
+    const uplink = document.getElementById('an-uact');
+    const compActy = document.getElementById('an-comp');
+    
+    if (uplink) uplink.classList.remove('active-green');
+    if (compActy) compActy.classList.add('active-green');
+
+    const rollInterval = setInterval(() => {
+      elapsed += intervalTime;
+      
+      // Roll calculations digits
+      scrR1.textContent = String(Math.floor(Math.random() * 90000) + 10000);
+      scrR2.textContent = String(Math.floor(Math.random() * 90000) + 10000);
+      scrR3.textContent = String(Math.floor(Math.random() * 90000) + 10000);
+      
+      scrR1Sign.textContent = Math.random() > 0.5 ? "+" : "-";
+      scrR2Sign.textContent = Math.random() > 0.5 ? "+" : "-";
+      scrR3Sign.textContent = Math.random() > 0.5 ? "+" : "-";
+
+      if (elapsed >= duration) {
+        clearInterval(rollInterval);
+        
+        // Final locked telemetries
+        scrProg.textContent = data.prog;
+        scrVerb.textContent = data.verb;
+        scrNoun.textContent = data.noun;
+        
+        scrR1Sign.textContent = data.r1s;
+        scrR1.textContent = data.r1;
+        
+        scrR2Sign.textContent = data.r2s;
+        scrR2.textContent = data.r2;
+        
+        scrR3Sign.textContent = data.r3s;
+        scrR3.textContent = data.r3;
+
+        guidanceOutput.innerHTML = data.html;
+        highlightManualCards(data, actionKey);
+
+        if (compActy) compActy.classList.remove('active-green');
+        playQuindarBeep(1800, 0.1);
+      }
+    }, intervalTime);
+  }
+
+  function highlightManualCards(data, actionKey) {
+    // Reset active states
+    document.querySelectorAll('.mission-card').forEach(c => c.classList.remove('active-mission'));
+    document.querySelectorAll('.payload-item').forEach(c => c.classList.remove('active-payload'));
+    document.querySelectorAll('.radar-blip').forEach(c => c.classList.remove('active-blip'));
+    document.querySelectorAll('.cap-dsky-node').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.04)');
+    document.querySelectorAll('.cap-dsky-node').forEach(c => c.style.background = 'rgba(0,0,0,0.15)');
+
+    // Apply specific highlights
+    if (data.cardId) {
+      const card = document.getElementById(data.cardId);
+      if (card) {
+        if (actionKey.startsWith('PROG')) {
+          card.classList.add('active-mission');
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else if (actionKey.startsWith('CAP')) {
+          card.style.borderColor = 'var(--amber-glow)';
+          card.style.background = 'rgba(255,165,0,0.04)';
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else if (actionKey.startsWith('PAYLOAD')) {
+          card.classList.add('active-payload');
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+
+    if (data.blipId) {
+      const blip = document.getElementById(data.blipId);
+      if (blip) blip.classList.add('active-blip');
+    }
+  }
+
+  // Keypad Manual Typing Handler
+  let keypadVerb = "37";
+  let keypadNoun = "88";
+  let keypadProg = "11";
+  let inputMode = null; // 'PROG', 'VERB', 'NOUN'
+
+  window.pressKey = function (k) {
+    playQuindarBeep(k === 'ENT' ? 2200 : 2525, k === 'ENT' ? 0.16 : 0.08);
+
+    const oprErr = document.getElementById('an-opr');
+    const progAuto = document.getElementById('an-prog');
+
+    if (k === 'RST') {
+      currentInput = "";
+      inputMode = null;
+      scrVerb.textContent = "00";
+      scrNoun.textContent = "00";
+      scrProg.textContent = "00";
+      scrR1.textContent = "00000";
+      scrR2.textContent = "00000";
+      scrR3.textContent = "00000";
+      if (oprErr) oprErr.classList.remove('active-red');
+      if (progAuto) progAuto.classList.remove('active-amber');
+      
+      // Remove all highlights
+      document.querySelectorAll('.mission-card').forEach(c => c.classList.remove('active-mission'));
+      document.querySelectorAll('.payload-item').forEach(c => c.classList.remove('active-payload'));
+      document.querySelectorAll('.radar-blip').forEach(c => c.classList.remove('active-blip'));
+      document.querySelectorAll('.cap-dsky-node').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.04)');
+      document.querySelectorAll('.cap-dsky-node').forEach(c => c.style.background = 'rgba(0,0,0,0.15)');
+      return;
+    }
+
+    if (k === 'CLR') {
+      currentInput = "";
+      if (inputMode === 'PROG') scrProg.textContent = "——";
+      if (inputMode === 'VERB') scrVerb.textContent = "——";
+      if (inputMode === 'NOUN') scrNoun.textContent = "——";
+      return;
+    }
+
+    if (k === 'PROG' || k === 'VERB' || k === 'NOUN') {
+      inputMode = k;
+      currentInput = "";
+      if (progAuto) progAuto.classList.add('active-amber');
+      return;
+    }
+
+    // Capture digits
+    if (!isNaN(k)) {
+      if (currentInput.length < 2) {
+        currentInput += k;
+        if (inputMode === 'PROG') scrProg.textContent = currentInput.padStart(2, '0');
+        if (inputMode === 'VERB') scrVerb.textContent = currentInput.padStart(2, '0');
+        if (inputMode === 'NOUN') scrNoun.textContent = currentInput.padStart(2, '0');
+      }
+    }
+
+    // ENTER key logic
+    if (k === 'ENT') {
+      if (progAuto) progAuto.classList.remove('active-amber');
+
+      // VERB 35 ENT (Self Test Easter Egg)
+      if (scrVerb.textContent === "35") {
+        runBezelSelfTest();
+        currentInput = "";
+        inputMode = null;
+        return;
+      }
+
+      // VERB 99 ENT (Overload Easter Egg)
+      if (scrVerb.textContent === "99") {
+        runOverloadAlert();
+        currentInput = "";
+        inputMode = null;
+        return;
+      }
+
+      if (inputMode === 'PROG' && currentInput.length === 2) {
+        const actionKey = `PROG_${currentInput}`;
+        const data = telemetryData[actionKey];
+        if (data) {
+          loadTelemetryDirect(data, actionKey);
+          if (oprErr) oprErr.classList.remove('active-red');
+        } else {
+          if (oprErr) oprErr.classList.add('active-red');
+          playQuindarBeep(440, 0.35); // alarm
+        }
+      } else if (inputMode === 'NOUN' && currentInput.length === 2) {
+        // Project or Noun 88 capability lookups
+        if (currentInput === '88') {
+          // Default to Capability 1
+          loadTelemetryDirect(telemetryData.CAP_1, 'CAP_1');
+          if (oprErr) oprErr.classList.remove('active-red');
+        } else {
+          // Payload index lookup e.g. NOUN 01 to NOUN 10
+          const indexNum = parseInt(currentInput);
+          if (indexNum >= 1 && indexNum <= 10) {
+            const keys = Object.keys(telemetryData).filter(key => key.startsWith('PAYLOAD'));
+            const targetKey = keys[indexNum - 1];
+            loadTelemetryDirect(telemetryData[targetKey], targetKey);
+            if (oprErr) oprErr.classList.remove('active-red');
+          } else {
+            if (oprErr) oprErr.classList.add('active-red');
+            playQuindarBeep(440, 0.35);
+          }
+        }
+      }
+      currentInput = "";
+      inputMode = null;
+    }
+  };
+
+  // Easter Eggs animations
+  function runBezelSelfTest() {
+    let flashCount = 0;
+    const maxFlashes = 6;
+    const alarm = setInterval(() => {
+      // Toggle all Nixie values to 88888
+      const isAlt = flashCount % 2 === 0;
+      scrProg.textContent = isAlt ? "88" : "35";
+      scrVerb.textContent = isAlt ? "88" : "00";
+      scrNoun.textContent = isAlt ? "88" : "00";
+      scrR1.textContent = isAlt ? "88888" : "00000";
+      scrR2.textContent = isAlt ? "88888" : "00000";
+      scrR3.textContent = isAlt ? "88888" : "00000";
+
+      // Toggle all warning panels
+      document.querySelectorAll('.annunc-box').forEach(box => {
+        box.classList.toggle('active-green', isAlt);
+        box.classList.toggle('active-amber', isAlt);
+        box.classList.toggle('active-red', isAlt);
+      });
+
+      playQuindarBeep(isAlt ? 1500 : 2500, 0.05);
+
+      flashCount++;
+      if (flashCount >= maxFlashes) {
+        clearInterval(alarm);
+        // Reset everything
+        scrProg.textContent = "11";
+        scrVerb.textContent = "37";
+        scrNoun.textContent = "88";
+        loadTelemetryDirect(telemetryData.PROG_11, 'PROG_11');
+        document.querySelectorAll('.annunc-box').forEach(box => {
+          box.classList.remove('active-green', 'active-amber', 'active-red');
+        });
+        const comp = document.getElementById('an-comp');
+        if (comp) comp.classList.add('active-green');
+      }
+    }, 200);
+  }
+
+  function runOverloadAlert() {
+    let count = 0;
+    const max = 8;
+    const oprErr = document.getElementById('an-opr');
+    const alarm = setInterval(() => {
+      const isAlt = count % 2 === 0;
+      if (oprErr) oprErr.classList.toggle('active-red', isAlt);
+      
+      scrR1.textContent = isAlt ? "99999" : "OVERL";
+      scrR2.textContent = isAlt ? "99999" : "OADED";
+      scrR3.textContent = isAlt ? "99999" : "ALARM";
+
+      playQuindarBeep(440, 0.15);
+      count++;
+      if (count >= max) {
+        clearInterval(alarm);
+        if (oprErr) oprErr.classList.add('active-red');
+        guidanceOutput.innerHTML = `<p style="color: var(--red-glow);"><b>[CRITICAL SYSTEM OVERLOAD WARNING // ALARM CODE 99]</b></p>
+                                    <p> Guidance registers exceeded calculation bounds. Manual console intervention required. Press [RESET] keypad key immediately to dump core buffers and recover guidance operations.</p>`;
+      }
+    }, 300);
+  }
+
+})();
+</script>
+
+</body>
+</html>
