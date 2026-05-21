@@ -29,10 +29,6 @@
   --rule-strong:  rgba(22, 22, 24, 0.85);
   --gutter:       clamp(16px, 3.5vw, 48px);
   --max:          1200px;
-  
-  /* Loupe Coordinates */
-  --lx: -100px;
-  --ly: -100px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -502,58 +498,6 @@ a { color: inherit; text-decoration: none; }
   gap: 12px;
 }
 
-/* ── DYNAMIC LOUPE GLASS MAGNIFIER ── */
-.magnifier-lens {
-  position: fixed;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 4px solid #B8860B; /* Golden brass frame */
-  box-shadow: 
-    0 10px 30px rgba(0,0,0,0.25), 
-    inset 0 0 10px rgba(0,0,0,0.15),
-    0 2px 4px rgba(0,0,0,0.1);
-  pointer-events: none;
-  z-index: 1000;
-  left: 0; top: 0;
-  transform: translate(-50%, -50%);
-  display: none;
-  background-color: var(--paper);
-  background-image: 
-    radial-gradient(var(--ink) 1px, transparent 0),
-    linear-gradient(rgba(22, 22, 24, 0.02) 1px, transparent 1px);
-  background-size: 8px 8px, 100% 4px;
-}
-.magnifier-lens::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.08) 100%);
-  z-index: 1010;
-}
-/* Glass reflection curve */
-.magnifier-lens::after {
-  content: '';
-  position: absolute;
-  top: 8px; left: 18px;
-  width: 110px; height: 35px;
-  border-radius: 50px / 15px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
-  z-index: 1011;
-  transform: rotate(-12deg);
-}
-
-/* Cloned magnified text container */
-.magnified-content {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  left: 0; top: 0;
-  transform-origin: 0 0;
-  transform: scale(1.3);
-  pointer-events: none;
-}
 </style>
 </head>
 
@@ -620,58 +564,58 @@ a { color: inherit; text-decoration: none; }
     
     <div class="classifieds-matrix">
       <!-- Kohl's -->
-      <article class="classified-block">
+      <a class="classified-block" href="https://kohls.com" target="_blank" rel="noopener">
         <div class="classified-block__hdr"><span>CLASSIFIED 05</span><span>2026 — PRES</span></div>
         <h4 class="classified-block__title">Kohl's Corp.</h4>
         <p class="classified-block__body">
           <b>Senior Product Designer &amp; AI Specialist.</b> Direct design authority across omnichannel Cart, Checkout, Wallet, and In-Store Self-Checkout loops. Bridging design specifications with scalable generative systems education.
         </p>
-      </article>
+      </a>
 
       <!-- Walmart Labs -->
-      <article class="classified-block">
+      <a class="classified-block" href="https://tech.walmart.com" target="_blank" rel="noopener">
         <div class="classified-block__hdr"><span>CLASSIFIED 04</span><span>2018 — 2023</span></div>
         <h4 class="classified-block__title">Walmart Labs</h4>
         <p class="classified-block__body">
           <b>Principal Product Designer.</b> Formulated advanced high-volume transaction checkout frameworks, payment matrices, and operations tools servicing millions of daily retail pipelines.
         </p>
-      </article>
+      </a>
 
       <!-- Yahoo! -->
-      <article class="classified-block">
+      <a class="classified-block" href="https://yahoo.com" target="_blank" rel="noopener">
         <div class="classified-block__hdr"><span>CLASSIFIED 03</span><span>2017 — 2018</span></div>
         <h4 class="classified-block__title">Yahoo!</h4>
         <p class="classified-block__body">
           <b>Director of UX Prototyping.</b> Managed a dedicated prototyping engineering squad stress-testing core portal and search frameworks to validate layouts before live launch.
         </p>
-      </article>
+      </a>
 
       <!-- Google -->
-      <article class="classified-block">
+      <a class="classified-block" href="https://google.com" target="_blank" rel="noopener">
         <div class="classified-block__hdr"><span>CLASSIFIED 02</span><span>2013 — 2017</span></div>
         <h4 class="classified-block__title">Google Inc.</h4>
         <p class="classified-block__body">
           <b>Senior UX Engineer &amp; Prototyper.</b> Constructed interactive systems for early Google Assistant speech models, Google Cloud AI tools, and foundational Material Design systems.
         </p>
-      </article>
+      </a>
 
       <!-- Endemol -->
-      <article class="classified-block">
+      <a class="classified-block" href="https://endemolshine.us/" target="_blank" rel="noopener">
         <div class="classified-block__hdr"><span>CLASSIFIED 01</span><span>2008 — 2013</span></div>
         <h4 class="classified-block__title">Endemol</h4>
         <p class="classified-block__body">
           <b>UX &amp; Engineering Lead.</b> Developed synchronous multi-screen companion apps and broadcast visual systems handling real-time interactive traffic loads of hundreds of millions of users.
         </p>
-      </article>
+      </a>
       
       <!-- The Lab -->
-      <article class="classified-block" style="border: 2px solid var(--ink); background: var(--paper-dark);">
+      <a class="classified-block" href="https://ai-created.com" target="_blank" rel="noopener" style="border: 2px solid var(--ink); background: var(--paper-dark);">
         <div class="classified-block__hdr" style="color: var(--ink);"><span style="font-weight: bold;">SPECIAL NOTICE</span><span>ACTIVE LAB</span></div>
         <h4 class="classified-block__title" style="font-style: italic;">ai-created.com</h4>
         <p class="classified-block__body">
           <b>Independent Laboratory.</b> Exploring interactive audio visualizers, custom conversational memory logs, smartwatch hardware integrations, and human verification algorithms.
         </p>
-      </article>
+      </a>
     </div>
 
   </section>
@@ -698,7 +642,7 @@ a { color: inherit; text-decoration: none; }
         <p class="vintage-ad__desc">
           Exploring deep reflective human journaling synced with custom conversational memory vectors.
         </p>
-        <a href="https://ai-created.com" target="_blank" rel="noopener" class="vintage-ad__btn">VISIT THE LAB ↗</a>
+        <a href="https://diary.ai-created.com/" target="_blank" rel="noopener" class="vintage-ad__btn">VISIT MY AI DIARY ↗</a>
       </div>
     </div>
 
@@ -729,36 +673,36 @@ a { color: inherit; text-decoration: none; }
     </div>
     <div class="newspaper-fold__body">
       <div class="classifieds-matrix" style="border: none; padding: 0;">
-        <div class="classified-block">
+        <a class="classified-block" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
           <div class="classified-block__hdr"><span>STUDY 01</span><span>CONVERSION</span></div>
           <h4 class="classified-block__title">My AI Diary</h4>
           <p class="classified-block__body">Conversational memory structures merged with deeply reflective personal diary systems.</p>
-        </div>
-        <div class="classified-block">
+        </a>
+        <a class="classified-block" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
           <div class="classified-block__hdr"><span>STUDY 02</span><span>MINIATURE</span></div>
           <h4 class="classified-block__title">WatchGPT</h4>
           <p class="classified-block__body">Compressing high-fidelity conversational loops inside wearable smartwatch hardware systems.</p>
-        </div>
-        <div class="classified-block">
+        </a>
+        <a class="classified-block" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
           <div class="classified-block__hdr"><span>STUDY 03</span><span>ORIGIN VALIDATION</span></div>
           <h4 class="classified-block__title">Human Actually</h4>
           <p class="classified-block__body">Creative layout verification stress-testing human behavior vectors inside synthetic zones.</p>
-        </div>
-        <div class="classified-block">
+        </a>
+        <a class="classified-block" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
           <div class="classified-block__hdr"><span>STUDY 04</span><span>FREQUENCY DYNAMICS</span></div>
           <h4 class="classified-block__title">Audio Visualizer</h4>
           <p class="classified-block__body">Transforming physical sound waves directly into fluid canvas particle visualizers.</p>
-        </div>
-        <div class="classified-block">
+        </a>
+        <a class="classified-block" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
           <div class="classified-block__hdr"><span>STUDY 05</span><span>PHYSICS VECTOR</span></div>
           <h4 class="classified-block__title">Vectronix</h4>
           <p class="classified-block__body">Retro vector physics simulation charting kinetic velocity coordinate mechanics.</p>
-        </div>
-        <div class="classified-block">
+        </a>
+        <a class="classified-block" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
           <div class="classified-block__hdr"><span>STUDY 06</span><span>HEX SPECTRUM</span></div>
           <h4 class="classified-block__title">Color Clock</h4>
           <p class="classified-block__body">Mapping the passage of time directly onto the visible 24-bit hexadecimal color spectrum.</p>
-        </div>
+        </a>
       </div>
     </div>
   </div>
@@ -803,12 +747,6 @@ a { color: inherit; text-decoration: none; }
   <div>VOL CXXVII No. 58,197</div>
 </footer>
 
-<!-- Magnifying Loupe Overlay Lens -->
-<div class="magnifier-lens" id="loupe-lens">
-  <!-- Double-rendered scaled text block will reside here -->
-  <div class="magnified-content" id="loupe-content"></div>
-</div>
-
 <script>
 (function () {
   'use strict';
@@ -826,60 +764,6 @@ a { color: inherit; text-decoration: none; }
     const subject = document.getElementById('c-msg').value;
     window.location.href = `mailto:marcovhv@gmail.com?subject=Broadsheet%20Dispatch%20from%20${encodeURIComponent(name)}&body=${encodeURIComponent(subject)}`;
   };
-
-  // ── DYNAMIC LOUPE GLASS MAGNIFIER PHYSICS ──
-  const lens = document.getElementById('loupe-lens');
-  const loupeContent = document.getElementById('loupe-content');
-  const body = document.body;
-
-  // Clone main content into loupe for accurate scale projection
-  const original = document.getElementById('main-content');
-  const clone = original.cloneNode(true);
-  // Remove interactive IDs to avoid duplication conflicts
-  clone.id = 'magnified-clone';
-  clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
-  loupeContent.appendChild(clone);
-
-  // Position and map loupe positioning
-  window.addEventListener('mousemove', e => {
-    // Only show loupe on larger viewports to prevent mobile clutter
-    if (window.innerWidth < 1024) {
-      lens.style.display = 'none';
-      return;
-    }
-
-    lens.style.display = 'block';
-
-    const x = e.clientX;
-    const y = e.clientY;
-    
-    // Update lens physical center coordinates
-    lens.style.left = `${x}px`;
-    lens.style.top = `${y}px`;
-
-    // Map offset coordinates to slide underlying clone perfectly
-    // The clone is scaled by 1.3, so we shift it to center the zoom point
-    const rect = original.getBoundingClientRect();
-    const offsetLeft = x - rect.left;
-    const offsetTop = y - rect.top;
-
-    // Reposition the cloned content inside the magnifier circle
-    // The math offsets the scale factor (1.3x) to keep the text aligned under the lens
-    const scale = 1.3;
-    const cloneX = -offsetLeft * scale + 75; // 75 is half lens width
-    const cloneY = -offsetTop * scale + 75;
-
-    // Shift relative to main-content offset within body
-    loupeContent.style.left = `${rect.left * scale}px`;
-    loupeContent.style.top = `${rect.top * scale}px`;
-    
-    // Translate the clone relative to the magnifier viewport
-    clone.style.transform = `translate(${cloneX / scale}px, ${cloneY / scale}px)`;
-  });
-
-  window.addEventListener('mouseleave', () => {
-    lens.style.display = 'none';
-  });
 
 })();
 </script>

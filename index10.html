@@ -452,8 +452,11 @@ a { color: inherit; text-decoration: none; }
   padding-bottom: 12px;
 }
 .step-button {
+  appearance: none;
   flex: 0 0 72px;
   height: 64px;
+  font: inherit;
+  color: inherit;
   background: #1e2124;
   border: 2px solid #101112;
   box-shadow: 0 3px 6px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1);
@@ -562,6 +565,14 @@ a { color: inherit; text-decoration: none; }
   left: 0; top: 0;
   color: var(--amber-glow);
   font-weight: bold;
+}
+.lcd-text a {
+  color: var(--amber-glow);
+  border-bottom: 1px solid var(--amber-dim);
+}
+.lcd-text a:hover {
+  color: var(--white);
+  border-color: var(--white);
 }
 
 /* ── MODULE 04: AUX MATRIX (SHIPPED LAB & LINKS) ── */
@@ -875,30 +886,30 @@ a { color: inherit; text-decoration: none; }
             <!-- Step triggers (horizontal grid) -->
             <div class="sequencer-grid">
               <!-- Kohl's -->
-              <div class="step-button active" id="step-kohls" onclick="triggerStep('kohls')">
+              <button type="button" class="step-button active" id="step-kohls" onclick="triggerStep('kohls')">
                 <div class="step-led"></div>
                 <span class="step-lbl">KOHL'S</span>
-              </div>
+              </button>
               <!-- Walmart -->
-              <div class="step-button" id="step-walmart" onclick="triggerStep('walmart')">
+              <button type="button" class="step-button" id="step-walmart" onclick="triggerStep('walmart')">
                 <div class="step-led"></div>
                 <span class="step-lbl">WALMART</span>
-              </div>
+              </button>
               <!-- Yahoo -->
-              <div class="step-button" id="step-yahoo" onclick="triggerStep('yahoo')">
+              <button type="button" class="step-button" id="step-yahoo" onclick="triggerStep('yahoo')">
                 <div class="step-led"></div>
                 <span class="step-lbl">YAHOO!</span>
-              </div>
+              </button>
               <!-- Google -->
-              <div class="step-button" id="step-google" onclick="triggerStep('google')">
+              <button type="button" class="step-button" id="step-google" onclick="triggerStep('google')">
                 <div class="step-led"></div>
                 <span class="step-lbl">GOOGLE</span>
-              </div>
+              </button>
               <!-- Endemol -->
-              <div class="step-button" id="step-endemol" onclick="triggerStep('endemol')">
+              <button type="button" class="step-button" id="step-endemol" onclick="triggerStep('endemol')">
                 <div class="step-led"></div>
                 <span class="step-lbl">ENDEMOL</span>
-              </div>
+              </button>
             </div>
 
             <!-- Sequencer Amber Screen -->
@@ -915,6 +926,7 @@ a { color: inherit; text-decoration: none; }
                   <li>Direct checkout experience optimization affecting millions of user carts.</li>
                   <li>Enterprise AI integration and advanced design tool engineering.</li>
                 </ul>
+                <p><a href="https://kohls.com" target="_blank" rel="noopener">Open Kohl's record ↗</a></p>
               </div>
             </div>
           </div>
@@ -935,7 +947,7 @@ a { color: inherit; text-decoration: none; }
               <h4 class="aux-title">My AI Diary</h4>
               <p class="aux-desc">Conversational memory structures combined with deeply reflective personal journal frameworks.</p>
               <span class="aux-tag">AI MEMORY</span>
-              <a href="https://ai-created.com" target="_blank" rel="noopener" class="aux-link"></a>
+              <a href="https://diary.ai-created.com/" target="_blank" rel="noopener" class="aux-link" aria-label="Open My AI Diary"></a>
             </div>
 
             <!-- Proj 2 -->
@@ -947,7 +959,7 @@ a { color: inherit; text-decoration: none; }
               <h4 class="aux-title">WatchGPT</h4>
               <p class="aux-desc">Miniaturizing conversational model architectures for wearable smartwatch interfaces.</p>
               <span class="aux-tag">WEARABLE APIS</span>
-              <a href="https://ai-created.com" target="_blank" rel="noopener" class="aux-link"></a>
+              <a href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener" class="aux-link" aria-label="Open WatchGPT"></a>
             </div>
 
             <!-- Proj 3 -->
@@ -959,7 +971,7 @@ a { color: inherit; text-decoration: none; }
               <h4 class="aux-title">Human Actually</h4>
               <p class="aux-desc">Organic human verification layout systems stressing design validation in synthetic fields.</p>
               <span class="aux-tag">ORIGIN CHECK</span>
-              <a href="https://ai-created.com" target="_blank" rel="noopener" class="aux-link"></a>
+              <a href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener" class="aux-link" aria-label="Open Human Actually"></a>
             </div>
 
             <!-- Proj 4 -->
@@ -971,7 +983,7 @@ a { color: inherit; text-decoration: none; }
               <h4 class="aux-title">Audio Visualizer</h4>
               <p class="aux-desc">Mapping sound frequencies directly onto real-time fluid dynamics using the Web Audio API.</p>
               <span class="aux-tag">WEB AUDIO</span>
-              <a href="https://ai-created.com" target="_blank" rel="noopener" class="aux-link"></a>
+              <a href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener" class="aux-link" aria-label="Open Audio Visualizer"></a>
             </div>
 
           </div>
@@ -1095,31 +1107,31 @@ a { color: inherit; text-decoration: none; }
       title: "KOHL'S",
       dates: "2026 — PRESENT",
       track: "PATTERN TRACK 05",
-      text: "<p><b>Senior Product Designer &amp; Generative-AI Specialist (2026 — PRESENT)</b></p><p>Architecting transactional frameworks across omnichannel Cart, Wallet, Checkout, and In-Store Self-Checkout, while establishing scalable Generative AI education and design tools.</p><ul><li>Direct checkout experience optimization affecting millions of user carts.</li><li>Enterprise AI integration and advanced design tool engineering.</li></ul>"
+      text: "<p><b>Senior Product Designer &amp; Generative-AI Specialist (2026 — PRESENT)</b></p><p>Architecting transactional frameworks across omnichannel Cart, Wallet, Checkout, and In-Store Self-Checkout, while establishing scalable Generative AI education and design tools.</p><ul><li>Direct checkout experience optimization affecting millions of user carts.</li><li>Enterprise AI integration and advanced design tool engineering.</li></ul><p><a href=\"https://kohls.com\" target=\"_blank\" rel=\"noopener\">Open Kohl's record ↗</a></p>"
     },
     walmart: {
       title: "WALMART LABS",
       dates: "2018 — 2023",
       track: "PATTERN TRACK 04",
-      text: "<p><b>Principal Product Designer (2018 — 2023)</b></p><p>Led UX layouts for enterprise commerce scale frameworks and high-volume merchant dashboard platforms.</p><ul><li>Designed workflows supporting transaction systems at national capacity.</li><li>Established cohesive retail software patterns across global operations.</li></ul>"
+      text: "<p><b>Principal Product Designer (2018 — 2023)</b></p><p>Led UX layouts for enterprise commerce scale frameworks and high-volume merchant dashboard platforms.</p><ul><li>Designed workflows supporting transaction systems at national capacity.</li><li>Established cohesive retail software patterns across global operations.</li></ul><p><a href=\"https://tech.walmart.com\" target=\"_blank\" rel=\"noopener\">Open Walmart Labs record ↗</a></p>"
     },
     yahoo: {
       title: "YAHOO!",
       dates: "2017 — 2018",
       track: "PATTERN TRACK 03",
-      text: "<p><b>Director of UX Prototyping (2017 — 2018)</b></p><p>Managed dedicated interactive design engineers building rapid validator modules for the primary media portal.</p><ul><li>Delivered robust code prototypes that stress-tested high-volume search updates.</li><li>Accelerated executive validation pipelines.</li></ul>"
+      text: "<p><b>Director of UX Prototyping (2017 — 2018)</b></p><p>Managed dedicated interactive design engineers building rapid validator modules for the primary media portal.</p><ul><li>Delivered robust code prototypes that stress-tested high-volume search updates.</li><li>Accelerated executive validation pipelines.</li></ul><p><a href=\"https://yahoo.com\" target=\"_blank\" rel=\"noopener\">Open Yahoo record ↗</a></p>"
     },
     google: {
       title: "GOOGLE",
       dates: "2013 — 2017",
       track: "PATTERN TRACK 02",
-      text: "<p><b>Senior UX Engineer / Prototyper (2013 — 2017)</b></p><p>Constructed functional prototype systems for Google Cloud AI, Google Assistant, and core Android experiences.</p><ul><li>Explored proactive conversational UI matrices and speech mechanics.</li><li>Bridged structural user experience values directly with low-level platform execution.</li></ul>"
+      text: "<p><b>Senior UX Engineer / Prototyper (2013 — 2017)</b></p><p>Constructed functional prototype systems for Google Cloud AI, Google Assistant, and core Android experiences.</p><ul><li>Explored proactive conversational UI matrices and speech mechanics.</li><li>Bridged structural user experience values directly with low-level platform execution.</li></ul><p><a href=\"https://google.com\" target=\"_blank\" rel=\"noopener\">Open Google record ↗</a></p>"
     },
     endemol: {
       title: "ENDEMOL",
       dates: "2008 — 2013",
       track: "PATTERN TRACK 01",
-      text: "<p><b>UX &amp; Engineering Lead (2008 — 2013)</b></p><p>Engineered broadcast-integrated second-screen client applications supporting global audience interaction peaks.</p><ul><li>Developed real-time audience synchronization layers.</li><li>Bridged full-stack layouts with high-capacity databases.</li></ul>"
+      text: "<p><b>UX &amp; Engineering Lead (2008 — 2013)</b></p><p>Engineered broadcast-integrated second-screen client applications supporting global audience interaction peaks.</p><ul><li>Developed real-time audience synchronization layers.</li><li>Bridged full-stack layouts with high-capacity databases.</li></ul><p><a href=\"https://endemolshine.us/\" target=\"_blank\" rel=\"noopener\">Open Endemol record ↗</a></p>"
     }
   };
 

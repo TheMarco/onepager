@@ -438,6 +438,7 @@ a { color: inherit; text-decoration: none; }
 }
 .radar-blip {
   position: absolute;
+  display: block;
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -618,6 +619,7 @@ a { color: inherit; text-decoration: none; }
 
 /* Section II: Chronology stops */
 .mission-card {
+  display: block;
   border: 1px solid rgba(255,255,255,0.05);
   background: rgba(255,255,255,0.01);
   padding: 18px;
@@ -738,6 +740,7 @@ a { color: inherit; text-decoration: none; }
 
 /* Section IV: Payload details */
 .payload-item {
+  display: block;
   border-bottom: 1px dashed rgba(255,255,255,0.06);
   padding: 14px 0;
   cursor: pointer;
@@ -1175,7 +1178,7 @@ a { color: inherit; text-decoration: none; }
           </p>
 
           <!-- PROG 11: Kohl's -->
-          <div class="mission-card active-mission" id="mission-11" onclick="autoProgram('PROG_11')">
+          <a class="mission-card active-mission" id="mission-11" href="https://kohls.com" target="_blank" rel="noopener" onclick="autoProgram('PROG_11')">
             <div class="mission-card-header">
               <span class="mission-company">KOHL'S CORP</span>
               <span class="mission-code-badge">PROG 11</span>
@@ -1187,10 +1190,10 @@ a { color: inherit; text-decoration: none; }
             <div class="mission-tags">
               <span class="mission-tag">e-comm</span><span class="mission-tag">generative-ai</span><span class="mission-tag">checkout</span>
             </div>
-          </div>
+          </a>
 
           <!-- PROG 12: Walmart Labs -->
-          <div class="mission-card" id="mission-12" onclick="autoProgram('PROG_12')">
+          <a class="mission-card" id="mission-12" href="https://tech.walmart.com" target="_blank" rel="noopener" onclick="autoProgram('PROG_12')">
             <div class="mission-card-header">
               <span class="mission-company">WALMART LABS</span>
               <span class="mission-code-badge">PROG 12</span>
@@ -1202,10 +1205,10 @@ a { color: inherit; text-decoration: none; }
             <div class="mission-tags">
               <span class="mission-tag">retail-tech</span><span class="mission-tag">ML-ux</span><span class="mission-tag">voice-commerce</span>
             </div>
-          </div>
+          </a>
 
           <!-- PROG 13: Yahoo! -->
-          <div class="mission-card" id="mission-13" onclick="autoProgram('PROG_13')">
+          <a class="mission-card" id="mission-13" href="https://yahoo.com" target="_blank" rel="noopener" onclick="autoProgram('PROG_13')">
             <div class="mission-card-header">
               <span class="mission-company">YAHOO! PORTALS</span>
               <span class="mission-code-badge">PROG 13</span>
@@ -1217,10 +1220,10 @@ a { color: inherit; text-decoration: none; }
             <div class="mission-tags">
               <span class="mission-tag">leadership</span><span class="mission-tag">prototyping</span><span class="mission-tag">scale</span>
             </div>
-          </div>
+          </a>
 
           <!-- PROG 14: Google -->
-          <div class="mission-card" id="mission-14" onclick="autoProgram('PROG_14')">
+          <a class="mission-card" id="mission-14" href="https://google.com" target="_blank" rel="noopener" onclick="autoProgram('PROG_14')">
             <div class="mission-card-header">
               <span class="mission-company">GOOGLE INC.</span>
               <span class="mission-code-badge">PROG 14</span>
@@ -1232,10 +1235,10 @@ a { color: inherit; text-decoration: none; }
             <div class="mission-tags">
               <span class="mission-tag">cloud-ai</span><span class="mission-tag">assistant-ux</span><span class="mission-tag">android</span>
             </div>
-          </div>
+          </a>
 
           <!-- PROG 15: Endemol -->
-          <div class="mission-card" id="mission-15" onclick="autoProgram('PROG_15')">
+          <a class="mission-card" id="mission-15" href="https://endemolshine.us/" target="_blank" rel="noopener" onclick="autoProgram('PROG_15')">
             <div class="mission-card-header">
               <span class="mission-company">ENDEMOL BROADCAST</span>
               <span class="mission-code-badge">PROG 15</span>
@@ -1247,7 +1250,7 @@ a { color: inherit; text-decoration: none; }
             <div class="mission-tags">
               <span class="mission-tag">live-media</span><span class="mission-tag">full-stack</span><span class="mission-tag">performance</span>
             </div>
-          </div>
+          </a>
 
         </div>
 
@@ -1340,95 +1343,95 @@ a { color: inherit; text-decoration: none; }
               
               <div style="max-height: 280px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.06); padding: 0 12px; background: rgba(0,0,0,0.15);">
                 <!-- Project 1 -->
-                <div class="payload-item" id="payload-diary" onclick="autoProgram('PAYLOAD_DIARY')">
+                <a class="payload-item" id="payload-diary" href="https://diary.ai-created.com/" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_DIARY')">
                   <div class="payload-meta">
                     <span class="payload-title">01. My AI Diary</span>
                     <span class="payload-status">● Live AI</span>
                   </div>
                   <p class="payload-desc">Voice-first journaling turning raw speech into written entries that retain your authentic voice. Whispers, encryption, semantic search.</p>
                   <span class="payload-tech">Next.js · OpenAI · Whisper · IndexedDB</span>
-                </div>
+                </a>
                 <!-- Project 2 -->
-                <div class="payload-item" id="payload-watch" onclick="autoProgram('PAYLOAD_WATCH')">
+                <a class="payload-item" id="payload-watch" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_WATCH')">
                   <div class="payload-meta">
                     <span class="payload-title">02. WatchGPT</span>
                     <span class="payload-status">● Live AI</span>
                   </div>
                   <p class="payload-desc">Realtime ChatGPT vocal interaction directly on your Apple Watch device face.</p>
                   <span class="payload-tech">watchOS · Realtime API</span>
-                </div>
+                </a>
                 <!-- Project 3 -->
-                <div class="payload-item" id="payload-human" onclick="autoProgram('PAYLOAD_HUMAN')">
+                <a class="payload-item" id="payload-human" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_HUMAN')">
                   <div class="payload-meta">
                     <span class="payload-title">03. Human, Actually</span>
                     <span class="payload-status">● Live AI</span>
                   </div>
                   <p class="payload-desc">Dynamic resume tailoring engine designed to match professional profiles cleanly to custom descriptions without synthetic voice cues.</p>
                   <span class="payload-tech">LLM · NLP · UX</span>
-                </div>
+                </a>
                 <!-- Project 4 -->
-                <div class="payload-item" id="payload-usage" onclick="autoProgram('PAYLOAD_USAGE')">
+                <a class="payload-item" id="payload-usage" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_USAGE')">
                   <div class="payload-meta">
                     <span class="payload-title">04. AI Usage</span>
                     <span class="payload-status">● Live AI</span>
                   </div>
                   <p class="payload-desc">Mac desktop menu utility helping developers monitor and optimize budget limits across Claude Code and Codex APIs.</p>
                   <span class="payload-tech">macOS · Swift · Menubar</span>
-                </div>
+                </a>
                 <!-- Project 5 -->
-                <div class="payload-item" id="payload-calorie" onclick="autoProgram('PAYLOAD_CALORIE')">
+                <a class="payload-item" id="payload-calorie" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_CALORIE')">
                   <div class="payload-meta">
                     <span class="payload-title">05. Calorie Counter</span>
                     <span class="payload-status">● Live AI</span>
                   </div>
                   <p class="payload-desc">Frictionless diet logging system utilizing photography and speech for fast tracking.</p>
                   <span class="payload-tech">Vision · LLM · PWA</span>
-                </div>
+                </a>
                 <!-- Project 6 -->
-                <div class="payload-item" id="payload-vector" onclick="autoProgram('PAYLOAD_VECTOR')">
+                <a class="payload-item" id="payload-vector" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_VECTOR')">
                   <div class="payload-meta">
                     <span class="payload-title">06. Vectronix</span>
                     <span class="payload-status" style="color: var(--amber-glow); background: rgba(255,165,0,0.1);">● Live Game</span>
                   </div>
                   <p class="payload-desc">Hardcore retro vector arcade space combat testing physics models and Web Audio synthesis.</p>
                   <span class="payload-tech">Canvas · Web Audio · Vector</span>
-                </div>
+                </a>
                 <!-- Project 7 -->
-                <div class="payload-item" id="payload-drift" onclick="autoProgram('PAYLOAD_DRIFT')">
+                <a class="payload-item" id="payload-drift" href="https://ai-created.com/games" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_DRIFT')">
                   <div class="payload-meta">
                     <span class="payload-title">07. Radial Drift</span>
                     <span class="payload-status" style="color: var(--amber-glow); background: rgba(255,165,0,0.1);">● Live Game</span>
                   </div>
                   <p class="payload-desc">One-finger minimalist tension game testing haptic feedback loops and hyper-fine touch coordinates.</p>
                   <span class="payload-tech">WebGL · Touch · Haptics</span>
-                </div>
+                </a>
                 <!-- Project 8 -->
-                <div class="payload-item" id="payload-audio" onclick="autoProgram('PAYLOAD_AUDIO')">
+                <a class="payload-item" id="payload-audio" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_AUDIO')">
                   <div class="payload-meta">
                     <span class="payload-title">08. Audio Visualizer Suite</span>
                     <span class="payload-status" style="color: #3498db; background: rgba(52,152,219,0.1);">● Experiment</span>
                   </div>
                   <p class="payload-desc">WebGL music video visualizer mapping sound frequencies to high-definition rendering pipelines.</p>
                   <span class="payload-tech">WebGL · FFT · FFmpeg</span>
-                </div>
+                </a>
                 <!-- Project 9 -->
-                <div class="payload-item" id="payload-color" onclick="autoProgram('PAYLOAD_COLOR')">
+                <a class="payload-item" id="payload-color" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_COLOR')">
                   <div class="payload-meta">
                     <span class="payload-title">09. Color Clock</span>
                     <span class="payload-status" style="color: #3498db; background: rgba(52,152,219,0.1);">● Experiment</span>
                   </div>
                   <p class="payload-desc">A digital recreation of a classic 1991 color-spectrum clock face using CSS typography.</p>
                   <span class="payload-tech">CSS · Type</span>
-                </div>
+                </a>
                 <!-- Project 10 -->
-                <div class="payload-item" id="payload-jumbo" onclick="autoProgram('PAYLOAD_JUMBO')">
+                <a class="payload-item" id="payload-jumbo" href="https://ai-created.com/products" target="_blank" rel="noopener" onclick="autoProgram('PAYLOAD_JUMBO')">
                   <div class="payload-meta">
                     <span class="payload-title">10. Jumbotron Simulator</span>
                     <span class="payload-status" style="color: #3498db; background: rgba(52,152,219,0.1);">● Experiment</span>
                   </div>
                   <p class="payload-desc">Pixel-faithful stadium led scoreboard canvas simulator for custom text overlays.</p>
                   <span class="payload-tech">Canvas · WebGL</span>
-                </div>
+                </a>
               </div>
             </div>
             
@@ -1447,16 +1450,16 @@ a { color: inherit; text-decoration: none; }
                 </svg>
                 <div class="radar-beam"></div>
                 <!-- 10 Radar blips representing all 10 lab projects -->
-                <div class="radar-blip" id="blip-diary" style="top: 25%; left: 35%;" onclick="autoProgram('PAYLOAD_DIARY')" title="01. My AI Diary"></div>
-                <div class="radar-blip" id="blip-watch" style="top: 38%; left: 68%;" onclick="autoProgram('PAYLOAD_WATCH')" title="02. WatchGPT"></div>
-                <div class="radar-blip" id="blip-human" style="top: 65%; left: 28%;" onclick="autoProgram('PAYLOAD_HUMAN')" title="03. Human, Actually"></div>
-                <div class="radar-blip" id="blip-usage" style="top: 48%; left: 18%;" onclick="autoProgram('PAYLOAD_USAGE')" title="04. AI Usage"></div>
-                <div class="radar-blip" id="blip-calorie" style="top: 15%; left: 55%;" onclick="autoProgram('PAYLOAD_CALORIE')" title="05. Calorie Counter"></div>
-                <div class="radar-blip" id="blip-vector" style="top: 78%; left: 52%;" onclick="autoProgram('PAYLOAD_VECTOR')" title="06. Vectronix"></div>
-                <div class="radar-blip" id="blip-drift" style="top: 52%; left: 45%;" onclick="autoProgram('PAYLOAD_DRIFT')" title="07. Radial Drift"></div>
-                <div class="radar-blip" id="blip-audio" style="top: 55%; left: 75%;" onclick="autoProgram('PAYLOAD_AUDIO')" title="08. Audio Visualizer Suite"></div>
-                <div class="radar-blip" id="blip-color" style="top: 85%; left: 82%;" onclick="autoProgram('PAYLOAD_COLOR')" title="09. Color Clock"></div>
-                <div class="radar-blip" id="blip-jumbo" style="top: 30%; left: 80%;" onclick="autoProgram('PAYLOAD_JUMBO')" title="10. Jumbotron Simulator"></div>
+                <a class="radar-blip" id="blip-diary" href="https://diary.ai-created.com/" target="_blank" rel="noopener" style="top: 25%; left: 35%;" onclick="autoProgram('PAYLOAD_DIARY')" title="01. My AI Diary"></a>
+                <a class="radar-blip" id="blip-watch" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener" style="top: 38%; left: 68%;" onclick="autoProgram('PAYLOAD_WATCH')" title="02. WatchGPT"></a>
+                <a class="radar-blip" id="blip-human" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener" style="top: 65%; left: 28%;" onclick="autoProgram('PAYLOAD_HUMAN')" title="03. Human, Actually"></a>
+                <a class="radar-blip" id="blip-usage" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener" style="top: 48%; left: 18%;" onclick="autoProgram('PAYLOAD_USAGE')" title="04. AI Usage"></a>
+                <a class="radar-blip" id="blip-calorie" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener" style="top: 15%; left: 55%;" onclick="autoProgram('PAYLOAD_CALORIE')" title="05. Calorie Counter"></a>
+                <a class="radar-blip" id="blip-vector" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener" style="top: 78%; left: 52%;" onclick="autoProgram('PAYLOAD_VECTOR')" title="06. Vectronix"></a>
+                <a class="radar-blip" id="blip-drift" href="https://ai-created.com/games" target="_blank" rel="noopener" style="top: 52%; left: 45%;" onclick="autoProgram('PAYLOAD_DRIFT')" title="07. Radial Drift"></a>
+                <a class="radar-blip" id="blip-audio" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener" style="top: 55%; left: 75%;" onclick="autoProgram('PAYLOAD_AUDIO')" title="08. Audio Visualizer Suite"></a>
+                <a class="radar-blip" id="blip-color" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener" style="top: 85%; left: 82%;" onclick="autoProgram('PAYLOAD_COLOR')" title="09. Color Clock"></a>
+                <a class="radar-blip" id="blip-jumbo" href="https://ai-created.com/products" target="_blank" rel="noopener" style="top: 30%; left: 80%;" onclick="autoProgram('PAYLOAD_JUMBO')" title="10. Jumbotron Simulator"></a>
               </div>
             </div>
             
@@ -1885,7 +1888,7 @@ a { color: inherit; text-decoration: none; }
              <p><b>PROJECT: VECTRONIX (LUNAR TARGET 06)</b></p>
              <p>Hardcore vector-based arcade space combat simulation built to demonstrate depth in physics modeling, responsive particle coordinates, and canvas-based game loop engines.</p>
              <p><i>Stack: Canvas · Web Audio · Vector | Status: Active &amp; Shipped</i></p>
-             <p><a href="https://ai-created.com/games" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Game ↗</a></p>`
+             <p><a href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener" style="color: var(--amber-glow); text-decoration: underline;">Launch Working Game ↗</a></p>`
     },
     PAYLOAD_DRIFT: {
       prog: "05", verb: "02", noun: "07",
