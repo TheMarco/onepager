@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Symphony № 24 — M. van Hylckama Vlieg, conductor's score</title>
+<meta name="description" content="A career engraved as an orchestral score: six movements, dynamic markings, a repertoire of shipped works, and the conductor's red pencil throughout." />
+<meta name="theme-color" content="#F8F4E9" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════
+   SYMPHONY № 24 — conductor's score
+   A career engraved like sheet music: movements, dynamics,
+   rehearsal marks, and the conductor's red pencil everywhere.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  --paper:   #F8F4E9;   /* engraving cream */
+  --paper-2: #F1ECDD;
+  --ink:     #221F1A;   /* printer's ink */
+  --ink-2:   #4A463E;
+  --ink-3:   #7D7869;
+  --ink-4:   #ABA694;
+  --pencil:  #C03A2B;   /* the conductor's red pencil */
+  --staff:   rgba(34, 31, 26, 0.28);
+  --hair:    rgba(34, 31, 26, 0.16);
+  --hair-2:  rgba(34, 31, 26, 0.08);
+  --gut:     clamp(22px, 5vw, 88px);
+  --max:     1180px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* paper grain */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+  mix-blend-mode: multiply;
+}
+
+::selection { background: var(--pencil); color: var(--paper); }
+a { color: inherit; text-decoration: none; }
+
+.disp { font-family: 'Gloock', 'Crimson Pro', serif; font-weight: 400; }
+.pencil {
+  font-family: 'Shadows Into Light', cursive;
+  color: var(--pencil);
+}
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-left: var(--gut);
+  padding-right: var(--gut);
+  position: relative;
+  z-index: 2;
+}
+
+/* engraver's small caps label */
+.mark {
+  font-family: 'Crimson Pro', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mark b { color: var(--pencil); font-weight: 600; }
+
+/* a run of staff lines — the recurring motif */
+.staff {
+  height: 33px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--staff) 0, var(--staff) 1px,
+    transparent 1px, transparent 8px
+  );
+  background-size: 100% 33px;
+  background-repeat: no-repeat;
+}
+
+/* rehearsal mark — boxed letter, like real scores */
+.rehearsal {
+  display: inline-grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border: 1.5px solid var(--ink);
+  font-family: 'Gloock', serif;
+  font-size: 17px;
+  background: var(--paper);
+}
+
+/* ─────────────── masthead ─────────────── */
+.mast {
+  border-bottom: 1px solid var(--hair);
+}
+.mast__in {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 15px var(--gut);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mast__in .l b { color: var(--ink); }
+@media (max-width: 700px) { .mast__in .c { display: none; } }
+
+/* ─────────────── title page (hero) ─────────────── */
+.title-page {
+  min-height: 96svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  padding-top: 60px;
+  padding-bottom: 80px;
+}
+
+.title-page .mark { display: block; margin-bottom: 30px; }
+
+.title-page h1 {
+  font-family: 'Gloock', serif;
+  font-weight: 400;
+  font-size: clamp(50px, 9vw, 122px);
+  line-height: 1.02;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+.title-page h1 .red { color: var(--pencil); }
+
+.title-page .for {
+  margin-top: clamp(22px, 3.4vh, 36px);
+  font-size: clamp(18px, 2vw, 24px);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ink-2);
+}
+
+/* hero staff with notes — the career as a melodic line */
+.hero-staff {
+  margin: clamp(36px, 6vh, 64px) auto 0;
+  width: min(760px, 100%);
+}
+.hero-staff svg { width: 100%; height: auto; display: block; overflow: visible; }
+.hero-staff .ln { stroke: var(--staff); stroke-width: 1; }
+.hero-staff .note { fill: var(--ink); }
+.hero-staff .stem { stroke: var(--ink); stroke-width: 1.3; }
+.hero-staff .nm {
+  font-family: 'Crimson Pro', serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--ink-3);
+}
+.hero-staff .clef {
+  font-family: 'Gloock', serif;
+  font-size: 54px;
+  fill: var(--ink);
+}
+.hero-staff .anno {
+  font-family: 'Shadows Into Light', cursive;
+  font-size: 15px;
+  fill: var(--pencil);
+}
+
+.title-page .credits {
+  margin-top: clamp(34px, 5.5vh, 56px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 40px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.title-page .credits b { color: var(--ink); font-weight: 600; }
+
+/* a tilted pencil scrawl on the cover */
+.cover-scrawl {
+  position: absolute;
+  right: clamp(8px, 2.6vw, 40px);
+  top: clamp(54px, 7.5vh, 88px);
+  transform: rotate(6deg);
+  font-size: clamp(15px, 1.5vw, 19px);
+  line-height: 1.25;
+  max-width: 170px;
+  text-align: left;
+}
+@media (max-width: 1060px) { .cover-scrawl { display: none; } }
+
+/* ─────────────── section scaffolding ─────────────── */
+.sec { padding: clamp(88px, 13vh, 150px) 0 0; }
+
+.sec__head {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.6vw, 30px);
+  margin-bottom: clamp(40px, 6.5vh, 72px);
+}
+.sec__head h2 {
+  font-family: 'Gloock', serif;
+  font-weight: 400;
+  font-size: clamp(32px, 4.8vw, 58px);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.sec__head h2 .red { color: var(--pencil); }
+.sec__head .staff { flex: 1; align-self: center; min-width: 40px; }
+.sec__head .tempo {
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(14px, 1.5vw, 17px);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .sec__head { flex-wrap: wrap; }
+  .sec__head h2 { white-space: normal; }
+  .sec__head .tempo { display: none; }
+}
+
+/* ─────────────── programme note ─────────────── */
+.prog {
+  max-width: 720px;
+}
+.prog p {
+  font-size: clamp(20px, 2.4vw, 28px);
+  line-height: 1.6;
+  font-weight: 300;
+}
+.prog p + p { margin-top: 1.3em; }
+.prog p b { font-weight: 600; }
+.prog p .red { color: var(--pencil); font-style: italic; }
+.prog .underline-pencil {
+  background: linear-gradient(transparent 72%, rgba(192, 58, 43, 0.3) 72%, rgba(192, 58, 43, 0.3) 88%, transparent 88%);
+}
+.prog__note {
+  margin-top: 40px;
+  transform: rotate(-2deg);
+  font-size: 21px;
+  max-width: 330px;
+  line-height: 1.3;
+}
+
+/* ─────────────── movements (career) ─────────────── */
+.mvts { counter-reset: mvt; }
+
+.mvt {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 0.85fr) minmax(0, 1.35fr);
+  gap: clamp(18px, 3vw, 48px);
+  padding: clamp(28px, 4.4vh, 46px) 0;
+  border-top: 1px solid var(--hair);
+  position: relative;
+}
+.mvt:last-child { border-bottom: 1px solid var(--hair); }
+
+.mvt__mark { padding-top: 4px; }
+
+.mvt__id .mvt-no {
+  font-family: 'Crimson Pro', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 8px;
+}
+.mvt__id h3 {
+  font-family: 'Gloock', serif;
+  font-weight: 400;
+  font-size: clamp(24px, 2.8vw, 36px);
+  line-height: 1.1;
+}
+.mvt__id .tempo {
+  margin-top: 8px;
+  font-style: italic;
+  font-size: clamp(15px, 1.6vw, 18px);
+  color: var(--pencil);
+}
+.mvt__id .yrs {
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--ink-3);
+}
+
+.mvt__body .role {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 10px;
+}
+.mvt__body p {
+  font-size: 16.5px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 34em;
+}
+.mvt__body p b { font-weight: 600; color: var(--ink); }
+
+/* pencil margin notes on selected movements */
+.mvt__scrawl {
+  position: absolute;
+  right: 0;
+  top: 14px;
+  transform: rotate(3deg);
+  font-size: 17px;
+  max-width: 150px;
+  line-height: 1.2;
+  text-align: right;
+}
+@media (max-width: 1080px) { .mvt__scrawl { display: none; } }
+@media (max-width: 760px) {
+  .mvt { grid-template-columns: 48px minmax(0, 1fr); }
+  .mvt__body { grid-column: 2; }
+}
+
+/* ─────────────── dynamics (capabilities) ─────────────── */
+.dyns { border-top: 1px solid var(--hair); }
+.dyn {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(16px, 3vw, 44px);
+  align-items: baseline;
+  padding: clamp(20px, 3.2vh, 30px) 0;
+  border-bottom: 1px solid var(--hair-2);
+  transition: background .3s ease;
+}
+.dyn:hover { background: rgba(34, 31, 26, 0.025); }
+
+.dyn__sym {
+  font-family: 'Gloock', serif;
+  font-style: italic;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1;
+  color: var(--ink);
+}
+.dyn:hover .dyn__sym { color: var(--pencil); }
+.dyn__name {
+  font-family: 'Gloock', serif;
+  font-size: clamp(19px, 2.1vw, 25px);
+  line-height: 1.2;
+}
+.dyn__desc {
+  font-size: 15.5px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+@media (max-width: 720px) {
+  .dyn { grid-template-columns: 70px minmax(0, 1fr); }
+  .dyn__desc { grid-column: 2; }
+}
+
+/* ─────────────── repertoire (lab) ─────────────── */
+.rep {
+  columns: 2;
+  column-gap: clamp(40px, 6vw, 90px);
+}
+.rep__item {
+  break-inside: avoid;
+  display: block;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--hair-2);
+}
+.rep__line {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.rep__name {
+  font-family: 'Gloock', serif;
+  font-size: clamp(19px, 2vw, 24px);
+  line-height: 1.2;
+}
+.rep__item:hover .rep__name { color: var(--pencil); }
+.rep__dots { flex: 1; border-bottom: 1px dotted var(--hair); transform: translateY(-4px); }
+.rep__op {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.rep__desc {
+  margin-top: 6px;
+  font-size: 14.5px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+@media (max-width: 760px) { .rep { columns: 1; } }
+
+.rep__foot {
+  display: inline-block;
+  margin-top: 36px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 5px;
+  transition: color .25s ease, border-color .25s ease;
+}
+.rep__foot:hover { color: var(--pencil); border-color: var(--pencil); }
+
+/* ─────────────── by the measures (numbers) ─────────────── */
+.measures {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(18px, 3vw, 44px);
+  text-align: center;
+}
+.measure { padding: clamp(20px, 3vw, 36px) 8px; border-top: 2px solid var(--ink); }
+.measure .n {
+  font-family: 'Gloock', serif;
+  font-size: clamp(44px, 6vw, 84px);
+  line-height: 1;
+}
+.measure .n sup { font-size: 0.4em; color: var(--pencil); }
+.measure .t {
+  margin-top: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.8;
+}
+@media (max-width: 760px) { .measures { grid-template-columns: repeat(2, 1fr); } }
+
+/* ─────────────── coda (contact) ─────────────── */
+.coda {
+  margin-top: clamp(88px, 13vh, 150px);
+  background: var(--paper-2);
+  border-top: 1px solid var(--hair);
+  padding: clamp(76px, 12vh, 130px) 0 clamp(66px, 10vh, 110px);
+  text-align: center;
+  position: relative;
+}
+
+.coda .fermata {
+  width: 64px;
+  margin: 0 auto 26px;
+}
+.coda .fermata svg { width: 100%; height: auto; display: block; }
+.coda .fermata path { stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; }
+.coda .fermata circle { fill: var(--ink); }
+
+.coda h2 {
+  font-family: 'Gloock', serif;
+  font-weight: 400;
+  font-size: clamp(42px, 7vw, 96px);
+  line-height: 1.02;
+}
+.coda h2 .red { color: var(--pencil); }
+.coda .lede {
+  margin: 24px auto 0;
+  max-width: 30em;
+  font-size: clamp(17px, 1.9vw, 21px);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.coda .lede i { color: var(--ink); }
+
+.coda__cta {
+  display: inline-block;
+  margin-top: 40px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  padding: 18px 34px;
+  transition: background .3s ease;
+}
+.coda__cta:hover { background: var(--pencil); }
+
+.coda__links {
+  margin: 52px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 36px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.coda__links a {
+  border-bottom: 1px solid var(--hair);
+  padding-bottom: 3px;
+  transition: color .3s ease, border-color .3s ease;
+}
+.coda__links a:hover { color: var(--pencil); border-color: var(--pencil); }
+
+.coda__scrawl {
+  position: absolute;
+  left: clamp(10px, 8vw, 150px);
+  bottom: clamp(30px, 7vh, 80px);
+  transform: rotate(-5deg);
+  font-size: clamp(17px, 1.9vw, 22px);
+  max-width: 190px;
+  line-height: 1.25;
+  text-align: left;
+}
+@media (max-width: 900px) { .coda__scrawl { display: none; } }
+
+/* ─────────────── footer ─────────────── */
+.foot {
+  padding: 26px 0 36px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 34px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.foot b { color: var(--ink-3); }
+.foot .r { margin-left: auto; }
+@media (max-width: 700px) { .foot .r { margin-left: 0; } }
+
+/* ─────────────── reveal ─────────────── */
+.rv {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .95s cubic-bezier(.2,.7,.2,1), transform .95s cubic-bezier(.2,.7,.2,1);
+  transition-delay: var(--d, 0s);
+}
+.rv.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.001s !important; }
+  .rv { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ── masthead ── -->
+<header class="mast">
+  <div class="mast__in">
+    <span class="l"><b>Édition Vlieg</b> · engraved scores</span>
+    <span class="c">plate № 24 · urtext</span>
+    <span>Portland · MMXXVI</span>
+  </div>
+</header>
+
+<!-- ── title page ── -->
+<section class="title-page wrap">
+
+  <span class="cover-scrawl pencil rv" style="--d:.7s" aria-hidden="true">don't rush the<br/>early movements —<br/>they earn the late ones</span>
+
+  <span class="mark rv">For one designer <b>&amp;</b> an orchestra of machines</span>
+
+  <h1 class="rv" style="--d:.1s">
+    Symphony <span class="red">№ 24</span><br/>
+    in M major
+  </h1>
+
+  <p class="for rv" style="--d:.22s">
+    “The Practice” — six movements on twenty years of shipped work
+  </p>
+
+  <div class="hero-staff rv" style="--d:.34s" aria-hidden="true">
+    <svg viewBox="0 0 760 130">
+      <text class="clef" x="6" y="78">&#119070;</text>
+      <g>
+        <line class="ln" x1="0" y1="40" x2="760" y2="40"/>
+        <line class="ln" x1="0" y1="52" x2="760" y2="52"/>
+        <line class="ln" x1="0" y1="64" x2="760" y2="64"/>
+        <line class="ln" x1="0" y1="76" x2="760" y2="76"/>
+        <line class="ln" x1="0" y1="88" x2="760" y2="88"/>
+      </g>
+      <line class="ln" x1="70" y1="40" x2="70" y2="88"/>
+      <line class="ln" x1="392" y1="40" x2="392" y2="88"/>
+      <line class="ln" x1="758" y1="40" x2="758" y2="88" stroke-width="3"/>
+      <line class="ln" x1="752" y1="40" x2="752" y2="88"/>
+
+      <!-- the career, rising -->
+      <g>
+        <ellipse class="note" cx="120" cy="88" rx="5.6" ry="4.2" transform="rotate(-14 120 88)"/>
+        <line class="stem" x1="125.4" y1="86" x2="125.4" y2="56"/>
+        <text class="nm" x="120" y="112" text-anchor="middle">Endemol</text>
+
+        <ellipse class="note" cx="226" cy="76" rx="5.6" ry="4.2" transform="rotate(-14 226 76)"/>
+        <line class="stem" x1="231.4" y1="74" x2="231.4" y2="44"/>
+        <text class="nm" x="226" y="112" text-anchor="middle">Yahoo!</text>
+
+        <ellipse class="note" cx="332" cy="64" rx="5.6" ry="4.2" transform="rotate(-14 332 64)"/>
+        <line class="stem" x1="337.4" y1="62" x2="337.4" y2="32"/>
+        <text class="nm" x="332" y="112" text-anchor="middle">Google</text>
+
+        <ellipse class="note" cx="448" cy="58" rx="5.6" ry="4.2" transform="rotate(-14 448 58)"/>
+        <line class="stem" x1="453.4" y1="56" x2="453.4" y2="26"/>
+        <text class="nm" x="448" y="112" text-anchor="middle">Walmart</text>
+
+        <ellipse class="note" cx="560" cy="46" rx="5.6" ry="4.2" transform="rotate(-14 560 46)"/>
+        <line class="stem" x1="565.4" y1="44" x2="565.4" y2="14"/>
+        <text class="nm" x="560" y="112" text-anchor="middle">Kohl's</text>
+
+        <ellipse class="note" cx="676" cy="40" rx="5.6" ry="4.2" transform="rotate(-14 676 40)"/>
+        <line class="stem" x1="681.4" y1="38" x2="681.4" y2="8"/>
+        <text class="nm" x="676" y="112" text-anchor="middle">AI-Created</text>
+      </g>
+
+      <text class="anno" x="392" y="22" text-anchor="middle" transform="rotate(-2 392 22)">crescendo poco a poco</text>
+    </svg>
+  </div>
+
+  <div class="credits rv" style="--d:.48s">
+    <span><b>Composed &amp; conducted</b> M. van Hylckama Vlieg</span>
+    <span><b>Duration</b> twenty years, ongoing</span>
+    <span><b>First chair</b> open to new engagements</span>
+  </div>
+</section>
+
+<!-- ── programme note ── -->
+<section class="sec wrap">
+  <div class="sec__head">
+    <span class="rehearsal rv" aria-hidden="true">A</span>
+    <h2 class="rv" style="--d:.06s">Programme <span class="red">note</span></h2>
+    <div class="staff" aria-hidden="true"></div>
+    <span class="tempo">adagio, sostenuto</span>
+  </div>
+
+  <div class="prog">
+    <p class="rv">
+      I design products at the seam where intent becomes interface — where a
+      half-formed idea has to choose what kind of system it wants to become.
+    </p>
+    <p class="rv" style="--d:.08s">
+      AI didn't shrink the design problem. It made it about
+      <span class="underline-pencil"><b>judgment</b></span> — which is to say,
+      about <span class="red">phrasing</span>: what to play, what to leave out,
+      and when to bring the brass in.
+    </p>
+    <div class="prog__note pencil rv" style="--d:.16s" aria-hidden="true">
+      the portfolio is the proof —<br/>everything below exists &amp; runs
+    </div>
+  </div>
+</section>
+
+<!-- ── the movements ── -->
+<section class="sec wrap">
+  <div class="sec__head">
+    <span class="rehearsal rv" aria-hidden="true">B</span>
+    <h2 class="rv" style="--d:.06s">The <span class="red">movements</span></h2>
+    <div class="staff" aria-hidden="true"></div>
+    <span class="tempo">attacca — no pause between</span>
+  </div>
+
+  <div class="mvts">
+    <article class="mvt rv">
+      <div class="mvt__mark"><span class="rehearsal" aria-hidden="true">I</span></div>
+      <div class="mvt__id">
+        <span class="mvt-no">First movement</span>
+        <h3>Endemol</h3>
+        <div class="tempo">Allegro con fuoco</div>
+        <div class="yrs">1998 — 2005</div>
+      </div>
+      <div class="mvt__body">
+        <div class="role">UX &amp; Engineering Lead</div>
+        <p>The opening theme, stated fast and loud. Multilingual content systems and large-scale platforms across an international entertainment portfolio — <b>the technical depth the whole work develops</b>.</p>
+      </div>
+      <span class="mvt__scrawl pencil" aria-hidden="true">the theme!</span>
+    </article>
+
+    <article class="mvt rv">
+      <div class="mvt__mark"><span class="rehearsal" aria-hidden="true">II</span></div>
+      <div class="mvt__id">
+        <span class="mvt-no">Second movement</span>
+        <h3>Yahoo!</h3>
+        <div class="tempo">Maestoso — for full orchestra</div>
+        <div class="yrs">2005 — 2013</div>
+      </div>
+      <div class="mvt__body">
+        <div class="role">Director of UX Prototyping · Senior UX Manager</div>
+        <p>The big ensemble writing. Global prototyping teams led across offices and product lines; rebrand and personalization work; <b>a generation of prototypers brought up through the section</b>.</p>
+      </div>
+    </article>
+
+    <article class="mvt rv">
+      <div class="mvt__mark"><span class="rehearsal" aria-hidden="true">III</span></div>
+      <div class="mvt__id">
+        <span class="mvt-no">Third movement</span>
+        <h3>Google</h3>
+        <div class="tempo">Scherzo — presto, leggiero</div>
+        <div class="yrs">2013 — 2017</div>
+      </div>
+      <div class="mvt__body">
+        <div class="role">Senior UX Engineer / Prototyper</div>
+        <p>Quick, precise, virtuosic. High-fidelity prototypes for Google Cloud AI, Assistant, and Android — <b>built nightly to settle the morning's arguments</b> between design and engineering.</p>
+      </div>
+      <span class="mvt__scrawl pencil" aria-hidden="true">lighter here —<br/>let it dance</span>
+    </article>
+
+    <article class="mvt rv">
+      <div class="mvt__mark"><span class="rehearsal" aria-hidden="true">IV</span></div>
+      <div class="mvt__id">
+        <span class="mvt-no">Fourth movement</span>
+        <h3>Walmart Labs</h3>
+        <div class="tempo">Andante — with great patience</div>
+        <div class="yrs">2017 — 2021</div>
+      </div>
+      <div class="mvt__body">
+        <div class="role">Principal Product Designer / Design Technologist</div>
+        <p>The slow movement, where the hard things happen quietly. Mobile, voice, and personalization through a digital transformation; <b>recommendation systems made legible</b> to a very full house.</p>
+      </div>
+    </article>
+
+    <article class="mvt rv">
+      <div class="mvt__mark"><span class="rehearsal" aria-hidden="true">V</span></div>
+      <div class="mvt__id">
+        <span class="mvt-no">Fifth movement</span>
+        <h3>Kohl's</h3>
+        <div class="tempo">Con moto — al presente</div>
+        <div class="yrs">2021 — now</div>
+      </div>
+      <div class="mvt__body">
+        <div class="role">Senior Product Designer · Generative AI Specialist</div>
+        <p>The current movement, still being played. UX across cart, checkout, wallet, account, and self-checkout; <b>AI tooling and education carried through the whole orchestra</b> of the design org.</p>
+      </div>
+    </article>
+
+    <article class="mvt rv">
+      <div class="mvt__mark"><span class="rehearsal" aria-hidden="true">VI</span></div>
+      <div class="mvt__id">
+        <span class="mvt-no">Ostinato — continuous</span>
+        <h3>AI-Created</h3>
+        <div class="tempo">Perpetuum mobile</div>
+        <div class="yrs">always</div>
+      </div>
+      <div class="mvt__body">
+        <div class="role">Independent product lab · solo</div>
+        <p>The figure that runs under everything. AI tools, design utilities, music, video, arcade games — <b>real software shipped most weeks</b>, proof the hands are still in practice.</p>
+      </div>
+      <span class="mvt__scrawl pencil" aria-hidden="true">never stops —<br/>good.</span>
+    </article>
+  </div>
+</section>
+
+<!-- ── dynamics ── -->
+<section class="sec wrap">
+  <div class="sec__head">
+    <span class="rehearsal rv" aria-hidden="true">C</span>
+    <h2 class="rv" style="--d:.06s">Dynamic <span class="red">markings</span></h2>
+    <div class="staff" aria-hidden="true"></div>
+    <span class="tempo">how the parts are to be played</span>
+  </div>
+
+  <div class="dyns rv">
+    <div class="dyn">
+      <span class="dyn__sym">ff</span>
+      <span class="dyn__name">AI-native product design</span>
+      <span class="dyn__desc">Played at full strength. Systems where the model is the interaction — voice, agents, ambient assistance — not a chat panel bolted on.</span>
+    </div>
+    <div class="dyn">
+      <span class="dyn__sym">f</span>
+      <span class="dyn__name">Design engineering</span>
+      <span class="dyn__desc">Loud and articulate. Prototypes that behave like real software because they are real software, built end-to-end by one player.</span>
+    </div>
+    <div class="dyn">
+      <span class="dyn__sym">sfz</span>
+      <span class="dyn__name">0 → 1 incubation</span>
+      <span class="dyn__desc">A sudden accent. Ambiguous briefs carried through research, framing, prototype, and shipped product — before the bar ends.</span>
+    </div>
+    <div class="dyn">
+      <span class="dyn__sym">mf</span>
+      <span class="dyn__name">Enterprise UX modernization</span>
+      <span class="dyn__desc">Sustained and steady. Legacy cart, checkout, account, and internal tooling replaced with systems people actually want to use.</span>
+    </div>
+    <div class="dyn">
+      <span class="dyn__sym">mp</span>
+      <span class="dyn__name">Internal AI tooling</span>
+      <span class="dyn__desc">Quieter, but always sounding. Copilots, prompt libraries, synthetic research environments — in use by real teams.</span>
+    </div>
+    <div class="dyn">
+      <span class="dyn__sym">tutti</span>
+      <span class="dyn__name">Leadership &amp; enablement</span>
+      <span class="dyn__desc">Everyone plays. Teams built and led at Yahoo; AI adoption driven through teaching, tooling, and example. IC, lead, or director.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── repertoire ── -->
+<section class="sec wrap">
+  <div class="sec__head">
+    <span class="rehearsal rv" aria-hidden="true">D</span>
+    <h2 class="rv" style="--d:.06s">The <span class="red">repertoire</span></h2>
+    <div class="staff" aria-hidden="true"></div>
+    <span class="tempo">works in the standing rotation</span>
+  </div>
+
+  <div class="rep rv">
+    <a class="rep__item" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+      <span class="rep__line"><span class="rep__name">My AI Diary</span><span class="rep__dots" aria-hidden="true"></span><span class="rep__op">Op. 1 · AI tool</span></span>
+      <span class="rep__desc">Voice-first journaling that still sounds like you. Zero-knowledge, local-first.</span>
+    </a>
+    <a class="rep__item" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+      <span class="rep__line"><span class="rep__name">Human, Actually</span><span class="rep__dots" aria-hidden="true"></span><span class="rep__op">Op. 2 · AI tool</span></span>
+      <span class="rep__desc">Your résumé, tailored to the job without sounding like a robot wrote it.</span>
+    </a>
+    <a class="rep__item" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+      <span class="rep__line"><span class="rep__name">WatchGPT</span><span class="rep__dots" aria-hidden="true"></span><span class="rep__op">Op. 3 · watchOS</span></span>
+      <span class="rep__desc">Realtime ChatGPT voice, on your wrist.</span>
+    </a>
+    <a class="rep__item" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">
+      <span class="rep__line"><span class="rep__name">AI Usage</span><span class="rep__dots" aria-hidden="true"></span><span class="rep__op">Op. 4 · macOS</span></span>
+      <span class="rep__desc">Claude Code + Codex usage in your Mac menubar.</span>
+    </a>
+    <a class="rep__item" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">
+      <span class="rep__line"><span class="rep__name">Calorie Counter</span><span class="rep__dots" aria-hidden="true"></span><span class="rep__op">Op. 5 · vision</span></span>
+      <span class="rep__desc">The most frictionless food logger ever built. Speak, photograph, done.</span>
+    </a>
+    <a class="rep__item" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
+      <span class="rep__line"><span class="rep__name">Vectronix</span><span class="rep__dots" aria-hidden="true"></span><span class="rep__op">Op. 6 · game</span></span>
+      <span class="rep__desc">Hardcore arcade space combat. No mercy, no filler.</span>
+    </a>
+    <a class="rep__item" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
+      <span class="rep__line"><span class="rep__name">Audio Visualizer Suite</span><span class="rep__dots" aria-hidden="true"></span><span class="rep__op">Op. 7 · WebGL</span></span>
+      <span class="rep__desc">Render-quality video visualizations of your music, hand-tuned.</span>
+    </a>
+    <a class="rep__item" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
+      <span class="rep__line"><span class="rep__name">Color Clock</span><span class="rep__dots" aria-hidden="true"></span><span class="rep__op">Op. 8 · object</span></span>
+      <span class="rep__desc">A 1991 clock design, brought back to life with care.</span>
+    </a>
+  </div>
+
+  <a class="rep__foot rv" href="https://ai-created.com" target="_blank" rel="noopener">
+    Complete works — eighteen opus numbers → ai-created.com
+  </a>
+</section>
+
+<!-- ── by the measures ── -->
+<section class="sec wrap">
+  <div class="sec__head">
+    <span class="rehearsal rv" aria-hidden="true">E</span>
+    <h2 class="rv" style="--d:.06s">By the <span class="red">measures</span></h2>
+    <div class="staff" aria-hidden="true"></div>
+    <span class="tempo">tempo giusto — the honest numbers</span>
+  </div>
+
+  <div class="measures rv">
+    <div class="measure">
+      <div class="n">20<sup>+</sup></div>
+      <div class="t">years at the podium</div>
+    </div>
+    <div class="measure">
+      <div class="n">5</div>
+      <div class="t">orchestras — Google, Yahoo!, Walmart, Kohl's, Endemol</div>
+    </div>
+    <div class="measure">
+      <div class="n">18</div>
+      <div class="t">works in the published catalogue</div>
+    </div>
+    <div class="measure">
+      <div class="n">4</div>
+      <div class="t">languages sung — NL, EN, DE, ES</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── coda ── -->
+<section class="coda">
+  <div class="wrap">
+    <div class="fermata rv" aria-hidden="true">
+      <svg viewBox="0 0 64 40">
+        <path d="M 8 34 A 24 24 0 0 1 56 34"/>
+        <circle cx="32" cy="28" r="3.4"/>
+      </svg>
+    </div>
+    <h2 class="rv" style="--d:.08s">Coda — <span class="red">your part</span></h2>
+    <p class="lede rv" style="--d:.18s">
+      The fermata holds until you answer. Open to senior IC, lead, and director
+      engagements — <i>tell me what you're building, what's ambiguous about it,
+      and what timeline you're on.</i>
+    </p>
+    <a class="coda__cta rv" style="--d:.28s" href="mailto:marcovhv@gmail.com">Cue the downbeat ↗</a>
+
+    <div class="coda__links rv" style="--d:.36s">
+      <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+      <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+      <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin/marcovhv</a>
+      <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x/AIandDesign</a>
+      <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">youtube/@AIandDesign</a>
+    </div>
+
+    <span class="coda__scrawl pencil rv" style="--d:.44s" aria-hidden="true">hold…<br/>hold…<br/>now write to him</span>
+  </div>
+</section>
+
+<!-- ── footer ── -->
+<footer class="foot wrap">
+  <span><b>Symphony № 24 in M major</b></span>
+  <span>set in Gloock, Crimson Pro &amp; Shadows Into Light</span>
+  <span>one HTML file · zero frameworks</span>
+  <span class="r">© 2026 M. van Hylckama Vlieg</span>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>

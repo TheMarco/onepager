@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Annual Report 2026 — M. van Hylckama Vlieg</title>
+<meta name="description" content="The Annual Report. Twenty years of design practice filed in the Swiss International Style: fiscal years, business segments, holdings, and a letter to shareholders." />
+<meta name="theme-color" content="#FAFAF6" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════
+   THE ANNUAL REPORT — fiscal year 2026
+   Twenty years of practice, filed in the International Style.
+   Grid first. Red sparingly. Nothing decorative that isn't load-bearing.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  --paper:  #FAFAF6;
+  --ink:    #121211;
+  --ink-2:  #3B3B38;
+  --ink-3:  #6F6F69;
+  --ink-4:  #A3A39B;
+  --red:    #E0301E;          /* the auditor's red */
+  --line:   rgba(18, 18, 17, 0.92);
+  --line-2: rgba(18, 18, 17, 0.18);
+  --line-3: rgba(18, 18, 17, 0.09);
+  --gut:    clamp(20px, 4.6vw, 72px);
+  --max:    1320px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Hanken Grotesk', 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--red); color: var(--paper); }
+a { color: inherit; text-decoration: none; }
+
+.mono { font-family: 'Spline Sans Mono', monospace; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-left: var(--gut);
+  padding-right: var(--gut);
+}
+
+/* index tab — small reference labels */
+.tab {
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.tab b { color: var(--red); font-weight: 600; }
+
+/* ─────────────── masthead ─────────────── */
+.mast { border-bottom: 2px solid var(--line); }
+.mast__in {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 16px var(--gut);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 18px;
+  align-items: baseline;
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.mast__in .c { text-align: center; color: var(--ink-3); }
+.mast__in .r { text-align: right; }
+.mast__in .r .dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--red);
+  margin-right: 8px;
+  vertical-align: baseline;
+}
+@media (max-width: 720px) {
+  .mast__in { grid-template-columns: 1fr auto; }
+  .mast__in .c { display: none; }
+}
+
+/* ─────────────── cover ─────────────── */
+.cover {
+  border-bottom: 2px solid var(--line);
+}
+.cover__grid {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  min-height: min(86svh, 940px);
+}
+.cover__left {
+  grid-column: 1 / 9;
+  border-right: 1px solid var(--line-2);
+  padding: clamp(40px, 7vh, 84px) clamp(20px, 3vw, 56px) clamp(40px, 7vh, 84px) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+}
+.cover__right {
+  grid-column: 9 / 13;
+  padding: clamp(40px, 7vh, 84px) 0 clamp(40px, 7vh, 84px) clamp(20px, 3vw, 56px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.cover h1 {
+  font-weight: 800;
+  font-size: clamp(54px, 9.6vw, 148px);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+.cover h1 .yr { color: var(--red); display: block; }
+
+.cover__sub {
+  max-width: 30em;
+  font-size: clamp(16px, 1.7vw, 20px);
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+.cover__sub b { font-weight: 700; color: var(--ink); }
+
+.cover__block { border-top: 1px solid var(--line); padding-top: 18px; }
+.cover__block + .cover__block { margin-top: 26px; }
+.cover__block .tab { display: block; margin-bottom: 10px; }
+.cover__block .val {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.cover__block .val.big {
+  font-size: clamp(34px, 3.6vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.cover__block .val.big span { color: var(--red); }
+
+/* red square — the report's only ornament */
+.cover__mark {
+  width: clamp(64px, 7vw, 104px);
+  aspect-ratio: 1;
+  background: var(--red);
+  position: relative;
+}
+.cover__mark::after {
+  content: 'FY26';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: clamp(13px, 1.3vw, 18px);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--paper);
+}
+
+@media (max-width: 880px) {
+  .cover__grid { grid-template-columns: 1fr; min-height: 0; }
+  .cover__left { grid-column: 1; border-right: 0; padding-right: 0; }
+  .cover__right {
+    grid-column: 1;
+    border-top: 1px solid var(--line-2);
+    padding-left: 0;
+    padding-top: 34px;
+  }
+}
+
+/* ─────────────── section scaffolding ─────────────── */
+.sec { border-bottom: 2px solid var(--line); padding: clamp(56px, 9vh, 110px) 0; }
+.sec--last { border-bottom: 0; }
+
+.sec__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(18px, 3vw, 44px);
+  align-items: baseline;
+  margin-bottom: clamp(34px, 6vh, 64px);
+}
+.sec__no {
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--red);
+}
+.sec__head h2 {
+  font-weight: 800;
+  font-size: clamp(30px, 4.6vw, 60px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+.sec__head .tab { justify-self: end; align-self: center; text-align: right; }
+@media (max-width: 640px) { .sec__head .tab { display: none; } }
+
+/* ─────────────── letter to shareholders ─────────────── */
+.letter {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 80px);
+}
+.letter__body p {
+  font-size: clamp(19px, 2.3vw, 28px);
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  max-width: 26em;
+}
+.letter__body p + p { margin-top: 1.2em; }
+.letter__body .hl {
+  background: linear-gradient(transparent 58%, rgba(224, 48, 30, 0.22) 58%);
+}
+.letter__sig {
+  margin-top: 40px;
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+.letter__sig .nm { font-weight: 700; font-size: 15px; }
+
+.letter__aside { border-left: 1px solid var(--line-2); padding-left: clamp(18px, 2.4vw, 36px); }
+.letter__aside dl { display: grid; gap: 22px; }
+.letter__aside dt { margin-bottom: 6px; }
+.letter__aside dd { font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+.letter__aside dd b { font-weight: 700; color: var(--ink); }
+@media (max-width: 800px) {
+  .letter { grid-template-columns: 1fr; }
+  .letter__aside { border-left: 0; border-top: 1px solid var(--line-2); padding-left: 0; padding-top: 28px; }
+}
+
+/* ─────────────── fiscal years ─────────────── */
+.fy { border-top: 2px solid var(--line); }
+.fy__row {
+  display: grid;
+  grid-template-columns: minmax(96px, 0.5fr) minmax(0, 0.8fr) minmax(0, 1.6fr) minmax(120px, 0.7fr);
+  gap: clamp(14px, 2.6vw, 44px);
+  padding: clamp(20px, 3.4vh, 34px) 0;
+  border-bottom: 1px solid var(--line-2);
+  align-items: baseline;
+  transition: background .3s ease;
+}
+.fy__row:hover { background: rgba(18, 18, 17, 0.025); }
+
+.fy__yrs {
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: clamp(13px, 1.4vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.fy__co { font-weight: 800; font-size: clamp(19px, 2.2vw, 27px); letter-spacing: -0.02em; line-height: 1.1; }
+.fy__co .role {
+  display: block;
+  margin-top: 5px;
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.fy__desc { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); max-width: 36em; }
+
+/* span bar — the years as a tiny gantt */
+.fy__bar { align-self: center; }
+.fy__bar .track {
+  height: 10px;
+  background: var(--line-3);
+  position: relative;
+}
+.fy__bar .fill {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: var(--s, 0%);
+  width: var(--w, 10%);
+  background: var(--ink);
+}
+.fy__row:hover .fill { background: var(--red); }
+.fy__bar .cap {
+  margin-top: 7px;
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+  display: flex;
+  justify-content: space-between;
+}
+@media (max-width: 860px) {
+  .fy__row { grid-template-columns: minmax(86px, auto) minmax(0, 1fr); }
+  .fy__desc { grid-column: 2; }
+  .fy__bar { grid-column: 1 / 3; }
+}
+
+/* ─────────────── segments (capabilities) ─────────────── */
+.segs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--line);
+  border-right: 0;
+  border-bottom: 0;
+}
+.seg {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: clamp(20px, 2.6vw, 36px);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: background .3s ease;
+}
+.seg:hover { background: var(--ink); color: var(--paper); }
+.seg:hover .seg__no { color: var(--red); }
+.seg:hover p { color: rgba(250, 250, 246, 0.78); }
+
+.seg__no {
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--ink-3);
+}
+.seg h3 {
+  font-weight: 800;
+  font-size: clamp(17px, 1.8vw, 22px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  max-width: 11em;
+}
+.seg p { font-size: 13.5px; line-height: 1.55; color: var(--ink-2); margin-top: auto; }
+@media (max-width: 900px) { .segs { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 580px) { .segs { grid-template-columns: 1fr; } }
+
+/* ─────────────── holdings table ─────────────── */
+.hold { border-top: 2px solid var(--line); }
+.hold__head, .hold__row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1.1fr) minmax(0, 1.9fr) minmax(86px, 0.55fr) 70px;
+  gap: clamp(12px, 2vw, 32px);
+  align-items: baseline;
+}
+.hold__head {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.hold__row {
+  padding: clamp(15px, 2.2vh, 22px) 0;
+  border-bottom: 1px solid var(--line-2);
+  transition: background .25s ease;
+}
+.hold__row:hover { background: rgba(18, 18, 17, 0.025); }
+.hold__row:hover .hold__name::after { content: ' ↗'; color: var(--red); }
+
+.hold__no { font-family: 'Spline Sans Mono', monospace; font-size: 11px; font-weight: 500; color: var(--ink-4); }
+.hold__name { font-weight: 700; font-size: clamp(15px, 1.7vw, 19px); letter-spacing: -0.01em; }
+.hold__desc { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.hold__class {
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.hold__live {
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--red);
+  justify-self: end;
+}
+@media (max-width: 760px) {
+  .hold__head { display: none; }
+  .hold__row { grid-template-columns: 40px minmax(0, 1fr) 60px; }
+  .hold__desc { grid-column: 2; }
+  .hold__class { grid-column: 2; }
+}
+
+.hold__foot {
+  margin-top: 26px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 5px;
+  transition: color .25s ease, border-color .25s ease;
+}
+.hold__foot:hover { color: var(--red); border-color: var(--red); }
+
+/* ─────────────── KPI spread ─────────────── */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--line);
+  border-right: 0;
+}
+.kpi {
+  border-right: 1px solid var(--line);
+  padding: clamp(22px, 3vw, 40px) clamp(18px, 2.4vw, 34px);
+}
+.kpi__n {
+  font-weight: 800;
+  font-size: clamp(46px, 6.4vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+.kpi__n sup { font-size: 0.4em; color: var(--red); }
+.kpi__t {
+  margin-top: 14px;
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.7;
+  color: var(--ink-3);
+}
+@media (max-width: 820px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); border-bottom: 0; }
+  .kpi { border-bottom: 1px solid var(--line); }
+}
+
+/* ─────────────── investor relations ─────────────── */
+.ir {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 90px);
+  align-items: start;
+}
+.ir h2 {
+  font-weight: 800;
+  font-size: clamp(42px, 7.4vw, 110px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+.ir h2 span { color: var(--red); }
+.ir__lede {
+  margin-top: 26px;
+  font-size: clamp(16px, 1.8vw, 20px);
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--ink-2);
+  max-width: 26em;
+}
+.ir__cta {
+  display: inline-block;
+  margin-top: 36px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 18px 30px;
+  transition: background .25s ease;
+}
+.ir__cta:hover { background: var(--red); }
+
+.ir__list { border-top: 2px solid var(--line); }
+.ir__list .row {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.6fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line-2);
+  align-items: baseline;
+}
+.ir__list .row a {
+  font-weight: 700;
+  font-size: 15px;
+  border-bottom: 1px solid var(--line-2);
+  transition: color .25s ease, border-color .25s ease;
+}
+.ir__list .row a:hover { color: var(--red); border-color: var(--red); }
+.ir__list .row span:last-child { font-size: 14.5px; color: var(--ink-2); }
+@media (max-width: 800px) { .ir { grid-template-columns: 1fr; } }
+
+/* ─────────────── footer ─────────────── */
+.foot { border-top: 2px solid var(--line); }
+.foot__in {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 20px var(--gut) 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 32px;
+  font-family: 'Spline Sans Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.foot__in b { color: var(--ink); font-weight: 600; }
+.foot__in .r { margin-left: auto; }
+@media (max-width: 700px) { .foot__in .r { margin-left: 0; } }
+
+/* ─────────────── reveal ─────────────── */
+.rv {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .85s cubic-bezier(.2,.7,.2,1), transform .85s cubic-bezier(.2,.7,.2,1);
+  transition-delay: var(--d, 0s);
+}
+.rv.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.001s !important; }
+  .rv { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ── masthead ── -->
+<header class="mast">
+  <div class="mast__in">
+    <span><b>M. van Hylckama Vlieg</b> — Design Practice</span>
+    <span class="c">Form 20-YR · filed Portland, OR</span>
+    <span class="r"><span class="dot" aria-hidden="true"></span>Fiscal year 2026</span>
+  </div>
+</header>
+
+<!-- ── cover ── -->
+<section class="cover">
+  <div class="cover__grid">
+    <div class="cover__left">
+      <div>
+        <div class="tab rv" style="margin-bottom: 26px;">Document <b>№ 22</b> / for public distribution</div>
+        <h1 class="rv" style="--d:.08s">Annual<br/>Report <span class="yr">2026</span></h1>
+      </div>
+      <p class="cover__sub rv" style="--d:.2s">
+        A twenty-year design practice, audited in full: <b>five companies, eighteen shipped
+        independent works, zero frameworks.</b> Figures verified against software that
+        actually exists. Read before investing your headcount.
+      </p>
+    </div>
+    <div class="cover__right">
+      <div class="cover__mark rv" style="--d:.28s" aria-hidden="true"></div>
+      <div>
+        <div class="cover__block rv" style="--d:.34s">
+          <span class="tab">Issuer</span>
+          <div class="val">Marco van Hylckama Vlieg<br/>Product designer · AI-native builder</div>
+        </div>
+        <div class="cover__block rv" style="--d:.4s">
+          <span class="tab">Years of operation</span>
+          <div class="val big">20<span>+</span></div>
+        </div>
+        <div class="cover__block rv" style="--d:.46s">
+          <span class="tab">Position</span>
+          <div class="val">Open — senior IC, lead &amp; director roles</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 1.0 letter to shareholders ── -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="sec__no rv">1.0</span>
+      <h2 class="rv" style="--d:.06s">Letter to shareholders</h2>
+      <span class="tab rv" style="--d:.12s">pp. 02 — 03</span>
+    </div>
+
+    <div class="letter">
+      <div class="letter__body">
+        <p class="rv">
+          I design products at the seam where intent becomes interface — where a half-formed
+          idea has to choose what kind of system it wants to become.
+        </p>
+        <p class="rv" style="--d:.08s">
+          AI did not shrink the design problem. <span class="hl">It made the problem about
+          judgment</span> — what to build, how it should behave in someone's actual life,
+          and shipping it before the moment passes.
+        </p>
+        <p class="rv" style="--d:.16s">
+          The portfolio is the proof. Everything reported below exists, runs, and is used.
+        </p>
+        <div class="letter__sig rv" style="--d:.24s">
+          <span class="nm">M. van Hylckama Vlieg</span>
+          <span class="tab">Principal · Portland, Oregon</span>
+        </div>
+      </div>
+
+      <aside class="letter__aside rv" style="--d:.18s">
+        <dl>
+          <div>
+            <dt class="tab">Basis of preparation</dt>
+            <dd>Hand-set HTML &amp; CSS. <b>No frameworks, no component libraries.</b> One file per document.</dd>
+          </div>
+          <div>
+            <dt class="tab">Auditor's note</dt>
+            <dd>First drafts were rejected as <b>generic</b>. Work shown survived six to twelve revision cycles.</dd>
+          </div>
+          <div>
+            <dt class="tab">Going concern</dt>
+            <dd>The independent lab ships most weeks. <b>No risk of discontinued operations.</b></dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2.0 fiscal years ── -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="sec__no rv">2.0</span>
+      <h2 class="rv" style="--d:.06s">Review of operations</h2>
+      <span class="tab rv" style="--d:.12s">1998 — present · consolidated</span>
+    </div>
+
+    <div class="fy">
+      <div class="fy__row rv">
+        <div class="fy__yrs">1998–2005</div>
+        <div class="fy__co">Endemol<span class="role">UX &amp; Engineering Lead</span></div>
+        <p class="fy__desc">Multilingual content systems and large-scale web platforms across an international entertainment portfolio. The technical depth on the balance sheet was acquired here.</p>
+        <div class="fy__bar" aria-hidden="true">
+          <div class="track"><div class="fill" style="--s:0%; --w:25%"></div></div>
+          <div class="cap"><span>'98</span><span>'26</span></div>
+        </div>
+      </div>
+
+      <div class="fy__row rv">
+        <div class="fy__yrs">2005–2013</div>
+        <div class="fy__co">Yahoo!<span class="role">Director of UX Prototyping · Sr UX Manager</span></div>
+        <p class="fy__desc">Global prototyping teams led across offices and product lines. Rebrand and personalization work, scalable design process, a mentored generation of senior prototypers.</p>
+        <div class="fy__bar" aria-hidden="true">
+          <div class="track"><div class="fill" style="--s:25%; --w:28.6%"></div></div>
+          <div class="cap"><span>'98</span><span>'26</span></div>
+        </div>
+      </div>
+
+      <div class="fy__row rv">
+        <div class="fy__yrs">2013–2017</div>
+        <div class="fy__co">Google<span class="role">Senior UX Engineer / Prototyper</span></div>
+        <p class="fy__desc">High-fidelity prototypes for Google Cloud AI, Assistant, and Android. Bridged design and engineering with builds that accelerated research, alignment, and decisions.</p>
+        <div class="fy__bar" aria-hidden="true">
+          <div class="track"><div class="fill" style="--s:53.6%; --w:14.3%"></div></div>
+          <div class="cap"><span>'98</span><span>'26</span></div>
+        </div>
+      </div>
+
+      <div class="fy__row rv">
+        <div class="fy__yrs">2017–2021</div>
+        <div class="fy__co">Walmart Labs<span class="role">Principal Product Designer / Design Technologist</span></div>
+        <p class="fy__desc">Mobile, voice, and personalization through a digital transformation. Recommendation systems translated into interfaces that didn't require explanation.</p>
+        <div class="fy__bar" aria-hidden="true">
+          <div class="track"><div class="fill" style="--s:67.9%; --w:14.3%"></div></div>
+          <div class="cap"><span>'98</span><span>'26</span></div>
+        </div>
+      </div>
+
+      <div class="fy__row rv">
+        <div class="fy__yrs">2021–now</div>
+        <div class="fy__co">Kohl's<span class="role">Senior Product Designer · Gen-AI Specialist</span></div>
+        <p class="fy__desc">UX across cart, checkout, wallet, account, and in-store self-checkout. AI tooling, prompt libraries, and education across the design organization.</p>
+        <div class="fy__bar" aria-hidden="true">
+          <div class="track"><div class="fill" style="--s:82.2%; --w:17.8%"></div></div>
+          <div class="cap"><span>'98</span><span>'26</span></div>
+        </div>
+      </div>
+
+      <div class="fy__row rv">
+        <div class="fy__yrs">always</div>
+        <div class="fy__co">AI-Created<span class="role">Independent product lab · solo</span></div>
+        <p class="fy__desc">Continuous operations. AI tools, design utilities, music, video, and arcade games — real software, built end-to-end, tested in public.</p>
+        <div class="fy__bar" aria-hidden="true">
+          <div class="track"><div class="fill" style="--s:0%; --w:100%"></div></div>
+          <div class="cap"><span>'98</span><span>'26</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 3.0 business segments ── -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="sec__no rv">3.0</span>
+      <h2 class="rv" style="--d:.06s">Business segments</h2>
+      <span class="tab rv" style="--d:.12s">six segments · most projects use four</span>
+    </div>
+
+    <div class="segs rv">
+      <article class="seg">
+        <span class="seg__no">3.1</span>
+        <h3>AI-native product design</h3>
+        <p>Systems where the model is the interaction — voice, agents, ambient assistance — not a chat panel bolted onto a SaaS shell.</p>
+      </article>
+      <article class="seg">
+        <span class="seg__no">3.2</span>
+        <h3>Design engineering</h3>
+        <p>Prototypes that behave like real software because they are real software. Built end-to-end by one person.</p>
+      </article>
+      <article class="seg">
+        <span class="seg__no">3.3</span>
+        <h3>0 → 1 incubation</h3>
+        <p>Ambiguous briefs carried through research, framing, design, prototype, and shipped product — without a roadmap.</p>
+      </article>
+      <article class="seg">
+        <span class="seg__no">3.4</span>
+        <h3>Enterprise UX modernization</h3>
+        <p>Legacy cart, checkout, account, and internal tooling, replaced with systems people actually want to use.</p>
+      </article>
+      <article class="seg">
+        <span class="seg__no">3.5</span>
+        <h3>Internal AI tooling</h3>
+        <p>Custom copilots, prompt libraries, synthetic research environments, workflow accelerators — used by real teams.</p>
+      </article>
+      <article class="seg">
+        <span class="seg__no">3.6</span>
+        <h3>Leadership &amp; enablement</h3>
+        <p>Built and led prototyping teams at Yahoo. Drives AI adoption through teaching, tooling, and example. IC, lead, or director.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── 4.0 holdings ── -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="sec__no rv">4.0</span>
+      <h2 class="rv" style="--d:.06s">Holdings</h2>
+      <span class="tab rv" style="--d:.12s">independent works · all positions live</span>
+    </div>
+
+    <div class="hold rv">
+      <div class="hold__head">
+        <span class="tab">№</span>
+        <span class="tab">Instrument</span>
+        <span class="tab">Description</span>
+        <span class="tab">Class</span>
+        <span class="tab" style="justify-self:end">Status</span>
+      </div>
+
+      <a class="hold__row" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+        <span class="hold__no">001</span>
+        <span class="hold__name">My AI Diary</span>
+        <span class="hold__desc">Voice-first journaling that still sounds like you. Zero-knowledge, local-first.</span>
+        <span class="hold__class">AI tool</span>
+        <span class="hold__live">LIVE</span>
+      </a>
+      <a class="hold__row" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+        <span class="hold__no">002</span>
+        <span class="hold__name">Human, Actually</span>
+        <span class="hold__desc">Tailors your résumé to the job — without sounding like a robot wrote it.</span>
+        <span class="hold__class">AI tool</span>
+        <span class="hold__live">LIVE</span>
+      </a>
+      <a class="hold__row" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+        <span class="hold__no">003</span>
+        <span class="hold__name">WatchGPT</span>
+        <span class="hold__desc">Realtime ChatGPT voice, on your wrist.</span>
+        <span class="hold__class">watchOS</span>
+        <span class="hold__live">LIVE</span>
+      </a>
+      <a class="hold__row" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">
+        <span class="hold__no">004</span>
+        <span class="hold__name">AI Usage</span>
+        <span class="hold__desc">Claude Code + Codex usage in your Mac menubar.</span>
+        <span class="hold__class">macOS</span>
+        <span class="hold__live">LIVE</span>
+      </a>
+      <a class="hold__row" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">
+        <span class="hold__no">005</span>
+        <span class="hold__name">Calorie Counter</span>
+        <span class="hold__desc">The most frictionless food logger ever built. Speak, photograph, done.</span>
+        <span class="hold__class">Vision</span>
+        <span class="hold__live">LIVE</span>
+      </a>
+      <a class="hold__row" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
+        <span class="hold__no">006</span>
+        <span class="hold__name">Vectronix</span>
+        <span class="hold__desc">Hardcore arcade space combat. No mercy, no filler.</span>
+        <span class="hold__class">Game</span>
+        <span class="hold__live">LIVE</span>
+      </a>
+      <a class="hold__row" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
+        <span class="hold__no">007</span>
+        <span class="hold__name">Audio Visualizer Suite</span>
+        <span class="hold__desc">Render-quality video visualizations of your music, hand-tuned.</span>
+        <span class="hold__class">WebGL</span>
+        <span class="hold__live">LIVE</span>
+      </a>
+      <a class="hold__row" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
+        <span class="hold__no">008</span>
+        <span class="hold__name">Color Clock</span>
+        <span class="hold__desc">A 1991 clock design, brought back to life with care.</span>
+        <span class="hold__class">Object</span>
+        <span class="hold__live">LIVE</span>
+      </a>
+    </div>
+
+    <a class="hold__foot rv" href="https://ai-created.com" target="_blank" rel="noopener">
+      Complete schedule of holdings — 18 positions → ai-created.com
+    </a>
+  </div>
+</section>
+
+<!-- ── 5.0 key figures ── -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="sec__no rv">5.0</span>
+      <h2 class="rv" style="--d:.06s">Key figures</h2>
+      <span class="tab rv" style="--d:.12s">audited · no adjustments</span>
+    </div>
+
+    <div class="kpis rv">
+      <div class="kpi">
+        <div class="kpi__n">20<sup>+</sup></div>
+        <div class="kpi__t">Years in the practice</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__n">5</div>
+        <div class="kpi__t">Companies — Google, Yahoo!, Walmart, Kohl's, Endemol</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__n">18</div>
+        <div class="kpi__t">Shipped independent products &amp; experiments</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__n">4</div>
+        <div class="kpi__t">Languages — Dutch, English, German, Spanish</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 6.0 investor relations ── -->
+<section class="sec sec--last">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="sec__no rv">6.0</span>
+      <h2 class="rv" style="--d:.06s">Investor relations</h2>
+      <span class="tab rv" style="--d:.12s">forward-looking statements welcome</span>
+    </div>
+
+    <div class="ir">
+      <div>
+        <h2 class="rv">Acquire<br/>the <span>asset.</span></h2>
+        <p class="ir__lede rv" style="--d:.1s">
+          Open to senior IC, lead, and director conversations. State what you're
+          building, what's ambiguous about it, and your timeline. Due diligence
+          materials ship same-day.
+        </p>
+        <a class="ir__cta rv" style="--d:.18s" href="mailto:marcovhv@gmail.com">Open negotiations ↗</a>
+      </div>
+
+      <div class="ir__list rv" style="--d:.14s">
+        <div class="row">
+          <span class="tab">Direct</span>
+          <span><a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a></span>
+        </div>
+        <div class="row">
+          <span class="tab">The lab</span>
+          <span><a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a></span>
+        </div>
+        <div class="row">
+          <span class="tab">Filings</span>
+          <span><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a></span>
+        </div>
+        <div class="row">
+          <span class="tab">Press</span>
+          <span><a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x.com/AIandDesign</a> · <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a></span>
+        </div>
+        <div class="row">
+          <span class="tab">Registered</span>
+          <span>Portland, Oregon, USA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── footer ── -->
+<footer class="foot">
+  <div class="foot__in">
+    <span><b>Annual Report 2026</b> · document № 22</span>
+    <span>set in Hanken Grotesk &amp; Spline Sans Mono</span>
+    <span>one HTML file · zero frameworks</span>
+    <span class="r">© 2026 M. van Hylckama Vlieg</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>

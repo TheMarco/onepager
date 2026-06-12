@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Grand Hôtel van Hylckama Vlieg — est. 1998</title>
+<meta name="description" content="An art deco grand hotel. Twenty years of design practice as six floors, a room-service menu of shipped products, and a concierge who answers." />
+<meta name="theme-color" content="#0C231C" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════
+   GRAND HÔTEL VAN HYLCKAMA VLIEG — est. 1998
+   An art deco house. Bottle green walls, gold leaf, brass fittings.
+   Six floors of career. Room service ships real software.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  --green:   #0C231C;   /* bottle green walls */
+  --green-2: #102D24;
+  --green-3: #16382D;
+  --gold:    #D4AF5E;   /* gold leaf */
+  --gold-2:  #9C8045;
+  --cream:   #F1E8D2;
+  --cream-2: #C9BFA4;
+  --cream-3: #8E8772;
+  --hair:    rgba(212, 175, 94, 0.32);
+  --hair-2:  rgba(212, 175, 94, 0.14);
+  --gut:     clamp(22px, 5vw, 80px);
+  --max:     1280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+
+body {
+  background: var(--green);
+  color: var(--cream);
+  font-family: 'Jost', 'Futura', sans-serif;
+  font-weight: 300;
+  font-size: 16.5px;
+  line-height: 1.65;
+  letter-spacing: 0.015em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* velvet + lamp glow */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: .85;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 75% 50% at 50% -8%, rgba(212, 175, 94, 0.09), transparent 60%),
+    radial-gradient(ellipse 50% 36% at 8% 105%, rgba(212, 175, 94, 0.05), transparent 65%);
+}
+
+::selection { background: var(--gold); color: var(--green); }
+a { color: inherit; text-decoration: none; }
+
+.deco { font-family: 'Poiret One', 'Jost', cursive; font-weight: 400; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-left: var(--gut);
+  padding-right: var(--gut);
+  position: relative;
+  z-index: 2;
+}
+
+/* engraved label */
+.plate {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.plate--dim { color: var(--cream-3); }
+
+/* deco divider: ─── ◆ ─── */
+.div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 auto;
+}
+.div::before, .div::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hair));
+}
+.div::after { background: linear-gradient(90deg, var(--hair), transparent); }
+.div .dia {
+  width: 7px; height: 7px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  flex: 0 0 auto;
+}
+.div .dia--sm { width: 4px; height: 4px; opacity: .7; }
+
+/* double-rule frame utility */
+.framed {
+  border: 1px solid var(--hair);
+  position: relative;
+}
+.framed::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid var(--hair-2);
+  pointer-events: none;
+}
+
+/* ─────────────── marquee header ─────────────── */
+.mast {
+  border-bottom: 1px solid var(--hair-2);
+  position: relative;
+  z-index: 3;
+}
+.mast__in {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 16px var(--gut);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--cream-2);
+}
+.mast__in .gold { color: var(--gold); }
+@media (max-width: 720px) { .mast__in span:nth-child(2) { display: none; } }
+
+/* ─────────────── façade (hero) ─────────────── */
+.facade {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-top: 70px;
+  padding-bottom: 80px;
+  position: relative;
+}
+
+/* sunburst over the door */
+.burst {
+  width: clamp(190px, 24vw, 300px);
+  margin-bottom: clamp(14px, 2.6vh, 28px);
+}
+.burst svg { width: 100%; height: auto; display: block; }
+.burst .ray {
+  stroke: var(--gold);
+  stroke-width: 1.1;
+  opacity: 0;
+  animation: ray .7s ease forwards;
+}
+@keyframes ray { to { opacity: var(--o, 0.8); } }
+.burst .arc { stroke: var(--gold); fill: none; }
+
+.facade__est {
+  margin-bottom: clamp(14px, 2vh, 22px);
+}
+.facade h1 {
+  font-family: 'Poiret One', cursive;
+  font-weight: 400;
+  font-size: clamp(38px, 6.6vw, 86px);
+  line-height: 1.04;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-wrap: balance;
+}
+.facade h1 .gold { color: var(--gold); }
+.facade h1 .small {
+  display: block;
+  font-size: 0.34em;
+  letter-spacing: 0.5em;
+  margin-top: 0.5em;
+  color: var(--cream-2);
+}
+
+.facade__sub {
+  margin-top: clamp(26px, 4vh, 42px);
+  max-width: 36em;
+  font-size: clamp(15.5px, 1.6vw, 18px);
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--cream-2);
+}
+.facade__sub i { color: var(--cream); font-style: italic; }
+
+.facade__keys {
+  margin-top: clamp(30px, 5vh, 52px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 36px;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cream-3);
+}
+.facade__keys .k b { color: var(--gold); font-weight: 500; margin-right: 8px; }
+
+.facade__down {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.facade__down .dia {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  animation: sink 2.4s ease-in-out infinite;
+}
+.facade__down .dia:nth-child(2) { animation-delay: .2s; opacity: .6; }
+.facade__down .dia:nth-child(3) { animation-delay: .4s; opacity: .3; }
+@keyframes sink {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); }
+  50% { transform: rotate(45deg) translate(3px, 3px); }
+}
+
+/* ─────────────── section scaffolding ─────────────── */
+.sec { padding: clamp(90px, 14vh, 160px) 0 0; }
+
+.sec__head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto clamp(44px, 7vh, 80px);
+}
+.sec__head .plate { display: block; margin-bottom: 20px; }
+.sec__head h2 {
+  font-family: 'Poiret One', cursive;
+  font-weight: 400;
+  font-size: clamp(34px, 5.2vw, 64px);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sec__head h2 .gold { color: var(--gold); }
+.sec__head .note {
+  margin-top: 18px;
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--cream-2);
+  line-height: 1.75;
+}
+.sec__head .div { max-width: 280px; margin-top: 26px; }
+
+/* ─────────────── the directory (career floors) ─────────────── */
+.directory {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(26px, 4vw, 52px);
+}
+
+.floor {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) auto;
+  gap: clamp(16px, 3vw, 40px);
+  align-items: baseline;
+  padding: clamp(20px, 3.4vh, 32px) clamp(4px, 1vw, 14px);
+  position: relative;
+  transition: background .4s ease;
+}
+.floor + .floor { border-top: 1px solid var(--hair-2); }
+.floor:hover { background: rgba(212, 175, 94, 0.05); }
+
+.floor__btn {
+  width: 52px; height: 52px;
+  border: 1px solid var(--hair);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: 'Poiret One', cursive;
+  font-size: 21px;
+  color: var(--gold);
+  align-self: center;
+  position: relative;
+  transition: box-shadow .4s ease, background .4s ease, color .4s ease;
+}
+.floor:hover .floor__btn {
+  background: var(--gold);
+  color: var(--green);
+  box-shadow: 0 0 22px rgba(212, 175, 94, 0.4);
+}
+
+.floor__id h3 {
+  font-family: 'Poiret One', cursive;
+  font-weight: 400;
+  font-size: clamp(22px, 2.6vw, 31px);
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+}
+.floor__id .role {
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+}
+.floor__id p {
+  margin-top: 10px;
+  font-size: 14.5px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--cream-2);
+  max-width: 34em;
+}
+.floor__yrs {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--cream-3);
+  white-space: nowrap;
+  align-self: center;
+}
+@media (max-width: 700px) {
+  .floor { grid-template-columns: 60px minmax(0, 1fr); }
+  .floor__btn { width: 44px; height: 44px; font-size: 18px; }
+  .floor__yrs { grid-column: 2; }
+}
+
+/* ─────────────── room service (the lab) ─────────────── */
+.menu {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: clamp(30px, 5vw, 60px);
+}
+.menu__title {
+  text-align: center;
+  margin-bottom: clamp(30px, 5vh, 48px);
+}
+.menu__title .deco {
+  font-size: clamp(24px, 3vw, 34px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.menu__title .plate { display: block; margin-top: 12px; }
+
+.dish {
+  display: grid;
+  grid-template-columns: minmax(0, auto) 1fr auto;
+  gap: 8px 14px;
+  align-items: baseline;
+  padding: 13px 0;
+}
+.dish__name {
+  font-family: 'Poiret One', cursive;
+  font-size: clamp(19px, 2.1vw, 25px);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.dish:hover .dish__name { color: var(--gold); }
+.dish__dots {
+  border-bottom: 1px dotted var(--hair);
+  transform: translateY(-5px);
+}
+.dish__kind {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  white-space: nowrap;
+}
+.dish__desc {
+  grid-column: 1 / 4;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--cream-2);
+  max-width: 40em;
+}
+@media (max-width: 560px) {
+  .dish__name { white-space: normal; }
+}
+
+.menu__foot {
+  margin-top: 36px;
+  text-align: center;
+}
+.menu__foot a {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-bottom: 1px solid var(--hair);
+  padding-bottom: 6px;
+  transition: border-color .3s ease, letter-spacing .3s ease;
+}
+.menu__foot a:hover { border-color: var(--gold); letter-spacing: 0.36em; }
+
+/* ─────────────── amenities (capabilities) ─────────────── */
+.amen {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2vw, 26px);
+}
+.amen article {
+  border: 1px solid var(--hair-2);
+  padding: clamp(24px, 3vw, 40px) clamp(20px, 2.6vw, 34px);
+  text-align: center;
+  transition: border-color .4s ease, background .4s ease;
+  position: relative;
+}
+.amen article:hover { border-color: var(--hair); background: rgba(212, 175, 94, 0.04); }
+
+.amen .glyph {
+  width: 44px; height: 44px;
+  margin: 0 auto 20px;
+}
+.amen .glyph svg { width: 100%; height: 100%; display: block; }
+.amen .glyph path, .amen .glyph circle, .amen .glyph rect, .amen .glyph line, .amen .glyph polyline {
+  stroke: var(--gold);
+  fill: none;
+  stroke-width: 1.2;
+}
+.amen h3 {
+  font-family: 'Poiret One', cursive;
+  font-weight: 400;
+  font-size: clamp(18px, 1.9vw, 23px);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+.amen p {
+  font-size: 13.5px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--cream-2);
+}
+@media (max-width: 880px) { .amen { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .amen { grid-template-columns: 1fr; } }
+
+/* ─────────────── ledger (numbers) ─────────────── */
+.ledger {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(30px, 6vw, 90px);
+  text-align: center;
+}
+.ledger .item .n {
+  font-family: 'Poiret One', cursive;
+  font-size: clamp(50px, 7vw, 92px);
+  line-height: 1;
+  color: var(--cream);
+}
+.ledger .item .n span { color: var(--gold); }
+.ledger .item .t {
+  margin-top: 12px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cream-3);
+  max-width: 16em;
+  line-height: 1.8;
+}
+
+/* ─────────────── concierge ─────────────── */
+.concierge {
+  margin-top: clamp(90px, 14vh, 160px);
+  border-top: 1px solid var(--hair-2);
+  background: linear-gradient(rgba(212, 175, 94, 0.05), transparent 55%);
+  padding: clamp(80px, 12vh, 140px) 0 clamp(70px, 10vh, 110px);
+  text-align: center;
+}
+.concierge .bell {
+  width: 60px;
+  margin: 0 auto 30px;
+}
+.concierge .bell svg { width: 100%; height: auto; display: block; }
+.concierge .bell path, .concierge .bell ellipse, .concierge .bell line {
+  stroke: var(--gold);
+  fill: none;
+  stroke-width: 1.3;
+}
+.concierge h2 {
+  font-family: 'Poiret One', cursive;
+  font-weight: 400;
+  font-size: clamp(38px, 6.4vw, 88px);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.08;
+}
+.concierge h2 .gold { color: var(--gold); }
+.concierge .lede {
+  margin: 26px auto 0;
+  max-width: 32em;
+  font-size: clamp(15px, 1.6vw, 18px);
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--cream-2);
+}
+.concierge__cta {
+  display: inline-block;
+  margin-top: 42px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  padding: 18px 38px;
+  position: relative;
+  transition: background .35s ease, color .35s ease, box-shadow .35s ease;
+}
+.concierge__cta:hover {
+  background: var(--gold);
+  color: var(--green);
+  box-shadow: 0 0 34px rgba(212, 175, 94, 0.35);
+}
+
+.concierge__card {
+  margin: 56px auto 0;
+  max-width: 620px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 38px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cream-3);
+}
+.concierge__card a {
+  color: var(--cream-2);
+  border-bottom: 1px solid var(--hair-2);
+  padding-bottom: 3px;
+  transition: color .3s ease, border-color .3s ease;
+}
+.concierge__card a:hover { color: var(--gold); border-color: var(--gold); }
+
+/* ─────────────── footer ─────────────── */
+.foot {
+  border-top: 1px solid var(--hair-2);
+  padding: 26px 0 36px;
+}
+.foot__in {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 34px;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--cream-3);
+}
+.foot__in b { color: var(--gold); font-weight: 500; }
+.foot__in .r { margin-left: auto; }
+@media (max-width: 720px) { .foot__in .r { margin-left: 0; } }
+
+/* ─────────────── reveal ─────────────── */
+.rv {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1);
+  transition-delay: var(--d, 0s);
+}
+.rv.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.001s !important;
+  }
+  .rv { opacity: 1; transform: none; }
+  .burst .ray { opacity: var(--o, 0.8); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ── marquee ── -->
+<header class="mast">
+  <div class="mast__in">
+    <span class="gold">◆ Grand Hôtel</span>
+    <span>van Hylckama Vlieg · établi 1998</span>
+    <span>Portland · Oregon</span>
+  </div>
+</header>
+
+<!-- ── façade ── -->
+<section class="facade wrap">
+
+  <div class="burst rv" aria-hidden="true">
+    <svg viewBox="0 0 380 150">
+      <g>
+        <line class="ray" x1="190" y1="138" x2="190" y2="10"  style="--o:.9; animation-delay:.30s"/>
+        <line class="ray" x1="190" y1="138" x2="130" y2="22"  style="--o:.75; animation-delay:.42s"/>
+        <line class="ray" x1="190" y1="138" x2="250" y2="22"  style="--o:.75; animation-delay:.42s"/>
+        <line class="ray" x1="190" y1="138" x2="78"  y2="52"  style="--o:.6; animation-delay:.54s"/>
+        <line class="ray" x1="190" y1="138" x2="302" y2="52"  style="--o:.6; animation-delay:.54s"/>
+        <line class="ray" x1="190" y1="138" x2="42"  y2="96"  style="--o:.45; animation-delay:.66s"/>
+        <line class="ray" x1="190" y1="138" x2="338" y2="96"  style="--o:.45; animation-delay:.66s"/>
+        <line class="ray" x1="190" y1="138" x2="26"  y2="138" style="--o:.3; animation-delay:.78s"/>
+        <line class="ray" x1="190" y1="138" x2="354" y2="138" style="--o:.3; animation-delay:.78s"/>
+      </g>
+      <path class="arc" d="M 110 138 A 80 80 0 0 1 270 138" stroke-width="1.4"/>
+      <path class="arc" d="M 132 138 A 58 58 0 0 1 248 138" stroke-width="1" opacity="0.55"/>
+      <path class="arc" d="M 154 138 A 36 36 0 0 1 226 138" stroke-width="0.8" opacity="0.35"/>
+      <line x1="60" y1="142" x2="320" y2="142" stroke="#D4AF5E" stroke-width="1.2"/>
+      <line x1="84" y1="147" x2="296" y2="147" stroke="#D4AF5E" stroke-width="0.7" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <div class="facade__est rv" style="--d:.15s">
+    <span class="plate">◆ &nbsp;Établi MCMXCVIII &nbsp;◆</span>
+  </div>
+
+  <h1 class="rv" style="--d:.25s">
+    Grand <span class="gold">Hôtel</span><br/>
+    van Hylckama Vlieg
+    <span class="small">six floors · all suites · no vacancies in craft</span>
+  </h1>
+
+  <p class="facade__sub rv" style="--d:.45s">
+    A house of product design in the grand manner. Twenty years of work kept like
+    a fine hotel — <i>every floor occupied, every fixture polished,
+    room service shipping real software at all hours.</i>
+  </p>
+
+  <div class="facade__keys rv" style="--d:.6s">
+    <span class="k"><b>Proprietor</b> M. van Hylckama Vlieg</span>
+    <span class="k"><b>Register</b> Google · Yahoo! · Walmart · Kohl's · Endemol</span>
+    <span class="k"><b>Tonight</b> Suites available for new engagements</span>
+  </div>
+
+  <div class="facade__down" aria-hidden="true">
+    <span class="dia"></span><span class="dia"></span><span class="dia"></span>
+  </div>
+</section>
+
+<!-- ── floor directory ── -->
+<section class="sec wrap" id="directory">
+  <header class="sec__head rv">
+    <span class="plate">The brass panel by the lift</span>
+    <h2>Floor <span class="gold">Directory</span></h2>
+    <p class="note">Six floors, ascended in order. Press a button; the doors take a moment — they're original.</p>
+    <div class="div" aria-hidden="true"><span class="dia dia--sm"></span><span class="dia"></span><span class="dia dia--sm"></span></div>
+  </header>
+
+  <div class="directory framed rv">
+    <div class="floor">
+      <div class="floor__btn">PH</div>
+      <div class="floor__id">
+        <h3>Kohl's — The Penthouse</h3>
+        <div class="role">Senior Product Designer · Generative AI Specialist</div>
+        <p>UX across cart, checkout, wallet, account, and in-store self-checkout. AI tooling, prompt libraries, and education across the entire design organization.</p>
+      </div>
+      <div class="floor__yrs">2021 — now</div>
+    </div>
+
+    <div class="floor">
+      <div class="floor__btn">4</div>
+      <div class="floor__id">
+        <h3>Walmart Labs</h3>
+        <div class="role">Principal Product Designer / Design Technologist</div>
+        <p>Mobile, voice, and personalization through a digital transformation. Recommendation systems translated into interfaces that didn't require explanation.</p>
+      </div>
+      <div class="floor__yrs">2017 — 2021</div>
+    </div>
+
+    <div class="floor">
+      <div class="floor__btn">3</div>
+      <div class="floor__id">
+        <h3>Google</h3>
+        <div class="role">Senior UX Engineer / Prototyper</div>
+        <p>High-fidelity prototypes for Google Cloud AI, Assistant, and Android. The bridge between design and engineering, crossed daily.</p>
+      </div>
+      <div class="floor__yrs">2013 — 2017</div>
+    </div>
+
+    <div class="floor">
+      <div class="floor__btn">2</div>
+      <div class="floor__id">
+        <h3>Yahoo!</h3>
+        <div class="role">Director of UX Prototyping · Senior UX Manager</div>
+        <p>Global prototyping teams led across offices and product lines. Rebrand and personalization work, scalable process, mentored prototypers throughout the house.</p>
+      </div>
+      <div class="floor__yrs">2005 — 2013</div>
+    </div>
+
+    <div class="floor">
+      <div class="floor__btn">L</div>
+      <div class="floor__id">
+        <h3>Endemol — The Lobby</h3>
+        <div class="role">UX &amp; Engineering Lead</div>
+        <p>Where guests first checked in. Multilingual content systems and large-scale platforms across an international entertainment portfolio. The foundations of the house.</p>
+      </div>
+      <div class="floor__yrs">1998 — 2005</div>
+    </div>
+
+    <div class="floor">
+      <div class="floor__btn">W</div>
+      <div class="floor__id">
+        <h3>The Workshop — below stairs</h3>
+        <div class="role">AI-Created · independent product lab</div>
+        <p>Never closes. AI tools, design utilities, music, video, and arcade games — real software, built end-to-end, sent upstairs most weeks.</p>
+      </div>
+      <div class="floor__yrs">always open</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── amenities ── -->
+<section class="sec wrap" id="amenities">
+  <header class="sec__head rv">
+    <span class="plate">Services of the house</span>
+    <h2>The <span class="gold">Amenities</span></h2>
+    <p class="note">Six standing services, available to every engagement. Most guests use four at once.</p>
+    <div class="div" aria-hidden="true"><span class="dia dia--sm"></span><span class="dia"></span><span class="dia dia--sm"></span></div>
+  </header>
+
+  <div class="amen">
+    <article class="rv">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="15"/><path d="M22 7 v-4 M22 41 v-4 M7 22 h-4 M41 22 h-4"/><circle cx="22" cy="22" r="4"/></svg>
+      </div>
+      <h3>AI-native design</h3>
+      <p>Systems where the model is the interaction — voice, agents, ambient assistance — not a chat panel bolted on.</p>
+    </article>
+    <article class="rv" style="--d:.08s">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 44 44"><rect x="6" y="10" width="32" height="24" rx="2"/><polyline points="13,18 18,23 13,28"/><line x1="22" y1="28" x2="30" y2="28"/></svg>
+      </div>
+      <h3>Design engineering</h3>
+      <p>Prototypes that behave like real software because they are real software. Built end-to-end by one person.</p>
+    </article>
+    <article class="rv" style="--d:.16s">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 44 44"><path d="M22 38 V14"/><path d="M14 22 L22 14 L30 22"/><circle cx="22" cy="8" r="3"/></svg>
+      </div>
+      <h3>0 → 1 incubation</h3>
+      <p>An ambiguous brief carried through research, framing, prototype, and shipped product. No roadmap required.</p>
+    </article>
+    <article class="rv">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 44 44"><rect x="8" y="8" width="12" height="12"/><rect x="24" y="8" width="12" height="12"/><rect x="8" y="24" width="12" height="12"/><rect x="24" y="24" width="12" height="12"/></svg>
+      </div>
+      <h3>Enterprise UX</h3>
+      <p>Legacy cart, checkout, account, and internal tooling — untangled and replaced with systems people want to use.</p>
+    </article>
+    <article class="rv" style="--d:.08s">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 44 44"><path d="M10 34 L10 22 M22 34 L22 12 M34 34 L34 18"/><line x1="6" y1="38" x2="38" y2="38"/></svg>
+      </div>
+      <h3>Internal AI tooling</h3>
+      <p>Custom copilots, prompt libraries, synthetic research environments, workflow accelerators — used by real teams.</p>
+    </article>
+    <article class="rv" style="--d:.16s">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 44 44"><circle cx="22" cy="14" r="6"/><path d="M10 36 C10 27, 34 27, 34 36"/></svg>
+      </div>
+      <h3>Leadership</h3>
+      <p>Built and led prototyping teams at Yahoo. Drives AI adoption through teaching, tooling, and example.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ── room service ── -->
+<section class="sec wrap" id="menu">
+  <header class="sec__head rv">
+    <span class="plate">Available at all hours</span>
+    <h2>Room <span class="gold">Service</span></h2>
+    <p class="note">Everything on the card is real, live, and prepared in-house at the Workshop.</p>
+    <div class="div" aria-hidden="true"><span class="dia dia--sm"></span><span class="dia"></span><span class="dia dia--sm"></span></div>
+  </header>
+
+  <div class="menu framed rv">
+    <div class="menu__title">
+      <div class="deco">Carte du Jour</div>
+      <span class="plate plate--dim">la cuisine ne ferme jamais</span>
+    </div>
+
+    <a class="dish" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+      <span class="dish__name">My AI Diary</span>
+      <span class="dish__dots" aria-hidden="true"></span>
+      <span class="dish__kind">AI tool</span>
+      <span class="dish__desc">Voice-first journaling that still sounds like you — zero-knowledge, local-first, served quietly.</span>
+    </a>
+    <a class="dish" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+      <span class="dish__name">Human, Actually</span>
+      <span class="dish__dots" aria-hidden="true"></span>
+      <span class="dish__kind">AI tool</span>
+      <span class="dish__desc">Your résumé, tailored to the job without sounding like a robot wrote it.</span>
+    </a>
+    <a class="dish" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+      <span class="dish__name">WatchGPT</span>
+      <span class="dish__dots" aria-hidden="true"></span>
+      <span class="dish__kind">watchOS</span>
+      <span class="dish__desc">Realtime ChatGPT voice, on your wrist — for guests who never sit still.</span>
+    </a>
+    <a class="dish" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">
+      <span class="dish__name">AI Usage</span>
+      <span class="dish__dots" aria-hidden="true"></span>
+      <span class="dish__kind">macOS</span>
+      <span class="dish__desc">Claude Code &amp; Codex usage in the menubar, for the builders in residence.</span>
+    </a>
+    <a class="dish" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">
+      <span class="dish__name">Calorie Counter</span>
+      <span class="dish__dots" aria-hidden="true"></span>
+      <span class="dish__kind">Vision</span>
+      <span class="dish__desc">The most frictionless food logger ever built. Speak, photograph, done.</span>
+    </a>
+    <a class="dish" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
+      <span class="dish__name">Vectronix</span>
+      <span class="dish__dots" aria-hidden="true"></span>
+      <span class="dish__kind">Game</span>
+      <span class="dish__desc">Hardcore arcade space combat for the lounge after midnight. No mercy, no filler.</span>
+    </a>
+    <a class="dish" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
+      <span class="dish__name">Audio Visualizer Suite</span>
+      <span class="dish__dots" aria-hidden="true"></span>
+      <span class="dish__kind">WebGL</span>
+      <span class="dish__desc">Render-quality visualizations for the house band's recordings.</span>
+    </a>
+    <a class="dish" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
+      <span class="dish__name">Color Clock</span>
+      <span class="dish__dots" aria-hidden="true"></span>
+      <span class="dish__kind">Object</span>
+      <span class="dish__desc">A 1991 clock design restored to the lobby wall, keeping perfect time.</span>
+    </a>
+
+    <div class="menu__foot">
+      <a href="https://ai-created.com" target="_blank" rel="noopener">Full cellar — eighteen works → ai-created.com</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── ledger ── -->
+<section class="sec wrap" id="ledger">
+  <header class="sec__head rv">
+    <span class="plate">From the guest ledger</span>
+    <h2>The <span class="gold">Record</span></h2>
+  </header>
+
+  <div class="ledger rv">
+    <div class="item">
+      <div class="n">20<span>+</span></div>
+      <div class="t">years keeping the house</div>
+    </div>
+    <div class="item">
+      <div class="n">5</div>
+      <div class="t">grand establishments served</div>
+    </div>
+    <div class="item">
+      <div class="n">18</div>
+      <div class="t">works prepared &amp; shipped in-house</div>
+    </div>
+    <div class="item">
+      <div class="n">4</div>
+      <div class="t">languages spoken at the desk</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── concierge ── -->
+<section class="concierge" id="concierge">
+  <div class="wrap">
+    <div class="bell rv" aria-hidden="true">
+      <svg viewBox="0 0 60 44">
+        <path d="M14 34 C14 22, 22 14, 30 14 C38 14, 46 22, 46 34"/>
+        <line x1="30" y1="14" x2="30" y2="9"/>
+        <circle cx="30" cy="7" r="2.4" fill="none" stroke="#D4AF5E" stroke-width="1.3"/>
+        <line x1="8" y1="38" x2="52" y2="38"/>
+        <line x1="14" y1="42" x2="46" y2="42" opacity="0.5"/>
+      </svg>
+    </div>
+    <h2 class="rv" style="--d:.08s">Ring for the<br/><span class="gold">Concierge</span></h2>
+    <p class="lede rv" style="--d:.18s">
+      The proprietor takes engagements personally — senior IC, lead, and director
+      conversations. State what you're building, what's ambiguous about it,
+      and your timeline. The desk replies the same day.
+    </p>
+    <a class="concierge__cta rv" style="--d:.28s" href="mailto:marcovhv@gmail.com">Ring the bell</a>
+
+    <div class="concierge__card rv" style="--d:.36s">
+      <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a>
+      <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+      <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin/marcovhv</a>
+      <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x/AIandDesign</a>
+      <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">youtube/@AIandDesign</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── footer ── -->
+<footer class="foot">
+  <div class="foot__in">
+    <span><b>◆ Grand Hôtel</b> · design № 23</span>
+    <span>set in Poiret One &amp; Jost</span>
+    <span>one HTML file · zero frameworks</span>
+    <span class="r">© 2026 M. van Hylckama Vlieg</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -7% 0px' });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>

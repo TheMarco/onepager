@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>間 — The Interval · Marco van Hylckama Vlieg</title>
+<meta name="description" content="Ma (間) — the space between things. A portfolio of Marco van Hylckama Vlieg composed almost entirely of what was left out." />
+<meta name="theme-color" content="#F5F1E8" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════
+   間 — THE INTERVAL
+   Ma: the deliberate space between things. A portfolio composed
+   almost entirely of what was left out.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  --washi:   #F5F1E8;   /* warm paper */
+  --washi-2: #EDE7D9;
+  --sumi:    #1F1B16;   /* ink */
+  --sumi-2:  #45403A;
+  --sumi-3:  #79736A;
+  --sumi-4:  #A8A296;
+  --shu:     #C73E2D;   /* vermillion — the seal, used once per breath */
+  --hair:    rgba(31, 27, 22, 0.16);
+  --hair-2:  rgba(31, 27, 22, 0.08);
+  --gut:     clamp(24px, 6vw, 110px);
+  --max:     1220px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+
+body {
+  background: var(--washi);
+  color: var(--sumi);
+  font-family: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16.5px;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* paper fibre */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.045 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+  mix-blend-mode: multiply;
+}
+
+::selection { background: var(--shu); color: var(--washi); }
+
+a { color: inherit; text-decoration: none; }
+
+.mincho { font-family: 'Shippori Mincho', 'Hiragino Mincho ProN', serif; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-left: var(--gut);
+  padding-right: var(--gut);
+  position: relative;
+}
+
+/* small caption style */
+.cap {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--sumi-3);
+}
+.cap .shu { color: var(--shu); }
+
+/* the vertical margin caption that runs down the right edge */
+.margin-note {
+  position: fixed;
+  top: 50%;
+  right: clamp(10px, 2.4vw, 34px);
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  color: var(--sumi-4);
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.margin-note::before {
+  content: '';
+  width: 1px;
+  height: 56px;
+  background: var(--hair);
+}
+.margin-note .k { color: var(--shu); font-size: 15px; }
+@media (max-width: 760px) { .margin-note { display: none; } }
+
+/* ─────────────── header ─────────────── */
+.head {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 20;
+}
+.head__in {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 30px var(--gut) 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+}
+.head__name {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+}
+.head__nav {
+  display: flex;
+  gap: clamp(18px, 3vw, 38px);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sumi-3);
+}
+.head__nav a { transition: color .3s ease; }
+.head__nav a:hover { color: var(--shu); }
+@media (max-width: 640px) { .head__nav { display: none; } }
+
+/* ─────────────── hero ─────────────── */
+.hero {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(20px, 5vw, 80px);
+  padding-top: 90px;
+  padding-bottom: 60px;
+  position: relative;
+}
+
+/* the great character, almost not there */
+.hero__kanji {
+  position: absolute;
+  right: 4%;
+  top: 50%;
+  transform: translateY(-52%);
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 400;
+  font-size: clamp(280px, 52vw, 760px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(31, 27, 22, 0.13);
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero__main { position: relative; z-index: 2; }
+
+.hero__pre {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: clamp(24px, 4vh, 44px);
+}
+.hero__pre .tick { width: 52px; height: 1px; background: var(--sumi); }
+
+.hero h1 {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 500;
+  font-size: clamp(44px, 7.4vw, 108px);
+  line-height: 1.08;
+  letter-spacing: 0.005em;
+  max-width: 9em;
+}
+.hero h1 .shu { color: var(--shu); }
+
+.hero__sub {
+  margin-top: clamp(22px, 3.6vh, 40px);
+  max-width: 30em;
+  font-size: clamp(16px, 1.6vw, 18.5px);
+  line-height: 1.85;
+  color: var(--sumi-2);
+  font-weight: 300;
+}
+.hero__sub b { font-weight: 500; color: var(--sumi); }
+
+.hero__meta {
+  margin-top: clamp(34px, 5vh, 58px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 44px;
+}
+.hero__meta .item { font-size: 12px; letter-spacing: 0.12em; color: var(--sumi-3); }
+.hero__meta .item b { display: block; font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; font-size: 9.5px; color: var(--sumi-4); margin-bottom: 3px; }
+
+/* enso — drawn once, on arrival */
+.hero__enso {
+  width: clamp(120px, 16vw, 210px);
+  position: relative;
+  z-index: 2;
+  align-self: end;
+  margin-bottom: 8vh;
+}
+.hero__enso svg { width: 100%; height: auto; display: block; }
+.hero__enso .stroke {
+  fill: none;
+  stroke: var(--sumi);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 560;
+  stroke-dashoffset: 560;
+  animation: enso 2.4s cubic-bezier(.6,.05,.3,1) 0.5s forwards;
+  opacity: 0.88;
+}
+@keyframes enso { to { stroke-dashoffset: 38; } }
+.hero__enso .cap { display: block; text-align: center; margin-top: 18px; }
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero__enso { display: none; }
+  .hero__kanji { right: -12%; opacity: .8; }
+}
+
+/* ─────────────── section scaffolding ─────────────── */
+.sec { padding: clamp(96px, 16vh, 190px) 0 0; }
+
+.sec__head {
+  display: flex;
+  align-items: baseline;
+  gap: 26px;
+  margin-bottom: clamp(44px, 7vh, 80px);
+}
+.sec__no {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(22px, 2.4vw, 30px);
+  color: var(--shu);
+  line-height: 1;
+}
+.sec__head h2 {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 500;
+  font-size: clamp(30px, 4.4vw, 56px);
+  line-height: 1.15;
+}
+.sec__head .line { flex: 1; height: 1px; background: var(--hair); align-self: center; }
+.sec__head .cap { white-space: nowrap; align-self: center; }
+@media (max-width: 640px) { .sec__head .cap { display: none; } }
+
+/* ─────────────── 一 · position ─────────────── */
+.position { max-width: 760px; }
+.position p {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(20px, 2.6vw, 31px);
+  line-height: 1.75;
+  font-weight: 400;
+  color: var(--sumi);
+}
+.position p + p { margin-top: 1.6em; }
+.position .shu { color: var(--shu); }
+.position .sig {
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.position .sig .cap { letter-spacing: 0.28em; }
+
+/* the seal */
+.seal {
+  width: 58px; height: 58px;
+  flex: 0 0 58px;
+  display: grid;
+  place-items: center;
+  transform: rotate(-3deg);
+}
+.seal svg { width: 100%; height: 100%; display: block; }
+
+/* ─────────────── 二 · the path (career) ─────────────── */
+.path { position: relative; }
+.path::before {
+  content: '';
+  position: absolute;
+  left: clamp(8px, 1.2vw, 14px);
+  top: 8px; bottom: 8px;
+  width: 1px;
+  background: linear-gradient(var(--hair), var(--hair) 85%, transparent);
+}
+
+.step {
+  position: relative;
+  padding: clamp(30px, 5vh, 52px) 0 clamp(30px, 5vh, 52px) clamp(48px, 6vw, 92px);
+  display: grid;
+  grid-template-columns: minmax(120px, 0.55fr) minmax(0, 1fr);
+  gap: clamp(16px, 3vw, 56px);
+  align-items: baseline;
+}
+.step + .step { border-top: 1px solid var(--hair-2); }
+
+.step::before {
+  /* station mark on the road */
+  content: '';
+  position: absolute;
+  left: clamp(4px, 1.2vw, 10px);
+  top: clamp(40px, 5.6vh, 62px);
+  width: 9px; height: 9px;
+  border: 1px solid var(--sumi-3);
+  background: var(--washi);
+  transform: rotate(45deg);
+  transition: background .4s ease, border-color .4s ease;
+}
+.step:hover::before { background: var(--shu); border-color: var(--shu); }
+
+.step__when {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(15px, 1.6vw, 19px);
+  letter-spacing: 0.08em;
+  color: var(--sumi-3);
+}
+.step__when .yr { color: var(--sumi); font-size: 1.35em; display: block; line-height: 1.2; }
+
+.step__body h3 {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 500;
+  font-size: clamp(22px, 2.6vw, 32px);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.step__body .role {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--shu);
+  margin-bottom: 14px;
+}
+.step__body p {
+  font-weight: 300;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--sumi-2);
+  max-width: 34em;
+}
+@media (max-width: 700px) {
+  .step { grid-template-columns: 1fr; gap: 10px; }
+}
+
+/* ─────────────── 三 · the craft ─────────────── */
+.craft {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 clamp(40px, 7vw, 110px);
+}
+.craft article {
+  padding: clamp(28px, 4vh, 42px) 0;
+  border-top: 1px solid var(--hair);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 22px;
+  align-items: baseline;
+}
+.craft .k {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(26px, 2.8vw, 36px);
+  color: var(--sumi-4);
+  line-height: 1;
+  transition: color .4s ease;
+}
+.craft article:hover .k { color: var(--shu); }
+.craft h3 {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 500;
+  font-size: clamp(18px, 1.9vw, 23px);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.craft p {
+  font-weight: 300;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--sumi-2);
+}
+@media (max-width: 800px) { .craft { grid-template-columns: 1fr; } }
+
+/* ─────────────── 四 · the things (lab) ─────────────── */
+.things { border-top: 1px solid var(--hair); }
+.thing {
+  display: grid;
+  grid-template-columns: auto minmax(0, 0.85fr) minmax(0, 1.1fr) auto;
+  gap: clamp(16px, 3vw, 48px);
+  align-items: baseline;
+  padding: clamp(20px, 3.2vh, 30px) 0;
+  border-bottom: 1px solid var(--hair-2);
+  position: relative;
+  transition: padding-left .45s cubic-bezier(.2,.7,.2,1);
+}
+.thing:hover { padding-left: 14px; }
+.thing::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  width: 0; height: 1px;
+  background: var(--shu);
+  transition: width .45s cubic-bezier(.2,.7,.2,1);
+}
+.thing:hover::after { width: 8px; }
+
+.thing__no {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13px;
+  color: var(--sumi-4);
+  min-width: 2.4em;
+}
+.thing__name {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 500;
+  font-size: clamp(19px, 2.1vw, 26px);
+  line-height: 1.25;
+}
+.thing__what {
+  font-weight: 300;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--sumi-2);
+}
+.thing__kind {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--sumi-3);
+  white-space: nowrap;
+  justify-self: end;
+}
+.thing:hover .thing__kind { color: var(--shu); }
+@media (max-width: 760px) {
+  .thing { grid-template-columns: auto minmax(0, 1fr); }
+  .thing__what { grid-column: 2; }
+  .thing__kind { grid-column: 2; justify-self: start; }
+}
+
+.things__more {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 34px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sumi-2);
+  border-bottom: 1px solid var(--sumi);
+  padding-bottom: 6px;
+  transition: color .3s ease, border-color .3s ease;
+}
+.things__more:hover { color: var(--shu); border-color: var(--shu); }
+
+/* ─────────────── 五 · presently / the letter close ─────────────── */
+.close-sec {
+  margin-top: clamp(96px, 16vh, 190px);
+  background: var(--washi-2);
+  border-top: 1px solid var(--hair);
+  padding: clamp(80px, 13vh, 150px) 0 clamp(70px, 11vh, 120px);
+}
+.close-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(40px, 7vw, 110px);
+  align-items: start;
+}
+.close-grid h2 {
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 500;
+  font-size: clamp(38px, 6vw, 84px);
+  line-height: 1.12;
+}
+.close-grid h2 .shu { color: var(--shu); }
+.close-grid .lede {
+  margin-top: 30px;
+  font-weight: 300;
+  font-size: clamp(16px, 1.7vw, 19px);
+  line-height: 1.85;
+  color: var(--sumi-2);
+  max-width: 28em;
+}
+.close-grid .lede b { font-weight: 500; color: var(--sumi); }
+
+.close-sig {
+  margin-top: 48px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.close-sig .name {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 19px;
+  letter-spacing: 0.06em;
+}
+.close-sig .place { font-size: 11px; letter-spacing: 0.2em; color: var(--sumi-3); margin-top: 2px; }
+
+.now-card { border-top: 2px solid var(--sumi); padding-top: 26px; }
+.now-card .cap { margin-bottom: 26px; display: block; }
+.now-card dl { display: grid; gap: 22px; }
+.now-card dt {
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sumi-4);
+  margin-bottom: 5px;
+}
+.now-card dd { font-size: 14.5px; line-height: 1.7; color: var(--sumi-2); font-weight: 300; }
+.now-card dd b { font-weight: 500; color: var(--sumi); }
+.now-card dd a {
+  color: var(--sumi);
+  font-weight: 500;
+  border-bottom: 1px solid var(--hair);
+  transition: color .3s ease, border-color .3s ease;
+}
+.now-card dd a:hover { color: var(--shu); border-color: var(--shu); }
+
+@media (max-width: 840px) { .close-grid { grid-template-columns: 1fr; } }
+
+/* ─────────────── footer ─────────────── */
+.foot {
+  padding: 34px 0 44px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 36px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--sumi-4);
+}
+.foot .r { margin-left: auto; }
+.foot b { color: var(--sumi-3); font-weight: 500; }
+@media (max-width: 700px) { .foot .r { margin-left: 0; } }
+
+/* ─────────────── reveal ─────────────── */
+.rv {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 1.1s cubic-bezier(.22,.65,.25,1), transform 1.1s cubic-bezier(.22,.65,.25,1);
+  transition-delay: var(--d, 0s);
+}
+.rv.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.001s !important;
+  }
+  .rv { opacity: 1; transform: none; }
+  .hero__enso .stroke { stroke-dashoffset: 38; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- vertical margin caption -->
+<div class="margin-note" aria-hidden="true">
+  <span><span class="k">間</span>&thinsp;— the space between things</span>
+</div>
+
+<!-- ── header ── -->
+<header class="head">
+  <div class="head__in">
+    <div class="head__name">M. van Hylckama Vlieg</div>
+    <nav class="head__nav">
+      <a href="#ichi">Position</a>
+      <a href="#ni">Path</a>
+      <a href="#san">Craft</a>
+      <a href="#yon">Things</a>
+      <a href="#go">Presently</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── hero ── -->
+<section class="hero wrap">
+  <div class="hero__kanji" aria-hidden="true">間</div>
+
+  <div class="hero__main">
+    <div class="hero__pre rv">
+      <span class="tick" aria-hidden="true"></span>
+      <span class="cap">A portfolio in five intervals · <span class="shu">折 2026</span></span>
+    </div>
+
+    <h1 class="rv" style="--d:.12s">
+      The work is<br/>
+      what remains<br/>
+      after <span class="shu">restraint.</span>
+    </h1>
+
+    <p class="hero__sub rv" style="--d:.26s">
+      <b>Ma (間)</b> is the Japanese idea that the space between things is itself a thing —
+      that an interval is designed, not left over. Twenty years of product design,
+      composed here almost entirely of what was left out.
+    </p>
+
+    <div class="hero__meta rv" style="--d:.4s">
+      <div class="item"><b>Subject</b>Marco van Hylckama Vlieg</div>
+      <div class="item"><b>Practice</b>Product design · AI-native systems</div>
+      <div class="item"><b>Place</b>Portland, Oregon</div>
+      <div class="item"><b>Status</b>Open to roles</div>
+    </div>
+  </div>
+
+  <div class="hero__enso" aria-hidden="true">
+    <svg viewBox="0 0 200 200">
+      <path class="stroke"
+        d="M 118 28
+           C 64 18, 22 62, 26 110
+           C 30 158, 76 186, 122 176
+           C 166 166, 186 124, 174 82
+           C 165 51, 140 33, 116 30" />
+    </svg>
+    <span class="cap">drawn once, kept</span>
+  </div>
+</section>
+
+<!-- ── 一 · position ── -->
+<section class="sec wrap" id="ichi">
+  <div class="sec__head rv">
+    <span class="sec__no">一</span>
+    <h2>Position</h2>
+    <span class="line" aria-hidden="true"></span>
+    <span class="cap">ichi · where one stands</span>
+  </div>
+
+  <div class="position">
+    <p class="rv">
+      I design products at the seam where intent becomes interface — where a
+      half-formed idea has to choose what kind of system it wants to become.
+    </p>
+    <p class="rv">
+      AI didn't shrink the design problem. It made the problem about
+      <span class="shu">judgment</span> — choosing what to build, how it should
+      behave in someone's actual life, and which nine ideas to decline so the
+      tenth can breathe.
+    </p>
+    <div class="sig rv">
+      <span class="seal" aria-hidden="true">
+        <svg viewBox="0 0 60 60">
+          <rect x="2.5" y="2.5" width="55" height="55" rx="6" fill="#C73E2D"/>
+          <rect x="7" y="7" width="46" height="46" rx="3.5" fill="none" stroke="#F5F1E8" stroke-width="1.6"/>
+          <text x="30" y="27" text-anchor="middle" font-family="'Shippori Mincho', serif" font-size="17" font-weight="600" fill="#F5F1E8">馬</text>
+          <text x="30" y="48" text-anchor="middle" font-family="'Shippori Mincho', serif" font-size="17" font-weight="600" fill="#F5F1E8">工</text>
+        </svg>
+      </span>
+      <span class="cap">sealed · m.v.h.v. · the maker's mark</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── 二 · the path ── -->
+<section class="sec wrap" id="ni">
+  <div class="sec__head rv">
+    <span class="sec__no">二</span>
+    <h2>The path</h2>
+    <span class="line" aria-hidden="true"></span>
+    <span class="cap">ni · six stations, walked in order</span>
+  </div>
+
+  <div class="path">
+    <article class="step rv">
+      <div class="step__when"><span class="yr">1998 — 2005</span>station one</div>
+      <div class="step__body">
+        <h3>Endemol</h3>
+        <div class="role">UX &amp; Engineering Lead</div>
+        <p>Multilingual content systems and large-scale web platforms across an international entertainment portfolio. Where the technical depth that still informs current judgment got built.</p>
+      </div>
+    </article>
+
+    <article class="step rv">
+      <div class="step__when"><span class="yr">2005 — 2013</span>station two</div>
+      <div class="step__body">
+        <h3>Yahoo!</h3>
+        <div class="role">Director of UX Prototyping · Senior UX Manager</div>
+        <p>Led global prototyping teams across offices and product lines. Rebrand and personalization work, scalable design process, mentored a generation of senior designers and prototypers.</p>
+      </div>
+    </article>
+
+    <article class="step rv">
+      <div class="step__when"><span class="yr">2013 — 2017</span>station three</div>
+      <div class="step__body">
+        <h3>Google</h3>
+        <div class="role">Senior UX Engineer / Prototyper</div>
+        <p>High-fidelity prototypes for Google Cloud AI, Assistant, and Android. Bridged design and engineering with builds that accelerated research, alignment, and decisions.</p>
+      </div>
+    </article>
+
+    <article class="step rv">
+      <div class="step__when"><span class="yr">2017 — 2021</span>station four</div>
+      <div class="step__body">
+        <h3>Walmart Labs</h3>
+        <div class="role">Principal Product Designer / Design Technologist</div>
+        <p>Mobile, voice, and personalization through a digital transformation. Complex recommendation systems translated into interfaces that didn't require explanation.</p>
+      </div>
+    </article>
+
+    <article class="step rv">
+      <div class="step__when"><span class="yr">2021 — now</span>station five</div>
+      <div class="step__body">
+        <h3>Kohl's</h3>
+        <div class="role">Senior Product Designer · Generative AI Specialist</div>
+        <p>UX across cart, checkout, wallet, account, and in-store self-checkout. AI tooling, prompt libraries, and education carried across the whole design organization.</p>
+      </div>
+    </article>
+
+    <article class="step rv">
+      <div class="step__when"><span class="yr">always</span>the road itself</div>
+      <div class="step__body">
+        <h3>AI-Created</h3>
+        <div class="role">Independent product lab · solo</div>
+        <p>The place where ideas are tested in public. AI tools, design utilities, music, video, arcade games — real software, built end-to-end. Proof the practice is current.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ── 三 · the craft ── -->
+<section class="sec wrap" id="san">
+  <div class="sec__head rv">
+    <span class="sec__no">三</span>
+    <h2>The craft</h2>
+    <span class="line" aria-hidden="true"></span>
+    <span class="cap">san · six disciplines, one hand</span>
+  </div>
+
+  <div class="craft">
+    <article class="rv">
+      <span class="k" aria-hidden="true">知</span>
+      <div>
+        <h3>AI-native product design</h3>
+        <p>Systems where the model is the interaction — voice, agents, ambient assistance — not a chat panel bolted onto a SaaS shell.</p>
+      </div>
+    </article>
+    <article class="rv" style="--d:.08s">
+      <span class="k" aria-hidden="true">工</span>
+      <div>
+        <h3>Design engineering</h3>
+        <p>Prototypes that behave like real software because they are real software. Built end-to-end, often before the team is convinced.</p>
+      </div>
+    </article>
+    <article class="rv">
+      <span class="k" aria-hidden="true">始</span>
+      <div>
+        <h3>0 → 1 incubation</h3>
+        <p>An ambiguous brief carried through research, framing, design, prototype, and shipped product — without waiting for a roadmap.</p>
+      </div>
+    </article>
+    <article class="rv" style="--d:.08s">
+      <span class="k" aria-hidden="true">直</span>
+      <div>
+        <h3>Enterprise UX modernization</h3>
+        <p>Legacy cart, checkout, account, and internal tooling untangled and replaced with systems people actually want to use.</p>
+      </div>
+    </article>
+    <article class="rv">
+      <span class="k" aria-hidden="true">具</span>
+      <div>
+        <h3>Internal AI tooling</h3>
+        <p>Custom copilots, prompt libraries, synthetic research environments, and workflow accelerators — in use by real teams.</p>
+      </div>
+    </article>
+    <article class="rv" style="--d:.08s">
+      <span class="k" aria-hidden="true">導</span>
+      <div>
+        <h3>Leadership &amp; enablement</h3>
+        <p>Built and led prototyping teams at Yahoo. Now drives AI adoption through teaching, tooling, and example. IC, lead, or director.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ── 四 · the things ── -->
+<section class="sec wrap" id="yon">
+  <div class="sec__head rv">
+    <span class="sec__no">四</span>
+    <h2>The things</h2>
+    <span class="line" aria-hidden="true"></span>
+    <span class="cap">yon · objects that exist</span>
+  </div>
+
+  <div class="things rv">
+    <a class="thing" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+      <span class="thing__no">〇一</span>
+      <span class="thing__name">My AI Diary</span>
+      <span class="thing__what">Voice-first journaling that still sounds like you. Zero-knowledge, local-first.</span>
+      <span class="thing__kind">AI tool · live</span>
+    </a>
+    <a class="thing" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+      <span class="thing__no">〇二</span>
+      <span class="thing__name">Human, Actually</span>
+      <span class="thing__what">Tailors your résumé to the job — without sounding like a robot wrote it.</span>
+      <span class="thing__kind">AI tool · live</span>
+    </a>
+    <a class="thing" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+      <span class="thing__no">〇三</span>
+      <span class="thing__name">WatchGPT</span>
+      <span class="thing__what">Realtime ChatGPT voice, on your wrist.</span>
+      <span class="thing__kind">watchOS · live</span>
+    </a>
+    <a class="thing" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">
+      <span class="thing__no">〇四</span>
+      <span class="thing__name">AI Usage</span>
+      <span class="thing__what">Claude Code + Codex usage in your Mac menubar.</span>
+      <span class="thing__kind">macOS · live</span>
+    </a>
+    <a class="thing" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">
+      <span class="thing__no">〇五</span>
+      <span class="thing__name">Calorie Counter</span>
+      <span class="thing__what">The most frictionless food logger ever built. Speak, photograph, done.</span>
+      <span class="thing__kind">Vision · live</span>
+    </a>
+    <a class="thing" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
+      <span class="thing__no">〇六</span>
+      <span class="thing__name">Vectronix</span>
+      <span class="thing__what">Hardcore arcade space combat. No mercy, no filler.</span>
+      <span class="thing__kind">Game · live</span>
+    </a>
+    <a class="thing" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
+      <span class="thing__no">〇七</span>
+      <span class="thing__name">Audio Visualizer Suite</span>
+      <span class="thing__what">Render-quality video visualizations of your music, hand-tuned.</span>
+      <span class="thing__kind">WebGL · live</span>
+    </a>
+    <a class="thing" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
+      <span class="thing__no">〇八</span>
+      <span class="thing__name">Color Clock</span>
+      <span class="thing__what">A 1991 clock design, brought back to life with care.</span>
+      <span class="thing__kind">Object · live</span>
+    </a>
+  </div>
+
+  <a class="things__more rv" href="https://ai-created.com" target="_blank" rel="noopener">
+    The full shelf — eighteen shipped works <span aria-hidden="true">→</span>
+  </a>
+</section>
+
+<!-- ── 五 · presently ── -->
+<section class="close-sec" id="go">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <span class="sec__no">五</span>
+      <h2>Presently</h2>
+      <span class="line" aria-hidden="true"></span>
+      <span class="cap">go · the letter closes</span>
+    </div>
+
+    <div class="close-grid">
+      <div>
+        <h2 class="rv">Tell me what's<br/><span class="shu">ambiguous</span><br/>about it.</h2>
+        <p class="lede rv" style="--d:.12s">
+          Open to <b>senior IC, lead, and director</b> conversations.
+          The fastest path is direct: what you're building, what's unresolved,
+          what timeline you're on. I'll reply with something concrete.
+        </p>
+        <div class="close-sig rv" style="--d:.22s">
+          <span class="seal" aria-hidden="true">
+            <svg viewBox="0 0 60 60">
+              <rect x="2.5" y="2.5" width="55" height="55" rx="6" fill="#C73E2D"/>
+              <rect x="7" y="7" width="46" height="46" rx="3.5" fill="none" stroke="#F5F1E8" stroke-width="1.6"/>
+              <text x="30" y="27" text-anchor="middle" font-family="'Shippori Mincho', serif" font-size="17" font-weight="600" fill="#F5F1E8">馬</text>
+              <text x="30" y="48" text-anchor="middle" font-family="'Shippori Mincho', serif" font-size="17" font-weight="600" fill="#F5F1E8">工</text>
+            </svg>
+          </span>
+          <div>
+            <div class="name">Marco van Hylckama Vlieg</div>
+            <div class="place">Portland, Oregon · 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="now-card rv" style="--d:.16s">
+        <span class="cap">Ways to reach the desk</span>
+        <dl>
+          <div>
+            <dt>Direct</dt>
+            <dd><a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a></dd>
+          </div>
+          <div>
+            <dt>The lab</dt>
+            <dd><a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a> — eighteen real, living works.</dd>
+          </div>
+          <div>
+            <dt>Professional</dt>
+            <dd><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a></dd>
+          </div>
+          <div>
+            <dt>Also</dt>
+            <dd><a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x.com/AIandDesign</a> · <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a></dd>
+          </div>
+          <div>
+            <dt>This week</dt>
+            <dd>Leading UX &amp; AI enablement at <b>Kohl's</b> · shipping through <b>AI-Created</b> · speaking at <b>Imagine AI Live</b>.</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ── footer ── -->
+<footer class="foot wrap">
+  <span><b>間 · The Interval</b></span>
+  <span>set in Shippori Mincho &amp; Zen Kaku Gothic New</span>
+  <span>one HTML file · zero frameworks</span>
+  <span class="r">© 2026 M. van Hylckama Vlieg</span>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -7% 0px' });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>
