@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>M. van Hylckama Vlieg — The Horologist</title>
+<meta name="description" content="Twenty years of product design, engineering and AI-native software — assembled as a mechanical movement."/>
+<meta name="theme-color" content="#0d0904"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Manrope:wght@300..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wood:#0d0904;--wood-2:#1a1208;--wood-3:#251c0e;
+  --brass:#c9a84c;--brass-2:#e6cc7a;--steel:#b8bcc4;
+  --ruby:#c0392b;--ruby-glow:rgba(192,57,43,.3);
+  --cream:#f5efe6;--cream-2:#c4b8a0;--cream-3:#7a6f5e;
+  --green:#1a3a2a;--maxw:1320px;--gut:clamp(20px,4vw,60px);
+  --fd:'Cormorant',serif;--fb:'Manrope',sans-serif;--fm:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{font-family:var(--fb);background:var(--wood);color:var(--cream);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+em{font-style:normal}a{color:inherit;text-decoration:none}
+::selection{background:var(--brass);color:var(--wood)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+
+/* wood grain bg */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(92deg,transparent 0px,transparent 3px,rgba(255,255,255,.008) 3px,rgba(255,255,255,.008) 4px),
+  repeating-linear-gradient(88deg,transparent 0px,transparent 7px,rgba(0,0,0,.04) 7px,rgba(0,0,0,.04) 8px)}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 30%,rgba(201,168,76,.04),transparent 60%)}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut);position:relative;z-index:2}
+section[id]{scroll-margin-top:72px}
+
+/* ── top bar ── */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gut);background:rgba(13,9,4,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.15)}
+.topbar__brand{display:flex;align-items:center;gap:12px;font-family:var(--fm);font-size:.75rem;letter-spacing:.14em;color:var(--cream-2)}
+.topbar__brand b{color:var(--brass);font-weight:500}
+.topbar__right{display:flex;align-items:center;gap:16px;font-family:var(--fm);font-size:.7rem;letter-spacing:.1em;color:var(--cream-3)}
+.topbar__right .dot{width:6px;height:6px;border-radius:50%;background:var(--brass);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── progress ── */
+#prog{position:fixed;top:0;left:0;height:2px;width:0;z-index:200;background:linear-gradient(90deg,var(--brass),var(--ruby))}
+
+/* ── HERO: watch face ── */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px var(--gut) 60px;position:relative}
+.hero__gears{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.gear{position:absolute;font-size:var(--sz,60px);color:rgba(201,168,76,.12);animation:spin var(--dur,20s) linear infinite;animation-direction:var(--dir,normal)}
+.gear:nth-child(1){top:8%;left:5%;--sz:90px;--dur:30s}
+.gear:nth-child(2){top:15%;right:8%;--sz:60px;--dur:22s;--dir:reverse}
+.gear:nth-child(3){bottom:18%;left:12%;--sz:70px;--dur:26s}
+.gear:nth-child(4){bottom:10%;right:5%;--sz:110px;--dur:38s;--dir:reverse}
+.gear:nth-child(5){top:40%;left:-2%;--sz:50px;--dur:18s}
+.gear:nth-child(6){top:55%;right:-1%;--sz:45px;--dur:16s;--dir:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.watch{position:relative;z-index:2;width:min(480px,85vw);aspect-ratio:1}
+.watch svg{width:100%;height:100%}
+.hero__label{text-align:center;margin-top:32px;z-index:2;position:relative}
+.hero__label .eyebrow{font-family:var(--fm);font-size:.7rem;letter-spacing:.2em;color:var(--cream-3);text-transform:uppercase;margin-bottom:16px}
+.hero__label h1{font-family:var(--fd);font-weight:300;font-size:clamp(2.4rem,6vw,4.5rem);line-height:1;letter-spacing:-.02em}
+.hero__label h1 em{font-style:italic;color:var(--brass)}
+.hero__label .sub{margin-top:14px;font-family:var(--fm);font-size:.78rem;letter-spacing:.12em;color:var(--cream-3)}
+.hero__scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:.68rem;letter-spacing:.18em;color:var(--cream-3);animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,6px)}}
+
+/* ── sections ── */
+.sect{padding:clamp(70px,9vw,130px) 0;border-top:1px solid rgba(201,168,76,.1);position:relative}
+.sect__head{margin-bottom:clamp(36px,5vw,64px)}
+.sect__ch{font-family:var(--fm);font-size:.72rem;letter-spacing:.2em;color:var(--brass);margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.sect__ch::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.15)}
+.sect__title{font-family:var(--fd);font-weight:300;font-size:clamp(2rem,4.5vw,3.6rem);line-height:1.05;letter-spacing:-.02em}
+.sect__title em{font-style:italic;color:var(--brass)}
+.sect__lede{margin-top:16px;max-width:52ch;color:var(--cream-2);font-size:1rem}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+
+/* ── MANIFESTO (guilloché) ── */
+.manif{display:grid;gap:40px}
+@media(min-width:960px){.manif{grid-template-columns:.85fr 1.3fr;gap:60px}}
+.manif__dial{position:relative;background:var(--wood-2);border:1px solid rgba(201,168,76,.2);padding:48px 36px;overflow:hidden}
+.manif__dial::before{content:'';position:absolute;inset:0;background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(201,168,76,.03) 4px,rgba(201,168,76,.03) 5px);pointer-events:none}
+.manif__dial blockquote{font-family:var(--fd);font-weight:300;font-style:italic;font-size:clamp(1.4rem,2.2vw,2rem);line-height:1.3;position:relative;z-index:1}
+.manif__dial blockquote em{color:var(--brass)}
+.manif__body p{font-size:1.1rem;color:var(--cream-2);line-height:1.75}
+.manif__body p+p{margin-top:20px}
+.manif__body .hl{color:var(--brass);font-weight:500}
+.manif__sig{margin-top:28px;font-family:var(--fm);font-size:.76rem;letter-spacing:.1em;color:var(--cream-3)}
+
+/* ── TIMELINE (gear train) ── */
+.train{position:relative;padding-left:48px}
+.train__line{position:absolute;left:16px;top:0;bottom:0;width:2px;background:rgba(201,168,76,.15)}
+.train__fill{position:absolute;left:0;top:0;width:100%;height:0;background:var(--brass);transition:height .1s linear}
+.titem{position:relative;padding-bottom:52px}
+.titem:last-child{padding-bottom:0}
+.titem__gear{position:absolute;left:-48px;top:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--brass);animation:spin 12s linear infinite}
+.titem:nth-child(even) .titem__gear{animation-direction:reverse;animation-duration:16s}
+.titem__year{font-family:var(--fm);font-size:.74rem;letter-spacing:.12em;color:var(--brass);margin-bottom:8px}
+.titem__co{font-family:var(--fd);font-weight:500;font-size:clamp(1.6rem,3vw,2.4rem);line-height:1;margin-bottom:10px}
+.titem__role{color:var(--cream-2);max-width:56ch;font-size:.98rem}
+.titem__role b{color:var(--cream);font-weight:600}
+.titem__tag{display:inline-block;margin-top:12px;font-family:var(--fm);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cream-3);border:1px solid rgba(201,168,76,.2);padding:4px 10px}
+.titem.is-live .titem__gear{color:var(--ruby);animation-duration:4s}
+.titem.is-live .titem__year{color:var(--ruby)}
+
+/* ── CAPABILITIES (jewels) ── */
+.jewels{display:grid;gap:1px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.1)}
+@media(min-width:640px){.jewels{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.jewels{grid-template-columns:repeat(3,1fr)}}
+.jewel{background:var(--wood);padding:32px 28px;position:relative;overflow:hidden;transition:.4s}
+.jewel::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--ruby);transform:scaleX(0);transform-origin:left;transition:.5s cubic-bezier(.2,.7,.2,1)}
+.jewel:hover{background:var(--wood-2);transform:translateY(-3px)}
+.jewel:hover::before{transform:scaleX(1)}
+.jewel__num{font-family:var(--fd);font-weight:300;font-size:2rem;color:rgba(192,57,43,.6);line-height:1}
+.jewel__dot{position:absolute;top:28px;right:28px;width:10px;height:10px;border-radius:50%;background:var(--ruby);box-shadow:0 0 12px var(--ruby-glow)}
+.jewel__title{font-family:var(--fd);font-weight:500;font-size:1.3rem;margin:16px 0 10px}
+.jewel__body{color:var(--cream-2);font-size:.94rem;line-height:1.6}
+.jewel__chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.jewel__chips span{font-family:var(--fm);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;color:var(--cream-3);border:1px solid rgba(201,168,76,.15);padding:4px 8px}
+
+/* ── LAB (escapement / balance wheel) ── */
+.esc{display:grid;gap:40px}
+@media(min-width:960px){.esc{grid-template-columns:.7fr 1.3fr;gap:60px}}
+.balance{position:relative;width:200px;height:200px;margin:0 auto}
+.balance__wheel{width:100%;height:100%;border-radius:50%;border:3px solid var(--brass);position:relative;animation:oscillate 2s ease-in-out infinite}
+.balance__wheel::before{content:'';position:absolute;inset:20%;border-radius:50%;border:1.5px solid rgba(201,168,76,.4)}
+.balance__wheel::after{content:'';position:absolute;top:50%;left:50%;width:8px;height:8px;background:var(--brass);border-radius:50%;transform:translate(-50%,-50%)}
+.balance__spoke{position:absolute;top:50%;left:50%;width:1px;height:42%;background:rgba(201,168,76,.5);transform-origin:top center}
+.balance__spoke:nth-child(2){transform:rotate(60deg)}
+.balance__spoke:nth-child(3){transform:rotate(120deg)}
+@keyframes oscillate{0%,100%{transform:rotate(-25deg)}50%{transform:rotate(25deg)}}
+.esc__label{text-align:center;margin-top:20px;font-family:var(--fm);font-size:.7rem;letter-spacing:.14em;color:var(--cream-3)}
+.lab-grid{display:grid;gap:12px}
+@media(min-width:680px){.lab-grid{grid-template-columns:repeat(2,1fr)}}
+.lab-card{background:var(--wood-2);border:1px solid rgba(201,168,76,.15);padding:24px;position:relative;transition:.35s;display:flex;flex-direction:column}
+.lab-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-3px)}
+.lab-card__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.lab-card__idx{font-family:var(--fm);font-size:.68rem;color:var(--cream-3)}
+.lab-card__pill{font-family:var(--fm);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid rgba(201,168,76,.2);color:var(--brass)}
+.lab-card__title{font-family:var(--fd);font-weight:500;font-size:1.3rem;margin-bottom:8px}
+.lab-card__tag{color:var(--cream-2);font-size:.9rem;line-height:1.55;flex:1}
+.lab-card__stack{margin-top:14px;font-family:var(--fm);font-size:.68rem;color:var(--cream-3)}
+.lab-card__go{position:absolute;bottom:18px;right:20px;font-size:1.2rem;color:var(--cream-3);transition:.3s}
+.lab-card:hover .lab-card__go{color:var(--brass);transform:translate(2px,-2px)}
+
+/* ── METRICS (spec plate) ── */
+.spec{display:grid;gap:1px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.1)}
+@media(min-width:560px){.spec{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.spec{grid-template-columns:repeat(4,1fr)}}
+.spec__cell{background:var(--wood);padding:36px 28px;position:relative}
+.spec__cell::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--brass);transform:scaleX(0);transform-origin:left;transition:.8s .2s}
+.spec__cell.in::before{transform:scaleX(1)}
+.spec__num{font-family:var(--fd);font-weight:300;font-size:clamp(2.8rem,5vw,4rem);line-height:.9;color:var(--brass)}
+.spec__unit{font-family:var(--fm);font-size:.76rem;color:var(--cream-3);margin-left:4px}
+.spec__label{margin-top:12px;font-family:var(--fm);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cream-3);line-height:1.5}
+
+/* ── METHOD (regulator) ── */
+.reg{display:grid;gap:24px}
+@media(min-width:900px){.reg{grid-template-columns:.8fr 1.2fr;gap:40px}}
+.reg__list{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+@media(min-width:900px){.reg__list{grid-template-columns:1fr}}
+.reg__btn{display:flex;align-items:center;gap:14px;padding:20px 22px;border:1px solid rgba(201,168,76,.15);background:none;color:var(--cream-2);cursor:pointer;text-align:left;font-family:inherit;transition:.3s}
+.reg__btn:hover{background:var(--wood-2);color:var(--cream)}
+.reg__btn.is-active{background:var(--wood-2);border-color:rgba(201,168,76,.4);color:var(--cream);box-shadow:inset 3px 0 0 var(--brass)}
+.reg__btn .n{font-family:var(--fm);font-size:.76rem;color:var(--cream-3)}
+.reg__btn.is-active .n{color:var(--brass)}
+.reg__btn .t{font-family:var(--fd);font-weight:500;font-size:1.15rem}
+.reg__panel{border:1px solid rgba(201,168,76,.15);background:var(--wood-2);padding:40px;min-height:260px;display:flex;flex-direction:column;justify-content:center}
+.reg__panel .big{font-family:var(--fd);font-weight:300;font-size:3.5rem;color:var(--brass);line-height:.9}
+.reg__panel h3{font-family:var(--fd);font-weight:500;font-size:1.8rem;margin:12px 0}
+.reg__panel p{color:var(--cream-2);font-size:1.05rem;line-height:1.7;max-width:42ch}
+.reg-swap{animation:regIn .5s cubic-bezier(.2,.7,.2,1)}
+@keyframes regIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ── NOW (power reserve) ── */
+.now{display:grid;gap:40px}
+@media(min-width:900px){.now{grid-template-columns:1fr 1fr;gap:60px}}
+.now__h{font-family:var(--fm);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cream-3);margin-bottom:20px}
+.now-list{list-style:none}
+.now-list li{display:flex;gap:14px;padding:18px 0;border-top:1px solid rgba(201,168,76,.1);transition:.3s}
+.now-list li:last-child{border-bottom:1px solid rgba(201,168,76,.1)}
+.now-list .dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--cream-3);margin-top:8px;flex-shrink:0}
+.now-list li.is-live .dot{background:var(--brass);border-color:var(--brass);box-shadow:0 0 8px rgba(201,168,76,.4);animation:pulse 2s infinite}
+.now-list li p{font-family:var(--fd);font-weight:500;font-size:1.15rem;line-height:1.3}
+.now-list li p b{color:var(--brass);font-weight:600}
+.now-list li small{display:block;font-family:var(--fm);font-size:.7rem;color:var(--cream-3);margin-top:4px}
+.now-list li:hover{background:linear-gradient(90deg,rgba(201,168,76,.04),transparent);padding-left:10px}
+.tool-list{list-style:none}
+.tool-list li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:16px 0;border-top:1px solid rgba(201,168,76,.1)}
+.tool-list li:last-child{border-bottom:1px solid rgba(201,168,76,.1)}
+.tool-list li span{font-family:var(--fd);font-weight:500;font-size:1rem}
+.tool-list li small{font-family:var(--fm);font-size:.68rem;color:var(--cream-3);text-align:right}
+
+/* ── CONTACT (winding crown) ── */
+.contact{text-align:center;padding-bottom:0}
+.crown{width:120px;height:120px;margin:0 auto 36px;border-radius:50%;border:3px solid var(--brass);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--brass);cursor:pointer;transition:.4s cubic-bezier(.2,.7,.2,1);position:relative}
+.crown::before{content:'';position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(201,168,76,.3)}
+.crown:hover{transform:rotate(45deg);box-shadow:0 0 30px rgba(201,168,76,.2)}
+.contact__big{font-family:var(--fd);font-weight:300;font-size:clamp(2.6rem,9vw,7rem);line-height:.9;letter-spacing:-.02em}
+.contact__big em{font-style:italic;color:var(--brass)}
+.contact__sub{margin-top:20px;max-width:48ch;margin-left:auto;margin-right:auto;color:var(--cream-2);font-size:1.05rem}
+.contact__row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:18px;margin-top:36px}
+.email-btn{font-family:var(--fm);font-size:clamp(.9rem,2vw,1.3rem);color:var(--cream);background:none;border:none;cursor:pointer;padding-bottom:5px;border-bottom:1px solid rgba(201,168,76,.3);transition:.3s;display:inline-flex;align-items:center;gap:12px}
+.email-btn:hover{color:var(--brass);border-color:var(--brass)}
+.email-btn .hint{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-3);border:1px solid rgba(201,168,76,.2);padding:3px 7px}
+.email-btn.copied{color:var(--brass)} .email-btn.copied .hint{color:var(--brass);border-color:rgba(201,168,76,.4)}
+.btn{display:inline-flex;align-items:center;gap:.5em;font-family:var(--fm);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;padding:.9em 1.4em;border:1px solid rgba(201,168,76,.3);color:var(--cream);cursor:pointer;background:none;transition:.3s}
+.btn--gold{background:var(--brass);border-color:var(--brass);color:var(--wood);font-weight:600}
+.btn--gold:hover{background:var(--brass-2);transform:translateY(-2px);box-shadow:0 12px 30px -8px rgba(201,168,76,.4)}
+.btn:hover{border-color:var(--brass);color:var(--brass)}
+.contact__links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;margin-top:32px}
+.contact__links a{font-family:var(--fm);font-size:.78rem;color:var(--cream-2);transition:.3s}
+.contact__links a:hover{color:var(--brass)}
+.c-sep{width:3px;height:3px;background:var(--cream-3);border-radius:50%}
+
+/* ── footer ── */
+.foot{border-top:1px solid rgba(201,168,76,.1);padding:48px 0;margin-top:clamp(50px,7vw,80px)}
+.foot__grid{display:grid;gap:32px}
+@media(min-width:760px){.foot__grid{grid-template-columns:1.5fr 1fr 1fr;gap:48px}}
+.foot h4{font-family:var(--fm);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cream-3);margin-bottom:12px}
+.foot p,.foot li{font-size:.84rem;color:var(--cream-2);line-height:1.7}
+.foot ul{list-style:none}
+.foot__bottom{margin-top:36px;padding-top:20px;border-top:1px solid rgba(201,168,76,.1);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--fm);font-size:.68rem;letter-spacing:.08em;color:var(--cream-3)}
+
+/* toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,16px);z-index:300;background:var(--wood-2);border:1px solid rgba(201,168,76,.3);color:var(--cream);font-family:var(--fm);font-size:.74rem;padding:12px 20px;display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:.4s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast i{width:7px;height:7px;border-radius:50%;background:var(--brass)}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  html{scroll-behavior:auto}.rv{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body id="top">
+<div id="prog"></div>
+
+<header class="topbar">
+  <a href="#top" class="topbar__brand"><b>MVHV</b> · THE HOROLOGIST</a>
+  <div class="topbar__right"><span class="dot"></span><span id="clock">--:--:--</span><span>PDX</span></div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__gears" aria-hidden="true">
+    <span class="gear">⚙</span><span class="gear">⚙</span><span class="gear">⚙</span>
+    <span class="gear">⚙</span><span class="gear">⚙</span><span class="gear">⚙</span>
+  </div>
+  <div class="watch rv">
+    <svg viewBox="0 0 400 400" id="watchSvg">
+      <circle cx="200" cy="200" r="196" fill="none" stroke="rgba(201,168,76,.3)" stroke-width="2"/>
+      <circle cx="200" cy="200" r="186" fill="var(--wood-2)" stroke="rgba(201,168,76,.15)" stroke-width="1"/>
+      <circle cx="200" cy="200" r="170" fill="none" stroke="rgba(201,168,76,.08)" stroke-width=".5"/>
+      <!-- hour markers -->
+      <g id="markers"></g>
+      <!-- hands -->
+      <line id="hHour" x1="200" y1="200" x2="200" y2="120" stroke="var(--cream)" stroke-width="4" stroke-linecap="round"/>
+      <line id="hMin" x1="200" y1="200" x2="200" y2="90" stroke="var(--cream)" stroke-width="2.5" stroke-linecap="round"/>
+      <line id="hSec" x1="200" y1="200" x2="200" y2="80" stroke="var(--ruby)" stroke-width="1" stroke-linecap="round"/>
+      <circle cx="200" cy="200" r="5" fill="var(--brass)"/>
+      <circle cx="200" cy="200" r="2" fill="var(--wood)"/>
+    </svg>
+  </div>
+  <div class="hero__label rv" style="--d:.15s">
+    <p class="eyebrow">Calibre MVHV-20 · 21 Jewels · Hand-assembled</p>
+    <h1>M. van Hylckama <em>Vlieg</em></h1>
+    <p class="sub">Product Designer · AI-Native Builder · Portland, OR</p>
+  </div>
+  <a href="#manifesto" class="hero__scroll">WIND ↓</a>
+</section>
+
+<!-- MANIFESTO -->
+<section class="sect" id="manifesto">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">MOVEMENT · 01</div><h2 class="sect__title">The <em>architecture</em> of judgment.</h2><p class="sect__lede">Why this practice. Why this way. Read once, then examine the mechanism.</p></header>
+    <div class="manif">
+      <div class="manif__dial rv"><blockquote>"AI didn't shrink the design problem. It made the problem about <em>judgment</em>, not output."</blockquote></div>
+      <div class="manif__body rv" style="--d:.1s">
+        <p>I design products at the seam where intent becomes interface — where a half-formed idea has to choose what kind of system it wants to become. The interesting decisions live there: pacing, posture, what shows up first, what stays hidden, what the model is allowed to assume.</p>
+        <p>The work is choosing what to build and how it should behave in someone's actual life — then shipping it before the moment passes.</p>
+        <p>I'm strongest where strategy, design, interaction behavior and the realities of implementation collide. I write the prototype, ship the build, and stay around for the part where it has to be good for real users. <span class="hl">The portfolio is the proof.</span></p>
+        <div class="manif__sig">— M. van Hylckama Vlieg · Portland, OR</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="sect" id="record">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">GEAR TRAIN · 02</div><h2 class="sect__title">Six <em>gears</em>, meshed in sequence.</h2><p class="sect__lede">Each drives the next. Twenty years of torque, from entertainment to AI.</p></header>
+    <div class="train" id="train">
+      <div class="train__line"><span class="train__fill" id="trainFill"></span></div>
+      <article class="titem rv"><div class="titem__gear">⚙</div><div class="titem__year">1998 — 2005</div><h3 class="titem__co">Endemol</h3><p class="titem__role"><b>UX &amp; Engineering Lead.</b> Multilingual content systems and large-scale web platforms across an international entertainment portfolio. Where the technical depth that still informs current judgment got built.</p><span class="titem__tag">entertainment</span></article>
+      <article class="titem rv"><div class="titem__gear">⚙</div><div class="titem__year">2005 — 2013</div><h3 class="titem__co">Yahoo!</h3><p class="titem__role"><b>Director of UX Prototyping &amp; Senior UX Manager.</b> Led global prototyping teams across offices and product lines. Shaped rebrand and personalization work, built scalable design processes, mentored senior designers.</p><span class="titem__tag">consumer · leadership</span></article>
+      <article class="titem rv"><div class="titem__gear">⚙</div><div class="titem__year">2013 — 2017</div><h3 class="titem__co">Google</h3><p class="titem__role"><b>Senior UX Engineer / Prototyper.</b> Built high-fidelity prototypes for Google Cloud AI, Google Assistant and Android. Bridged design and engineering with prototypes that accelerated decisions.</p><span class="titem__tag">ai · cloud</span></article>
+      <article class="titem rv"><div class="titem__gear">⚙</div><div class="titem__year">2017 — 2021</div><h3 class="titem__co">Walmart Labs</h3><p class="titem__role"><b>Principal Product Designer / Design Technologist.</b> Mobile, voice and personalization during Walmart's digital transformation. Translated complex recommendation systems into interfaces that didn't require explanation.</p><span class="titem__tag">retail · ml</span></article>
+      <article class="titem rv"><div class="titem__gear">⚙</div><div class="titem__year">2021 — now</div><h3 class="titem__co">Kohl's</h3><p class="titem__role"><b>Senior Product Designer &amp; Generative AI Specialist.</b> Led UX across cart, checkout, wallet, account and in-store self-checkout. Drove AI tooling, prompt libraries and education across the design org.</p><span class="titem__tag">e-comm · ai</span></article>
+      <article class="titem is-live rv"><div class="titem__gear">⚙</div><div class="titem__year">always</div><h3 class="titem__co">AI-Created</h3><p class="titem__role"><b>Independent product lab.</b> The place where ideas get tested in public. Shipped AI tools, design utilities, music, video and arcade games — all real software, all built end to end.</p><span class="titem__tag">lab · solo</span></article>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="sect" id="capabilities">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">JEWELS · 03</div><h2 class="sect__title">Six <em>jewels</em> in the movement.</h2><p class="sect__lede">Each one reduces friction at a critical pivot. Most projects engage four at once.</p></header>
+    <div class="jewels">
+      <article class="jewel rv"><span class="jewel__dot"></span><div class="jewel__num">01</div><h3 class="jewel__title">AI-native product design</h3><p class="jewel__body">Designing systems where the model is the interaction, not a chat panel bolted onto a SaaS shell. Voice, agents, ambient assistance, model-aware interfaces.</p><div class="jewel__chips"><span>Voice UX</span><span>Agent UI</span><span>Prompt systems</span></div></article>
+      <article class="jewel rv" style="--d:.05s"><span class="jewel__dot"></span><div class="jewel__num">02</div><h3 class="jewel__title">Design engineering</h3><p class="jewel__body">Production-quality prototypes that behave like real software because they are real software. Built end to end by one person, often before the team is convinced.</p><div class="jewel__chips"><span>Next.js</span><span>TypeScript</span><span>Tailwind</span><span>Vercel</span></div></article>
+      <article class="jewel rv" style="--d:.1s"><span class="jewel__dot"></span><div class="jewel__num">03</div><h3 class="jewel__title">0 → 1 incubation</h3><p class="jewel__body">Taking an ambiguous brief through research, framing, design, prototype and shipped product. Comfortable carrying the weight when there isn't a roadmap yet.</p><div class="jewel__chips"><span>Strategy</span><span>Research</span><span>Prototype</span></div></article>
+      <article class="jewel rv"><span class="jewel__dot"></span><div class="jewel__num">04</div><h3 class="jewel__title">Enterprise UX modernization</h3><p class="jewel__body">Untangling legacy workflows in cart, checkout, account and internal tooling — replacing them with systems people actually want to use. Years of this, at scale.</p><div class="jewel__chips"><span>E-commerce</span><span>Internal tools</span><span>A11y</span></div></article>
+      <article class="jewel rv" style="--d:.05s"><span class="jewel__dot"></span><div class="jewel__num">05</div><h3 class="jewel__title">Internal AI tooling</h3><p class="jewel__body">Custom copilots, prompt libraries, synthetic research environments and workflow accelerators built for design and product orgs. Used by real teams.</p><div class="jewel__chips"><span>LLM pipelines</span><span>Workflows</span><span>Enablement</span></div></article>
+      <article class="jewel rv" style="--d:.1s"><span class="jewel__dot"></span><div class="jewel__num">06</div><h3 class="jewel__title">Leadership &amp; enablement</h3><p class="jewel__body">Built and led prototyping teams at Yahoo. Now drive AI adoption inside a design org through teaching, tooling and example. Comfortable as IC, lead or director.</p><div class="jewel__chips"><span>Mentorship</span><span>AI education</span><span>Hiring</span></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- LAB -->
+<section class="sect" id="lab">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">ESCAPEMENT · 04</div><h2 class="sect__title">The <em>heartbeat</em>. Eighteen beats per hour.</h2><p class="sect__lede">The escapement is what keeps a watch alive. These are the independent artifacts that prove the mechanism still ticks.</p></header>
+    <div class="esc">
+      <div class="rv"><div class="balance" aria-hidden="true"><div class="balance__wheel"></div><span class="balance__spoke"></span><span class="balance__spoke"></span><span class="balance__spoke"></span></div><p class="esc__label">BALANCE WHEEL · 28,800 VPH</p></div>
+      <div class="lab-grid">
+        <a class="lab-card rv" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-01</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">My AI Diary</h3><p class="lab-card__tag">Voice-first journaling that turns raw speech into a written entry that still sounds like you. Whisper transcription, semantic search, weekly AI summaries.</p><div class="lab-card__stack">Next.js · OpenAI · Whisper · IndexedDB</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-02</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">Human, Actually</h3><p class="lab-card__tag">Tailor your resume to the job — without sounding like a robot wrote it.</p><div class="lab-card__stack">LLM · NLP · UX</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-03</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">WatchGPT</h3><p class="lab-card__tag">Realtime ChatGPT voice, on your wrist.</p><div class="lab-card__stack">watchOS · Realtime API</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-04</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">AI Usage</h3><p class="lab-card__tag">Claude Code + Codex usage on your Mac desktop. A menubar utility for devs.</p><div class="lab-card__stack">macOS · Swift · menubar</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-05</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">Calorie Counter</h3><p class="lab-card__tag">The most frictionless food intake logger ever built. Speak, photograph, done.</p><div class="lab-card__stack">Vision · LLM · PWA</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-06</span><span class="lab-card__pill">GAME · LIVE</span></div><h3 class="lab-card__title">Vectronix</h3><p class="lab-card__tag">Hardcore arcade space combat. No mercy, no filler — proof of interaction design depth.</p><div class="lab-card__stack">Canvas · Web Audio · Vector</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" href="https://ai-created.com/games" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-07</span><span class="lab-card__pill">GAME · LIVE</span></div><h3 class="lab-card__title">Radial Drift</h3><p class="lab-card__tag">One finger. One mistake ends the run. A minimal arcade study in tension.</p><div class="lab-card__stack">WebGL · Touch · Haptics</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-08</span><span class="lab-card__pill">EXPERIMENT · LIVE</span></div><h3 class="lab-card__title">Audio Visualizer Suite</h3><p class="lab-card__tag">Captivating video visualizations of your music. Render-quality output.</p><div class="lab-card__stack">WebGL · FFT · FFmpeg</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-09</span><span class="lab-card__pill">EXPERIMENT · LIVE</span></div><h3 class="lab-card__title">Color Clock</h3><p class="lab-card__tag">A 1991 clock design, brought to life. A love letter to vintage craft.</p><div class="lab-card__stack">CSS · Type</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-10</span><span class="lab-card__pill">EXPERIMENT · LIVE</span></div><h3 class="lab-card__title">Jumbotron Simulator</h3><p class="lab-card__tag">See your name in lights at a major sporting event. Pixel-faithful arena LED.</p><div class="lab-card__stack">Canvas · WebGL</div><span class="lab-card__go">↗</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="sect" id="metrics">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">SPECIFICATION · 05</div><h2 class="sect__title">Engraved on the <em>case back</em>.</h2><p class="sect__lede">The honest numbers, stamped in brass.</p></header>
+    <div class="spec">
+      <div class="spec__cell rv"><span class="spec__num" data-count="20">0</span><span class="spec__unit">+ yrs</span><p class="spec__label">in the practice</p></div>
+      <div class="spec__cell rv" style="--d:.05s"><span class="spec__num" data-count="5">0</span><span class="spec__unit">cos</span><p class="spec__label">Google · Yahoo · Walmart · Kohl's · Endemol</p></div>
+      <div class="spec__cell rv" style="--d:.1s"><span class="spec__num" data-count="18">0</span><span class="spec__unit">shipped</span><p class="spec__label">independent products &amp; experiments</p></div>
+      <div class="spec__cell rv" style="--d:.15s"><span class="spec__num" data-count="4">0</span><span class="spec__unit">lang.</span><p class="spec__label">Dutch · English · German · Spanish</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section class="sect" id="method">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">REGULATION · 06</div><h2 class="sect__title">Four positions of the <em>regulator</em>.</h2><p class="sect__lede">How the work is adjusted to beat true. No slides, no frameworks — just four moves.</p></header>
+    <div class="reg rv">
+      <div class="reg__list" role="tablist">
+        <button class="reg__btn is-active" data-step="0"><span class="n">01</span><span class="t">Frame</span></button>
+        <button class="reg__btn" data-step="1"><span class="n">02</span><span class="t">Prototype</span></button>
+        <button class="reg__btn" data-step="2"><span class="n">03</span><span class="t">Pressure-test</span></button>
+        <button class="reg__btn" data-step="3"><span class="n">04</span><span class="t">Ship</span></button>
+      </div>
+      <div class="reg__panel" id="regPanel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- NOW -->
+<section class="sect" id="now">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">POWER RESERVE · 07</div><h2 class="sect__title">Currently <em>wound</em>.</h2><p class="sect__lede">What's running right now, updated by hand.</p></header>
+    <div class="now">
+      <div class="rv"><h3 class="now__h">Active</h3>
+        <ul class="now-list">
+          <li class="is-live"><span class="dot"></span><div><p>Leading UX &amp; AI enablement at <b>Kohl's.</b></p><small>Senior product designer / generative AI specialist</small></div></li>
+          <li class="is-live"><span class="dot"></span><div><p>Shipping new artifacts through <b>AI-Created</b> most weeks.</p><small>Independent product lab · solo</small></div></li>
+          <li class="is-live"><span class="dot"></span><div><p>Open to <b>senior IC, lead and director</b> conversations.</p><small>Product design · design engineering · AI</small></div></li>
+          <li><span class="dot"></span><div><p>Speaking at <b>Imagine AI Live</b> as a founding contributor.</p><small>Founding member · speaker</small></div></li>
+        </ul>
+      </div>
+      <div class="rv" style="--d:.1s"><h3 class="now__h">In the rotation</h3>
+        <ul class="tool-list">
+          <li><span>Figma · Figma Make · Lovable</span><small>Design surface</small></li>
+          <li><span>Next.js · TypeScript · Tailwind · Vercel</span><small>Production stack</small></li>
+          <li><span>ChatGPT · Claude · Gemini · Codex</span><small>Model fleet</small></li>
+          <li><span>Midjourney · Runway · ElevenLabs · Suno</span><small>Media generation</small></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sect contact" id="contact">
+  <div class="wrap">
+    <header class="sect__head rv" style="margin-bottom:24px"><div class="sect__ch">WINDING · 08</div></header>
+    <div class="crown rv" id="crown" title="Turn to wind">⚙</div>
+    <h2 class="contact__big rv" style="--d:.05s">Wind the <em>conversation</em>.</h2>
+    <p class="contact__sub rv" style="--d:.1s">The fastest path is a direct line. Tell me what you're building, what's ambiguous about it, and the timeline you're on.</p>
+    <div class="contact__row rv" style="--d:.15s">
+      <button class="email-btn" id="copyEmail">marcovhv@gmail.com<span class="hint">click to copy</span></button>
+      <a href="mailto:marcovhv@gmail.com?subject=Let's%20talk" class="btn btn--gold">Send a message ↗</a>
+    </div>
+    <div class="contact__links rv" style="--d:.2s">
+      <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a><span class="c-sep"></span>
+      <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">X / @AIandDesign</a><span class="c-sep"></span>
+      <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a><span class="c-sep"></span>
+      <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid rv">
+      <div><h4>Colophon</h4><p>Hand-assembled, single HTML file, no frameworks. Typography is Cormorant (display), Manrope (body) and IBM Plex Mono (spec). The watch hands track real Portland time. Gears rotate at different ratios to suggest a working movement. Built in Portland, OR · 2026.</p></div>
+      <div><h4>Specimen</h4><ul><li>Cormorant · display</li><li>Manrope · body 300–800</li><li>IBM Plex Mono · specs</li><li>Walnut · Brass · Ruby</li></ul></div>
+      <div><h4>Movement</h4><ul><li>HTML · one file</li><li>CSS · variables, grid</li><li>JS · vanilla, no deps</li><li>Any static host</li></ul></div>
+    </div>
+    <div class="foot__bottom"><span>© 2026 M. van Hylckama Vlieg · Calibre MVHV-20</span><a href="#top" style="color:var(--cream-2)">Back to top ↑</a></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><i></i><span>Copied to clipboard</span></div>
+
+<script>
+(function(){
+'use strict';
+const REDUCED=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* clock */
+const clk=document.getElementById('clock');
+const fmt=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+function tick(){const s=fmt.format(new Date());if(clk)clk.textContent=s;}
+tick();setInterval(tick,1000);
+
+/* watch hands */
+const hH=document.getElementById('hHour'),hM=document.getElementById('hMin'),hS=document.getElementById('hSec');
+function hands(){const n=new Date();const s=n.getSeconds()+n.getMilliseconds()/1000;const m=n.getMinutes()+s/60;const h=(n.getHours()%12)+m/60;
+  if(hS)hS.setAttribute('transform','rotate('+(s*6)+' 200 200)');
+  if(hM)hM.setAttribute('transform','rotate('+(m*6)+' 200 200)');
+  if(hH)hH.setAttribute('transform','rotate('+(h*30)+' 200 200)');}
+hands();if(!REDUCED)setInterval(hands,50);else setInterval(hands,1000);
+
+/* hour markers */
+const mg=document.getElementById('markers');
+if(mg){for(let i=0;i<12;i++){const a=i*30*Math.PI/180;const x1=200+Math.sin(a)*175,y1=200-Math.cos(a)*175;const x2=200+Math.sin(a)*(i%3===0?158:166),y2=200-Math.cos(a)*(i%3===0?158:166);
+  const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);
+  l.setAttribute('stroke','rgba(201,168,76,.5)');l.setAttribute('stroke-width',i%3===0?2.5:1);mg.appendChild(l);}}
+
+/* progress */
+const prog=document.getElementById('prog');
+function onScroll(){const d=document.documentElement;const t=d.scrollHeight-d.clientHeight;if(prog)prog.style.width=(t>0?(scrollY/t)*100:0)+'%';
+  const tr=document.getElementById('train'),tf=document.getElementById('trainFill');
+  if(tr&&tf){const r=tr.getBoundingClientRect();let p=(innerHeight*.6-r.top)/r.height;p=Math.max(0,Math.min(1,p));tf.style.height=(p*100)+'%';}}
+let tk=false;addEventListener('scroll',()=>{if(!tk){requestAnimationFrame(()=>{onScroll();tk=false;});tk=true;}},{passive:true});onScroll();
+
+/* reveal */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');io.unobserve(e.target);});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* count-up */
+const cio=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,t=+el.dataset.count;if(REDUCED){el.textContent=t;cio.unobserve(el);return;}
+  const s=performance.now();(function f(n){const p=Math.min(1,(n-s)/1200);el.textContent=Math.floor((1-Math.pow(1-p,3))*t);if(p<1)requestAnimationFrame(f);else el.textContent=t;})(s);cio.unobserve(el);});},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(c=>cio.observe(c));
+
+/* method tabs */
+const rbtns=[...document.querySelectorAll('.reg__btn')],rpanel=document.getElementById('regPanel');
+const RD=[{n:'01',t:'Frame',b:"Find the smallest, most honest version of the problem. Strip the brief until what remains is real."},
+{n:'02',t:'Prototype',b:"Skip the slide. Build the smallest behaving thing. Code, not comp. The product tells you what it wants to be."},
+{n:'03',t:'Pressure-test',b:"Real users, real models, real edge cases. Watch what breaks. Decide what's worth keeping."},
+{n:'04',t:'Ship',b:"Stay around for the boring part. The 1.0 only matters if it stays in the build after launch."}];
+function setReg(i){rbtns.forEach((b,idx)=>{b.classList.toggle('is-active',idx===i);});
+  const d=RD[i];rpanel.innerHTML='<div class="reg-swap"><span class="big">'+d.n+'</span><h3>'+d.t+'</h3><p>'+d.b+'</p></div>';}
+rbtns.forEach((b,i)=>b.addEventListener('click',()=>setReg(i)));if(rpanel)setReg(0);
+
+/* copy email */
+const ce=document.getElementById('copyEmail'),toast=document.getElementById('toast');let tt;
+function showToast(){toast.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('show'),2200);}
+if(ce)ce.addEventListener('click',async()=>{const e='marcovhv@gmail.com';try{await navigator.clipboard.writeText(e);}catch(_){const ta=document.createElement('textarea');ta.value=e;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(__){}ta.remove();}
+  ce.classList.add('copied');const h=ce.querySelector('.hint'),o=h.textContent;h.textContent='copied ✓';showToast();setTimeout(()=>{ce.classList.remove('copied');h.textContent=o;},1800);});
+
+/* crown spin on click */
+const crown=document.getElementById('crown');
+if(crown)crown.addEventListener('click',()=>{crown.style.transform='rotate(360deg)';setTimeout(()=>{crown.style.transform='';},600);});
+})();
+</script>
+</body>
+</html>

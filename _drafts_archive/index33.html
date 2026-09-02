@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>M. van Hylckama Vlieg — The Perfume</title>
+<meta name="description" content="Twenty years of product design, engineering and AI-native software — composed as a fragrance."/>
+<meta name="theme-color" content="#faf6f0"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Outfit:wght@300..800&family=Cormorant:ital,wght@1,300;1,400&family=Azeret+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#faf6f0;--peach:#f5ede4;--blush:#f3e7ea;
+  --plum:#2a1a2e;--plum-2:#38243c;
+  --top:#d9a06b;--heart:#c9708a;--base:#6b3a5e;
+  --gold:#b8935a;--ink:#2a1f1a;--ink-2:#8a7d6f;--ink-3:#b0a493;
+  --line:rgba(42,31,26,.12);--maxw:1280px;--gut:clamp(20px,4vw,60px);
+  --fd:'Marcellus',serif;--fb:'Outfit',sans-serif;--fi:'Cormorant',serif;--fm:'Azeret Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{font-family:var(--fb);background:linear-gradient(180deg,var(--ivory) 0%,var(--peach) 45%,var(--blush) 100%);color:var(--ink);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+em{font-style:normal}a{color:inherit;text-decoration:none}
+::selection{background:var(--heart);color:#fff}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+section[id]{scroll-margin-top:76px}
+
+/* rising scent particles */
+#particles{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.p{position:absolute;bottom:-24px;border-radius:50%;background:radial-gradient(circle,rgba(217,160,107,.5),transparent 70%);animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0) scale(1);opacity:0}12%{opacity:.7}85%{opacity:.35}100%{transform:translateY(-108vh) scale(.3);opacity:0}}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut);position:relative;z-index:2}
+
+/* top bar */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gut);background:rgba(250,246,240,.78);backdrop-filter:blur(14px) saturate(1.2);border-bottom:1px solid var(--line)}
+.topbar__brand{display:flex;align-items:center;gap:12px;font-family:var(--fm);font-size:.74rem;letter-spacing:.16em;color:var(--ink-2)}
+.topbar__brand b{color:var(--gold);font-weight:500}
+.topbar__right{display:flex;align-items:center;gap:14px;font-family:var(--fm);font-size:.7rem;color:var(--ink-3)}
+.topbar__right .dot{width:6px;height:6px;border-radius:50%;background:var(--heart);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+#prog{position:fixed;top:0;left:0;height:2px;width:0;z-index:300;background:linear-gradient(90deg,var(--top),var(--heart),var(--base))}
+
+/* scent trail rail */
+.trail{position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:90;display:none;flex-direction:column;align-items:center;gap:26px}
+@media(min-width:1180px){.trail{display:flex}}
+.trail__line{position:absolute;top:14px;bottom:14px;left:50%;width:1px;background:var(--line);transform:translateX(-50%)}
+.trail__node{position:relative;display:flex;align-items:center;gap:12px;flex-direction:row-reverse}
+.trail__node .d{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--ink-3);background:var(--ivory);transition:.4s;z-index:1}
+.trail__node .l{font-family:var(--fm);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);opacity:0;transform:translateX(6px);transition:.4s}
+.trail__node.is-active .d{border-color:var(--gold);background:var(--gold);box-shadow:0 0 14px rgba(184,147,90,.5)}
+.trail__node.is-active .l{opacity:1;transform:none;color:var(--ink)}
+.trail__node:hover .l{opacity:1;transform:none}
+
+/* HERO */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:96px var(--gut) 60px;position:relative}
+.hero__glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);width:min(640px,90vw);height:min(640px,90vw);background:radial-gradient(circle,rgba(217,160,107,.22),transparent 62%);z-index:0;pointer-events:none}
+.bottle{position:relative;z-index:2;width:min(230px,58vw);margin-bottom:8px;filter:drop-shadow(0 30px 50px rgba(107,58,94,.22))}
+.bottle svg{width:100%;height:auto;display:block;overflow:visible}
+.liquid-surface{animation:breathe 5s ease-in-out infinite;transform-origin:center}
+@keyframes breathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.7)}}
+.shimmer{animation:shim 6s ease-in-out infinite}
+@keyframes shim{0%,100%{opacity:.14}50%{opacity:.3}}
+.hero__eyebrow{font-family:var(--fm);font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3);margin-bottom:18px;z-index:2;position:relative}
+.hero__name{font-family:var(--fd);font-weight:400;font-size:clamp(2.6rem,7vw,5.4rem);line-height:.98;letter-spacing:-.01em;z-index:2;position:relative}
+.hero__name em{font-family:var(--fi);font-style:italic;font-weight:300;color:var(--heart)}
+.hero__role{margin-top:16px;font-family:var(--fm);font-size:.8rem;letter-spacing:.14em;color:var(--ink-2);z-index:2;position:relative}
+.hero__notes{display:flex;gap:10px;justify-content:center;margin-top:26px;z-index:2;position:relative}
+.hero__notes span{font-family:var(--fm);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2)}
+.hero__notes span i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:middle}
+.hero__scroll{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:.66rem;letter-spacing:.2em;color:var(--ink-3);animation:bob 2.4s ease-in-out infinite;z-index:2}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
+
+/* sections */
+.sect{padding:clamp(72px,9vw,130px) 0;position:relative}
+.sect__head{margin-bottom:clamp(38px,5vw,64px)}
+.sect__ch{font-family:var(--fm);font-size:.72rem;letter-spacing:.24em;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:14px}
+.sect__ch::after{content:'';flex:1;height:1px;background:var(--line)}
+.sect__title{font-family:var(--fd);font-weight:400;font-size:clamp(2rem,4.6vw,3.7rem);line-height:1.05;letter-spacing:-.01em}
+.sect__title em{font-family:var(--fi);font-style:italic;font-weight:300;color:var(--heart)}
+.sect__lede{margin-top:16px;max-width:52ch;color:var(--ink-2);font-size:1.04rem}
+
+/* bloom reveal */
+.rv{opacity:0;transform:scale(.96);filter:blur(10px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1),filter 1s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none;filter:none}
+
+/* TOP NOTES / manifesto */
+.manif{display:grid;gap:40px}
+@media(min-width:960px){.manif{grid-template-columns:.85fr 1.3fr;gap:64px}}
+.manif__card{background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(217,160,107,.08));border:1px solid var(--line);border-radius:20px;padding:44px 38px;position:relative;overflow:hidden}
+.manif__card::before{content:'';position:absolute;top:-40px;left:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(217,160,107,.3),transparent 70%);pointer-events:none}
+.manif__card .q{font-family:var(--fi);font-style:italic;font-weight:300;font-size:clamp(1.5rem,2.4vw,2.1rem);line-height:1.3;position:relative}
+.manif__card .q em{color:var(--top)}
+.manif__body p{font-size:1.12rem;color:var(--ink-2);line-height:1.75}
+.manif__body p+p{margin-top:20px}
+.manif__body .hl{color:var(--ink);font-weight:500}
+.manif__sig{margin-top:28px;font-family:var(--fm);font-size:.76rem;letter-spacing:.1em;color:var(--ink-3)}
+
+/* HEART NOTES / capabilities (scent wheel) */
+.heart{display:grid;gap:48px;align-items:center}
+@media(min-width:960px){.heart{grid-template-columns:.8fr 1.2fr;gap:64px}}
+.wheel-wrap{position:relative;width:min(340px,80vw);margin:0 auto}
+.wheel{width:100%;height:auto;display:block;transform:rotate(0deg);transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.wheel:hover{transform:rotate(8deg)}
+.wseg{transition:.4s;cursor:pointer}
+.wseg.dim{opacity:.28}
+.wseg.hot{opacity:1;filter:brightness(1.08)}
+.wheel__center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.wheel__center .m{font-family:var(--fd);font-size:1.5rem;color:var(--ink)}
+.wheel__center .s{font-family:var(--fm);font-size:.56rem;letter-spacing:.18em;color:var(--ink-3);margin-top:4px}
+.notes{display:flex;flex-direction:column;gap:2px}
+.note{padding:24px 26px;border-top:1px solid var(--line);position:relative;transition:.4s;display:grid;grid-template-columns:auto 1fr;gap:20px}
+.note:last-child{border-bottom:1px solid var(--line)}
+.note:hover,.note.hot{background:linear-gradient(90deg,rgba(255,255,255,.7),transparent);padding-left:34px}
+.note__dot{width:12px;height:12px;border-radius:50%;margin-top:8px;flex-shrink:0;transition:.4s}
+.note:hover .note__dot,.note.hot .note__dot{box-shadow:0 0 16px currentColor;transform:scale(1.25)}
+.note__title{font-family:var(--fd);font-size:1.3rem;margin-bottom:6px}
+.note__body{color:var(--ink-2);font-size:.95rem;line-height:1.6}
+.note__chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.note__chips span{font-family:var(--fm);font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--line);padding:4px 9px;border-radius:999px}
+
+/* BASE NOTES / career (plum descent) */
+.base{background:var(--plum);color:#f5efe6;border-radius:28px;padding:clamp(40px,6vw,72px);position:relative;overflow:hidden}
+.base::before{content:'';position:absolute;top:-60px;right:-40px;width:280px;height:280px;background:radial-gradient(circle,rgba(107,58,94,.6),transparent 70%);pointer-events:none}
+.base .sect__ch{color:var(--gold)}
+.base .sect__ch::after{background:rgba(245,239,230,.16)}
+.base .sect__title{color:#f5efe6}
+.base .sect__lede{color:rgba(245,239,230,.6)}
+.train{position:relative;padding-left:44px;margin-top:8px}
+.train__line{position:absolute;left:12px;top:6px;bottom:6px;width:1px;background:rgba(245,239,230,.18)}
+.train__fill{position:absolute;left:0;top:0;width:100%;height:0;background:linear-gradient(var(--gold),var(--heart));transition:height .1s linear}
+.titem{position:relative;padding-bottom:40px}
+.titem:last-child{padding-bottom:0}
+.titem__node{position:absolute;left:-38px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--plum);border:2px solid var(--gold)}
+.titem.is-live .titem__node{background:var(--heart);border-color:var(--heart);box-shadow:0 0 12px rgba(201,112,138,.6);animation:pulse 2.4s infinite}
+.titem__year{font-family:var(--fm);font-size:.72rem;letter-spacing:.14em;color:var(--gold);margin-bottom:8px}
+.titem__co{font-family:var(--fd);font-size:clamp(1.5rem,3vw,2.2rem);line-height:1;margin-bottom:8px}
+.titem__role{color:rgba(245,239,230,.68);max-width:56ch;font-size:.96rem}
+.titem__role b{color:#f5efe6;font-weight:600}
+.titem__tag{display:inline-block;margin-top:12px;font-family:var(--fm);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,239,230,.5);border:1px solid rgba(245,239,230,.18);padding:4px 10px;border-radius:999px}
+
+/* EXTRAIT / lab */
+.extrait{position:relative}
+.vial-row{display:flex;align-items:center;gap:20px;margin-bottom:36px}
+.vial{width:44px;height:120px;border-radius:8px 8px 16px 16px;background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(184,147,90,.3));border:1px solid var(--line);position:relative;overflow:hidden;flex-shrink:0}
+.vial::after{content:'';position:absolute;left:0;right:0;bottom:0;height:78%;background:linear-gradient(180deg,var(--gold),var(--base));box-shadow:0 0 24px rgba(184,147,90,.5)}
+.vial__cap{position:absolute;top:-16px;left:8px;right:8px;height:14px;border-radius:5px;background:var(--gold)}
+.vial-row p{font-family:var(--fi);font-style:italic;font-weight:300;font-size:1.2rem;color:var(--ink-2);max-width:46ch}
+.lab-grid{display:grid;gap:14px}
+@media(min-width:680px){.lab-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.lab-grid{grid-template-columns:repeat(3,1fr)}}
+.lab-card{background:rgba(255,255,255,.5);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative;transition:.4s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column}
+.lab-card:hover{transform:translateY(-4px);border-color:rgba(184,147,90,.5);box-shadow:0 20px 40px -20px rgba(107,58,94,.3);background:rgba(255,255,255,.8)}
+.lab-card__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.lab-card__idx{font-family:var(--fm);font-size:.68rem;color:var(--ink-3)}
+.lab-card__pill{font-family:var(--fm);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2)}
+.lab-card__pill i{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.pill--ai i{background:var(--top)}.pill--game i{background:var(--heart)}.pill--exp i{background:var(--base)}
+.lab-card__title{font-family:var(--fd);font-size:1.3rem;margin-bottom:8px}
+.lab-card__tag{color:var(--ink-2);font-size:.9rem;line-height:1.55;flex:1}
+.lab-card__stack{margin-top:14px;font-family:var(--fm);font-size:.68rem;color:var(--ink-3)}
+.lab-card__go{position:absolute;bottom:18px;right:20px;font-size:1.2rem;color:var(--ink-3);transition:.4s}
+.lab-card:hover .lab-card__go{color:var(--gold);transform:translate(3px,-3px)}
+
+/* CONCENTRATION / metrics */
+.conc{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+@media(min-width:560px){.conc{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.conc{grid-template-columns:repeat(4,1fr)}}
+.conc__cell{background:rgba(255,255,255,.4);padding:38px 28px;position:relative}
+.conc__cell::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:.9s .2s}
+.conc__cell.in::before{transform:scaleX(1)}
+.conc__num{font-family:var(--fd);font-size:clamp(2.8rem,5vw,4rem);line-height:.9;color:var(--ink)}
+.conc__unit{font-family:var(--fm);font-size:.74rem;color:var(--gold);margin-left:5px}
+.conc__label{margin-top:12px;font-family:var(--fm);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);line-height:1.5}
+.conc__note{margin-top:8px;font-family:var(--fi);font-style:italic;font-size:.95rem;color:var(--ink-2)}
+
+/* MACERATION / method */
+.mac{display:grid;gap:24px}
+@media(min-width:900px){.mac{grid-template-columns:.8fr 1.2fr;gap:40px}}
+.mac__list{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+@media(min-width:900px){.mac__list{grid-template-columns:1fr}}
+.mac-btn{display:flex;align-items:center;gap:14px;padding:20px 22px;border:1px solid var(--line);background:none;color:var(--ink-2);cursor:pointer;text-align:left;font-family:inherit;transition:.3s;border-radius:14px}
+.mac-btn:hover{background:rgba(255,255,255,.6);color:var(--ink)}
+.mac-btn.is-active{background:#fff;border-color:rgba(184,147,90,.5);color:var(--ink);box-shadow:inset 3px 0 0 var(--gold)}
+.mac-btn .n{font-family:var(--fm);font-size:.76rem;color:var(--ink-3)}
+.mac-btn.is-active .n{color:var(--gold)}
+.mac-btn .t{font-family:var(--fd);font-size:1.15rem}
+.mac-panel{border:1px solid var(--line);background:rgba(255,255,255,.5);border-radius:20px;padding:44px;min-height:260px;display:flex;flex-direction:column;justify-content:center}
+.mac-panel .big{font-family:var(--fd);font-size:3.5rem;color:var(--gold);line-height:.9}
+.mac-panel h3{font-family:var(--fd);font-size:1.8rem;margin:12px 0}
+.mac-panel p{color:var(--ink-2);font-size:1.05rem;line-height:1.7;max-width:42ch}
+.mac-swap{animation:macIn .5s cubic-bezier(.2,.7,.2,1)}
+@keyframes macIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* SILLAGE / now */
+.now{display:grid;gap:40px}
+@media(min-width:900px){.now{grid-template-columns:1fr 1fr;gap:64px}}
+.now__h{font-family:var(--fm);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:20px}
+.now-list{list-style:none}
+.now-list li{display:flex;gap:14px;padding:18px 0;border-top:1px solid var(--line);transition:.3s}
+.now-list li:last-child{border-bottom:1px solid var(--line)}
+.now-list .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ink-3);margin-top:8px;flex-shrink:0}
+.now-list li.is-live .dot{background:var(--heart);border-color:var(--heart);box-shadow:0 0 10px rgba(201,112,138,.5);animation:pulse 2.4s infinite}
+.now-list li p{font-family:var(--fd);font-size:1.15rem;line-height:1.3}
+.now-list li p b{color:var(--heart);font-weight:400;font-family:var(--fi);font-style:italic}
+.now-list li small{display:block;font-family:var(--fm);font-size:.7rem;color:var(--ink-3);margin-top:4px}
+.now-list li:hover{background:linear-gradient(90deg,rgba(255,255,255,.6),transparent);padding-left:10px}
+.tool-list{list-style:none}
+.tool-list li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
+.tool-list li:last-child{border-bottom:1px solid var(--line)}
+.tool-list li span{font-family:var(--fd);font-size:1rem}
+.tool-list li small{font-family:var(--fm);font-size:.68rem;color:var(--ink-3);text-align:right}
+
+/* ACCORD / contact */
+.contact{text-align:center;background:linear-gradient(180deg,transparent,rgba(217,160,107,.08) 40%,rgba(201,112,138,.1));border-radius:28px;padding:clamp(56px,8vw,90px) var(--gut)}
+.contact__big{font-family:var(--fd);font-size:clamp(2.6rem,9vw,7rem);line-height:.9;letter-spacing:-.01em}
+.contact__big em{font-family:var(--fi);font-style:italic;font-weight:300;color:var(--heart)}
+.contact__sub{margin-top:22px;max-width:48ch;margin-left:auto;margin-right:auto;color:var(--ink-2);font-size:1.05rem}
+.contact__row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:18px;margin-top:36px}
+.email-btn{font-family:var(--fm);font-size:clamp(.9rem,2vw,1.3rem);color:var(--ink);background:none;border:none;cursor:pointer;padding-bottom:5px;border-bottom:1px solid rgba(42,31,26,.25);transition:.3s;display:inline-flex;align-items:center;gap:12px}
+.email-btn:hover{color:var(--heart);border-color:var(--heart)}
+.email-btn .hint{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--line);padding:4px 8px;border-radius:999px}
+.email-btn.copied{color:var(--heart)} .email-btn.copied .hint{color:var(--heart);border-color:rgba(201,112,138,.4)}
+.btn{display:inline-flex;align-items:center;gap:.5em;font-family:var(--fm);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;padding:.95em 1.5em;border-radius:999px;border:1px solid var(--gold);color:var(--ink);cursor:pointer;background:none;transition:.3s}
+.btn--gold{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:500}
+.btn--gold:hover{background:#a6824c;transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(184,147,90,.5)}
+.btn:hover{border-color:var(--heart);color:var(--heart)}
+.contact__links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;margin-top:32px}
+.contact__links a{font-family:var(--fm);font-size:.78rem;color:var(--ink-2);transition:.3s}
+.contact__links a:hover{color:var(--heart)}
+.c-sep{width:3px;height:3px;background:var(--ink-3);border-radius:50%}
+
+/* footer */
+.foot{padding:clamp(56px,7vw,80px) 0 40px;margin-top:clamp(50px,7vw,80px)}
+.foot__grid{display:grid;gap:32px}
+@media(min-width:760px){.foot__grid{grid-template-columns:1.5fr 1fr 1fr;gap:48px}}
+.foot h4{font-family:var(--fm);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px}
+.foot p,.foot li{font-size:.86rem;color:var(--ink-2);line-height:1.7}
+.foot ul{list-style:none}
+.foot__bottom{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--fm);font-size:.68rem;letter-spacing:.08em;color:var(--ink-3)}
+
+/* toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,16px);z-index:400;background:#fff;border:1px solid var(--line);color:var(--ink);font-family:var(--fm);font-size:.74rem;padding:12px 20px;border-radius:999px;display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:.4s;box-shadow:0 16px 40px -16px rgba(42,31,26,.3)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast i{width:7px;height:7px;border-radius:50%;background:var(--heart)}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  html{scroll-behavior:auto}.rv{opacity:1!important;transform:none!important;filter:none!important}
+  #particles{display:none}
+}
+</style>
+</head>
+<body id="top">
+<div id="particles" aria-hidden="true"></div>
+<div id="prog"></div>
+
+<header class="topbar">
+  <a href="#top" class="topbar__brand"><b>MVHV</b> · THE PERFUME</a>
+  <div class="topbar__right"><span class="dot"></span><span id="clock">--:--:--</span><span>PDX</span></div>
+</header>
+
+<!-- scent trail rail -->
+<nav class="trail" aria-label="Fragrance notes">
+  <span class="trail__line"></span>
+  <a href="#top" data-trail="top" class="trail__node is-active"><span class="l">Top</span><span class="d"></span></a>
+  <a href="#capabilities" data-trail="capabilities" class="trail__node"><span class="l">Heart</span><span class="d"></span></a>
+  <a href="#record" data-trail="record" class="trail__node"><span class="l">Base</span><span class="d"></span></a>
+  <a href="#contact" data-trail="contact" class="trail__node"><span class="l">Accord</span><span class="d"></span></a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="bottle rv">
+    <svg viewBox="0 0 240 380" role="img" aria-label="Perfume bottle">
+      <defs>
+        <linearGradient id="liq" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e8c4a0"/><stop offset=".5" stop-color="#d9a06b"/><stop offset="1" stop-color="#c98f5e"/>
+        </linearGradient>
+        <clipPath id="bodyClip"><rect x="52" y="96" width="136" height="268" rx="28"/></clipPath>
+      </defs>
+      <!-- cap -->
+      <rect x="96" y="18" width="48" height="50" rx="9" fill="#b8935a"/>
+      <rect x="104" y="26" width="32" height="8" rx="4" fill="#cfae76"/>
+      <!-- neck -->
+      <rect x="108" y="66" width="24" height="34" fill="#e9ddc8"/>
+      <!-- glass body -->
+      <rect x="52" y="96" width="136" height="268" rx="28" fill="#f4ecdd"/>
+      <rect x="52" y="96" width="136" height="268" rx="28" fill="none" stroke="#d9cbb0" stroke-width="1.5"/>
+      <!-- liquid -->
+      <g clip-path="url(#bodyClip)">
+        <rect x="52" y="184" width="136" height="180" fill="url(#liq)"/>
+        <ellipse class="liquid-surface" cx="120" cy="184" rx="68" ry="9" fill="#f0d3ac"/>
+        <rect class="shimmer" x="64" y="108" width="15" height="244" rx="7.5" fill="#fff"/>
+      </g>
+      <!-- label -->
+      <rect x="74" y="216" width="92" height="86" rx="5" fill="#faf6f0" opacity=".92"/>
+      <text x="120" y="256" text-anchor="middle" font-family="Marcellus,serif" font-size="26" fill="#2a1f1a">MVHV</text>
+      <line x1="90" y1="268" x2="150" y2="268" stroke="#b8935a" stroke-width="1"/>
+      <text x="120" y="286" text-anchor="middle" font-family="Azeret Mono,monospace" font-size="8.5" letter-spacing="2" fill="#8a7d6f">EAU DE PARFUM</text>
+    </svg>
+  </div>
+  <p class="hero__eyebrow rv" style="--d:.1s">Eau de Parfum · 20 Years · Portland, OR</p>
+  <h1 class="hero__name rv" style="--d:.2s">M. van Hylckama <em>Vlieg</em></h1>
+  <p class="hero__role rv" style="--d:.3s">Product Designer · AI-Native Builder</p>
+  <div class="hero__notes rv" style="--d:.4s">
+    <span><i style="background:var(--top)"></i>Top · Judgment</span>
+    <span><i style="background:var(--heart)"></i>Heart · Craft</span>
+    <span><i style="background:var(--base)"></i>Base · Depth</span>
+  </div>
+  <a href="#topnotes" class="hero__scroll">DESCEND INTO THE NOTES ↓</a>
+</section>
+
+<!-- TOP NOTES / manifesto -->
+<section class="sect" id="topnotes">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">TOP NOTES · 01</div><h2 class="sect__title">The first <em>fifteen minutes.</em></h2><p class="sect__lede">What you notice before the rest settles in. Bright, immediate, honest.</p></header>
+    <div class="manif">
+      <div class="manif__card rv"><p class="q">"AI didn't shrink the design problem. It made the problem about <em>judgment</em>, not output."</p></div>
+      <div class="manif__body rv" style="--d:.1s">
+        <p>I design products at the seam where intent becomes interface — where a half-formed idea has to choose what kind of system it wants to become. The interesting decisions live there: pacing, posture, what shows up first, what stays hidden, what the model is allowed to assume.</p>
+        <p>The work is choosing what to build and how it should behave in someone's actual life — then shipping it before the moment passes.</p>
+        <p>I'm strongest where strategy, design, interaction behavior and the realities of implementation collide. I write the prototype, ship the build, and stay around for the part where it has to be good for real users. <span class="hl">The portfolio is the proof.</span></p>
+        <div class="manif__sig">— M. van Hylckama Vlieg · Portland, OR</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HEART NOTES / capabilities -->
+<section class="sect" id="capabilities">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">HEART NOTES · 02</div><h2 class="sect__title">The core, <em>lasting hours.</em></h2><p class="sect__lede">Six notes that make up the character of the blend. Most projects wear four at once.</p></header>
+    <div class="heart">
+      <div class="wheel-wrap rv"><svg class="wheel" id="wheel" viewBox="0 0 240 240"></svg><div class="wheel__center"><div class="m">MVHV</div><div class="s">6 NOTES</div></div></div>
+      <div class="notes" id="noteList">
+        <article class="note rv" data-i="0"><span class="note__dot" style="background:#d9a06b;color:#d9a06b"></span><div><h3 class="note__title">AI-native product design</h3><p class="note__body">Designing systems where the model is the interaction, not a chat panel bolted onto a SaaS shell. Voice, agents, ambient assistance.</p><div class="note__chips"><span>Voice UX</span><span>Agent UI</span><span>Prompt systems</span></div></div></article>
+        <article class="note rv" data-i="1" style="--d:.05s"><span class="note__dot" style="background:#c98f5e;color:#c98f5e"></span><div><h3 class="note__title">Design engineering</h3><p class="note__body">Production-quality prototypes that behave like real software because they are real software. Built end to end by one person.</p><div class="note__chips"><span>Next.js</span><span>TypeScript</span><span>Tailwind</span><span>Vercel</span></div></div></article>
+        <article class="note rv" data-i="2" style="--d:.1s"><span class="note__dot" style="background:#c9708a;color:#c9708a"></span><div><h3 class="note__title">0 → 1 incubation</h3><p class="note__body">Taking an ambiguous brief through research, framing, design, prototype and shipped product. Comfortable carrying the weight.</p><div class="note__chips"><span>Strategy</span><span>Research</span><span>Prototype</span></div></div></article>
+        <article class="note rv" data-i="3"><span class="note__dot" style="background:#a85d7a;color:#a85d7a"></span><div><h3 class="note__title">Enterprise UX modernization</h3><p class="note__body">Untangling legacy workflows in cart, checkout, account and internal tooling — replacing them with systems people actually want to use.</p><div class="note__chips"><span>E-commerce</span><span>Internal tools</span><span>A11y</span></div></div></article>
+        <article class="note rv" data-i="4" style="--d:.05s"><span class="note__dot" style="background:#6b3a5e;color:#6b3a5e"></span><div><h3 class="note__title">Internal AI tooling</h3><p class="note__body">Custom copilots, prompt libraries, synthetic research environments and workflow accelerators built for design and product orgs.</p><div class="note__chips"><span>LLM pipelines</span><span>Workflows</span><span>Enablement</span></div></div></article>
+        <article class="note rv" data-i="5" style="--d:.1s"><span class="note__dot" style="background:#8a4f6b;color:#8a4f6b"></span><div><h3 class="note__title">Leadership &amp; enablement</h3><p class="note__body">Built and led prototyping teams at Yahoo. Now drive AI adoption inside a design org through teaching, tooling and example.</p><div class="note__chips"><span>Mentorship</span><span>AI education</span><span>Hiring</span></div></div></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BASE NOTES / career -->
+<section class="sect" id="record">
+  <div class="wrap">
+    <div class="base rv">
+      <header class="sect__head"><div class="sect__ch">BASE NOTES · 03</div><h2 class="sect__title">The foundation, <em>lasting days.</em></h2><p class="sect__lede">The deep, dry-wood notes that everything else rests on. Twenty years of it.</p></header>
+      <div class="train" id="train">
+        <div class="train__line"><span class="train__fill" id="trainFill"></span></div>
+        <article class="titem rv"><span class="titem__node"></span><div class="titem__year">1998 — 2005</div><h3 class="titem__co">Endemol</h3><p class="titem__role"><b>UX &amp; Engineering Lead.</b> Multilingual content systems and large-scale web platforms across an international entertainment portfolio. Where the technical depth got built.</p><span class="titem__tag">entertainment</span></article>
+        <article class="titem rv"><span class="titem__node"></span><div class="titem__year">2005 — 2013</div><h3 class="titem__co">Yahoo!</h3><p class="titem__role"><b>Director of UX Prototyping &amp; Senior UX Manager.</b> Led global prototyping teams. Shaped rebrand and personalization work, built scalable design processes, mentored senior designers.</p><span class="titem__tag">consumer · leadership</span></article>
+        <article class="titem rv"><span class="titem__node"></span><div class="titem__year">2013 — 2017</div><h3 class="titem__co">Google</h3><p class="titem__role"><b>Senior UX Engineer / Prototyper.</b> Built high-fidelity prototypes for Google Cloud AI, Google Assistant and Android. Bridged design and engineering.</p><span class="titem__tag">ai · cloud</span></article>
+        <article class="titem rv"><span class="titem__node"></span><div class="titem__year">2017 — 2021</div><h3 class="titem__co">Walmart Labs</h3><p class="titem__role"><b>Principal Product Designer / Design Technologist.</b> Mobile, voice and personalization during Walmart's digital transformation. Translated complex ML into clear interfaces.</p><span class="titem__tag">retail · ml</span></article>
+        <article class="titem rv"><span class="titem__node"></span><div class="titem__year">2021 — now</div><h3 class="titem__co">Kohl's</h3><p class="titem__role"><b>Senior Product Designer &amp; Generative AI Specialist.</b> Led UX across cart, checkout, wallet, account and self-checkout. Drove AI tooling and education across the design org.</p><span class="titem__tag">e-comm · ai</span></article>
+        <article class="titem is-live rv"><span class="titem__node"></span><div class="titem__year">always</div><h3 class="titem__co">AI-Created</h3><p class="titem__role"><b>Independent product lab.</b> Shipped AI tools, design utilities, music, video and arcade games — all real software, all built end to end.</p><span class="titem__tag">lab · solo</span></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXTRAIT / lab -->
+<section class="sect extrait" id="lab">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">THE EXTRAIT · 04</div><h2 class="sect__title">Most <em>concentrated.</em></h2><p class="sect__lede">Eighteen independent artifacts — the purest distillation of the practice. Real software, shipped end to end.</p></header>
+    <div class="vial-row rv"><div class="vial" aria-hidden="true"><span class="vial__cap"></span></div><p>The extrait is where the blend is strongest. These are the pieces I made alone, in public, to prove the nose still works.</p></div>
+    <div class="lab-grid">
+      <a class="lab-card rv" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-01</span><span class="lab-card__pill pill--ai"><i></i>AI · LIVE</span></div><h3 class="lab-card__title">My AI Diary</h3><p class="lab-card__tag">Voice-first journaling that turns raw speech into a written entry that still sounds like you. Whisper, semantic search, weekly summaries.</p><div class="lab-card__stack">Next.js · OpenAI · Whisper · IndexedDB</div><span class="lab-card__go">↗</span></a>
+      <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-02</span><span class="lab-card__pill pill--ai"><i></i>AI · LIVE</span></div><h3 class="lab-card__title">Human, Actually</h3><p class="lab-card__tag">Tailor your resume to the job — without sounding like a robot wrote it.</p><div class="lab-card__stack">LLM · NLP · UX</div><span class="lab-card__go">↗</span></a>
+      <a class="lab-card rv" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-03</span><span class="lab-card__pill pill--ai"><i></i>AI · LIVE</span></div><h3 class="lab-card__title">WatchGPT</h3><p class="lab-card__tag">Realtime ChatGPT voice, on your wrist.</p><div class="lab-card__stack">watchOS · Realtime API</div><span class="lab-card__go">↗</span></a>
+      <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-04</span><span class="lab-card__pill pill--ai"><i></i>AI · LIVE</span></div><h3 class="lab-card__title">AI Usage</h3><p class="lab-card__tag">Claude Code + Codex usage on your Mac desktop. A menubar utility for devs.</p><div class="lab-card__stack">macOS · Swift · menubar</div><span class="lab-card__go">↗</span></a>
+      <a class="lab-card rv" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-05</span><span class="lab-card__pill pill--ai"><i></i>AI · LIVE</span></div><h3 class="lab-card__title">Calorie Counter</h3><p class="lab-card__tag">The most frictionless food intake logger ever built. Speak, photograph, done.</p><div class="lab-card__stack">Vision · LLM · PWA</div><span class="lab-card__go">↗</span></a>
+      <a class="lab-card rv" style="--d:.05s" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-06</span><span class="lab-card__pill pill--game"><i></i>GAME · LIVE</span></div><h3 class="lab-card__title">Vectronix</h3><p class="lab-card__tag">Hardcore arcade space combat. No mercy, no filler — proof of interaction design depth.</p><div class="lab-card__stack">Canvas · Web Audio · Vector</div><span class="lab-card__go">↗</span></a>
+      <a class="lab-card rv" href="https://ai-created.com/games" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-07</span><span class="lab-card__pill pill--game"><i></i>GAME · LIVE</span></div><h3 class="lab-card__title">Radial Drift</h3><p class="lab-card__tag">One finger. One mistake ends the run. A minimal arcade study in tension.</p><div class="lab-card__stack">WebGL · Touch · Haptics</div><span class="lab-card__go">↗</span></a>
+      <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-08</span><span class="lab-card__pill pill--exp"><i></i>EXPERIMENT · LIVE</span></div><h3 class="lab-card__title">Audio Visualizer Suite</h3><p class="lab-card__tag">Captivating video visualizations of your music. Render-quality output.</p><div class="lab-card__stack">WebGL · FFT · FFmpeg</div><span class="lab-card__go">↗</span></a>
+      <a class="lab-card rv" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-09</span><span class="lab-card__pill pill--exp"><i></i>EXPERIMENT · LIVE</span></div><h3 class="lab-card__title">Color Clock</h3><p class="lab-card__tag">A 1991 clock design, brought to life. A love letter to vintage craft.</p><div class="lab-card__stack">CSS · Type</div><span class="lab-card__go">↗</span></a>
+      <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-10</span><span class="lab-card__pill pill--exp"><i></i>EXPERIMENT · LIVE</span></div><h3 class="lab-card__title">Jumbotron Simulator</h3><p class="lab-card__tag">See your name in lights at a major sporting event. Pixel-faithful arena LED.</p><div class="lab-card__stack">Canvas · WebGL</div><span class="lab-card__go">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- CONCENTRATION / metrics -->
+<section class="sect" id="metrics">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">CONCENTRATION · 05</div><h2 class="sect__title">Notes <em>by weight.</em></h2><p class="sect__lede">The honest numbers, measured to the drop.</p></header>
+    <div class="conc">
+      <div class="conc__cell rv"><span class="conc__num" data-count="20">0</span><span class="conc__unit">+ yrs</span><p class="conc__label">in the practice</p><p class="conc__note">the base accord</p></div>
+      <div class="conc__cell rv" style="--d:.05s"><span class="conc__num" data-count="5">0</span><span class="conc__unit">cos</span><p class="conc__label">Google · Yahoo · Walmart · Kohl's · Endemol</p><p class="conc__note">five raw materials</p></div>
+      <div class="conc__cell rv" style="--d:.1s"><span class="conc__num" data-count="18">0</span><span class="conc__unit">shipped</span><p class="conc__label">independent products &amp; experiments</p><p class="conc__note">the extrait batch</p></div>
+      <div class="conc__cell rv" style="--d:.15s"><span class="conc__num" data-count="4">0</span><span class="conc__unit">lang.</span><p class="conc__label">Dutch · English · German · Spanish</p><p class="conc__note">four dialects of the nose</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MACERATION / method -->
+<section class="sect" id="method">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">MACERATION · 06</div><h2 class="sect__title">How the blend <em>ages.</em></h2><p class="sect__lede">No process slides. No frameworks for sale. Four stages of resting and refining.</p></header>
+    <div class="mac rv">
+      <div class="mac__list" role="tablist">
+        <button class="mac-btn is-active" data-step="0"><span class="n">I.</span><span class="t">Frame</span></button>
+        <button class="mac-btn" data-step="1"><span class="n">II.</span><span class="t">Prototype</span></button>
+        <button class="mac-btn" data-step="2"><span class="n">III.</span><span class="t">Pressure-test</span></button>
+        <button class="mac-btn" data-step="3"><span class="n">IV.</span><span class="t">Ship</span></button>
+      </div>
+      <div class="mac-panel" id="macPanel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SILLAGE / now -->
+<section class="sect" id="now">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">SILLAGE · 07</div><h2 class="sect__title">The trail it <em>leaves behind.</em></h2><p class="sect__lede">What's in the air this week. Updated by hand.</p></header>
+    <div class="now">
+      <div class="rv"><h3 class="now__h">In the air</h3>
+        <ul class="now-list">
+          <li class="is-live"><span class="dot"></span><div><p>Leading UX &amp; AI enablement at <b>Kohl's.</b></p><small>Senior product designer / generative AI specialist</small></div></li>
+          <li class="is-live"><span class="dot"></span><div><p>Shipping new artifacts through <b>AI-Created</b> most weeks.</p><small>Independent product lab · solo</small></div></li>
+          <li class="is-live"><span class="dot"></span><div><p>Open to <b>senior IC, lead and director</b> conversations.</p><small>Product design · design engineering · AI</small></div></li>
+          <li><span class="dot"></span><div><p>Speaking at <b>Imagine AI Live</b> as a founding contributor.</p><small>Founding member · speaker</small></div></li>
+        </ul>
+      </div>
+      <div class="rv" style="--d:.1s"><h3 class="now__h">In the rotation</h3>
+        <ul class="tool-list">
+          <li><span>Figma · Figma Make · Lovable</span><small>Design surface</small></li>
+          <li><span>Next.js · TypeScript · Tailwind · Vercel</span><small>Production stack</small></li>
+          <li><span>ChatGPT · Claude · Gemini · Codex</span><small>Model fleet</small></li>
+          <li><span>Midjourney · Runway · ElevenLabs · Suno</span><small>Media generation</small></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCORD / contact -->
+<section class="sect" id="contact">
+  <div class="wrap">
+    <div class="contact rv">
+      <header class="sect__head" style="margin-bottom:24px"><div class="sect__ch">THE ACCORD · 08</div></header>
+      <h2 class="contact__big">Wear the <em>accord.</em></h2>
+      <p class="contact__sub">Where every note comes together. The fastest path is a direct line — tell me what you're building, what's ambiguous about it, and the timeline you're on.</p>
+      <div class="contact__row">
+        <button class="email-btn" id="copyEmail">marcovhv@gmail.com<span class="hint">click to copy</span></button>
+        <a href="mailto:marcovhv@gmail.com?subject=Let's%20talk" class="btn btn--gold">Send a message ↗</a>
+      </div>
+      <div class="contact__links">
+        <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a><span class="c-sep"></span>
+        <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">X / @AIandDesign</a><span class="c-sep"></span>
+        <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a><span class="c-sep"></span>
+        <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid rv">
+      <div><h4>Colophon</h4><p>Hand-composed, single HTML file, no frameworks. Typography is Marcellus (display), Outfit (body), Cormorant italic (accents) and Azeret Mono (labels). The bottle is drawn in SVG; the scent wheel is generated at runtime. Built in Portland, OR · 2026.</p></div>
+      <div><h4>Specimen</h4><ul><li>Marcellus · display</li><li>Outfit · body 300–800</li><li>Cormorant italic · accents</li><li>Ivory · Amber · Rose · Plum</li></ul></div>
+      <div><h4>Composition</h4><ul><li>HTML · one file</li><li>CSS · variables, grid</li><li>JS · vanilla, no deps</li><li>Any static host</li></ul></div>
+    </div>
+    <div class="foot__bottom"><span>© 2026 M. van Hylckama Vlieg · Eau de Parfum</span><a href="#top" style="color:var(--ink-2)">Back to top ↑</a></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><i></i><span>Copied to clipboard</span></div>
+
+<script>
+(function(){
+'use strict';
+const REDUCED=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* clock */
+const clk=document.getElementById('clock');
+const fmt=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+function tick(){const s=fmt.format(new Date());if(clk)clk.textContent=s;}
+tick();setInterval(tick,1000);
+
+/* scent particles */
+const pc=document.getElementById('particles');
+if(pc&&!REDUCED){for(let i=0;i<26;i++){const p=document.createElement('span');p.className='p';
+  const sz=4+Math.random()*10;p.style.width=sz+'px';p.style.height=sz+'px';
+  p.style.left=(Math.random()*100)+'%';p.style.animationDuration=(9+Math.random()*12)+'s';
+  p.style.animationDelay=(-Math.random()*18)+'s';pc.appendChild(p);}}
+
+/* scent wheel */
+const wheel=document.getElementById('wheel');
+if(wheel){
+  const colors=['#d9a06b','#c98f5e','#c9708a','#a85d7a','#6b3a5e','#8a4f6b'];
+  const cx=120,cy=120,R=112,r=64,segs=6,gap=.05;
+  const pt=(rad,a)=>[cx+rad*Math.cos(a),cy+rad*Math.sin(a)];
+  for(let i=0;i<segs;i++){
+    const a0=-Math.PI/2+i*(2*Math.PI/segs)+gap;
+    const a1=-Math.PI/2+(i+1)*(2*Math.PI/segs)-gap;
+    const [x0,y0]=pt(R,a0),[x1,y1]=pt(R,a1),[x2,y2]=pt(r,a1),[x3,y3]=pt(r,a0);
+    const large=(a1-a0)>Math.PI?1:0;
+    const d=document.createElementNS('http://www.w3.org/2000/svg','path');
+    d.setAttribute('d',`M${x0} ${y0} A${R} ${R} 0 ${large} 1 ${x1} ${y1} L${x2} ${y2} A${r} ${r} 0 ${large} 0 ${x3} ${y3} Z`);
+    d.setAttribute('fill',colors[i]);d.classList.add('wseg');d.dataset.i=i;
+    wheel.appendChild(d);
+  }
+}
+
+/* cross-highlight wheel <-> notes */
+const segs=[...document.querySelectorAll('.wseg')],notes=[...document.querySelectorAll('.note')];
+function hot(i,on){segs.forEach(s=>{s.classList.toggle('hot',on&&+s.dataset.i===i);s.classList.toggle('dim',on&&+s.dataset.i!==i);});
+  notes.forEach(n=>n.classList.toggle('hot',on&&+n.dataset.i===i));}
+segs.forEach(s=>{s.addEventListener('mouseenter',()=>hot(+s.dataset.i,true));s.addEventListener('mouseleave',()=>hot(0,false));});
+notes.forEach(n=>{n.addEventListener('mouseenter',()=>hot(+n.dataset.i,true));n.addEventListener('mouseleave',()=>hot(0,false));});
+
+/* progress + trail spy + train fill */
+const prog=document.getElementById('prog');
+const trailNodes=[...document.querySelectorAll('.trail__node')];
+const spyT=trailNodes.map(a=>({el:document.getElementById(a.dataset.trail),a})).filter(t=>t.el);
+const train=document.getElementById('train'),tf=document.getElementById('trainFill');
+function onScroll(){
+  const d=document.documentElement;const t=d.scrollHeight-d.clientHeight;if(prog)prog.style.width=(t>0?(scrollY/t)*100:0)+'%';
+  const y=scrollY+innerHeight*.4;let cur=spyT[0];for(const s of spyT){if(s.el.offsetTop<=y)cur=s;}
+  trailNodes.forEach(a=>a.classList.remove('is-active'));if(cur)cur.a.classList.add('is-active');
+  if(train&&tf){const r=train.getBoundingClientRect();let p=(innerHeight*.6-r.top)/r.height;p=Math.max(0,Math.min(1,p));tf.style.height=(p*100)+'%';}
+}
+let tk=false;addEventListener('scroll',()=>{if(!tk){requestAnimationFrame(()=>{onScroll();tk=false;});tk=true;}},{passive:true});onScroll();
+
+/* bloom reveal */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');io.unobserve(e.target);});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* count-up */
+const cio=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,t=+el.dataset.count;if(REDUCED){el.textContent=t;cio.unobserve(el);return;}
+  const s=performance.now();(function f(n){const p=Math.min(1,(n-s)/1200);el.textContent=Math.floor((1-Math.pow(1-p,3))*t);if(p<1)requestAnimationFrame(f);else el.textContent=t;})(s);cio.unobserve(el);});},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(c=>cio.observe(c));
+
+/* maceration tabs */
+const mbtns=[...document.querySelectorAll('.mac-btn')],mpanel=document.getElementById('macPanel');
+const MD=[{n:'I.',t:'Frame',b:"Find the smallest, most honest version of the problem. Strip the brief until what remains is real."},
+{n:'II.',t:'Prototype',b:"Skip the slide. Build the smallest behaving thing. Code, not comp. The product tells you what it wants to be."},
+{n:'III.',t:'Pressure-test',b:"Real users, real models, real edge cases. Watch what breaks. Decide what's worth keeping."},
+{n:'IV.',t:'Ship',b:"Stay around for the boring part. The 1.0 only matters if it stays in the build after launch."}];
+function setMac(i){mbtns.forEach((b,idx)=>{b.classList.toggle('is-active',idx===i);});
+  const d=MD[i];mpanel.innerHTML='<div class="mac-swap"><span class="big">'+d.n+'</span><h3>'+d.t+'</h3><p>'+d.b+'</p></div>';}
+mbtns.forEach((b,i)=>b.addEventListener('click',()=>setMac(i)));if(mpanel)setMac(0);
+
+/* copy email */
+const ce=document.getElementById('copyEmail'),toast=document.getElementById('toast');let tt;
+function showToast(){toast.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('show'),2200);}
+if(ce)ce.addEventListener('click',async()=>{const e='marcovhv@gmail.com';try{await navigator.clipboard.writeText(e);}catch(_){const ta=document.createElement('textarea');ta.value=e;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(__){}ta.remove();}
+  ce.classList.add('copied');const h=ce.querySelector('.hint'),o=h.textContent;h.textContent='copied ✓';showToast();setTimeout(()=>{ce.classList.remove('copied');h.textContent=o;},1800);});
+})();
+</script>
+</body>
+</html>
+

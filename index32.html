@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Risograph MVHV — Atelier & Printshop Edition</title>
+<meta name="description" content="A three-color fluorescent risograph zine and printshop portfolio recording twenty years of product design and AI craftsmanship by Marco van Hylckama Vlieg." />
+<meta name="theme-color" content="#f7f4ec" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   RISOGRAPH MVHV // ATELIER & PRINTSHOP EDITION
+   A Fluorescent 3-Drum Mechanical Press Portfolio of Product Design & AI
+   Hand-set by Gemini 3.8 Flash · Zero Frameworks
+   ══════════════════════════════════════════════════════════════════════ */
+:root {
+  --paper:         #f7f4ec;
+  --paper-2:       #ebe6d8;
+  --paper-edge:    #ded7c2;
+  --ink-black:     #141416;
+  --ink-dim:       #55555c;
+  --riso-pink:     #ff2a6d;
+  --riso-blue:     #05d9e8;
+  --riso-yellow:   #ffdf00;
+  --reg-x:         0px;
+  --reg-y:         0px;
+  --max:           1260px;
+  --gutter:        clamp(18px, 4vw, 54px);
+  --f-display:     'Syne', sans-serif;
+  --f-heading:     'Space Grotesk', sans-serif;
+  --f-mono:        'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--f-heading);
+  background: var(--paper);
+  color: var(--ink-black);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Mechanical newsprint fiber texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background-image: 
+    radial-gradient(#141416 0.75px, transparent 0.75px),
+    radial-gradient(#ff2a6d 0.5px, transparent 0.5px);
+  background-size: 24px 24px, 16px 16px;
+  background-position: 0 0, 8px 8px;
+  opacity: 0.12;
+}
+
+::selection { background: var(--riso-pink); color: #fff; }
+a { color: inherit; text-decoration: none; }
+
+/* ── Printshop Calibration Bar ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 56px;
+  background: rgba(247, 244, 236, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--ink-black);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--gutter);
+  font-family: var(--f-mono); font-size: 11px;
+}
+.brand {
+  display: flex; align-items: center; gap: 12px;
+}
+.reg-mark {
+  width: 18px; height: 18px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.reg-mark::before, .reg-mark::after {
+  content: ''; position: absolute; background: var(--ink-black);
+}
+.reg-mark::before { width: 100%; height: 1.5px; }
+.reg-mark::after { width: 1.5px; height: 100%; }
+.reg-circle {
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 1.5px solid var(--ink-black);
+}
+.brand b { font-weight: 700; letter-spacing: 0.08em; }
+.topbar-right {
+  display: flex; align-items: center; gap: 18px;
+}
+.ink-towers {
+  display: flex; gap: 6px; align-items: center;
+}
+.ink-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1px solid var(--ink-black);
+}
+.ink-pink { background: var(--riso-pink); }
+.ink-blue { background: var(--riso-blue); }
+.ink-yellow { background: var(--riso-yellow); }
+.ink-black { background: var(--ink-black); }
+
+/* Progress line */
+#press-foil {
+  position: fixed; top: 56px; left: 0; height: 3px; width: 0; z-index: 101;
+  background: linear-gradient(90deg, var(--riso-pink), var(--riso-yellow), var(--riso-blue));
+}
+
+/* ── Content Layout ── */
+.wrap {
+  max-width: var(--max);
+  margin: 86px auto 80px;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Hero Print Spread ── */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-bottom: 70px;
+  border-bottom: 2px solid var(--ink-black);
+  padding-bottom: 60px;
+}
+@media (min-width: 980px) {
+  .hero { grid-template-columns: 1.35fr 1fr; gap: 60px; align-items: center; }
+}
+
+.kicker {
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-black);
+  display: inline-block;
+  background: var(--riso-yellow);
+  padding: 3px 10px;
+  border: 1.5px solid var(--ink-black);
+  box-shadow: 2px 2px 0 var(--ink-black);
+  margin-bottom: 18px;
+}
+
+.hero-title {
+  font-family: var(--f-display);
+  font-size: clamp(38px, 6vw, 76px);
+  font-weight: 900;
+  line-height: 0.94;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--ink-black);
+  position: relative;
+}
+
+/* Mechanical Misregistration visual illusion */
+.hero-title .layer-blue {
+  position: absolute; left: calc(var(--reg-x) * -1); top: calc(var(--reg-y) * -1);
+  color: var(--riso-blue);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 1;
+}
+.hero-title .layer-pink {
+  position: absolute; left: var(--reg-x); top: var(--reg-y);
+  color: var(--riso-pink);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 2;
+}
+.hero-title .layer-black {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-desc {
+  font-size: clamp(17px, 1.8vw, 20px);
+  line-height: 1.5;
+  color: var(--ink-dim);
+  margin-top: 24px;
+}
+.hero-desc b { color: var(--ink-black); }
+
+/* ── Interactive Drum Registration Control Panel ── */
+.press-controller {
+  background: var(--paper-2);
+  border: 2px solid var(--ink-black);
+  box-shadow: 6px 6px 0 var(--ink-black);
+  padding: 26px;
+  border-radius: 2px;
+}
+.press-controller h3 {
+  font-family: var(--f-display);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.press-controller h3 span {
+  font-family: var(--f-mono); font-size: 10px; color: var(--riso-pink);
+}
+.press-controller p {
+  font-size: 13.5px;
+  color: var(--ink-dim);
+  margin-bottom: 20px;
+}
+.control-row {
+  margin-bottom: 16px;
+}
+.control-row label {
+  display: flex; justify-content: space-between;
+  font-family: var(--f-mono); font-size: 11px; text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.control-row label span { color: var(--riso-pink); }
+.press-slider {
+  width: 100%;
+  height: 8px;
+  background: var(--paper-edge);
+  outline: none;
+  border: 1.5px solid var(--ink-black);
+  appearance: none;
+  cursor: pointer;
+}
+.press-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px; height: 20px;
+  background: var(--riso-pink);
+  border: 2px solid var(--ink-black);
+  cursor: ew-resize;
+}
+.reset-btn {
+  background: var(--ink-black);
+  color: var(--paper);
+  border: none;
+  padding: 8px 16px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 2px 2px 0 var(--riso-pink);
+  transition: all 0.15s ease;
+}
+.reset-btn:hover {
+  background: var(--riso-pink); color: #fff;
+}
+
+/* ── Section Header ── */
+.sec-head {
+  margin: 60px 0 32px;
+  display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  border-bottom: 2px solid var(--ink-black);
+  padding-bottom: 12px;
+}
+.sec-head h2 {
+  font-family: var(--f-display);
+  font-size: clamp(26px, 3.4vw, 42px);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+.sec-head h2 span { color: var(--riso-pink); }
+.sec-tag {
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ── Career Zine Issues (The 20-Year Archive) ── */
+.issues-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 60px;
+}
+@media (min-width: 800px) {
+  .issues-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.issue-card {
+  background: #fff;
+  border: 2px solid var(--ink-black);
+  box-shadow: 5px 5px 0 var(--ink-black);
+  padding: 24px 28px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.issue-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 var(--riso-pink);
+}
+.issue-badge {
+  position: absolute; top: 18px; right: 20px;
+  background: var(--riso-yellow);
+  border: 1.5px solid var(--ink-black);
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  padding: 2px 8px;
+  text-transform: uppercase;
+}
+.issue-num {
+  font-family: var(--f-mono); font-size: 12px; font-weight: 700;
+  color: var(--riso-pink); letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.issue-title {
+  font-family: var(--f-display);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.issue-role {
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.issue-desc {
+  font-size: 14.5px;
+  color: #333338;
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+.issue-bullets {
+  list-style: none;
+  border-top: 1.5px dashed var(--paper-edge);
+  padding-top: 10px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.issue-bullets li {
+  font-size: 13.5px;
+  color: #44444a;
+  position: relative;
+  padding-left: 18px;
+}
+.issue-bullets li::before {
+  content: '■';
+  position: absolute; left: 0; font-size: 9px; color: var(--riso-pink);
+}
+
+/* ── The Ink Cylinder Matrix (Capabilities) ── */
+.ink-matrix {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 60px;
+}
+.cylinder {
+  background: var(--paper-2);
+  border: 2px solid var(--ink-black);
+  padding: 20px;
+  position: relative;
+}
+.cyl-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.cyl-drum {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1.5px solid var(--ink-black);
+}
+.cylinder h4 {
+  font-family: var(--f-display);
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.cylinder p {
+  font-size: 13.5px;
+  color: var(--ink-dim);
+  line-height: 1.45;
+}
+
+/* ── Sovereign Press Callout (ai-created.com) ── */
+.press-lab {
+  background: #fff;
+  border: 2px solid var(--ink-black);
+  box-shadow: 6px 6px 0 var(--riso-blue);
+  padding: 34px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 60px;
+}
+@media (min-width: 800px) {
+  .press-lab { grid-template-columns: 1fr auto; }
+}
+.press-lab h3 {
+  font-family: var(--f-display);
+  font-size: 26px;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.press-lab p {
+  font-size: 15.5px;
+  color: var(--ink-dim);
+  line-height: 1.5;
+}
+.press-lab-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--riso-blue);
+  color: var(--ink-black);
+  padding: 12px 24px;
+  border: 2px solid var(--ink-black);
+  box-shadow: 3px 3px 0 var(--ink-black);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+}
+.press-lab-btn:hover {
+  background: var(--riso-yellow);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--ink-black);
+}
+
+/* ── Contact & Press Proofs ── */
+.contact-section {
+  border-top: 2px solid var(--ink-black);
+  padding-top: 50px;
+  text-align: center;
+}
+.contact-section h3 {
+  font-family: var(--f-display);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.contact-section p {
+  font-size: 16.5px;
+  color: var(--ink-dim);
+  max-width: 520px;
+  margin: 0 auto 24px;
+}
+.contact-actions {
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.btn-pull-print {
+  background: var(--riso-pink);
+  color: #fff;
+  border: 2px solid var(--ink-black);
+  box-shadow: 4px 4px 0 var(--ink-black);
+  padding: 12px 26px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-pull-print:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink-black);
+}
+.btn-courier {
+  background: #fff;
+  color: var(--ink-black);
+  border: 2px solid var(--ink-black);
+  box-shadow: 4px 4px 0 var(--ink-black);
+  padding: 12px 24px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+}
+.btn-courier:hover {
+  background: var(--riso-yellow);
+}
+
+.press-colophon {
+  display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-dim);
+  margin-top: 24px;
+}
+.press-colophon a:hover { color: var(--riso-pink); }
+
+.foot-legal {
+  margin-top: 50px;
+  padding-top: 20px;
+  border-top: 1.5px dashed var(--paper-edge);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+.badge-gemini {
+  font-weight: 700; color: var(--riso-pink);
+}
+
+/* ── Riso Toast ── */
+.riso-toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translate(-50%, 40px);
+  background: var(--ink-black); color: var(--paper);
+  border: 2px solid var(--riso-pink);
+  box-shadow: 4px 4px 0 var(--riso-pink);
+  padding: 10px 22px;
+  font-family: var(--f-mono); font-size: 12px;
+  text-transform: uppercase;
+  z-index: 500; opacity: 0; pointer-events: none;
+  transition: all 0.25s ease;
+}
+.riso-toast.active {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+/* Reveal transition */
+.rv { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.rv.in { opacity: 1; transform: none; }
+</style>
+</head>
+
+<body>
+
+<!-- ── Printshop Calibration Bar ── -->
+<header class="topbar">
+  <div class="brand">
+    <div class="reg-mark"><div class="reg-circle"></div></div>
+    <span>ATELIER MVHV // <b>PRESS 32</b></span>
+  </div>
+  <div class="topbar-right">
+    <div class="ink-towers">
+      <div class="ink-dot ink-pink" title="Fluorescent Pink"></div>
+      <div class="ink-dot ink-blue" title="Cornflower Blue"></div>
+      <div class="ink-dot ink-yellow" title="Sunflower Yellow"></div>
+      <div class="ink-dot ink-black" title="Carbon Black"></div>
+    </div>
+    <span id="press-clock">--:--:-- PST</span>
+  </div>
+</header>
+
+<div id="press-foil"></div>
+
+<!-- ── Main Workspace ── -->
+<main class="wrap">
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div>
+      <div class="kicker">Edition XXXII · Independent Zine Press</div>
+      
+      <div class="hero-title" id="hero-title">
+        <div class="layer-blue">MARCO VAN<br/>HYLCKAMA VLIEG</div>
+        <div class="layer-pink">MARCO VAN<br/>HYLCKAMA VLIEG</div>
+        <div class="layer-black">MARCO VAN<br/>HYLCKAMA VLIEG</div>
+      </div>
+
+      <p class="hero-desc">
+        Product Designer &amp; AI-Native Craftsperson. Twenty years operating across <b>Google</b>, <b>Walmart Labs</b>, <b>Yahoo!</b>, and <b>Kohl&rsquo;s</b>. Refusing automated beige output in favor of authentic tactile opinions.
+      </p>
+    </div>
+
+    <!-- Registration Control Panel -->
+    <aside class="press-controller">
+      <h3>Drum Calibration <span>[LIVE SLIDER]</span></h3>
+      <p>Adjust mechanical registration drift to slip physical ink drums out of alignment:</p>
+      
+      <div class="control-row">
+        <label>Horizontal Drum Drift (X) <span id="val-x">3px</span></label>
+        <input type="range" min="-12" max="12" value="3" class="press-slider" id="slider-x" />
+      </div>
+
+      <div class="control-row">
+        <label>Vertical Drum Drift (Y) <span id="val-y">-2px</span></label>
+        <input type="range" min="-12" max="12" value="-2" class="press-slider" id="slider-y" />
+      </div>
+
+      <button class="reset-btn" id="btn-reset-reg">Recalibrate Drums</button>
+    </aside>
+  </section>
+
+  <!-- Career Zine Archive (Issues 01 to 05) -->
+  <section>
+    <div class="sec-head rv">
+      <h2>The Zine Archive // <span>2008–2026</span></h2>
+      <span class="sec-tag">Twenty Years Hand-Set</span>
+    </div>
+
+    <div class="issues-grid">
+
+      <!-- Issue 05: Kohl's -->
+      <article class="issue-card rv">
+        <span class="issue-badge">Active Run</span>
+        <div class="issue-num">ISSUE 05 // KOHL'S &amp; LAB</div>
+        <h3 class="issue-title">The Generative Broadside</h3>
+        <div class="issue-role">Senior Product Designer &amp; Generative AI Specialist (2023 — Present)</div>
+        <p class="issue-desc">
+          Directing enterprise-scale generative AI workflows across design orgs while shaping cart, checkout, wallet, and design technology.
+        </p>
+        <ul class="issue-bullets">
+          <li>Pioneered org-wide AI prototyping pipelines and prompt engineering standards.</li>
+          <li>Created high-fidelity multi-model prototypes connecting Claude, Gemini, and GPT with live design systems.</li>
+          <li>Operates <em>ai-created.com</em> as a sovereign press for unconstrained weekly software releases.</li>
+        </ul>
+      </article>
+
+      <!-- Issue 04: Walmart Labs -->
+      <article class="issue-card rv">
+        <span class="issue-badge">High Volume</span>
+        <div class="issue-num">ISSUE 04 // WALMART LABS</div>
+        <h3 class="issue-title">The 100M Checkout Press</h3>
+        <div class="issue-role">Principal Product Designer / Design Technologist (2018 — 2023)</div>
+        <p class="issue-desc">
+          Led interaction design for the planet's highest-volume transactional funnels: omnichannel checkout, wallet, and in-store self-checkout kiosks.
+        </p>
+        <ul class="issue-bullets">
+          <li>Architected frictionless transaction systems serving hundreds of millions of weekly shoppers.</li>
+          <li>Engineered production-fidelity web prototypes and code-level design token frameworks.</li>
+        </ul>
+      </article>
+
+      <!-- Issue 03: Yahoo! -->
+      <article class="issue-card rv">
+        <div class="issue-num">ISSUE 03 // YAHOO!</div>
+        <h3 class="issue-title">The Prototyping Directorate</h3>
+        <div class="issue-role">Director of UX Prototyping &amp; Senior UX Manager (2017 — 2018)</div>
+        <p class="issue-desc">
+          Directed global prototyping teams across Sunnyvale and international campuses, validating high-profile media and search rebrands through interactive code.
+        </p>
+        <ul class="issue-bullets">
+          <li>Accelerated product alignment by replacing slide decks with live interactive prototypes.</li>
+          <li>Mentored dozens of senior design technologists across distributed product teams.</li>
+        </ul>
+      </article>
+
+      <!-- Issue 02: Google -->
+      <article class="issue-card rv">
+        <div class="issue-num">ISSUE 02 // GOOGLE</div>
+        <h3 class="issue-title">Speech &amp; Machine Intelligence</h3>
+        <div class="issue-role">Senior UX Engineer / Prototyper (2013 — 2017)</div>
+        <p class="issue-desc">
+          Forged zero-to-one conversational interfaces, multi-modal interaction patterns, and cloud AI tooling for Google Assistant, Android, and Material Design.
+        </p>
+        <ul class="issue-bullets">
+          <li>Engineered speech and gesture prototypes that accelerated user testing for Google Assistant.</li>
+          <li>Bridged machine learning research scientists and UX designers.</li>
+        </ul>
+      </article>
+
+      <!-- Issue 01: Endemol -->
+      <article class="issue-card rv">
+        <div class="issue-num">ISSUE 01 // ENDEMOL</div>
+        <h3 class="issue-title">The Synchronous Broadcast</h3>
+        <div class="issue-role">UX &amp; Technical Lead (2008 — 2013)</div>
+        <p class="issue-desc">
+          Invented real-time synchronous second-screen audience engagement applications for global television broadcasts with millions of concurrent viewers.
+        </p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Ink Cylinders Matrix (Capabilities) -->
+  <section>
+    <div class="sec-head rv">
+      <h2>The Ink Cylinders // <span>Capabilities</span></h2>
+      <span class="sec-tag">Loaded Print Drums</span>
+    </div>
+
+    <div class="ink-matrix">
+      <div class="cylinder rv">
+        <div class="cyl-head">
+          <span style="font-family:var(--f-mono); font-size:11px; font-weight:700;">DRUM 01</span>
+          <div class="cyl-drum" style="background:var(--riso-pink);"></div>
+        </div>
+        <h4>Model Fleets</h4>
+        <p>Orchestrating Gemini 3.8 Flash, Claude 3.7 Sonnet, OpenAI Codex, and GPT-5 across multi-agent pipelines.</p>
+      </div>
+
+      <div class="cylinder rv">
+        <div class="cyl-head">
+          <span style="font-family:var(--f-mono); font-size:11px; font-weight:700;">DRUM 02</span>
+          <div class="cyl-drum" style="background:var(--riso-blue);"></div>
+        </div>
+        <h4>Prompt Pipelines</h4>
+        <p>Structured tool-calling chains, automated regression evals, and deterministic schema parsing.</p>
+      </div>
+
+      <div class="cylinder rv">
+        <div class="cyl-head">
+          <span style="font-family:var(--f-mono); font-size:11px; font-weight:700;">DRUM 03</span>
+          <div class="cyl-drum" style="background:var(--riso-yellow);"></div>
+        </div>
+        <h4>Synthetic Research</h4>
+        <p>Generating diverse AI user personas to simulate user testing and uncover critical UX edge cases early.</p>
+      </div>
+
+      <div class="cylinder rv">
+        <div class="cyl-head">
+          <span style="font-family:var(--f-mono); font-size:11px; font-weight:700;">DRUM 04</span>
+          <div class="cyl-drum" style="background:var(--ink-black);"></div>
+        </div>
+        <h4>Production Code</h4>
+        <p>TypeScript, Next.js, Tailwind CSS, Vercel deployment, and rigorous zero-framework vanilla web craft.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sovereign Press Lab Callout -->
+  <section class="press-lab rv">
+    <div>
+      <h3>The Sovereign Press // ai-created.com</h3>
+      <p>
+        An independent imprint where Marco hand-crafts and distributes weekly software experiments, AI utilities, and interactive design prototypes.
+      </p>
+    </div>
+    <div>
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="press-lab-btn">Visit Imprint ↗</a>
+    </div>
+  </section>
+
+  <!-- Contact & Print Proofs -->
+  <section class="contact-section rv" id="contact">
+    <h3>Request a Proof</h3>
+    <p>Available for senior design leadership, generative AI advisory, and zero-to-one product initiatives.</p>
+
+    <div class="contact-actions">
+      <button class="btn-pull-print" id="btn-copy-email">Pull Proof (marcovhv@gmail.com)</button>
+      <a href="mailto:marcovhv@gmail.com?subject=Risograph%20Inquiry" class="btn-courier">Send Dispatch ↗</a>
+    </div>
+
+    <div class="press-colophon">
+      <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a>
+      <span>·</span>
+      <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">X / @AIandDesign</a>
+      <span>·</span>
+      <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a>
+      <span>·</span>
+      <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+    </div>
+
+    <!-- Colophon -->
+    <footer class="foot-legal">
+      <div>Atelier MVHV // Press 32 // Portland, Oregon</div>
+      <div>Designed by <span class="badge-gemini">Gemini 3.8 Flash</span> // 1 HTML File // Zero Frameworks</div>
+      <div>Printed in Run of One // All Rights Reserved</div>
+    </footer>
+  </section>
+
+</main>
+
+<div class="riso-toast" id="riso-toast">Proof Dispatched: marcovhv@gmail.com</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // 1. Live Portland Clock
+  const clockEl = document.getElementById('press-clock');
+  function updateClock() {
+    const now = new Date();
+    const str = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles', hour12: false,
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    }).format(now);
+    if (clockEl) clockEl.textContent = str + ' PST';
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // 2. Press Progress Line
+  const foil = document.getElementById('press-foil');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const st = h.scrollTop || document.body.scrollTop;
+    const sh = h.scrollHeight - h.clientHeight;
+    const pct = sh > 0 ? (st / sh) * 100 : 0;
+    if (foil) foil.style.width = pct + '%';
+  }, { passive: true });
+
+  // 3. Scroll Reveal Observer
+  const ro = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        ro.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.rv').forEach(el => ro.observe(el));
+
+  // 4. Interactive Drum Registration Misalignment
+  const sliderX = document.getElementById('slider-x');
+  const sliderY = document.getElementById('slider-y');
+  const valX = document.getElementById('val-x');
+  const valY = document.getElementById('val-y');
+  const resetBtn = document.getElementById('btn-reset-reg');
+
+  function updateRegistration() {
+    const x = sliderX.value;
+    const y = sliderY.value;
+    document.documentElement.style.setProperty('--reg-x', x + 'px');
+    document.documentElement.style.setProperty('--reg-y', y + 'px');
+    if (valX) valX.textContent = x + 'px';
+    if (valY) valY.textContent = y + 'px';
+  }
+
+  if (sliderX && sliderY) {
+    sliderX.addEventListener('input', updateRegistration);
+    sliderY.addEventListener('input', updateRegistration);
+    updateRegistration();
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      sliderX.value = 0;
+      sliderY.value = 0;
+      updateRegistration();
+    });
+  }
+
+  // 5. Toast Copy Email
+  const copyBtn = document.getElementById('btn-copy-email');
+  const toast = document.getElementById('riso-toast');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const email = 'marcovhv@gmail.com';
+      navigator.clipboard.writeText(email).then(() => {
+        if (toast) {
+          toast.classList.add('active');
+          setTimeout(() => toast.classList.remove('active'), 2400);
+        }
+      });
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

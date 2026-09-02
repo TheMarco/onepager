@@ -1,0 +1,1098 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Codex MVHV — The Illuminated Folio of Marco van Hylckama Vlieg</title>
+<meta name="description" content="A 14th-century illuminated alchemical manuscript recording twenty years of product design, AI engineering, and shipped software by Marco van Hylckama Vlieg." />
+<meta name="theme-color" content="#100d0a" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   CODEX MVHV — THE ILLUMINATED FOLIO
+   A 14th-Century Alchemical Scriptorium of Product Design & AI Engineering
+   Hand-set by Gemini 3.8 Flash · Zero Frameworks
+   ══════════════════════════════════════════════════════════════════════ */
+:root {
+  --desk:          #0e0b08;
+  --desk-2:        #18130e;
+  --vellum:        #f6f0df;
+  --vellum-2:      #ece3cb;
+  --vellum-dark:   #ddcfad;
+  --ink:           #1e160e;
+  --ink-2:         #443527;
+  --ink-3:         #76604a;
+  --ink-faint:     #af9a83;
+  --gold:          #c69228;
+  --gold-bright:   #efc95c;
+  --gold-glow:     rgba(214, 160, 48, 0.35);
+  --cinnabar:      #aa281e;
+  --cinnabar-soft: rgba(170, 40, 30, 0.12);
+  --ultramarine:   #1b3a6b;
+  --lapis-soft:    rgba(27, 58, 107, 0.12);
+  --rule:          rgba(30, 22, 14, 0.16);
+  --rule-gold:     rgba(198, 146, 40, 0.4);
+  --max:           1240px;
+  --gutter:        clamp(18px, 4vw, 54px);
+  --f-dec:         'Cinzel Decorative', serif;
+  --f-display:     'Cinzel', serif;
+  --f-body:        'EB Garamond', Georgia, serif;
+  --f-mono:        'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 68px; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--f-body);
+  background: var(--desk);
+  color: var(--ink);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Desk woodgrain ambient background */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: 
+    radial-gradient(ellipse at 50% 15%, rgba(198, 146, 40, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 85%, rgba(170, 40, 30, 0.06) 0%, transparent 65%),
+    repeating-linear-gradient(90deg, transparent 0, transparent 4px, rgba(0,0,0,0.2) 4px, rgba(0,0,0,0.2) 5px),
+    linear-gradient(180deg, #100c09 0%, #080605 100%);
+  opacity: 0.95;
+}
+
+::selection { background: var(--cinnabar); color: #fff; }
+a { color: inherit; text-decoration: none; }
+
+/* ── Scriptorium Top Bar ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: 58px;
+  background: rgba(14, 11, 8, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule-gold);
+  color: var(--vellum);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--gutter);
+  font-family: var(--f-display);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+.topbar__sigil {
+  display: flex; align-items: center; gap: 12px;
+}
+.topbar__seal {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  background: radial-gradient(circle, var(--cinnabar) 20%, #77170f 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-bright);
+  font-family: var(--f-dec);
+  font-size: 14px;
+  box-shadow: 0 0 12px rgba(170, 40, 30, 0.6);
+}
+.topbar__title b { color: var(--gold-bright); font-weight: 700; }
+.topbar__right {
+  display: flex; align-items: center; gap: 18px;
+  font-family: var(--f-mono); font-size: 10.5px; color: var(--vellum-dark);
+}
+.topbar__hours {
+  color: var(--gold); font-family: var(--f-display); text-transform: uppercase;
+}
+.topbar__clock { color: #fff; }
+
+/* Progress scroll line */
+#scroll-foil {
+  position: fixed; top: 58px; left: 0; height: 2px; width: 0; z-index: 101;
+  background: linear-gradient(90deg, var(--cinnabar), var(--gold-bright), var(--ultramarine));
+  box-shadow: 0 0 8px var(--gold-bright);
+}
+
+/* ── Main Folio Container (The Parchment Page) ── */
+.folio-wrapper {
+  max-width: var(--max);
+  margin: 92px auto 80px;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+.folio {
+  background: var(--vellum);
+  border-radius: 4px;
+  box-shadow: 
+    0 25px 60px rgba(0,0,0,0.85),
+    0 0 0 1px rgba(198, 146, 40, 0.5),
+    inset 0 0 90px rgba(170, 140, 90, 0.25),
+    inset 0 0 20px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+  padding: clamp(36px, 6vw, 76px) clamp(24px, 5.5vw, 68px);
+}
+
+/* Aged parchment texture and gold leaf border */
+.folio::before {
+  content: '';
+  position: absolute; inset: 12px;
+  border: 2px solid var(--gold);
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: inset 0 0 0 1px rgba(30, 22, 14, 0.2);
+}
+.folio::after {
+  content: '';
+  position: absolute; inset: 16px;
+  border: 1px dashed var(--cinnabar);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.65;
+}
+
+/* Corner Illuminated Ornaments */
+.corner-knot {
+  position: absolute; width: 34px; height: 34px; z-index: 2; pointer-events: none;
+  fill: var(--gold);
+}
+.corner-tl { top: 8px; left: 8px; }
+.corner-tr { top: 8px; right: 8px; transform: rotate(90deg); }
+.corner-br { bottom: 8px; right: 8px; transform: rotate(180deg); }
+.corner-bl { bottom: 8px; left: 8px; transform: rotate(270deg); }
+
+/* ── Scriptorium Rubric Header ── */
+.rubric {
+  font-family: var(--f-display);
+  font-size: 11.5px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--cinnabar);
+  font-weight: 700;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 22px;
+}
+.rubric::before, .rubric::after {
+  content: '❧';
+  color: var(--gold);
+  font-size: 14px;
+}
+
+/* ── Hero Illuminated Opening ── */
+.incipit {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+  border-bottom: 2px double var(--rule-gold);
+  padding-bottom: 50px;
+}
+@media (min-width: 960px) {
+  .incipit { grid-template-columns: 1.45fr 1fr; gap: 60px; align-items: center; }
+}
+
+.hero-drop {
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.drop-cap {
+  width: 96px; height: 96px; flex-shrink: 0;
+  background: linear-gradient(135deg, #22120e, #471410);
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-dec);
+  font-size: 64px;
+  color: var(--gold-bright);
+  text-shadow: 0 0 16px var(--gold-glow);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  line-height: 1;
+  position: relative;
+}
+.drop-cap::after {
+  content: '❖';
+  position: absolute; bottom: -4px; right: -4px;
+  font-size: 12px; color: var(--cinnabar);
+}
+
+.incipit-text h1 {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(32px, 4.4vw, 56px);
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.incipit-text h1 em {
+  font-style: italic;
+  font-family: var(--f-body);
+  color: var(--cinnabar);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+.incipit-sub {
+  font-size: clamp(17px, 1.8vw, 21px);
+  line-height: 1.45;
+  color: var(--ink-2);
+  font-style: italic;
+}
+.incipit-sub b {
+  color: var(--ultramarine);
+  font-style: normal;
+  font-family: var(--f-display);
+  letter-spacing: 0.05em;
+}
+
+/* ── Interactive Astrolabe Panel ── */
+.astrolabe-box {
+  background: radial-gradient(circle at center, #18130e 0%, #0c0906 100%);
+  border: 2px solid var(--gold);
+  border-radius: 6px;
+  padding: 24px;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 0 30px rgba(0,0,0,0.6);
+  color: var(--vellum);
+  text-align: center;
+  position: relative;
+}
+.astrolabe-box h3 {
+  font-family: var(--f-display);
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  color: var(--gold-bright);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.astrolabe-box p {
+  font-size: 13.5px;
+  color: var(--vellum-dark);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+#astrolabe-canvas {
+  width: 100%;
+  max-width: 320px;
+  height: 320px;
+  margin: 0 auto;
+  display: block;
+  cursor: crosshair;
+}
+.astrolabe-legend {
+  margin-top: 14px;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;
+}
+.metal-btn {
+  background: rgba(198, 146, 40, 0.12);
+  border: 1px solid var(--gold);
+  color: var(--vellum);
+  padding: 4px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: var(--f-display);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  transition: all 0.2s ease;
+}
+.metal-btn:hover, .metal-btn.active {
+  background: var(--gold);
+  color: var(--desk);
+  box-shadow: 0 0 10px var(--gold-glow);
+}
+
+/* ── Section Title Bar ── */
+.section-head {
+  text-align: center;
+  margin: 60px 0 36px;
+  position: relative;
+}
+.section-head h2 {
+  font-family: var(--f-display);
+  font-size: clamp(24px, 3vw, 36px);
+  color: var(--ink);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.section-head h2 em {
+  font-style: italic;
+  color: var(--cinnabar);
+  font-family: var(--f-body);
+  text-transform: none;
+}
+.section-head p {
+  font-size: 16.5px;
+  color: var(--ink-3);
+  font-style: italic;
+  max-width: 580px;
+  margin: 6px auto 0;
+}
+.section-rule {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  margin: 12px 0 0;
+  color: var(--gold);
+  font-size: 18px;
+}
+.section-rule::before, .section-rule::after {
+  content: ''; height: 1px; width: 120px; background: var(--rule-gold);
+}
+
+/* ── Five Great Transmutations (Career Epochs) ── */
+.epochs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-bottom: 50px;
+}
+.epoch-card {
+  border: 1px solid var(--rule-gold);
+  background: rgba(255, 255, 255, 0.45);
+  padding: 26px 30px;
+  border-radius: 4px;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.epoch-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(198, 146, 40, 0.15);
+  background: rgba(255, 255, 255, 0.7);
+}
+.epoch-metal {
+  position: absolute; top: 18px; right: 24px;
+  font-family: var(--f-mono); font-size: 11px;
+  color: var(--gold); letter-spacing: 0.14em;
+  text-transform: uppercase; font-weight: 500;
+  display: flex; align-items: center; gap: 6px;
+}
+.epoch-metal span {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cinnabar); display: inline-block;
+}
+.epoch-head {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.epoch-title {
+  font-family: var(--f-display);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+.epoch-corp {
+  font-family: var(--f-body);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ultramarine);
+}
+.epoch-years {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+}
+.epoch-role {
+  font-family: var(--f-display);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cinnabar);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.epoch-body p {
+  font-size: 16px;
+  color: var(--ink-2);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.epoch-feats {
+  list-style: none;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule);
+}
+.epoch-feats li {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 6px;
+}
+.epoch-feats li::before {
+  content: '✠';
+  position: absolute; left: 0; top: 0;
+  color: var(--gold); font-size: 12px;
+}
+
+/* ── Alchemical Seals: Capabilities & Guild Knowledge ── */
+.seals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin: 30px 0 60px;
+}
+.seal {
+  background: var(--vellum-2);
+  border: 1px solid var(--rule-gold);
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+.seal-icon {
+  width: 44px; height: 44px; margin: 0 auto 12px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--cinnabar);
+  font-size: 20px;
+  background: rgba(255,255,255,0.4);
+}
+.seal h4 {
+  font-family: var(--f-display);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.seal p {
+  font-size: 14px;
+  color: var(--ink-2);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+/* ── The Sovereign Product Lab (ai-created.com) ── */
+.lab-callout {
+  background: linear-gradient(135deg, rgba(27, 58, 107, 0.08), rgba(198, 146, 40, 0.1));
+  border: 2px solid var(--ultramarine);
+  border-radius: 6px;
+  padding: 34px;
+  margin: 50px 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+}
+@media (min-width: 800px) {
+  .lab-callout { grid-template-columns: 1fr auto; }
+}
+.lab-copy h3 {
+  font-family: var(--f-display);
+  font-size: 22px;
+  color: var(--ultramarine);
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.lab-copy p {
+  font-size: 16.5px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+.lab-link {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--ultramarine);
+  color: var(--vellum);
+  border: 1px solid var(--gold);
+  padding: 12px 24px;
+  border-radius: 3px;
+  font-family: var(--f-display);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+.lab-link:hover {
+  background: #112649;
+  color: var(--gold-bright);
+  box-shadow: 0 0 14px rgba(27, 58, 107, 0.4);
+}
+
+/* ── Epistle & Scriptorium Contact ── */
+.contact-folio {
+  border-top: 2px double var(--rule-gold);
+  padding-top: 48px;
+  text-align: center;
+}
+.wax-seal {
+  width: 68px; height: 68px; border-radius: 50%;
+  margin: 0 auto 20px;
+  background: radial-gradient(circle at 35% 35%, #ca3024 0%, #7e1710 80%, #440c08 100%);
+  border: 2px solid #57100b;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 2px 4px rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-bright);
+  font-family: var(--f-dec);
+  font-size: 32px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.wax-seal:hover {
+  transform: scale(1.05) rotate(5deg);
+}
+.contact-folio h3 {
+  font-family: var(--f-display);
+  font-size: 26px;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.contact-folio p {
+  font-size: 17px;
+  color: var(--ink-2);
+  font-style: italic;
+  max-width: 520px;
+  margin: 0 auto 24px;
+}
+.contact-actions {
+  display: flex; justify-content: center; gap: 18px; flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--desk);
+  border: 1px solid var(--gold-bright);
+  padding: 12px 26px;
+  border-radius: 3px;
+  font-family: var(--f-display);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-gold:hover {
+  background: var(--gold-bright);
+  box-shadow: 0 0 16px var(--gold-glow);
+}
+.btn-vellum {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink-3);
+  padding: 12px 24px;
+  border-radius: 3px;
+  font-family: var(--f-display);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-vellum:hover {
+  border-color: var(--cinnabar);
+  color: var(--cinnabar);
+}
+
+.guild-links {
+  display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+  font-family: var(--f-display); font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.guild-links a:hover { color: var(--cinnabar); }
+
+/* ── Colophon Footer ── */
+.colophon {
+  margin-top: 50px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+}
+.colophon-badge {
+  color: var(--gold); font-weight: 600;
+}
+
+/* ── Toast Inscription ── */
+.toast-missal {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translate(-50%, 40px);
+  background: #19140e; color: var(--gold-bright);
+  border: 1.5px solid var(--gold);
+  padding: 10px 22px; border-radius: 3px;
+  font-family: var(--f-display); font-size: 12px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.6);
+  z-index: 500; opacity: 0; pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.toast-missal.active {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+/* Reveal transition */
+.rv { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.rv.in { opacity: 1; transform: none; }
+</style>
+</head>
+
+<body>
+
+<!-- ── Scriptorium Top Bar ── -->
+<header class="topbar">
+  <div class="topbar__sigil">
+    <div class="topbar__seal">M</div>
+    <span class="topbar__title">CODEX MVHV <b>FOLIO XXX</b></span>
+  </div>
+  <div class="topbar__right">
+    <span class="topbar__hours" id="monastic-hour">HORA SEXTA</span>
+    <span>·</span>
+    <span class="topbar__clock" id="portland-clock">--:--:-- PST</span>
+    <span>·</span>
+    <span>PORTLAND SCRIPTORIUM</span>
+  </div>
+</header>
+
+<div id="scroll-foil"></div>
+
+<!-- ── Parchment Folio Container ── -->
+<main class="folio-wrapper">
+  <article class="folio">
+
+    <!-- Corner knots -->
+    <svg class="corner-knot corner-tl" viewBox="0 0 40 40"><path d="M0 0 H40 V10 H10 V40 H0 Z"/></svg>
+    <svg class="corner-knot corner-tr" viewBox="0 0 40 40"><path d="M0 0 H40 V10 H10 V40 H0 Z"/></svg>
+    <svg class="corner-knot corner-br" viewBox="0 0 40 40"><path d="M0 0 H40 V10 H10 V40 H0 Z"/></svg>
+    <svg class="corner-knot corner-bl" viewBox="0 0 40 40"><path d="M0 0 H40 V10 H10 V40 H0 Z"/></svg>
+
+    <!-- Incipit Rubric -->
+    <div class="rubric">Incipit Opus Viginti Annorum · Anno Domini MMXXVI</div>
+
+    <!-- Opening Illuminated Chapter -->
+    <section class="incipit">
+      <div>
+        <div class="hero-drop">
+          <div class="drop-cap">M</div>
+          <div class="incipit-text">
+            <h1>Marco van<br/>Hylckama Vlieg</h1>
+          </div>
+        </div>
+        <p class="incipit-sub" style="margin-top: 18px;">
+          A master chronicler of <b>Product Design</b> and <b>AI-Native Architecture</b>. Twenty years spent transmuting raw software complexity into living, humane interfaces across <em>Google</em>, <em>Walmart Labs</em>, <em>Yahoo!</em>, and <em>Kohl&rsquo;s</em>.
+        </p>
+        <p style="margin-top: 18px; font-size: 16px; color: var(--ink-2); line-height: 1.65;">
+          "The machine is not a parlor trick of automated text; it is an alchemical furnace. When wielded with strict typographic discipline and empathetic rigor, code becomes parchment and models become collaborators in craft."
+        </p>
+      </div>
+
+      <!-- Alchemical Astrolabe Canvas -->
+      <aside class="astrolabe-box">
+        <h3>Alchemical Astrolabe</h3>
+        <p>Rotate the celestial reticle to align career epochs</p>
+        <canvas id="astrolabe-canvas" width="320" height="320"></canvas>
+        <div class="astrolabe-legend">
+          <button class="metal-btn active" data-epoch="0">Lead / Endemol</button>
+          <button class="metal-btn" data-epoch="1">Iron / Google</button>
+          <button class="metal-btn" data-epoch="2">Copper / Yahoo</button>
+          <button class="metal-btn" data-epoch="3">Silver / Walmart</button>
+          <button class="metal-btn" data-epoch="4">Gold / Kohl's &amp; Lab</button>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Five Transmutations (Career Epochs) -->
+    <section>
+      <div class="section-head rv">
+        <h2>The Five <em>Transmutations</em></h2>
+        <p>A twenty-year chronicle of design engineering across five planetary metals</p>
+        <div class="section-rule">❖</div>
+      </div>
+
+      <div class="epochs">
+
+        <!-- Epoch V: Aurum (Kohl's) -->
+        <article class="epoch-card rv" id="epoch-aurum">
+          <div class="epoch-metal"><span></span>Aurum · The Golden Era</div>
+          <div class="epoch-head">
+            <h3 class="epoch-title">The Sovereign Synthesis</h3>
+            <span class="epoch-corp">Kohl&rsquo;s &amp; AI-Created Lab</span>
+            <span class="epoch-years">2023 — Present</span>
+          </div>
+          <div class="epoch-role">Senior Product Designer &amp; Generative AI Specialist</div>
+          <div class="epoch-body">
+            <p>Directing enterprise generative AI enablement and high-volume commerce architecture across cart, checkout, wallet, and design technology orgs.</p>
+            <ul class="epoch-feats">
+              <li>Pioneered org-wide generative AI workflows, prompt libraries, and automated prototyping pipelines.</li>
+              <li>Engineered high-fidelity AI-native prototypes unifying ChatGPT, Claude, and Gemini with enterprise design systems.</li>
+              <li>Operates <em>ai-created.com</em> as a sovereign laboratory, publishing novel AI software artifacts weekly.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Epoch IV: Argentum (Walmart Labs) -->
+        <article class="epoch-card rv" id="epoch-argentum">
+          <div class="epoch-metal"><span></span>Argentum · The Silver Forge</div>
+          <div class="epoch-head">
+            <h3 class="epoch-title">The Crucible of Scale</h3>
+            <span class="epoch-corp">Walmart Labs</span>
+            <span class="epoch-years">2018 — 2023</span>
+          </div>
+          <div class="epoch-role">Principal Product Designer / Design Technologist</div>
+          <div class="epoch-body">
+            <p>Led UX and interaction architecture across the planet's highest-volume transactional funnels: omnichannel checkout, payment wallets, and in-store self-checkout kiosks.</p>
+            <ul class="epoch-feats">
+              <li>Architected frictionless transaction systems serving hundreds of millions of weekly customers.</li>
+              <li>Mentored principal design leads and built code-level design systems bridging engineering and product.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Epoch III: Cuprum (Yahoo!) -->
+        <article class="epoch-card rv" id="epoch-cuprum">
+          <div class="epoch-metal"><span></span>Cuprum · The Copper Guild</div>
+          <div class="epoch-head">
+            <h3 class="epoch-title">The Prototyping Directive</h3>
+            <span class="epoch-corp">Yahoo!</span>
+            <span class="epoch-years">2017 — 2018</span>
+          </div>
+          <div class="epoch-role">Director of UX Prototyping &amp; Senior UX Manager</div>
+          <div class="epoch-body">
+            <p>Directed global prototyping guilds across Sunnyvale and international campuses, transforming ambiguous media, search, and portal concepts into interactive reality.</p>
+            <ul class="epoch-feats">
+              <li>Steered major brand redesigns through rapid high-fidelity code prototypes tested with millions of active users.</li>
+              <li>Established rigorous prototyping criteria to de-risk ambitious product roadmaps before production sprints.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Epoch II: Ferrum (Google) -->
+        <article class="epoch-card rv" id="epoch-ferrum">
+          <div class="epoch-metal"><span></span>Ferrum · The Iron Engine</div>
+          <div class="epoch-head">
+            <h3 class="epoch-title">The Speech &amp; Intelligence Guild</h3>
+            <span class="epoch-corp">Google</span>
+            <span class="epoch-years">2013 — 2017</span>
+          </div>
+          <div class="epoch-role">Senior UX Engineer / Prototyper</div>
+          <div class="epoch-body">
+            <p>Forged zero-to-one conversational interfaces, multi-modal interaction patterns, and cloud AI tooling for Google Assistant, Android, and Material Design.</p>
+            <ul class="epoch-feats">
+              <li>Pioneered rapid speech-and-gesture prototyping environments for early conversational agents.</li>
+              <li>Bridged machine learning research scientists and design teams to turn research models into consumer experiences.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Epoch I: Stannum (Endemol) -->
+        <article class="epoch-card rv" id="epoch-stannum">
+          <div class="epoch-metal"><span></span>Stannum · The Tin Genesis</div>
+          <div class="epoch-head">
+            <h3 class="epoch-title">The Real-Time Broadcast</h3>
+            <span class="epoch-corp">Endemol</span>
+            <span class="epoch-years">2008 — 2013</span>
+          </div>
+          <div class="epoch-role">UX &amp; Technical Lead · Second Screen Broadcast</div>
+          <div class="epoch-body">
+            <p>Invented real-time synchronous second-screen audience engagement applications for world-scale television broadcasts with millions of concurrent viewers.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Guild Seals (Capabilities) -->
+    <section>
+      <div class="section-head rv">
+        <h2>The Guild <em>Arcana</em></h2>
+        <p>Disciplines mastered through two decades of empirical practice</p>
+        <div class="section-rule">❖</div>
+      </div>
+
+      <div class="seals-grid">
+        <div class="seal rv">
+          <div class="seal-icon">⚡</div>
+          <h4>Model Fleets</h4>
+          <p>Multi-agent orchestration with Claude 3.7, Gemini 3.8, OpenAI Codex &amp; GPT-5.</p>
+        </div>
+        <div class="seal rv">
+          <div class="seal-icon">📜</div>
+          <h4>Prompt Architecture</h4>
+          <p>System prompts, structured tool calling, deterministic pipelines, and evaluation loops.</p>
+        </div>
+        <div class="seal rv">
+          <div class="seal-icon">🔬</div>
+          <h4>Synthetic Research</h4>
+          <p>AI persona generation, multi-perspective stress testing, and rapid user feedback synthesis.</p>
+        </div>
+        <div class="seal rv">
+          <div class="seal-icon">⚙</div>
+          <h4>Production Engineering</h4>
+          <p>Next.js, TypeScript, Tailwind CSS, Web Crypto, Node, Vercel &amp; zero-framework web craft.</p>
+        </div>
+        <div class="seal rv">
+          <div class="seal-icon">🖋</div>
+          <h4>Design Systems</h4>
+          <p>Figma, Token systems, high-density transactional UI, and accessible component hierarchies.</p>
+        </div>
+        <div class="seal rv">
+          <div class="seal-icon">🗣</div>
+          <h4>Voice &amp; Multi-Modal</h4>
+          <p>Conversational flow design, Whisper audio pipelines, real-time feedback loops &amp; UI synchrony.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lab Callout -->
+    <section class="lab-callout rv">
+      <div class="lab-copy">
+        <h3>The Independent Laboratory · ai-created.com</h3>
+        <p>A sovereign workbench where Marco constructs and releases new AI experiments, interactive micro-products, and generative tools without corporate red tape.</p>
+      </div>
+      <div>
+        <a href="https://ai-created.com" target="_blank" rel="noopener" class="lab-link">Enter Scriptorium ↗</a>
+      </div>
+    </section>
+
+    <!-- Scriptorium Epistolary / Contact -->
+    <section class="contact-folio rv" id="contact">
+      <div class="wax-seal" id="wax-trigger" title="Click to copy missive">M</div>
+      <h3>Inscribe a Missive</h3>
+      <p>Marco welcomes counsel, advisory inquiries, design leadership roles, and ambitious AI-native product initiatives.</p>
+      
+      <div class="contact-actions">
+        <button class="btn-gold" id="btn-copy-missive">
+          <span>Inscribe Email</span>
+          <span style="font-size:10px; opacity:0.8;">(marcovhv@gmail.com)</span>
+        </button>
+        <a href="mailto:marcovhv@gmail.com?subject=Council%20with%20Marco" class="btn-vellum">Send via Courier ↗</a>
+      </div>
+
+      <div class="guild-links">
+        <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a>
+        <span>·</span>
+        <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">X / @AIandDesign</a>
+        <span>·</span>
+        <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a>
+        <span>·</span>
+        <a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created.com</a>
+      </div>
+
+      <!-- Colophon -->
+      <footer class="colophon">
+        <div>Folio MVHV · Edition XXX · Illuminated in Portland, Oregon</div>
+        <div class="colophon-badge">Set by Gemini 3.8 Flash · Zero Frameworks</div>
+        <div>All Rights Reserved · Anno Domini MMXXVI</div>
+      </footer>
+    </section>
+
+  </article>
+</main>
+
+<div class="toast-missal" id="toast-missal">Missive inscribed to clipboard: marcovhv@gmail.com</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // 1. Monastic Liturgical Clock & Pacific Time
+  const clockEl = document.getElementById('portland-clock');
+  const hourEl = document.getElementById('monastic-hour');
+  
+  function updateHours() {
+    const now = new Date();
+    const pstOptions = { timeZone: 'America/Los_Angeles', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const timeStr = new Intl.DateTimeFormat('en-US', pstOptions).format(now);
+    if (clockEl) clockEl.textContent = timeStr + ' PST';
+
+    // Monastic Liturgical Hours based on PST
+    const pstHour = parseInt(timeStr.split(':')[0], 10);
+    let liturgical = 'HORA VIGILIAE';
+    if (pstHour >= 6 && pstHour < 9) liturgical = 'HORA PRIMA (DAWN)';
+    else if (pstHour >= 9 && pstHour < 12) liturgical = 'HORA TERTIA (MORNING)';
+    else if (pstHour >= 12 && pstHour < 15) liturgical = 'HORA SEXTA (NOON)';
+    else if (pstHour >= 15 && pstHour < 18) liturgical = 'HORA NONA (AFTERNOON)';
+    else if (pstHour >= 18 && pstHour < 21) liturgical = 'HORA VESPERAE (DUSK)';
+    else if (pstHour >= 21 || pstHour < 3) liturgical = 'HORA COMPLETORII (NIGHT)';
+    else liturgical = 'HORA MATUTINAE';
+    if (hourEl) hourEl.textContent = liturgical;
+  }
+  updateHours();
+  setInterval(updateHours, 1000);
+
+  // 2. Scroll Progress Foil
+  const foil = document.getElementById('scroll-foil');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const st = h.scrollTop || document.body.scrollTop;
+    const sh = h.scrollHeight - h.clientHeight;
+    const pct = sh > 0 ? (st / sh) * 100 : 0;
+    if (foil) foil.style.width = pct + '%';
+  }, { passive: true });
+
+  // 3. Scroll Reveal Animation
+  const ro = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        ro.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.rv').forEach(el => ro.observe(el));
+
+  // 4. Interactive Alchemical Astrolabe Canvas
+  const canvas = document.getElementById('astrolabe-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    const cx = w / 2, cy = h / 2;
+    let angle = 0;
+    let targetAngle = 0;
+    let activeMetal = 4; // Gold default
+
+    const metals = [
+      { name: 'Lead', sym: '♄', era: 'Endemol', color: '#888888', ring: 45 },
+      { name: 'Iron', sym: '♂', era: 'Google', color: '#c25e36', ring: 65 },
+      { name: 'Copper', sym: '♀', era: 'Yahoo', color: '#d97d48', ring: 85 },
+      { name: 'Silver', sym: '☽', era: 'Walmart', color: '#d6dbe0', ring: 105 },
+      { name: 'Gold', sym: '☉', era: 'Kohl\'s & Lab', color: '#efc95c', ring: 125 }
+    ];
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = (e.clientX - rect.left) * (w / rect.width);
+      const my = (e.clientY - rect.top) * (h / rect.height);
+      targetAngle = Math.atan2(my - cy, mx - cx);
+    });
+
+    const metalBtns = document.querySelectorAll('.metal-btn');
+    metalBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        metalBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeMetal = parseInt(btn.dataset.epoch, 10);
+        targetAngle = (activeMetal * (Math.PI * 2 / 5));
+        
+        // Scroll smoothly to relevant epoch card
+        const epochIds = ['epoch-stannum', 'epoch-ferrum', 'epoch-cuprum', 'epoch-argentum', 'epoch-aurum'];
+        const targetCard = document.getElementById(epochIds[activeMetal]);
+        if (targetCard) targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    function drawAstrolabe() {
+      angle += (targetAngle - angle) * 0.05;
+      ctx.clearRect(0, 0, w, h);
+
+      // Background ambient ring
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      // Outer Brass Rim
+      ctx.beginPath();
+      ctx.arc(0, 0, 145, 0, Math.PI * 2);
+      ctx.strokeStyle = '#c69228';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // Degree tick marks
+      for (let i = 0; i < 72; i++) {
+        const rad = (i * 5) * Math.PI / 180;
+        const r1 = i % 6 === 0 ? 134 : 138;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(rad) * r1, Math.sin(rad) * r1);
+        ctx.lineTo(Math.cos(rad) * 144, Math.sin(rad) * 144);
+        ctx.strokeStyle = i % 6 === 0 ? '#efc95c' : 'rgba(198, 146, 40, 0.4)';
+        ctx.lineWidth = i % 6 === 0 ? 1.5 : 1;
+        ctx.stroke();
+      }
+
+      // Concentric planetary rings
+      metals.forEach((m, idx) => {
+        ctx.beginPath();
+        ctx.arc(0, 0, m.ring, 0, Math.PI * 2);
+        ctx.strokeStyle = idx === activeMetal ? m.color : 'rgba(198, 146, 40, 0.2)';
+        ctx.lineWidth = idx === activeMetal ? 2 : 1;
+        ctx.stroke();
+
+        // Orbiting planetary symbol
+        const symAngle = angle + (idx * (Math.PI * 2 / 5));
+        const sx = Math.cos(symAngle) * m.ring;
+        const sy = Math.sin(symAngle) * m.ring;
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, idx === activeMetal ? 8 : 5, 0, Math.PI * 2);
+        ctx.fillStyle = idx === activeMetal ? m.color : '#c69228';
+        ctx.fill();
+        ctx.strokeStyle = '#0e0b08';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Glyph symbol
+        ctx.font = '12px serif';
+        ctx.fillStyle = idx === activeMetal ? '#ffffff' : 'rgba(238, 227, 203, 0.7)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(m.sym, sx, sy - 14);
+      });
+
+      // Rotating Astrolabe Rete (Lace web)
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.moveTo(-140, 0); ctx.lineTo(140, 0);
+      ctx.moveTo(0, -140); ctx.lineTo(0, 140);
+      ctx.strokeStyle = 'rgba(239, 201, 92, 0.45)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Central Golden Boss
+      ctx.beginPath();
+      ctx.arc(0, 0, 14, 0, Math.PI * 2);
+      ctx.fillStyle = '#aa281e';
+      ctx.fill();
+      ctx.strokeStyle = '#efc95c';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#efc95c';
+      ctx.fill();
+
+      ctx.restore();
+      requestAnimationFrame(drawAstrolabe);
+    }
+    drawAstrolabe();
+  }
+
+  // 5. Missive Copy to Clipboard with Toast Notification
+  const copyBtn = document.getElementById('btn-copy-missive');
+  const waxTrigger = document.getElementById('wax-trigger');
+  const toast = document.getElementById('toast-missal');
+
+  function copyMissive() {
+    const email = 'marcovhv@gmail.com';
+    navigator.clipboard.writeText(email).then(() => {
+      if (toast) {
+        toast.classList.add('active');
+        setTimeout(() => toast.classList.remove('active'), 2600);
+      }
+    }).catch(() => {
+      alert('Address: ' + email);
+    });
+  }
+
+  if (copyBtn) copyBtn.addEventListener('click', copyMissive);
+  if (waxTrigger) waxTrigger.addEventListener('click', copyMissive);
+
+})();
+</script>
+</body>
+</html>

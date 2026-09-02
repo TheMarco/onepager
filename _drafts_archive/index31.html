@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>M. van Hylckama Vlieg — The Chess Match</title>
+<meta name="description" content="Twenty years of product design, engineering and AI-native software — played as a game of chess."/>
+<meta name="theme-color" content="#1a2e1a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300..800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --felt:#1a2e1a;--felt-2:#0f1f0f;--felt-3:#243a24;
+  --sq-l:#f0e6d2;--sq-d:#5c3a1e;
+  --gold:#d4af37;--ivory:#f5f0e8;--ebony:#2a2a2a;
+  --red:#c0392b;--cream:#f5efe6;--cream-2:#a8a090;--cream-3:#6b6558;
+  --maxw:1280px;--gut:clamp(20px,4vw,60px);
+  --fd:'Playfair Display',serif;--fb:'Inter',sans-serif;--fm:'Space Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{font-family:var(--fb);background:var(--felt);color:var(--cream);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+em{font-style:normal}a{color:inherit;text-decoration:none}
+::selection{background:var(--gold);color:var(--felt)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* felt texture */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 40%,rgba(212,175,55,.03),transparent 60%),
+  repeating-linear-gradient(45deg,transparent 0px,transparent 2px,rgba(0,0,0,.015) 2px,rgba(0,0,0,.015) 3px)}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut);position:relative;z-index:2}
+section[id]{scroll-margin-top:72px}
+
+/* top bar */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gut);background:rgba(15,31,15,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,175,55,.15)}
+.topbar__brand{display:flex;align-items:center;gap:12px;font-family:var(--fm);font-size:.74rem;letter-spacing:.12em;color:var(--cream-2)}
+.topbar__brand b{color:var(--gold);font-weight:700}
+.topbar__right{display:flex;align-items:center;gap:14px;font-family:var(--fm);font-size:.7rem;color:var(--cream-3)}
+.topbar__right .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+#prog{position:fixed;top:0;left:0;height:2px;width:0;z-index:200;background:linear-gradient(90deg,var(--gold),var(--red))}
+
+/* HERO */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px var(--gut) 60px;position:relative}
+.hero__board{display:grid;grid-template-columns:repeat(8,1fr);width:min(420px,78vw);aspect-ratio:1;border:3px solid var(--gold);box-shadow:0 20px 60px rgba(0,0,0,.5);margin-bottom:36px}
+.hero__board .sq{display:flex;align-items:center;justify-content:center;font-size:clamp(1.4rem,4vw,2.4rem);transition:.3s;cursor:default}
+.hero__board .sq.l{background:var(--sq-l);color:var(--ebony)}
+.hero__board .sq.d{background:var(--sq-d);color:var(--ivory)}
+.hero__board .sq:hover{filter:brightness(1.15);transform:scale(1.08)}
+.hero__board .sq.hl{box-shadow:inset 0 0 0 3px var(--gold)}
+.hero__title{text-align:center}
+.hero__title .vs{font-family:var(--fm);font-size:.72rem;letter-spacing:.18em;color:var(--cream-3);text-transform:uppercase;margin-bottom:12px}
+.hero__title h1{font-family:var(--fd);font-weight:900;font-size:clamp(2rem,5.5vw,4rem);line-height:1;letter-spacing:-.02em}
+.hero__title h1 em{font-style:italic;color:var(--gold)}
+.hero__title .sub{margin-top:12px;font-family:var(--fm);font-size:.76rem;letter-spacing:.1em;color:var(--cream-3)}
+.hero__scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:.68rem;letter-spacing:.18em;color:var(--cream-3);animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,6px)}}
+
+/* sections */
+.sect{padding:clamp(70px,9vw,130px) 0;border-top:1px solid rgba(212,175,55,.1);position:relative}
+.sect__head{margin-bottom:clamp(36px,5vw,64px)}
+.sect__ch{font-family:var(--fm);font-size:.72rem;letter-spacing:.2em;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.sect__ch::after{content:'';flex:1;height:1px;background:rgba(212,175,55,.15)}
+.sect__title{font-family:var(--fd);font-weight:700;font-size:clamp(2rem,4.5vw,3.6rem);line-height:1.05;letter-spacing:-.02em}
+.sect__title em{font-style:italic;color:var(--gold)}
+.sect__lede{margin-top:16px;max-width:52ch;color:var(--cream-2);font-size:1rem}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+
+/* SCORE SHEET (career) */
+.score{display:grid;gap:0;border:1px solid rgba(212,175,55,.2);background:var(--felt-2)}
+.score__head{display:grid;grid-template-columns:60px 1fr 1fr;padding:14px 20px;border-bottom:2px solid rgba(212,175,55,.3);font-family:var(--fm);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-3)}
+.score__head span:nth-child(2){color:var(--ivory)}.score__head span:nth-child(3){color:var(--ebony);background:rgba(240,230,210,.05)}
+.score__row{display:grid;grid-template-columns:60px 1fr 1fr;padding:18px 20px;border-bottom:1px solid rgba(212,175,55,.08);transition:.3s}
+.score__row:hover{background:rgba(212,175,55,.04)}
+.score__row:last-child{border-bottom:none}
+.score__num{font-family:var(--fm);font-size:.8rem;color:var(--gold)}
+.score__move{font-family:var(--fd);font-weight:700;font-size:1.2rem}
+.score__move small{display:block;font-family:var(--fm);font-weight:400;font-size:.68rem;color:var(--cream-3);margin-top:4px}
+.score__desc{font-size:.9rem;color:var(--cream-2);line-height:1.5}
+.score__desc b{color:var(--cream);font-weight:600}
+
+/* PIECES (capabilities) */
+.pieces{display:grid;gap:1px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.1)}
+@media(min-width:640px){.pieces{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.pieces{grid-template-columns:repeat(3,1fr)}}
+.piece{background:var(--felt);padding:32px 28px;position:relative;overflow:hidden;transition:.4s}
+.piece::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:.5s}
+.piece:hover{background:var(--felt-3);transform:translateY(-3px)}
+.piece:hover::before{transform:scaleX(1)}
+.piece__icon{font-size:2.8rem;line-height:1;margin-bottom:14px;display:block}
+.piece__icon.w{color:var(--ivory)}.piece__icon.b{color:rgba(245,240,232,.7)}
+.piece__title{font-family:var(--fd);font-weight:700;font-size:1.25rem;margin-bottom:8px}
+.piece__body{color:var(--cream-2);font-size:.94rem;line-height:1.6}
+.piece__chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.piece__chips span{font-family:var(--fm);font-size:.64rem;letter-spacing:.05em;text-transform:uppercase;color:var(--cream-3);border:1px solid rgba(212,175,55,.15);padding:4px 8px}
+
+/* ENDGAME (lab) */
+.endgame{display:grid;gap:40px}
+@media(min-width:960px){.endgame{grid-template-columns:.7fr 1.3fr;gap:60px}}
+.endgame__board{display:grid;grid-template-columns:repeat(4,1fr);width:min(280px,60vw);aspect-ratio:1;border:2px solid var(--gold);margin:0 auto;box-shadow:0 16px 40px rgba(0,0,0,.4)}
+.endgame__board .sq{display:flex;align-items:center;justify-content:center;font-size:1.6rem}
+.endgame__board .sq.l{background:var(--sq-l);color:var(--ebony)}
+.endgame__board .sq.d{background:var(--sq-d);color:var(--ivory)}
+.endgame__label{text-align:center;margin-top:16px;font-family:var(--fm);font-size:.7rem;letter-spacing:.14em;color:var(--cream-3)}
+.lab-grid{display:grid;gap:12px}
+@media(min-width:680px){.lab-grid{grid-template-columns:repeat(2,1fr)}}
+.lab-card{background:var(--felt-2);border:1px solid rgba(212,175,55,.15);padding:24px;position:relative;transition:.35s;display:flex;flex-direction:column}
+.lab-card:hover{border-color:rgba(212,175,55,.4);transform:translateY(-3px)}
+.lab-card__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.lab-card__idx{font-family:var(--fm);font-size:.68rem;color:var(--cream-3)}
+.lab-card__pill{font-family:var(--fm);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid rgba(212,175,55,.2);color:var(--gold)}
+.lab-card__title{font-family:var(--fd);font-weight:700;font-size:1.25rem;margin-bottom: 8px}
+.lab-card__tag{color:var(--cream-2);font-size:.9rem;line-height:1.55;flex:1}
+.lab-card__stack{margin-top:14px;font-family:var(--fm);font-size:.68rem;color:var(--cream-3)}
+.lab-card__go{position:absolute;bottom:18px;right:20px;font-size:1.2rem;color:var(--cream-3);transition:.3s}
+.lab-card:hover .lab-card__go{color:var(--gold);transform:translate(2px,-2px)}
+
+/* RATING (metrics) */
+.rating{display:grid;gap:1px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.1)}
+@media(min-width:560px){.rating{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.rating{grid-template-columns:repeat(4,1fr)}}
+.rating__cell{background:var(--felt);padding:36px 28px;position:relative}
+.rating__cell::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:.8s .2s}
+.rating__cell.in::before{transform:scaleX(1)}
+.rating__num{font-family:var(--fd);font-weight:900;font-size:clamp(2.8rem,5vw,4rem);line-height:.9;color:var(--gold)}
+.rating__unit{font-family:var(--fm);font-size:.74rem;color:var(--cream-3);margin-left:4px}
+.rating__label{margin-top:12px;font-family:var(--fm);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cream-3);line-height:1.5}
+.rating__title{margin-top:8px;font-family:var(--fd);font-style:italic;font-size:.95rem;color:var(--cream-2)}
+
+/* OPENING PRINCIPLES (method) */
+.opening{display:grid;gap:24px}
+@media(min-width:900px){.opening{grid-template-columns:.8fr 1.2fr;gap:40px}}
+.opening__list{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+@media(min-width:900px){.opening__list{grid-template-columns:1fr}}
+.op-btn{display:flex;align-items:center;gap:14px;padding:20px 22px;border:1px solid rgba(212,175,55,.15);background:none;color:var(--cream-2);cursor:pointer;text-align:left;font-family:inherit;transition:.3s}
+.op-btn:hover{background:var(--felt-2);color:var(--cream)}
+.op-btn.is-active{background:var(--felt-2);border-color:rgba(212,175,55,.4);color:var(--cream);box-shadow:inset 3px 0 0 var(--gold)}
+.op-btn .n{font-family:var(--fm);font-size:.76rem;color:var(--cream-3)}
+.op-btn.is-active .n{color:var(--gold)}
+.op-btn .t{font-family:var(--fd);font-weight:700;font-size:1.1rem}
+.op-panel{border:1px solid rgba(212,175,55,.15);background:var(--felt-2);padding:40px;min-height:260px;display:flex;flex-direction:column;justify-content:center}
+.op-panel .big{font-family:var(--fd);font-weight:900;font-size:3.5rem;color:var(--gold);line-height:.9}
+.op-panel h3{font-family:var(--fd);font-weight:700;font-size:1.8rem;margin:12px 0}
+.op-panel p{color:var(--cream-2);font-size:1.05rem;line-height:1.7;max-width:42ch}
+.op-swap{animation:opIn .5s cubic-bezier(.2,.7,.2,1)}
+@keyframes opIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* CURRENT POSITION (now) */
+.now{display:grid;gap:40px}
+@media(min-width:900px){.now{grid-template-columns:1fr 1fr;gap:60px}}
+.now__h{font-family:var(--fm);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cream-3);margin-bottom:20px}
+.now-list{list-style:none}
+.now-list li{display:flex;gap:14px;padding:18px 0;border-top:1px solid rgba(212,175,55,.1);transition:.3s}
+.now-list li:last-child{border-bottom:1px solid rgba(212,175,55,.1)}
+.now-list .dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--cream-3);margin-top:8px;flex-shrink:0}
+.now-list li.is-live .dot{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px rgba(212,175,55,.4);animation:pulse 2s infinite}
+.now-list li p{font-family:var(--fd);font-weight:700;font-size:1.1rem;line-height:1.3}
+.now-list li p b{color:var(--gold);font-weight:900}
+.now-list li small{display:block;font-family:var(--fm);font-size:.7rem;color:var(--cream-3);margin-top:4px}
+.now-list li:hover{background:linear-gradient(90deg,rgba(212,175,55,.04),transparent);padding-left:10px}
+.tool-list{list-style:none}
+.tool-list li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:16px 0;border-top:1px solid rgba(212,175,55,.1)}
+.tool-list li:last-child{border-bottom:1px solid rgba(212,175,55,.1)}
+.tool-list li span{font-family:var(--fd);font-weight:700;font-size:.98rem}
+.tool-list li small{font-family:var(--fm);font-size:.68rem;color:var(--cream-3);text-align:right}
+
+/* CHECKMATE (contact) */
+.contact{text-align:center;padding-bottom:0}
+.mate{font-size:5rem;line-height:1;margin-bottom:24px;display:block;animation:matePulse 3s ease-in-out infinite}
+@keyframes matePulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.06);opacity:1}}
+.contact__big{font-family:var(--fd);font-weight:900;font-size:clamp(2.6rem,9vw,7rem);line-height:.9;letter-spacing:-.02em}
+.contact__big em{font-style:italic;color:var(--gold)}
+.contact__sub{margin-top:20px;max-width:48ch;margin-left:auto;margin-right:auto;color:var(--cream-2);font-size:1.05rem}
+.contact__row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:18px;margin-top:36px}
+.email-btn{font-family:var(--fm);font-size:clamp(.9rem,2vw,1.3rem);color:var(--cream);background:none;border:none;cursor:pointer;padding-bottom:5px;border-bottom:1px solid rgba(212,175,55,.3);transition:.3s;display:inline-flex;align-items:center;gap:12px}
+.email-btn:hover{color:var(--gold);border-color:var(--gold)}
+.email-btn .hint{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-3);border:1px solid rgba(212,175,55,.2);padding:3px 7px}
+.email-btn.copied{color:var(--gold)} .email-btn.copied .hint{color:var(--gold);border-color:rgba(212,175,55,.4)}
+.btn{display:inline-flex;align-items:center;gap:.5em;font-family:var(--fm);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;padding:.9em 1.4em;border:1px solid rgba(212,175,55,.3);color:var(--cream);cursor:pointer;background:none;transition:.3s}
+.btn--gold{background:var(--gold);border-color:var(--gold);color:var(--felt);font-weight:700}
+.btn--gold:hover{background:#e6c84a;transform:translateY(-2px);box-shadow:0 12px 30px -8px rgba(212,175,55,.4)}
+.btn:hover{border-color:var(--gold);color:var(--gold)}
+.contact__links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;margin-top:32px}
+.contact__links a{font-family:var(--fm);font-size:.78rem;color:var(--cream-2);transition:.3s}
+.contact__links a:hover{color:var(--gold)}
+.c-sep{width:3px;height:3px;background:var(--cream-3);border-radius:50%}
+
+/* footer */
+.foot{border-top:1px solid rgba(212,175,55,.1);padding:48px 0;margin-top:clamp(50px,7vw,80px)}
+.foot__grid{display:grid;gap:32px}
+@media(min-width:760px){.foot__grid{grid-template-columns:1.5fr 1fr 1fr;gap:48px}}
+.foot h4{font-family:var(--fm);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cream-3);margin-bottom:12px}
+.foot p,.foot li{font-size:.84rem;color:var(--cream-2);line-height:1.7}
+.foot ul{list-style:none}
+.foot__bottom{margin-top:36px;padding-top:20px;border-top:1px solid rgba(212,175,55,.1);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--fm);font-size:.68rem;letter-spacing:.08em;color:var(--cream-3)}
+
+/* toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,16px);z-index:300;background:var(--felt-2);border:1px solid rgba(212,175,55,.3);color:var(--cream);font-family:var(--fm);font-size:.74rem;padding:12px 20px;display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:.4s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast i{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+
+/* piece tooltip */
+.piece-tip{position:fixed;z-index:500;background:var(--felt-2);border:1px solid var(--gold);padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--cream);pointer-events:none;opacity:0;transition:opacity .2s;max-width:220px;line-height:1.5}
+.piece-tip.show{opacity:1}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  html{scroll-behavior:auto}.rv{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body id="top">
+<div id="prog"></div>
+
+<header class="topbar">
+  <a href="#top" class="topbar__brand"><b>MVHV</b> · THE CHESS MATCH</a>
+  <div class="topbar__right"><span class="dot"></span><span id="clock">--:--:--</span><span>PDX</span></div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__board rv" id="heroBoard"></div>
+  <div class="hero__title rv" style="--d:.15s">
+    <p class="vs">Game 1 of ∞ · Classical Opening</p>
+    <h1>M. van Hylckama <em>Vlieg</em></h1>
+    <p class="sub">vs. The Blank Brief · Portland, OR · 20+ years in play</p>
+  </div>
+  <a href="#record" class="hero__scroll">OPENING MOVES ↓</a>
+</section>
+
+<!-- SCORE SHEET -->
+<section class="sect" id="record">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">SCORE SHEET · 01</div><h2 class="sect__title">Six moves. <em>Each one committed.</em></h2><p class="sect__lede">The notation of twenty years. Every move was a decision that couldn't be taken back.</p></header>
+    <div class="score rv">
+      <div class="score__head"><span>Move</span><span>M. van Hylckama Vlieg</span><span>The Brief</span></div>
+      <div class="score__row"><span class="score__num">1.</span><div class="score__move">Endemol e4<small>1998 — 2005</small></div><div class="score__desc"><b>UX &amp; Engineering Lead.</b> Multilingual content systems and large-scale web platforms across an international entertainment portfolio. Where the technical depth got built.</div></div>
+      <div class="score__row"><span class="score__num">2.</span><div class="score__move">Yahoo! Nf3<small>2005 — 2013</small></div><div class="score__desc"><b>Director of UX Prototyping &amp; Senior UX Manager.</b> Led global prototyping teams. Shaped rebrand and personalization work, built scalable design processes, mentored senior designers.</div></div>
+      <div class="score__row"><span class="score__num">3.</span><div class="score__move">Google Bc4<small>2013 — 2017</small></div><div class="score__desc"><b>Senior UX Engineer / Prototyper.</b> Built high-fidelity prototypes for Google Cloud AI, Google Assistant and Android. Bridged design and engineering.</div></div>
+      <div class="score__row"><span class="score__num">4.</span><div class="score__move">Walmart Rxe7<small>2017 — 2021</small></div><div class="score__desc"><b>Principal Product Designer / Design Technologist.</b> Mobile, voice and personalization during Walmart's digital transformation. Translated complex ML into clear interfaces.</div></div>
+      <div class="score__row"><span class="score__num">5.</span><div class="score__move">Kohl's Qd2<small>2021 — now</small></div><div class="score__desc"><b>Senior Product Designer &amp; Generative AI Specialist.</b> Led UX across cart, checkout, wallet, account and self-checkout. Drove AI tooling and education across the design org.</div></div>
+      <div class="score__row"><span class="score__num">6.</span><div class="score__move">AI-Created O-O<small>always</small></div><div class="score__desc"><b>Independent product lab.</b> Shipped AI tools, design utilities, music, video and arcade games — all real software, all built end to end. The perpetual castling.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PIECES -->
+<section class="sect" id="capabilities">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">THE PIECES · 02</div><h2 class="sect__title">Six pieces. <em>Each with a role.</em></h2><p class="sect__lede">The capabilities mapped to the board. Most interesting projects deploy four at once.</p></header>
+    <div class="pieces">
+      <article class="piece rv"><span class="piece__icon w" data-tip="The most versatile piece. Reaches every square of the board — voice, agents, ambient assistance, model-aware interfaces.">♛</span><h3 class="piece__title">AI-native product design</h3><p class="piece__body">Designing systems where the model is the interaction, not a chat panel bolted onto a SaaS shell. Voice, agents, ambient assistance.</p><div class="piece__chips"><span>Voice UX</span><span>Agent UI</span><span>Prompt systems</span></div></article>
+      <article class="piece rv" style="--d:.05s"><span class="piece__icon w" data-tip="Strong and linear. Builds the structure that everything else stands on. Production-quality, end to end.">♜</span><h3 class="piece__title">Design engineering</h3><p class="piece__body">Production-quality prototypes that behave like real software because they are real software. Built end to end by one person.</p><div class="piece__chips"><span>Next.js</span><span>TypeScript</span><span>Tailwind</span><span>Vercel</span></div></article>
+      <article class="piece rv" style="--d:.1s"><span class="piece__icon w" data-tip="The unconventional mover. Jumps over obstacles. Takes ambiguous briefs through to shipped product when there's no roadmap yet.">♞</span><h3 class="piece__title">0 → 1 incubation</h3><p class="piece__body">Taking an ambiguous brief through research, framing, design, prototype and shipped product. Comfortable carrying the weight.</p><div class="piece__chips"><span>Strategy</span><span>Research</span><span>Prototype</span></div></article>
+      <article class="piece rv"><span class="piece__icon w" data-tip="Controls the long diagonals. Sees the whole board from a distance. Untangles legacy at scale, years of this.">♝</span><h3 class="piece__title">Enterprise UX modernization</h3><p class="piece__body">Untangling legacy workflows in cart, checkout, account and internal tooling — replacing them with systems people actually want to use.</p><div class="piece__chips"><span>E-commerce</span><span>Internal tools</span><span>A11y</span></div></article>
+      <article class="piece rv" style="--d:.05s"><span class="piece__icon w" data-tip="The second rook. Structural, reliable, always in the right file. Custom copilots and workflow accelerators used by real teams.">♜</span><h3 class="piece__title">Internal AI tooling</h3><p class="piece__body">Custom copilots, prompt libraries, synthetic research environments and workflow accelerators built for design and product orgs.</p><div class="piece__chips"><span>LLM pipelines</span><span>Workflows</span><span>Enablement</span></div></article>
+      <article class="piece rv" style="--d:.1s"><span class="piece__icon w" data-tip="The king. Must be protected at all costs. Built and led teams at Yahoo. Now drives AI adoption through teaching, tooling and example.">♔</span><h3 class="piece__title">Leadership &amp; enablement</h3><p class="piece__body">Built and led prototyping teams at Yahoo. Now drive AI adoption inside a design org through teaching, tooling and example.</p><div class="piece__chips"><span>Mentorship</span><span>AI education</span><span>Hiring</span></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- ENDGAME (lab) -->
+<section class="sect" id="lab">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">ENDGAME STUDY · 03</div><h2 class="sect__title">The <em>endgame</em>. Where advantages become checkmate.</h2><p class="sect__lede">Eighteen independent artifacts. The pawns that promote. Real software, shipped end to end.</p></header>
+    <div class="endgame">
+      <div class="rv"><div class="endgame__board" id="endBoard"></div><p class="endgame__label">POSITION AFTER MOVE 6 · WHITE TO PLAY</p></div>
+      <div class="lab-grid">
+        <a class="lab-card rv" href="https://diary.ai-created.com/" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-01</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">My AI Diary</h3><p class="lab-card__tag">Voice-first journaling that turns raw speech into a written entry that still sounds like you. Whisper, semantic search, weekly summaries.</p><div class="lab-card__stack">Next.js · OpenAI · Whisper · IndexedDB</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-02</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">Human, Actually</h3><p class="lab-card__tag">Tailor your resume to the job — without sounding like a robot wrote it.</p><div class="lab-card__stack">LLM · NLP · UX</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-03</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">WatchGPT</h3><p class="lab-card__tag">Realtime ChatGPT voice, on your wrist.</p><div class="lab-card__stack">watchOS · Realtime API</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-04</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">AI Usage</h3><p class="lab-card__tag">Claude Code + Codex usage on your Mac desktop. A menubar utility for devs.</p><div class="lab-card__stack">macOS · Swift · menubar</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-05</span><span class="lab-card__pill">AI · LIVE</span></div><h3 class="lab-card__title">Calorie Counter</h3><p class="lab-card__tag">The most frictionless food intake logger ever built. Speak, photograph, done.</p><div class="lab-card__stack">Vision · LLM · PWA</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-06</span><span class="lab-card__pill">GAME · LIVE</span></div><h3 class="lab-card__title">Vectronix</h3><p class="lab-card__tag">Hardcore arcade space combat. No mercy, no filler — proof of interaction design depth.</p><div class="lab-card__stack">Canvas · Web Audio · Vector</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" href="https://ai-created.com/games" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-07</span><span class="lab-card__pill">GAME · LIVE</span></div><h3 class="lab-card__title">Radial Drift</h3><p class="lab-card__tag">One finger. One mistake ends the run. A minimal arcade study in tension.</p><div class="lab-card__stack">WebGL · Touch · Haptics</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-08</span><span class="lab-card__pill">EXPERIMENT · LIVE</span></div><h3 class="lab-card__title">Audio Visualizer Suite</h3><p class="lab-card__tag">Captivating video visualizations of your music. Render-quality output.</p><div class="lab-card__stack">WebGL · FFT · FFmpeg</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-09</span><span class="lab-card__pill">EXPERIMENT · LIVE</span></div><h3 class="lab-card__title">Color Clock</h3><p class="lab-card__tag">A 1991 clock design, brought to life. A love letter to vintage craft.</p><div class="lab-card__stack">CSS · Type</div><span class="lab-card__go">↗</span></a>
+        <a class="lab-card rv" style="--d:.05s" href="https://ai-created.com/products" target="_blank" rel="noopener"><div class="lab-card__top"><span class="lab-card__idx">A-10</span><span class="lab-card__pill">EXPERIMENT · LIVE</span></div><h3 class="lab-card__title">Jumbotron Simulator</h3><p class="lab-card__tag">See your name in lights at a major sporting event. Pixel-faithful arena LED.</p><div class="lab-card__stack">Canvas · WebGL</div><span class="lab-card__go">↗</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RATING -->
+<section class="sect" id="metrics">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">RATING · 04</div><h2 class="sect__title">The <em>Elo</em> doesn't lie.</h2><p class="sect__lede">Twenty years of rated games. Here are the honest numbers.</p></header>
+    <div class="rating">
+      <div class="rating__cell rv"><span class="rating__num" data-count="20">0</span><span class="rating__unit">+ yrs</span><p class="rating__label">in the practice</p><p class="rating__title">Grandmaster norm</p></div>
+      <div class="rating__cell rv" style="--d:.05s"><span class="rating__num" data-count="5">0</span><span class="rating__unit">cos</span><p class="rating__label">Google · Yahoo · Walmart · Kohl's · Endemol</p><p class="rating__title">Titled opponents</p></div>
+      <div class="rating__cell rv" style="--d:.1s"><span class="rating__num" data-count="18">0</span><span class="rating__unit">shipped</span><p class="rating__label">independent products &amp; experiments</p><p class="rating__title">Winning lines</p></div>
+      <div class="rating__cell rv" style="--d:.15s"><span class="rating__num" data-count="4">0</span><span class="rating__unit">lang.</span><p class="rating__label">Dutch · English · German · Spanish</p><p class="rating__title">Opening repertoires</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- OPENING PRINCIPLES -->
+<section class="sect" id="method">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">OPENING PRINCIPLES · 05</div><h2 class="sect__title">Four rules. <em>Every game.</em></h2><p class="sect__lede">No process slides. No frameworks for sale. The four moves that show up in every project that ships.</p></header>
+    <div class="opening rv">
+      <div class="opening__list" role="tablist">
+        <button class="op-btn is-active" data-step="0"><span class="n">1.</span><span class="t">Frame</span></button>
+        <button class="op-btn" data-step="1"><span class="n">2.</span><span class="t">Prototype</span></button>
+        <button class="op-btn" data-step="2"><span class="n">3.</span><span class="t">Pressure-test</span></button>
+        <button class="op-btn" data-step="3"><span class="n">4.</span><span class="t">Ship</span></button>
+      </div>
+      <div class="op-panel" id="opPanel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CURRENT POSITION -->
+<section class="sect" id="now">
+  <div class="wrap">
+    <header class="sect__head rv"><div class="sect__ch">CURRENT POSITION · 06</div><h2 class="sect__title">The board <em>right now</em>.</h2><p class="sect__lede">Updated by hand. That's how you know it's real.</p></header>
+    <div class="now">
+      <div class="rv"><h3 class="now__h">Active pieces</h3>
+        <ul class="now-list">
+          <li class="is-live"><span class="dot"></span><div><p>Leading UX &amp; AI enablement at <b>Kohl's.</b></p><small>Senior product designer / generative AI specialist</small></div></li>
+          <li class="is-live"><span class="dot"></span><div><p>Shipping new artifacts through <b>AI-Created</b> most weeks.</p><small>Independent product lab · solo</small></div></li>
+          <li class="is-live"><span class="dot"></span><div><p>Open to <b>senior IC, lead and director</b> conversations.</p><small>Product design · design engineering · AI</small></div></li>
+          <li><span class="dot"></span><div><p>Speaking at <b>Imagine AI Live</b> as a founding contributor.</p><small>Founding member · speaker</small></div></li>
+        </ul>
+      </div>
+      <div class="rv" style="--d:.1s"><h3 class="now__h">In the rotation</h3>
+        <ul class="tool-list">
+          <li><span>Figma · Figma Make · Lovable</span><small>Design surface</small></li>
+          <li><span>Next.js · TypeScript · Tailwind · Vercel</span><small>Production stack</small></li>
+          <li><span>ChatGPT · Claude · Gemini · Codex</span><small>Model fleet</small></li>
+          <li><span>Midjourney · Runway · ElevenLabs · Suno</span><small>Media generation</small></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKMATE -->
+<section class="sect contact" id="contact">
+  <div class="wrap">
+    <header class="sect__head rv" style="margin-bottom:24px"><div class="sect__ch">FINAL MOVE · 07</div></header>
+    <span class="mate rv" aria-hidden="true">♚</span>
+    <h2 class="contact__big rv" style="--d:.05s">Your move. <em>Checkmate.</em></h2>
+    <p class="contact__sub rv" style="--d:.1s">The fastest path is a direct line. Tell me what you're building, what's ambiguous about it, and the timeline you're on.</p>
+    <div class="contact__row rv" style="--d:.15s">
+      <button class="email-btn" id="copyEmail">marcovhv@gmail.com<span class="hint">click to copy</span></button>
+      <a href="mailto:marcovhv@gmail.com?subject=Let's%20talk" class="btn btn--gold">Resign &amp; hire me ↗</a>
+    </div>
+    <div class="contact__links rv" style="--d:.2s">
+      <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">LinkedIn</a><span class="c-sep"></span>
+      <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">X / @AIandDesign</a><span class="c-sep"></span>
+      <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">YouTube</a><span class="c-sep"></span>
+      <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid rv">
+      <div><h4>Colophon</h4><p>Hand-set, single HTML file, no frameworks. Typography is Playfair Display (display), Inter (body) and Space Mono (notation). The board uses Unicode chess glyphs. Built in Portland, OR · 2026.</p></div>
+      <div><h4>Specimen</h4><ul><li>Playfair Display · display 400–900</li><li>Inter · body 300–800</li><li>Space Mono · notation</li><li>Felt · Ivory · Ebony · Gold</li></ul></div>
+      <div><h4>Stack</h4><ul><li>HTML · one file</li><li>CSS · variables, grid</li><li>JS · vanilla, no deps</li><li>Any static host</li></ul></div>
+    </div>
+    <div class="foot__bottom"><span>© 2026 M. van Hylckama Vlieg · Game 1 of ∞</span><a href="#top" style="color:var(--cream-2)">Back to top ↑</a></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><i></i><span>Copied to clipboard</span></div>
+<div class="piece-tip" id="pieceTip"></div>
+
+<script>
+(function(){
+'use strict';
+const REDUCED=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* clock */
+const clk=document.getElementById('clock');
+const fmt=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+function tick(){const s=fmt.format(new Date());if(clk)clk.textContent=s;}
+tick();setInterval(tick,1000);
+
+/* hero board — starting position */
+const hb=document.getElementById('heroBoard');
+if(hb){
+  const back=['♜','♞','♝','♛','♔','♝','♞','♜'];
+  const pawns='♙';
+  let html='';
+  for(let r=0;r<8;r++){for(let c=0;c<8;c++){
+    const cls=(r+c)%2===0?'l':'d';
+    let p='';
+    if(r===0)p=back[c];else if(r===1)p=pawns;
+    html+='<div class="sq '+cls+'">'+p+'</div>';
+  }}
+  hb.innerHTML=html;
+}
+
+/* endgame board — a mid-game position */
+const eb=document.getElementById('endBoard');
+if(eb){
+  const pos=[['','','♔',''],['♙','','','♛'],['','♞','',''],['♜','','♝','']];
+  let html='';
+  for(let r=0;r<4;r++){for(let c=0;c<4;c++){
+    const cls=(r+c)%2===0?'l':'d';
+    html+='<div class="sq '+cls+'">'+(pos[r][c]||'')+'</div>';
+  }}
+  eb.innerHTML=html;
+}
+
+/* piece tooltips */
+const tip=document.getElementById('pieceTip');
+document.querySelectorAll('[data-tip]').forEach(el=>{
+  el.addEventListener('mouseenter',e=>{tip.textContent=el.dataset.tip;tip.classList.add('show');});
+  el.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+16)+'px';tip.style.top=(e.clientY-10)+'px';});
+  el.addEventListener('mouseleave',()=>{tip.classList.remove('show');});
+});
+
+/* progress */
+const prog=document.getElementById('prog');
+function onScroll(){const d=document.documentElement;const t=d.scrollHeight-d.clientHeight;if(prog)prog.style.width=(t>0?(scrollY/t)*100:0)+'%';}
+let tk=false;addEventListener('scroll',()=>{if(!tk){requestAnimationFrame(()=>{onScroll();tk=false;});tk=true;}},{passive:true});onScroll();
+
+/* reveal */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');io.unobserve(e.target);});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* count-up */
+const cio=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,t=+el.dataset.count;if(REDUCED){el.textContent=t;cio.unobserve(el);return;}
+  const s=performance.now();(function f(n){const p=Math.min(1,(n-s)/1200);el.textContent=Math.floor((1-Math.pow(1-p,3))*t);if(p<1)requestAnimationFrame(f);else el.textContent=t;})(s);cio.unobserve(el);});},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(c=>cio.observe(c));
+
+/* opening principles tabs */
+const obtns=[...document.querySelectorAll('.op-btn')],opanel=document.getElementById('opPanel');
+const OD=[{n:'1.',t:'Frame',b:"Find the smallest, most honest version of the problem. Strip the brief until what remains is real. Control the center before you commit to a flank."},
+{n:'2.',t:'Prototype',b:"Skip the slide. Build the smallest behaving thing. Code, not comp. The product tells you what it wants to be — let it develop."},
+{n:'3.',t:'Pressure-test',b:"Real users, real models, real edge cases. Watch what breaks under attack. Decide what's worth keeping and what to sacrifice."},
+{n:'4.',t:'Ship',b:"Stay around for the boring part. The 1.0 only matters if it stays in the build after launch. Convert the advantage."}];
+function setOp(i){obtns.forEach((b,idx)=>{b.classList.toggle('is-active',idx===i);});
+  const d=OD[i];opanel.innerHTML='<div class="op-swap"><span class="big">'+d.n+'</span><h3>'+d.t+'</h3><p>'+d.b+'</p></div>';}
+obtns.forEach((b,i)=>b.addEventListener('click',()=>setOp(i)));if(opanel)setOp(0);
+
+/* copy email */
+const ce=document.getElementById('copyEmail'),toast=document.getElementById('toast');let tt;
+function showToast(){toast.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('show'),2200);}
+if(ce)ce.addEventListener('click',async()=>{const e='marcovhv@gmail.com';try{await navigator.clipboard.writeText(e);}catch(_){const ta=document.createElement('textarea');ta.value=e;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(__){}ta.remove();}
+  ce.classList.add('copied');const h=ce.querySelector('.hint'),o=h.textContent;h.textContent='copied ✓';showToast();setTimeout(()=>{ce.classList.remove('copied');h.textContent=o;},1800);});
+})();
+</script>
+</body>
+</html>
+
