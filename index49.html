@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Soft Systems / Marco van Hylckama Vlieg</title>
+<meta name="description" content="Soft Systems: rigid problems, flexible thinking. Product design, engineering and AI by Marco van Hylckama Vlieg / an experimental elastic-membrane portfolio.">
+<meta name="designer" content="OpenAI Sol 6.1">
+<meta name="theme-color" content="#211b25">
+<link rel="preload" href="assets/astra-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/astra-mono.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Astra Sans";src:url("assets/astra-sans.woff2") format("woff2");font-weight:300 700;font-display:swap}
+@font-face{font-family:"Astra Mono";src:url("assets/astra-mono.woff2") format("woff2");font-weight:400;font-display:swap}
+:root{
+  --bg:#211b25; --bg-raise:#2a2130; --bg-deep:#1a151e;
+  --ink:#eee3ef; --ink-dim:#c4b2c7; --ink-faint:#9a879e;
+  --accent:#ee704a; --accent-soft:#f49b7d;
+  --line:rgba(238,227,239,.16); --line-soft:rgba(238,227,239,.09);
+  --pad:clamp(20px,4.2vw,64px);
+  --sans:"Astra Sans",Helvetica,Arial,sans-serif;
+  --mono:"Astra Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+html,body{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:var(--accent);color:#211b25}
+a{color:inherit}
+img{max-width:100%}
+:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:2px}
+.skip{position:fixed;top:12px;left:12px;z-index:60;transform:translateY(-260%);background:var(--accent);color:#211b25;font-family:var(--mono);font-size:12px;padding:11px 16px;text-decoration:none;transition:transform .18s ease}
+.skip:focus{transform:none}
+.wrap{max-width:1560px;margin-inline:auto;padding-inline:var(--pad)}
+.mono{font-family:var(--mono)}
+.visually-hidden{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ---------- header ---------- */
+.site-head{border-bottom:1px solid var(--line-soft)}
+.nav{display:flex;align-items:center;gap:28px;padding-block:20px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:19px;letter-spacing:-.04em;text-decoration:none;line-height:1.1}
+.brand span{display:block;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.02em;color:var(--ink-faint);margin-top:3px}
+.nav-links{display:flex;gap:26px;margin-left:auto;flex-wrap:wrap}
+.nav-links a{font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-dim);padding:4px 0;border-bottom:1px solid transparent}
+.nav-links a:hover{color:var(--ink);border-bottom-color:var(--accent)}
+.badge{font-family:var(--mono);font-size:10.5px;color:var(--accent-soft);border:1px solid rgba(238,112,74,.55);padding:7px 10px;white-space:nowrap}
+
+/* ---------- hero ---------- */
+.hero{position:relative;border-bottom:1px solid var(--line-soft);
+  background:
+    linear-gradient(var(--line-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:72px 72px;background-position:center top}
+.hero-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,72px);align-items:start;padding-block:clamp(34px,5vh,64px) clamp(40px,6vh,72px)}
+.hero-copy{min-width:0}
+.hero h1{font-size:clamp(74px,10vw,155px);line-height:.88;letter-spacing:-.055em;font-weight:600;margin:0 0 26px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero-lede{font-size:clamp(17px,1.5vw,20px);line-height:1.5;color:var(--ink-dim);max-width:42ch;margin:0 0 30px}
+.hero-lede strong{color:var(--ink);font-weight:600}
+.hero-meta{display:flex;gap:34px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px}
+.hero-meta div{min-width:0}
+.hero-meta dt{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);margin:0 0 5px}
+.hero-meta dd{margin:0;font-size:14.5px;line-height:1.45}
+.hero-meta a{text-decoration-color:var(--accent);text-underline-offset:4px}
+.hero-hint{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin:22px 0 0}
+.hero-hint b{color:var(--accent-soft);font-weight:400}
+
+.stage{min-width:0}
+.stage-frame{position:relative;border:1px solid var(--line);background:radial-gradient(120% 130% at 68% 30%,#332739 0%,var(--bg-raise) 52%,var(--bg-deep) 100%)}
+.stage-frame::before,.stage-frame::after{content:"";position:absolute;width:14px;height:14px;pointer-events:none}
+.stage-frame::before{top:-1px;left:-1px;border-top:2px solid var(--accent);border-left:2px solid var(--accent)}
+.stage-frame::after{bottom:-1px;right:-1px;border-bottom:2px solid var(--accent);border-right:2px solid var(--accent)}
+.stage-tag{position:absolute;top:12px;left:14px;z-index:3;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);pointer-events:none}
+.stage-tag b{color:var(--ink-dim);font-weight:400}
+#membrane{display:block;width:100%;height:clamp(340px,52vh,520px);touch-action:none;cursor:grab}
+.stage-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 14px;border-top:1px solid var(--line-soft);font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);flex-wrap:wrap}
+.stage-bar .coords{color:var(--ink-dim)}
+
+.controls{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-top:16px;padding:16px 18px;border:1px solid var(--line-soft);background:rgba(238,227,239,.025)}
+.ctl{min-width:0}
+.ctl label,.ctl .ctl-name{display:block;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);margin-bottom:9px}
+.ctl label output,.ctl-status{color:var(--accent-soft)}
+.ctl input[type="range"]{width:min(210px,52vw);accent-color:var(--accent);cursor:pointer;display:block}
+.swatch-row{display:flex;gap:8px;flex-wrap:wrap}
+.swatch{font-family:var(--mono);font-size:11px;color:var(--ink-dim);background:transparent;border:1px solid var(--line);padding:8px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.swatch i{width:10px;height:10px;border-radius:50%;background:var(--c,#ee704a);flex:none}
+.swatch:hover{border-color:var(--ink-faint);color:var(--ink)}
+.swatch[aria-pressed="true"]{background:var(--ink);color:#211b25;border-color:var(--ink)}
+.relax{font-family:var(--mono);font-size:11px;background:var(--accent);color:#211b25;border:1px solid var(--accent);padding:10px 18px;cursor:pointer}
+.relax:hover{background:var(--accent-soft);border-color:var(--accent-soft)}
+.relax:active{transform:translateY(1px)}
+.ctl-status{font-family:var(--mono);font-size:11px;margin:12px 2px 0;color:var(--ink-faint)}
+.ctl-status[aria-live]{min-height:1em}
+
+/* ---------- art band ---------- */
+.artband{border-bottom:1px solid var(--line-soft);background:var(--bg-deep)}
+.artband figure{margin:0}
+.artband .frame{max-height:560px;overflow:hidden;background:linear-gradient(160deg,#332739,var(--bg-deep))}
+.artband img{display:block;width:100%;height:100%;max-height:560px;object-fit:cover;object-position:50% 50%}
+.artband figcaption{display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap;padding:16px var(--pad);max-width:1560px;margin-inline:auto;font-family:var(--mono);font-size:11px;color:var(--ink-faint);line-height:1.7}
+.artband figcaption b{color:var(--ink-dim);font-weight:400}
+
+/* ---------- sections, shared ---------- */
+.section{padding-block:clamp(72px,11vh,128px);border-bottom:1px solid var(--line-soft)}
+.sec-head{display:flex;align-items:flex-end;gap:26px;margin-bottom:clamp(38px,6vh,64px);flex-wrap:wrap}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);border:1px solid rgba(238,112,74,.5);width:44px;height:44px;display:grid;place-items:center;flex:none;border-radius:50%}
+.sec-head h2{font-size:clamp(38px,4.6vw,68px);line-height:1.02;letter-spacing:-.045em;font-weight:550;margin:0}
+.sec-head .aside{margin-left:auto;max-width:34ch;font-size:14px;line-height:1.6;color:var(--ink-faint)}
+.sec-head .aside a{color:var(--ink-dim);text-decoration-color:var(--accent);text-underline-offset:4px}
+
+/* manifesto */
+.manifesto-lines{font-size:clamp(30px,4.2vw,58px);line-height:1.16;letter-spacing:-.035em;font-weight:500;margin:0;max-width:20ch}
+.manifesto-lines .l2{margin-left:clamp(0px,6vw,110px);color:var(--ink-dim)}
+.manifesto-lines .l3{margin-left:clamp(0px,2.5vw,44px)}
+.manifesto-lines em{font-style:normal;color:var(--accent)}
+.manifesto-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(30px,5vw,90px);align-items:start}
+.manifesto-side{border-left:1px solid var(--line);padding-left:clamp(18px,2vw,30px)}
+.manifesto-side p{margin:0 0 18px;color:var(--ink-dim);font-size:15.5px;line-height:1.7;max-width:38ch}
+.manifesto-side p:last-child{margin-bottom:0}
+.manifesto-side strong{color:var(--ink);font-weight:600}
+
+/* work index */
+.work-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.work-list li{border-bottom:1px solid var(--line)}
+.work-row{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(18px,3vw,44px);align-items:baseline;padding:clamp(26px,4vh,42px) 6px;text-decoration:none}
+.work-row .ghost{font-size:clamp(44px,5.5vw,84px);line-height:1;font-weight:300;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px rgba(238,112,74,.65);min-width:1.6em}
+.work-row h3{font-size:clamp(30px,3.8vw,54px);line-height:1.02;letter-spacing:-.04em;font-weight:550;margin:0 0 10px}
+.work-row h3 .arr{color:var(--accent);font-weight:300;display:inline-block;transition:transform .25s ease}
+.work-row:hover h3 .arr{transform:translate(4px,-4px)}
+.work-row:hover h3{text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:8px;text-decoration-thickness:1px}
+.work-row p{margin:0;color:var(--ink-dim);font-size:15.5px;line-height:1.65;max-width:52ch}
+.work-row .kind{font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-align:right;line-height:1.9;white-space:nowrap}
+.work-row .kind b{display:block;color:var(--ink-dim);font-weight:400}
+.work-list li:nth-child(2) .work-row,.work-list li:nth-child(4) .work-row{margin-left:clamp(0px,5vw,84px)}
+.work-list li:nth-child(3) .work-row{margin-left:clamp(0px,2vw,30px)}
+
+/* experience */
+.exp-grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(30px,5vw,90px);align-items:start}
+.exp-sticky{position:sticky;top:28px}
+.exp-sticky p{color:var(--ink-dim);font-size:15.5px;line-height:1.7;max-width:34ch;margin:0}
+.role-list{list-style:none;margin:0;padding:0}
+.role-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 26px;padding:26px 0;border-top:1px solid var(--line)}
+.role-list li:first-child{padding-top:4px;border-top:0}
+.role-list h3{font-size:clamp(24px,2.6vw,34px);letter-spacing:-.035em;font-weight:550;margin:0}
+.role-list h3 span{color:var(--ink-faint);font-weight:400}
+.role-when{font-family:var(--mono);font-size:11.5px;color:var(--accent-soft);white-space:nowrap;padding-top:8px}
+.role-list p{grid-column:1/-1;margin:4px 0 0;color:var(--ink-dim);font-size:15px;line-height:1.65;max-width:56ch}
+
+/* practice principles */
+.principles{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:26px}
+.principle{border-top:2px solid var(--line);padding-top:20px;min-width:0}
+.principle .p-num{font-family:var(--mono);font-size:11px;color:var(--accent);display:block;margin-bottom:14px}
+.principle h3{font-size:clamp(21px,2vw,27px);letter-spacing:-.03em;font-weight:550;line-height:1.2;margin:0 0 12px}
+.principle p{margin:0;color:var(--ink-dim);font-size:14.5px;line-height:1.7}
+.principle:nth-child(1){grid-column:1/6}
+.principle:nth-child(2){grid-column:6/10;margin-top:52px;border-top-color:var(--accent)}
+.principle:nth-child(3){grid-column:9/13;margin-top:104px}
+
+/* contact + footer */
+.contact{padding-block:clamp(80px,12vh,140px) clamp(56px,8vh,90px)}
+.contact h2{font-size:clamp(46px,7.6vw,116px);line-height:.96;letter-spacing:-.05em;font-weight:600;margin:0 0 18px}
+.contact h2 em{font-style:normal;color:var(--accent)}
+.contact p{color:var(--ink-dim);font-size:17px;max-width:52ch;margin:0 0 38px;line-height:1.65}
+.contact-links{display:flex;gap:14px 44px;flex-wrap:wrap;align-items:baseline}
+.contact-links a{font-size:clamp(18px,2vw,24px);text-decoration-color:var(--accent);text-underline-offset:7px}
+.contact-links .mono-link{font-family:var(--mono);font-size:12px;color:var(--ink-faint);text-decoration:none}
+.contact-links .mono-link:hover{color:var(--ink)}
+.site-foot{border-top:1px solid var(--line-soft)}
+.foot-row{display:flex;justify-content:space-between;gap:14px 30px;flex-wrap:wrap;padding-block:22px;font-family:var(--mono);font-size:11px;color:var(--ink-faint);line-height:1.8}
+.foot-row a{color:var(--ink-dim);text-decoration:none}
+.foot-row a:hover{color:var(--ink);text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:4px}
+
+/* ---------- motion & responsive ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .work-row .ghost{transition:transform .35s ease}
+  .work-row:hover .ghost{transform:translateX(6px)}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+@media (max-width:1020px){
+  .hero-grid{grid-template-columns:minmax(0,1fr);align-items:start}
+  .hero h1{font-size:clamp(58px,11vw,96px)}
+  #membrane{height:clamp(320px,46vh,440px)}
+  .exp-grid,.manifesto-grid{grid-template-columns:minmax(0,1fr)}
+  .exp-sticky{position:static}
+  .principle:nth-child(1),.principle:nth-child(2),.principle:nth-child(3){grid-column:1/-1;margin-top:0}
+  .principles{gap:34px}
+}
+@media (max-width:560px){
+  .brand{font-size:15px}
+  .brand span{font-size:9px}
+  .nav{gap:10px;flex-wrap:nowrap}
+  .nav-links{display:none}
+  .badge{margin-left:auto;font-size:9px;padding:7px 8px}
+  .hero-meta{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .hero-meta dd{font-size:12px}
+  .hero-grid{padding-block:30px 44px;gap:30px}
+  #membrane{height:320px}
+  .controls{gap:18px;padding:14px}
+  .work-row{grid-template-columns:minmax(0,1fr);gap:8px}
+  .work-row .ghost{font-size:40px}
+  .work-row .kind{text-align:left;white-space:normal}
+  .work-list li .work-row{margin-left:0!important}
+  .role-list li{grid-template-columns:minmax(0,1fr)}
+  .role-when{padding-top:0}
+  .artband figcaption{padding:14px var(--pad)}
+  .contact-links{flex-direction:column;gap:16px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap nav">
+    <a class="brand" href="#main">Marco van Hylckama Vlieg<span>Product designer &amp; AI-native builder</span></a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#work">Work</a>
+      <a href="#experience">Experience</a>
+      <a href="#practice">Practice</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <span class="badge">OpenAI Sol 6.1</span>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1 id="hero-title">Built to<br><em>bend.</em></h1>
+        <p class="hero-lede">Rigid problems. Flexible thinking.<br>I design and build products that adapt to the people using them.</p>
+        <dl class="hero-meta">
+          <div>
+            <dt>Currently</dt>
+            <dd>Kohl&rsquo;s / commerce &amp; AI<br>2021-present</dd>
+          </div>
+          <div>
+            <dt>Independent lab</dt>
+            <dd><a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created</a> / tools, games,<br>music &amp; experiments</dd>
+          </div>
+        </dl>
+        <p class="hero-hint"><b>Drag the membrane.</b> Feel how a system responds.</p>
+      </div>
+
+      <figure class="stage" style="margin:0">
+        <div class="stage-frame">
+          <span class="stage-tag" aria-hidden="true"><b>fig. 01</b> &nbsp;elastic membrane, spring lattice</span>
+          <canvas id="membrane" width="880" height="560" role="img"
+            aria-label="Interactive elastic membrane: a sculptural lattice of spring-connected nodes stretched in a frame. Dragging on it dents and stretches the surface; it springs back when released. Use the tension slider, colour buttons and Relax button below to change it.">
+            An elastic membrane made of a lattice of spring-connected nodes, stretched inside a rectangular frame and lit so its folds read as a soft sculpture. In a supporting browser you can drag across the surface to dent and stretch it, adjust its tension and colour, and press Relax to let it settle flat.
+          </canvas>
+          <div class="stage-bar" aria-hidden="true">
+            <span>soft systems / membrane study</span>
+            <span class="coords" id="coords">x 0.00 &nbsp;·&nbsp; y 0.00</span>
+          </div>
+        </div>
+
+        <div class="controls" aria-label="Membrane controls">
+          <div class="ctl">
+            <label for="tension">Membrane tension &nbsp;<output id="tensionOut" for="tension" aria-live="polite">42</output></label>
+            <input type="range" id="tension" min="10" max="90" step="1" value="42" aria-describedby="tensionOut">
+          </div>
+          <div class="ctl">
+            <span class="ctl-name" id="colourName">Membrane colour</span>
+            <div class="swatch-row" role="group" aria-labelledby="colourName">
+              <button type="button" class="swatch" data-colour="persimmon" aria-pressed="true"><i style="--c:#ee704a"></i>Persimmon</button>
+              <button type="button" class="swatch" data-colour="mauve" aria-pressed="false"><i style="--c:#eee3ef"></i>Mauve</button>
+              <button type="button" class="swatch" data-colour="amber" aria-pressed="false"><i style="--c:#f2b879"></i>Amber</button>
+            </div>
+          </div>
+          <div class="ctl">
+            <span class="ctl-name" aria-hidden="true">&nbsp;</span>
+            <button type="button" class="relax" id="relax">Relax</button>
+          </div>
+        </div>
+        <p class="ctl-status" id="ctlStatus" aria-live="polite">Persimmon membrane, tension 42. Drag on the surface to deform it.</p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ================= ART BAND ================= -->
+  <section class="artband" aria-label="Material study">
+    <figure>
+      <div class="frame">
+        <img src="shots/sol61-soft-sculpture.webp" alt="Conceptual elastic membrane sculpture" width="1916" height="821" loading="lazy">
+      </div>
+      <figcaption>
+        <span><b>Conceptual elastic membrane sculpture</b> / a material study for Soft Systems: a stretched lattice held between rigid points, deforming under load and recovering its shape.</span>
+        <span>Material study · generated image</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ================= MANIFESTO ================= -->
+  <section class="section" aria-labelledby="manifesto-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-num" aria-hidden="true">01</span>
+        <h2 id="manifesto-title">The idea</h2>
+        <p class="aside">A short statement of method, before the evidence. The work below is where it has been tested.</p>
+      </div>
+      <div class="manifesto-grid">
+        <p class="manifesto-lines">
+          <span class="l1">Rigid problems</span><br>
+          <span class="l2">do not need <em>rigid</em> answers.</span><br>
+          <span class="l3">They need material that can stretch / and recover.</span>
+        </p>
+        <div class="manifesto-side">
+          <p><strong>Soft Systems</strong> is how I approach product work: hold the problem firmly, keep the solution pliable. A checkout flow, a voice interface, a design system / each is a membrane stretched between fixed points of business, technology and human behaviour.</p>
+          <p>Push on one point and the whole surface should respond, not tear. That means prototypes early, assumptions under load, and enough structure that the next decision stays clear. Less noise. More purpose.</p>
+          <p>The membrane in the hero is the same idea, made literal: thousands of small springs, each unremarkable, together behaving like a material with a point of view.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WORK ================= -->
+  <section class="section" id="work" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-num" aria-hidden="true">02</span>
+        <h2 id="work-title">Selected work</h2>
+        <p class="aside">Four independent products from the <a href="https://ai-created.com" target="_blank" rel="noopener">AI-Created</a> lab. Each link opens the live product.</p>
+      </div>
+      <ol class="work-list">
+        <li>
+          <a class="work-row" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+            <span class="ghost" aria-hidden="true">01</span>
+            <span>
+              <h3>My AI Diary <span class="arr" aria-hidden="true">&#8599;</span></h3>
+              <p>A private place to think out loud. Voice-first journaling built around the most natural interface you have: your own voice.</p>
+            </span>
+            <span class="kind"><b>AI tool</b>Voice-first journaling</span>
+          </a>
+        </li>
+        <li>
+          <a class="work-row" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+            <span class="ghost" aria-hidden="true">02</span>
+            <span>
+              <h3>Human, Actually <span class="arr" aria-hidden="true">&#8599;</span></h3>
+              <p>Tailored resumes in human language. Career tools that translate experience into words a person would actually say.</p>
+            </span>
+            <span class="kind"><b>Career tool</b>Resumes, in human language</span>
+          </a>
+        </li>
+        <li>
+          <a class="work-row" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+            <span class="ghost" aria-hidden="true">03</span>
+            <span>
+              <h3>WatchGPT <span class="arr" aria-hidden="true">&#8599;</span></h3>
+              <p>Realtime ChatGPT voice, within reach. A smaller surface demands a clearer idea / AI for the wrist, designed down to the glance.</p>
+            </span>
+            <span class="kind"><b>AI tool</b>watchOS · voice</span>
+          </a>
+        </li>
+        <li>
+          <a class="work-row" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
+            <span class="ghost" aria-hidden="true">04</span>
+            <span>
+              <h3>Vectronix <span class="arr" aria-hidden="true">&#8599;</span></h3>
+              <p>Arcade combat rebuilt as a fast vector duel. Proof that the same hands that simplify a checkout can still chase a high score.</p>
+            </span>
+            <span class="kind"><b>Play</b>Arcade combat</span>
+          </a>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= EXPERIENCE ================= -->
+  <section class="section" id="experience" aria-labelledby="exp-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-num" aria-hidden="true">03</span>
+        <h2 id="exp-title">Experience</h2>
+      </div>
+      <div class="exp-grid">
+        <div class="exp-sticky">
+          <p>Five systems, stretched across twenty years / retail, search, cloud, entertainment. The constant is the method: prototype the decision, then build the thing.</p>
+        </div>
+        <ol class="role-list">
+          <li>
+            <h3>Kohl&rsquo;s <span> /  Commerce / AI</span></h3>
+            <span class="role-when">2021-present</span>
+            <p>Cart, checkout, wallet, account, and self-checkout. Designing across the commerce journey while advancing AI practice.</p>
+          </li>
+          <li>
+            <h3>Walmart Labs <span> /  Mobile / voice</span></h3>
+            <span class="role-when">2017-2021</span>
+            <p>Led mobile, voice, and personalization design through a major retail transformation.</p>
+          </li>
+          <li>
+            <h3>Google <span> /  Cloud AI / Android</span></h3>
+            <span class="role-when">2013-2017</span>
+            <p>Built high-fidelity prototypes for Cloud AI, Assistant, and Android to help teams settle product decisions quickly.</p>
+          </li>
+          <li>
+            <h3>Yahoo! <span> /  Design leadership</span></h3>
+            <span class="role-when">2005-2013</span>
+            <p>Directed global prototyping teams, personalization work, design process, and senior talent development.</p>
+          </li>
+          <li>
+            <h3>Endemol <span> /  UX / engineering</span></h3>
+            <span class="role-when">1998-2005</span>
+            <p>Led UX and engineering for multilingual platforms across an international entertainment portfolio.</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRACTICE ================= -->
+  <section class="section" id="practice" aria-labelledby="practice-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-num" aria-hidden="true">04</span>
+        <h2 id="practice-title">How the work stays flexible</h2>
+        <p class="aside">Three working principles. They apply as well to a membrane of springs as to a product roadmap.</p>
+      </div>
+      <div class="principles">
+        <article class="principle">
+          <span class="p-num" aria-hidden="true">( a )</span>
+          <h3>Fix the corners, free the middle</h3>
+          <p>Pin down the few things that cannot move / the user need, the deadline, the honest constraint / then let everything between them deform. Most design fights are about corners that were never agreed.</p>
+        </article>
+        <article class="principle">
+          <span class="p-num" aria-hidden="true">( b )</span>
+          <h3>Prototype under load</h3>
+          <p>A surface only shows its character when pushed. Build the prototype early, press on the weakest assumption, and watch how the whole system answers / before the expensive version exists.</p>
+        </article>
+        <article class="principle">
+          <span class="p-num" aria-hidden="true">( c )</span>
+          <h3>Design the recovery</h3>
+          <p>Stretching is easy; springing back is the craft. States, errors and edge cases are the membrane returning to shape. If recovery is designed, deformation stops being damage.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <h2 id="contact-title">Bring me a<br><em>rigid problem.</em></h2>
+      <p>Product design, engineering and AI / or the interesting overlap of all three. If it needs to bend without breaking, I would like to hear about it.</p>
+      <div class="contact-links">
+        <a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com &#8599;</a>
+        <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">Connect on LinkedIn &#8599;</a>
+        <a class="mono-link" href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com / the independent lab &#8599;</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-row">
+    <a href="index.html#sol61-pages">&larr; Back to all pages</a>
+    <span>Marco van Hylckama Vlieg · Soft Systems</span>
+    <span>Created by OpenAI Sol 6.1</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var canvas = document.getElementById("membrane");
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  var tensionInput = document.getElementById("tension");
+  var tensionOut = document.getElementById("tensionOut");
+  var status = document.getElementById("ctlStatus");
+  var coords = document.getElementById("coords");
+  var relaxBtn = document.getElementById("relax");
+  var swatches = Array.prototype.slice.call(document.querySelectorAll(".swatch"));
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ---------- membrane model ---------- */
+  var COLS = 26, ROWS = 17, N = COLS * ROWS;
+  var SPAN_X = 2.0, SPAN_Y = 1.42;
+  var px = new Float32Array(N), py = new Float32Array(N), pz = new Float32Array(N);
+  var vx = new Float32Array(N), vy = new Float32Array(N), vz = new Float32Array(N);
+  var rx = new Float32Array(N), ry = new Float32Array(N), rz = new Float32Array(N);
+  var fx = new Float32Array(N), fy = new Float32Array(N), fz = new Float32Array(N);
+  var sx = new Float32Array(N), sy = new Float32Array(N), sd = new Float32Array(N);
+  var pinned = new Uint8Array(N);
+  var springs = [];
+
+  function idx(i, j) { return j * COLS + i; }
+  function restZ(u, v) {
+    return 1.8 * ((u - 0.5) ** 2 - (v - 0.5) ** 2)
+         + 0.18 * Math.sin(u * Math.PI * 2) * Math.sin(v * Math.PI * 2);
+  }
+  for (var j = 0; j < ROWS; j++) {
+    for (var i = 0; i < COLS; i++) {
+      var u = i / (COLS - 1), v = j / (ROWS - 1), k = idx(i, j);
+      rx[k] = (u - 0.5) * 2.45 * (0.68 + 0.5 * (Math.abs(v - 0.5) * 2) ** 2);
+      ry[k] = (v - 0.5) * 1.9 * (0.72 + 0.35 * (Math.abs(u - 0.5) * 2) ** 2);
+      rz[k] = restZ(u, v);
+      px[k] = rx[k]; py[k] = ry[k]; pz[k] = rz[k];
+      if (i === 0 || j === 0 || i === COLS - 1 || j === ROWS - 1) pinned[k] = 1;
+    }
+  }
+  function addSpring(a, b) {
+    var dx = rx[b] - rx[a], dy = ry[b] - ry[a], dz = rz[b] - rz[a];
+    springs.push([a, b, Math.sqrt(dx * dx + dy * dy + dz * dz)]);
+  }
+  for (var j2 = 0; j2 < ROWS; j2++) {
+    for (var i2 = 0; i2 < COLS; i2++) {
+      if (i2 < COLS - 1) addSpring(idx(i2, j2), idx(i2 + 1, j2));
+      if (j2 < ROWS - 1) addSpring(idx(i2, j2), idx(i2, j2 + 1));
+      if (i2 < COLS - 1 && j2 < ROWS - 1) { addSpring(idx(i2, j2), idx(i2 + 1, j2 + 1)); addSpring(idx(i2 + 1, j2), idx(i2, j2 + 1)); }
+    }
+  }
+
+  /* ---------- state ---------- */
+  var COLOURS = {
+    persimmon: { name: "Persimmon", rgb: [238, 112, 74] },
+    mauve:     { name: "Mauve",     rgb: [238, 227, 239] },
+    amber:     { name: "Amber",     rgb: [242, 184, 121] }
+  };
+  var colour = COLOURS.persimmon;
+  var tension = tensionInput ? parseFloat(tensionInput.value) : 42;
+  var pointer = { active: false, down: false, x: 0, y: 0 };
+  var relaxing = false, relaxSteps = 0;
+  var W = 0, H = 0, dpr = 1;
+  var running = false, frameId = 0, inView = true, pageVisible = !document.hidden;
+  var startTime = (window.performance && performance.now) ? performance.now() : Date.now();
+
+  function announce() {
+    if (status) status.textContent = colour.name + " membrane, tension " + Math.round(tension) + ". Drag on the surface to deform it.";
+    if (tensionOut) tensionOut.textContent = String(Math.round(tension));
+  }
+
+  function resize() {
+    var rect = canvas.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.max(280, rect.width); H = Math.max(240, rect.height);
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (reduceMotion.matches) drawStatic();
+  }
+
+  /* ---------- physics ---------- */
+  function step(now) {
+    var kSpring = 2.2 + (tension / 90) * 13.0;      /* tension slider -> stiffness */
+    var damp = 0.90 + (tension / 90) * 0.045;
+    var anchor = 0.012;                              /* gentle pull back to sculptural rest shape */
+    var t = (now - startTime) / 1000;
+    fx.fill(0); fy.fill(0); fz.fill(0);
+    for (var s = 0; s < springs.length; s++) {
+      var sp = springs[s], a = sp[0], b = sp[1];
+      var dx = px[b] - px[a], dy = py[b] - py[a], dz = pz[b] - pz[a];
+      var d = Math.sqrt(dx * dx + dy * dy + dz * dz) || 0.0001;
+      var f = kSpring * (d - sp[2]) / d;
+      var gx = dx * f, gy = dy * f, gz = dz * f;
+      fx[a] += gx; fy[a] += gy; fz[a] += gz;
+      fx[b] -= gx; fy[b] -= gy; fz[b] -= gz;
+    }
+    for (var n = 0; n < N; n++) {
+      if (pinned[n]) { px[n] = rx[n]; py[n] = ry[n]; pz[n] = rz[n]; vx[n] = vy[n] = vz[n] = 0; continue; }
+      fx[n] += (rx[n] - px[n]) * anchor * 60 * 0.016;
+      fy[n] += (ry[n] - py[n]) * anchor * 60 * 0.016;
+      fz[n] += (rz[n] - pz[n]) * anchor * 60 * 0.016;
+      if (!reduceMotion.matches) fz[n] += Math.sin(px[n] * 3.0 + t * 0.7) * Math.cos(py[n] * 2.2 + t * 0.5) * 0.055; /* faint breeze */
+      if (pointer.active) {
+        var pdx = px[n] - pointer.x, pdy = py[n] - pointer.y;
+        var pd2 = pdx * pdx + pdy * pdy, R = 0.52;
+        if (pd2 < R * R) {
+          var fall = 1 - Math.sqrt(pd2) / R;
+          var strength = (pointer.down ? 26 : 13) * fall * fall;
+          fz[n] += strength; fx[n] -= pdx * strength * 0.35; fy[n] -= pdy * strength * 0.35;
+        }
+      }
+      var dt = 0.016;
+      vx[n] = (vx[n] + fx[n] * dt) * damp; vy[n] = (vy[n] + fy[n] * dt) * damp; vz[n] = (vz[n] + fz[n] * dt) * damp;
+      px[n] += vx[n] * dt * 3.2; py[n] += vy[n] * dt * 3.2; pz[n] += vz[n] * dt * 3.2;
+    }
+    if (relaxing) {
+      var maxD = 0;
+      for (var m = 0; m < N; m++) {
+        px[m] += (rx[m] - px[m]) * 0.16; py[m] += (ry[m] - py[m]) * 0.16; pz[m] += (rz[m] - pz[m]) * 0.16;
+        vx[m] *= 0.6; vy[m] *= 0.6; vz[m] *= 0.6;
+        var dd = Math.abs(rx[m] - px[m]) + Math.abs(rz[m] - pz[m]);
+        if (dd > maxD) maxD = dd;
+      }
+      if (maxD < 0.0015 || --relaxSteps <= 0) {
+        relaxing = false;
+        for (var k = 0; k < N; k++) { px[k]=rx[k]; py[k]=ry[k]; pz[k]=rz[k]; vx[k]=vy[k]=vz[k]=0; }
+        if (status) status.textContent = colour.name + " membrane, tension " + Math.round(tension) + ". Relaxed to its rest shape.";
+      }
+    }
+  }
+
+  /* ---------- rendering: perspective projection of the lattice ---------- */
+  function project(now) {
+    var t = (now - startTime) / 1000;
+    var sway = reduceMotion.matches ? 0 : 1;
+    var yaw = 0.34 + Math.sin(t * 0.16) * 0.045 * sway;
+    var pitch = -0.46 + Math.cos(t * 0.13) * 0.03 * sway;
+    var cy = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(pitch), sp2 = Math.sin(pitch);
+    var focal = 3.8, scale = Math.min(W / 3.1, H / 2.1), cx = W / 2, cyy = H / 2;
+    for (var n = 0; n < N; n++) {
+      var x = px[n], y = py[n], z = pz[n];
+      var x1 = x * cy + z * syw, z1 = -x * syw + z * cy;
+      var y2 = y * cp - z1 * sp2, z2 = y * sp2 + z1 * cp;
+      var d = focal + z2;
+      sx[n] = cx + (x1 / d) * scale * 3.8; sy[n] = cyy + (y2 / d) * scale * 3.8; sd[n] = z2;
+    }
+    var left=Infinity,right=-Infinity,top=Infinity,bottom=-Infinity;
+    for (var k=0;k<N;k++) { left=Math.min(left,sx[k]);right=Math.max(right,sx[k]);top=Math.min(top,sy[k]);bottom=Math.max(bottom,sy[k]); }
+    var fit=Math.min(1,W*.84/(right-left),H*.76/(bottom-top));
+    var centerX=(left+right)/2,centerY=(top+bottom)/2;
+    for (var k=0;k<N;k++) { sx[k]=W/2+(sx[k]-centerX)*fit;sy[k]=H*.53+(sy[k]-centerY)*fit; }
+  }
+
+  function draw(now) {
+    ctx.clearRect(0, 0, W, H);
+    project(now);
+    var r = colour.rgb[0], g = colour.rgb[1], blue = colour.rgb[2];
+    var a, b, c, d2, shade, stretch, alpha;
+    /* faces: filled quads shaded by height, so folds read as a soft solid */
+    for (var j = 0; j < ROWS - 1; j++) {
+      for (var i = 0; i < COLS - 1; i++) {
+        a = idx(i, j); b = idx(i + 1, j); c = idx(i + 1, j + 1); d2 = idx(i, j + 1);
+        var hgt = ((pz[a] - rz[a]) + (pz[b] - rz[b]) + (pz[c] - rz[c]) + (pz[d2] - rz[d2])) * 0.25;
+        shade = Math.max(0, Math.min(1, 0.5 + hgt * 2.6 + (sd[a] + 0.4) * 0.35));
+        alpha = 0.1 + shade * 0.24;
+        ctx.beginPath();
+        ctx.moveTo(sx[a], sy[a]); ctx.lineTo(sx[b], sy[b]); ctx.lineTo(sx[c], sy[c]); ctx.lineTo(sx[d2], sy[d2]); ctx.closePath();
+        ctx.fillStyle = "rgba(" + r + "," + g + "," + blue + "," + alpha.toFixed(3) + ")";
+        ctx.fill();
+      }
+    }
+    /* lattice lines: brighter where stretched */
+    ctx.lineWidth = 1;
+    for (var s2 = 0; s2 < springs.length; s2++) {
+      var sp = springs[s2], p = sp[0], q = sp[1];
+      if ((p % COLS === COLS - 1) && q === p + 1) continue;
+      var dx = px[q] - px[p], dy = py[q] - py[p], dz = pz[q] - pz[p];
+      stretch = (Math.sqrt(dx * dx + dy * dy + dz * dz) - sp[2]) / sp[2];
+      var glow = Math.max(0, Math.min(1, 0.25 + stretch * 9));
+      ctx.strokeStyle = "rgba(" + r + "," + g + "," + blue + "," + (0.35 + glow * 0.55).toFixed(3) + ")";
+      ctx.beginPath(); ctx.moveTo(sx[p], sy[p]); ctx.lineTo(sx[q], sy[q]); ctx.stroke();
+    }
+    /* nodes */
+    ctx.fillStyle = "rgba(238,227,239,0.55)";
+    for (var n2 = 0; n2 < N; n2++) {
+      if (n2 % 2) continue;
+      ctx.beginPath(); ctx.arc(sx[n2], sy[n2], pinned[n2] ? 1.7 : 1.15, 0, 6.2832); ctx.fill();
+    }
+    /* frame edge */
+    ctx.strokeStyle = "rgba(238,227,239,0.35)"; ctx.lineWidth = 1.2; ctx.beginPath();
+    var e, first = true;
+    for (e = 0; e < COLS; e++) { var t1 = idx(e, 0); if (first) { ctx.moveTo(sx[t1], sy[t1]); first = false; } else ctx.lineTo(sx[t1], sy[t1]); }
+    for (e = 1; e < ROWS; e++) { var t2 = idx(COLS - 1, e); ctx.lineTo(sx[t2], sy[t2]); }
+    for (e = COLS - 2; e >= 0; e--) { var t3 = idx(e, ROWS - 1); ctx.lineTo(sx[t3], sy[t3]); }
+    for (e = ROWS - 2; e >= 1; e--) { var t4 = idx(0, e); ctx.lineTo(sx[t4], sy[t4]); }
+    ctx.closePath(); ctx.stroke();
+  }
+
+  function frame(now) {
+    if (!running) return;
+    step(now); step(now);
+    draw(now);
+    if (running) frameId = requestAnimationFrame(frame);
+  }
+  function start() {
+    if (running || reduceMotion.matches) return;
+    running = true; frameId = requestAnimationFrame(frame);
+  }
+  function stop() { running = false; cancelAnimationFrame(frameId); frameId = 0; }
+  function drawStatic() {
+    var now = (window.performance && performance.now) ? performance.now() : Date.now();
+    for (var s = 0; s < 30; s++) step(now);
+    draw(now);
+  }
+  function maybeRun() {
+    if (reduceMotion.matches) { stop(); drawStatic(); return; }
+    if (inView && pageVisible) start(); else stop();
+  }
+
+  /* ---------- pointer deformation ---------- */
+  function setPointer(ev) {
+    var rect = canvas.getBoundingClientRect();
+    var nx = ((ev.clientX - rect.left) / rect.width) * SPAN_X - SPAN_X / 2;
+    var ny = ((ev.clientY - rect.top) / rect.height) * SPAN_Y - SPAN_Y / 2;
+    pointer.x = nx; pointer.y = ny;
+    if (coords) coords.textContent = "x " + nx.toFixed(2) + " \u00B7 y " + ny.toFixed(2);
+  }
+  canvas.addEventListener("pointerdown", function (ev) {
+    pointer.down = true; pointer.active = true; setPointer(ev);
+    if (canvas.setPointerCapture) { try { canvas.setPointerCapture(ev.pointerId); } catch (e) {} }
+    if (reduceMotion.matches) drawStatic();
+  });
+  canvas.addEventListener("pointermove", function (ev) {
+    pointer.active = true; setPointer(ev);
+    if (reduceMotion.matches) drawStatic();
+  });
+  function endPointer() { pointer.down = false; pointer.active = false; }
+  canvas.addEventListener("pointerup", endPointer);
+  canvas.addEventListener("pointercancel", endPointer);
+  canvas.addEventListener("pointerleave", function () { if (!pointer.down) pointer.active = false; });
+
+  /* ---------- controls ---------- */
+  if (tensionInput) {
+    tensionInput.addEventListener("input", function () {
+      tension = parseFloat(tensionInput.value); announce();
+      if (reduceMotion.matches) drawStatic();
+    });
+  }
+  swatches.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      swatches.forEach(function (o) { o.setAttribute("aria-pressed", o === btn ? "true" : "false"); });
+      colour = COLOURS[btn.getAttribute("data-colour")] || COLOURS.persimmon;
+      announce();
+      if (reduceMotion.matches) drawStatic();
+    });
+  });
+  if (relaxBtn) {
+    relaxBtn.addEventListener("click", function () {
+      relaxing = true; relaxSteps = 80; pointer.down = false; pointer.active = false;
+      if (status) status.textContent = "Relaxing / the membrane is settling back to its rest shape.";
+      if (reduceMotion.matches) {
+        for (var n = 0; n < N; n++) { px[n] = rx[n]; py[n] = ry[n]; pz[n] = rz[n]; vx[n] = vy[n] = vz[n] = 0; }
+        relaxing = false; drawStatic();
+        if (status) status.textContent = colour.name + " membrane, tension " + Math.round(tension) + ". Relaxed to its rest shape.";
+      }
+    });
+  }
+
+  /* ---------- lifecycle: pause offscreen / hidden / reduced-motion ---------- */
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      inView = entries[0].isIntersecting; maybeRun();
+    }, { threshold: 0.04 }).observe(canvas);
+  }
+  document.addEventListener("visibilitychange", function () {
+    pageVisible = !document.hidden; maybeRun();
+  });
+  if (reduceMotion.addEventListener) reduceMotion.addEventListener("change", maybeRun);
+  window.addEventListener("resize", resize);
+
+  resize();
+  announce();
+  maybeRun();
+})();
+</script>
+</body>
+</html>

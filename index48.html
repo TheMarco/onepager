@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Crease / Marco van Hylckama Vlieg</title>
+<meta name="description" content="Crease: a practice in unfolding. Product design, engineering, and AI by Marco van Hylckama Vlieg.">
+<meta name="designer" content="OpenAI Sol 6.1">
+<meta name="theme-color" content="#e9f1fa">
+<link rel="preload" href="assets/astra-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/astra-condensed.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Space Grotesk";src:url("assets/astra-sans.woff2") format("woff2");font-weight:300 700;font-display:swap}
+@font-face{font-family:"Barlow Condensed";src:url("assets/astra-condensed.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"DM Mono";src:url("assets/astra-mono.woff2") format("woff2");font-weight:400;font-display:swap}
+:root{
+  --paper:#e9f1fa; --paper-2:#dfeaf8; --sheet:#f7fbff; --ink:#173aa8; --ink-deep:#0e2a7d;
+  --ink-soft:#3d5bb5; --line:#aec4e8; --line-soft:#c9d9f2; --accent:#0b5fff;
+  --pad:clamp(20px,4.5vw,64px); --max:1560px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Space Grotesk",Arial,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button,input{font:inherit;color:inherit}
+::selection{background:var(--ink);color:var(--paper)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.skip{position:fixed;top:12px;left:12px;z-index:60;transform:translateY(-220%);background:var(--ink);color:#fff;padding:12px 18px;font-size:14px;text-decoration:none}
+.skip:focus{transform:none}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--pad)}
+.mono{font-family:"DM Mono",monospace}
+.cond{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;text-transform:uppercase}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- header ---------- */
+.topbar{border-bottom:1.5px solid var(--ink)}
+.topbar-in{display:flex;align-items:center;gap:28px;padding-block:18px}
+.brand{font-weight:700;font-size:19px;letter-spacing:-.03em;text-decoration:none;line-height:1.15}
+.brand small{display:block;font-family:"DM Mono",monospace;font-weight:400;font-size:11px;letter-spacing:.06em;color:var(--ink-soft)}
+.navlinks{display:flex;gap:26px;margin-left:auto}
+.navlinks a{font-size:14px;text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+.navlinks a:hover{border-color:var(--ink)}
+.badge{border:1.5px solid var(--ink);padding:6px 10px;font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.04em;white-space:nowrap;background:var(--sheet)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding-top:clamp(26px,3.5vh,44px);padding-bottom:clamp(30px,4vh,52px);border-bottom:1.5px solid var(--ink);
+  background:
+    repeating-linear-gradient(0deg,transparent 0 47px,rgba(23,58,168,.055) 47px 48px),
+    repeating-linear-gradient(90deg,transparent 0 47px,rgba(23,58,168,.045) 47px 48px),
+    var(--paper)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(28px,4vw,72px);align-items:start}
+.hero-kicker{display:flex;justify-content:space-between;gap:16px;font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.05em;color:var(--ink-soft);border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:22px}
+.hero-name{font-size:clamp(21px,2vw,27px);font-weight:700;letter-spacing:-.03em;margin:0 0 6px}
+.hero-role{font-size:15px;color:var(--ink-soft);margin:0 0 20px;max-width:44ch}
+h1.fold-head{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(64px,6.7vw,112px);line-height:.88;letter-spacing:.005em;margin:0 0 22px;color:var(--ink-deep);white-space:nowrap}
+h1.fold-head .thin{display:block;color:var(--ink)}
+.hero-lede{font-size:17px;line-height:1.6;max-width:46ch;margin:0 0 26px}
+.hero-lede strong{font-weight:700}
+
+/* controls */
+.controls{border:1.5px solid var(--ink);background:var(--sheet);padding:18px 18px 16px;box-shadow:7px 7px 0 rgba(23,58,168,.14)}
+.controls-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-bottom:6px}
+.controls-head h2{font-size:15px;margin:0;font-weight:700;letter-spacing:-.01em}
+.controls-head output{font-family:"DM Mono",monospace;font-size:12px;color:var(--ink-deep);white-space:nowrap}
+.patterns{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}
+.patterns button{border:1.5px solid var(--ink);background:transparent;padding:9px 13px;font-size:14px;cursor:pointer;line-height:1.2}
+.patterns button:hover{background:var(--paper-2)}
+.patterns button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row .end{font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.04em;color:var(--ink-soft);white-space:nowrap}
+input[type="range"]{flex:1;min-width:0;appearance:none;-webkit-appearance:none;height:2px;background:var(--ink);cursor:pointer}
+input[type="range"]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--sheet);border:2.5px solid var(--ink);box-shadow:2px 2px 0 rgba(23,58,168,.3);cursor:grab}
+input[type="range"]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--sheet);border:2.5px solid var(--ink);cursor:grab}
+.presets{display:flex;gap:8px;margin-top:14px}
+.presets button{border:1px solid var(--line);background:transparent;padding:7px 12px;font-family:"DM Mono",monospace;font-size:12px;cursor:pointer}
+.presets button:hover{border-color:var(--ink);background:var(--paper-2)}
+.controls-note{font-size:14px;color:var(--ink-soft);margin:14px 0 0;line-height:1.5}
+
+/* stage */
+.stage{border:1.5px solid var(--ink);background:
+  repeating-linear-gradient(0deg,transparent 0 31px,rgba(23,58,168,.07) 31px 32px),
+  repeating-linear-gradient(90deg,transparent 0 31px,rgba(23,58,168,.06) 31px 32px),
+  linear-gradient(160deg,#f4f9ff,#dde9f9);
+  box-shadow:10px 10px 0 rgba(23,58,168,.12);position:relative}
+.stage-head{display:flex;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.05em;color:var(--ink-soft)}
+.stage canvas{display:block;width:100%;height:clamp(340px,46vh,480px);touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage-foot{display:flex;justify-content:space-between;gap:12px;padding:11px 16px;border-top:1px solid var(--line);font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.04em;color:var(--ink-soft)}
+.hero-strip{display:flex;flex-wrap:wrap;gap:10px 34px;margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.05em;color:var(--ink-soft)}
+
+/* ---------- sections shared ---------- */
+section.block{padding-block:clamp(64px,9vh,110px)}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px}
+.sec-head h2{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(46px,5.4vw,84px);line-height:.9;margin:0;color:var(--ink-deep)}
+.sec-head .mono{font-size:11px;letter-spacing:.05em;color:var(--ink-soft);text-align:right}
+
+/* practice */
+.practice-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(30px,5vw,90px)}
+.practice-statement{font-size:clamp(25px,2.7vw,38px);line-height:1.25;letter-spacing:-.02em;font-weight:500;margin:0 0 26px;max-width:22ch}
+.practice-statement em{font-style:normal;color:var(--ink-deep);border-bottom:3px solid var(--line)}
+.practice-copy p{font-size:16px;line-height:1.65;color:var(--ink);margin:0 0 18px;max-width:52ch}
+.legend{border:1.5px solid var(--ink);background:var(--sheet);padding:20px}
+.legend h3{font-size:15px;margin:0 0 14px}
+.legend dl{margin:0;display:grid;gap:14px}
+.legend .row{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center}
+.legend dt{font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.04em}
+.legend dd{margin:0;font-size:14px;line-height:1.45;color:var(--ink-soft)}
+.sample{height:0;border-top:2px solid var(--ink)}
+.sample.dash{border-top-style:dashed}
+.sample.dotdash{border-top:2px dotted var(--ink);border-top-width:3px}
+.legend figcaption,.spec{font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.04em;color:var(--ink-soft)}
+
+/* work */
+#work{background:var(--ink-deep);color:#eaf2ff}
+#work .sec-head h2{color:#fff}
+#work .sec-head .mono{color:#9db8ec}
+.work-list{border-top:1.5px solid #5b7fd6}
+.work-row{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:clamp(14px,2.5vw,36px);align-items:center;padding:26px 6px;border-bottom:1.5px solid #5b7fd6;text-decoration:none;color:inherit}
+.work-row:hover{background:rgba(255,255,255,.05)}
+.work-num{font-family:"DM Mono",monospace;font-size:12px;color:#9db8ec}
+.work-row h3{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(36px,4.4vw,64px);line-height:.92;margin:0 0 8px;color:#fff}
+.work-row p{font-size:15px;line-height:1.5;color:#c3d4f7;margin:0;max-width:52ch}
+.work-meta{text-align:right;display:grid;gap:8px;justify-items:end}
+.work-meta .tag{font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.05em;color:#9db8ec}
+.work-meta .visit{font-size:14px;border:1.5px solid #9db8ec;padding:8px 14px;white-space:nowrap}
+.work-row:hover .visit{background:#fff;color:var(--ink-deep);border-color:#fff}
+.lab-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-top:30px;border:1.5px dashed #5b7fd6;padding:20px}
+.lab-row p{font-size:15px;margin:0;color:#c3d4f7;max-width:56ch}
+.lab-row a{font-size:15px;color:#fff;border-bottom:1.5px solid #fff;padding-bottom:3px;text-decoration:none;white-space:nowrap}
+
+/* experience */
+.exp-grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:clamp(30px,5vw,90px);align-items:start}
+.exp-intro{position:sticky;top:28px}
+.exp-intro p{font-size:16px;line-height:1.65;max-width:36ch;margin:0 0 18px}
+.exp-years{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:clamp(70px,8vw,120px);line-height:.85;color:var(--ink-deep);margin:0}
+.chapters{border-top:1.5px solid var(--ink)}
+.chapter{border-bottom:1px solid var(--line)}
+.chapter summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:22px 4px}
+.chapter summary::-webkit-details-marker{display:none}
+.chapter summary:hover .ch-name{text-decoration:underline}
+.ch-idx{font-family:"DM Mono",monospace;font-size:12px;color:var(--ink-soft)}
+.ch-name{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(30px,3.4vw,46px);line-height:.95;color:var(--ink-deep)}
+.ch-date{font-family:"DM Mono",monospace;font-size:12px;letter-spacing:.04em;color:var(--ink-soft);white-space:nowrap}
+.ch-body{padding:0 4px 24px 60px;max-width:60ch}
+.ch-body .role{font-size:14px;font-weight:700;margin:0 0 8px}
+.ch-body p{font-size:15px;line-height:1.6;color:var(--ink-soft);margin:0}
+.chapter summary .plus{font-family:"DM Mono",monospace;font-size:16px}
+.chapter details marker-fix{}
+
+/* contact */
+#contact{background:var(--sheet);border-top:1.5px solid var(--ink)}
+#contact h2{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(54px,8.5vw,132px);line-height:.88;color:var(--ink-deep);margin:0 0 14px}
+#contact .lead{font-size:18px;line-height:1.6;max-width:52ch;margin:0 0 34px}
+.contact-row{display:flex;flex-wrap:wrap;gap:14px}
+.contact-row a{font-size:16px;text-decoration:none;border:1.5px solid var(--ink);padding:14px 20px;background:var(--paper)}
+.contact-row a:hover{background:var(--ink);color:#fff}
+.contact-row a.primary{background:var(--ink);color:#fff}
+.contact-row a.primary:hover{background:var(--ink-deep)}
+
+/* footer */
+footer{border-top:1.5px solid var(--ink);padding-block:22px}
+.foot-in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 28px;font-size:14px}
+.foot-in a{text-decoration:none;border-bottom:1px solid var(--ink);padding-bottom:2px}
+.foot-in .mono{font-size:11px;letter-spacing:.05em;color:var(--ink-soft)}
+
+@media (max-width:920px){
+  .hero-grid,.practice-grid,.exp-grid{grid-template-columns:1fr}
+  .hero-grid{gap:18px}
+  .hero-text{display:contents}
+  .hero-text>*{order:0}
+  .hero-text .controls{order:2;margin-top:12px}
+  .hero-grid .stage{order:1}
+  .exp-intro{position:static}
+  .stage canvas{height:340px}
+  .sec-head{flex-direction:column;align-items:flex-start;gap:10px}
+  .sec-head .mono{text-align:left}
+}
+@media (max-width:560px){
+  .hero-name,.hero-kicker{display:none}
+  .hero-role,.hero-lede,h1.fold-head{margin:0}
+  .hero-lede{font-size:16px}
+  .navlinks{display:none}
+  .topbar-in{gap:14px}
+  .badge{margin-left:auto}
+  h1.fold-head{font-size:clamp(48px,15.6vw,84px)}
+  .work-row{grid-template-columns:1fr;gap:8px;padding:22px 2px}
+  .work-meta{justify-items:start;text-align:left}
+  .ch-body{padding-left:4px}
+  .chapter summary{grid-template-columns:34px minmax(0,1fr);gap:10px}
+  .ch-date{grid-column:2}
+  .stage canvas{height:300px}
+  .slider-row .end{display:none}
+  .hero-strip{gap:8px 20px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#main">Marco van Hylckama Vlieg<small>A PRACTICE IN UNFOLDING</small></a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="#practice">Practice</a><a href="#work">Work</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
+    </nav>
+    <span class="badge">OpenAI Sol 6.1</span>
+  </div>
+</header>
+
+<main id="main">
+<!-- HERO -->
+<section class="hero" aria-labelledby="page-title">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hero-kicker"><span>FIG. 00 / SHEET, UNFOLDED</span><span>EST. 1998 · 20+ YEARS</span></div>
+        <p class="hero-name">Marco van Hylckama Vlieg</p>
+        <p class="hero-role">Product designer &amp; AI-native builder</p>
+        <h1 class="fold-head" id="page-title">A different<br>kind of fold.</h1>
+        <p class="hero-lede">I give ambitious ideas a structure they can grow into. Product design, engineering, and a curiosity for what comes next.</p>
+
+        <div class="controls" aria-labelledby="controls-title">
+          <div class="controls-head">
+            <h2 id="controls-title">Fold study / sheet no. 48</h2>
+            <output id="foldOutput" for="foldRange">Flat · 0%</output>
+          </div>
+          <div class="patterns" role="group" aria-label="Fold pattern">
+            <button type="button" data-pattern="accordion" aria-pressed="true">Accordion</button>
+            <button type="button" data-pattern="peak" aria-pressed="false">Mountain peak</button>
+            <button type="button" data-pattern="twist" aria-pressed="false">Pinwheel twist</button>
+          </div>
+          <div class="slider-row">
+            <span class="end" aria-hidden="true">FLAT</span>
+            <label class="visually-hidden" for="foldRange">Fold amount, from flat to fully folded</label>
+            <input type="range" id="foldRange" min="0" max="100" step="1" value="62" aria-describedby="foldLive">
+            <span class="end" aria-hidden="true">FOLDED</span>
+          </div>
+          <div class="presets">
+            <button type="button" id="btnFlat">Lay flat</button>
+            <button type="button" id="btnHalf">Half fold</button>
+            <button type="button" id="btnFull">Fold fully</button>
+          </div>
+          <p class="controls-note">Choose a pattern. Fold the sheet. Drag to see it from another angle.</p>
+          <p class="visually-hidden" id="foldLive" aria-live="polite">Accordion fold, 62 percent folded.</p>
+        </div>
+      </div>
+
+      <figure class="stage" style="margin:0">
+        <div class="stage-head"><span>CREASE DIAGRAM / LIVE</span><span id="stagePattern">PATTERN A · ACCORDION</span></div>
+        <canvas id="paperCanvas" role="img" aria-label="Interactive folded paper sculpture. A sheet of six panels folds in three dimensions according to the selected pattern and fold amount. Use the fold slider and pattern buttons beside it to change the shape."></canvas>
+        <figcaption class="stage-foot"><span>DRAG TO ORBIT · SCROLL PAGE TO CONTINUE</span><span id="stageState">62% FOLDED</span></figcaption>
+      </figure>
+    </div>
+    <div class="hero-strip"><span>PRODUCT DESIGN</span><span>ENGINEERING</span><span>AI SYSTEMS</span><span>PAPER, PIXELS &amp; PROTOTYPES</span></div>
+  </div>
+</section>
+
+<!-- PRACTICE -->
+<section class="block" id="practice" aria-labelledby="practice-title">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="practice-title">Pressed flat,<br>then given shape.</h2><p class="mono">THE PRACTICE / HOW THE WORK HOLDS</p></div>
+    <div class="practice-grid">
+      <div class="practice-copy">
+        <p class="practice-statement">Good products have a strong foundation. <em>And a human point of view.</em></p>
+        <p>I bring twenty years of design and engineering to the space between an ambitious idea and a working product. Less noise. More purpose. Enough structure to make the next decision clear.</p>
+        <p>Clarity is a structural decision. Like a crease in paper, a good decision made early decides where everything else can bend / and what refuses to. Built on intention, designed for people: that is the fold this practice keeps returning to.</p>
+        <p>Twenty years making complex products feel natural / and still curious about what happens next.</p>
+      </div>
+      <figure class="legend" style="margin:0">
+        <h3>How to read a crease diagram</h3>
+        <dl>
+          <div class="row"><dt aria-hidden="true"><div class="sample"></div></dt><dd><strong>Mountain fold.</strong> The ridge rises toward you; the sheet falls away on both sides.</dd></div>
+          <div class="row"><dt aria-hidden="true"><div class="sample dash"></div></dt><dd><strong>Valley fold.</strong> The sheet dips inward, gathering material into a channel.</dd></div>
+          <div class="row"><dt aria-hidden="true"><div class="sample dotdash"></div></dt><dd><strong>Decision line.</strong> Not yet folded / the place where a product team commits, or waits.</dd></div>
+        </dl>
+        <figcaption style="margin-top:16px">Specimen notation, after the exhibition diagrams. Every project below began as the third line.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="block" id="work" aria-labelledby="work-title">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="work-title">Selected<br>constructions.</h2><p class="mono">INDEPENDENT PRODUCTS / BUILT, SHIPPED, IN USE</p></div>
+    <div class="work-list">
+      <a class="work-row" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+        <span class="work-num">01</span>
+        <span><h3>My AI Diary</h3><p>Voice-first journaling. A private space for your thoughts, built around the most natural interface you have: your own voice.</p></span>
+        <span class="work-meta"><span class="tag">AI TOOL · JOURNALING</span><span class="visit">Visit ↗</span></span>
+      </a>
+      <a class="work-row" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+        <span class="work-num">02</span>
+        <span><h3>Human, Actually</h3><p>Career tools with a human voice / tailored resumes in human language, not machine filler.</p></span>
+        <span class="work-meta"><span class="tag">CAREER TOOL · AI</span><span class="visit">Visit ↗</span></span>
+      </a>
+      <a class="work-row" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+        <span class="work-num">03</span>
+        <span><h3>WatchGPT</h3><p>AI for the wrist / realtime ChatGPT voice, within reach. A smaller surface demands a clearer idea.</p></span>
+        <span class="work-meta"><span class="tag">AI TOOL · WATCHOS</span><span class="visit">Visit ↗</span></span>
+      </a>
+      <a class="work-row" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
+        <span class="work-num">04</span>
+        <span><h3>Vectronix</h3><p>Play, folded back into the practice / an arcade combat experiment from the independent lab.</p></span>
+        <span class="work-meta"><span class="tag">PLAY · ARCADE COMBAT</span><span class="visit">Visit ↗</span></span>
+      </a>
+    </div>
+    <div class="lab-row">
+      <p>The complete product lab / AI tools, games, music, video, and useful experiments, ongoing.</p>
+      <a href="https://ai-created.com" target="_blank" rel="noopener">Enter AI-Created ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="block" id="experience" aria-labelledby="exp-title">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="exp-title">Built over time.<br>Made to matter.</h2><p class="mono">FIVE CHAPTERS / OPEN EACH FOLD</p></div>
+    <div class="exp-grid">
+      <div class="exp-intro">
+        <p class="exp-years">20+ yrs</p>
+        <p>Five chapters, one crease pattern: enter somewhere flat and uncertain, leave with a shape that holds. Each chapter added a material / entertainment, platforms, AI, retail / without unfolding the ones before it.</p>
+        <p class="spec">CHAPTERS LISTED IN REVERSE, AS FOUND IN THE STACK.</p>
+      </div>
+      <div class="chapters">
+        <div class="chapter"><details open>
+          <summary><span class="ch-idx">05</span><span class="ch-name">Kohl&rsquo;s</span><span class="ch-date">2021 / PRESENT</span></summary>
+          <div class="ch-body"><p class="role">Commerce / AI</p><p>Cart, checkout, wallet, account, and self-checkout. Designing across the commerce journey while advancing AI practice.</p></div>
+        </details></div>
+        <div class="chapter"><details>
+          <summary><span class="ch-idx">04</span><span class="ch-name">Walmart Labs</span><span class="ch-date">2017 / 2021</span></summary>
+          <div class="ch-body"><p class="role">Mobile / voice</p><p>Led mobile, voice, and personalization design through a major retail transformation.</p></div>
+        </details></div>
+        <div class="chapter"><details>
+          <summary><span class="ch-idx">03</span><span class="ch-name">Google</span><span class="ch-date">2013 / 2017</span></summary>
+          <div class="ch-body"><p class="role">Cloud AI / Android</p><p>Built high-fidelity prototypes for Cloud AI, Assistant, and Android to help teams settle product decisions quickly.</p></div>
+        </details></div>
+        <div class="chapter"><details>
+          <summary><span class="ch-idx">02</span><span class="ch-name">Yahoo!</span><span class="ch-date">2005 / 2013</span></summary>
+          <div class="ch-body"><p class="role">Design leadership</p><p>Directed global prototyping teams, personalization work, design process, and senior talent development.</p></div>
+        </details></div>
+        <div class="chapter"><details>
+          <summary><span class="ch-idx">01</span><span class="ch-name">Endemol</span><span class="ch-date">1998 / 2005</span></summary>
+          <div class="ch-body"><p class="role">UX / engineering</p><p>UX and engineering lead for multilingual platforms across an international entertainment portfolio.</p></div>
+        </details></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="block" id="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <h2 id="contact-title">What are you<br>building toward?</h2>
+    <p class="lead">Start with a conversation. Bring the flat sheet / the ambiguous brief, the half-formed idea, the product that will not sit still / and we will find the first crease together.</p>
+    <div class="contact-row">
+      <a class="primary" href="mailto:marcovhv@gmail.com">marcovhv@gmail.com ↗</a>
+      <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">Connect on LinkedIn ↗</a>
+      <a href="#work">Revisit the work ↑</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <a href="index.html#sol61-pages">← All design directions</a>
+    <span>Crease / Marco van Hylckama Vlieg / a practice in unfolding</span>
+    <span class="mono">CREATED BY OpenAI Sol 6.1</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("paperCanvas");
+  const ctx = canvas.getContext("2d");
+  const range = document.getElementById("foldRange");
+  const output = document.getElementById("foldOutput");
+  const live = document.getElementById("foldLive");
+  const stagePattern = document.getElementById("stagePattern");
+  const stageState = document.getElementById("stageState");
+  const patternBtns = Array.from(document.querySelectorAll("[data-pattern]"));
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  const LABELS = {
+    accordion: { name: "Accordion", tag: "PATTERN A · ACCORDION" },
+    peak: { name: "Mountain peak", tag: "PATTERN B · MOUNTAIN PEAK" },
+    twist: { name: "Pinwheel twist", tag: "PATTERN C · PINWHEEL TWIST" }
+  };
+  const N = 6, PW = 1, PH = 2.35;
+
+  function hingesFor(pattern, t) {
+    if (pattern === "peak") { const a = t * 1.05; return [a, a * 0.12, -2 * a, a * 0.12, 0]; }
+    if (pattern === "twist") { const a = t * 0.62; return [a, a, a, a, a]; }
+    const a = t * 1.85; return [a, -a, a, -a, a];
+  }
+  function rollFor(pattern, t, i) {
+    return pattern === "twist" ? t * i * 0.34 : 0;
+  }
+
+  // small vector helpers
+  const add = (a, b) => ({ x: a.x + b.x, y: a.y + b.y, z: a.z + b.z });
+  const mul = (a, s) => ({ x: a.x * s, y: a.y * s, z: a.z * s });
+  const cross = (a, b) => ({ x: a.y * b.z - a.z * b.y, y: a.z * b.x - a.x * b.z, z: a.x * b.y - a.y * b.x });
+  const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
+  function rot(v, axis, ang) {
+    const c = Math.cos(ang), s = Math.sin(ang);
+    const d = axis.x * v.x + axis.y * v.y + axis.z * v.z;
+    const cr = cross(axis, v);
+    return { x: v.x * c + cr.x * s + axis.x * d * (1 - c), y: v.y * c + cr.y * s + axis.y * d * (1 - c), z: v.z * c + cr.z * s + axis.z * d * (1 - c) };
+  }
+  const norm = v => { const l = Math.hypot(v.x, v.y, v.z) || 1; return { x: v.x / l, y: v.y / l, z: v.z / l }; };
+
+  function buildPanels(pattern, t, hinges) {
+    let o = { x: 0, y: -PH / 2, z: 0 };
+    let bx = { x: 1, y: 0, z: 0 }, by = { x: 0, y: 1, z: 0 };
+    const panels = [];
+    for (let i = 0; i < N; i++) {
+      const p0 = o, p1 = add(o, mul(bx, PW)), p2 = add(p1, mul(by, PH)), p3 = add(o, mul(by, PH));
+      panels.push([p0, p1, p2, p3]);
+      if (i < N - 1) {
+        const roll = rollFor(pattern, t, i + 1) - rollFor(pattern, t, i);
+        if (roll) { by = norm(rot(by, bx, roll)); }
+        const axis = norm(by);
+        bx = norm(rot(bx, axis, hinges[i]));
+        by = norm(rot(by, axis, hinges[i]));
+        o = add(o, mul(bx, 0)); // hinge point stays at panel edge
+        // advance origin along the *previous* panel direction end:
+        o = panels[i][1];
+        // recompute: origin of next panel is p1 of current panel
+      }
+    }
+    // centre the sheet on its centroid
+    let cx = 0, cy = 0, cz = 0, n = 0;
+    panels.forEach(p => p.forEach(v => { cx += v.x; cy += v.y; cz += v.z; n++; }));
+    const c = { x: cx / n, y: cy / n, z: cz / n };
+    return panels.map(p => p.map(v => sub(v, c)));
+  }
+
+  let pattern = "accordion";
+  let fold = Number(range.value) / 100;
+  let hingesCur = hingesFor(pattern, fold);
+  let hingesTgt = hingesCur.slice();
+  let rotX = 0.85, rotY = -0.55, rotXT = 0.85, rotYT = -0.55;
+  let raf = 0, running = false;
+
+  function resize() {
+    const r = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.round(r.width * dpr));
+    canvas.height = Math.max(1, Math.round(r.height * dpr));
+    draw();
+  }
+
+  function project(p, w, h) {
+    let v = rot(p, { x: 0, y: 1, z: 0 }, rotY);
+    v = rot(v, { x: 1, y: 0, z: 0 }, rotX);
+    const dist = 8.2, f = Math.min(w, h) * 1.85;
+    const s = f / (dist + v.z);
+    return { x: w / 2 + v.x * s, y: h / 2 - v.y * s, z: v.z, s };
+  }
+
+  function draw() {
+    const w = canvas.width, h = canvas.height;
+    if (!w || !h) return;
+    ctx.clearRect(0, 0, w, h);
+    const panels = buildPanels(pattern, fold, hingesCur);
+    const proj = panels.map(p => p.map(v => project(v, w, h)));
+    const vertices = proj.flat();
+    const bounds = vertices.reduce((b,p)=>({left:Math.min(b.left,p.x),right:Math.max(b.right,p.x),top:Math.min(b.top,p.y),bottom:Math.max(b.bottom,p.y)}),{left:Infinity,right:-Infinity,top:Infinity,bottom:-Infinity});
+    const fit = Math.min(1,w*.86/(bounds.right-bounds.left),h*.72/(bounds.bottom-bounds.top));
+    const centerX = (bounds.left+bounds.right)/2, centerY = (bounds.top+bounds.bottom)/2;
+    vertices.forEach(p=>{p.x=w/2+(p.x-centerX)*fit;p.y=h*.46+(p.y-centerY)*fit;});
+    // ground shadow
+    let minY = 0, maxX = 0, cx = 0;
+    proj.flat().forEach(p => { if (p.y > minY) minY = p.y; if (Math.abs(p.x - w / 2) > maxX) maxX = Math.abs(p.x - w / 2); cx += p.x; });
+    cx /= proj.flat().length;
+    ctx.save();
+    ctx.fillStyle = "rgba(14,42,125,0.16)";
+    ctx.beginPath();
+    ctx.ellipse(cx, minY + h * 0.045, Math.max(30, maxX * 0.95), h * 0.035, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // painter's sort, far first
+    const order = panels.map((p, i) => ({ i, z: proj[i].reduce((a, q) => a + q.z, 0) / 4 })).sort((a, b) => b.z - a.z);
+    const light = norm({ x: -0.45, y: 0.75, z: 0.65 });
+    order.forEach(({ i }) => {
+      const pts = proj[i], raw = panels[i];
+      const nrm = norm(cross(sub(raw[1], raw[0]), sub(raw[3], raw[0])));
+      let v = rot(nrm, { x: 0, y: 1, z: 0 }, rotY); v = rot(v, { x: 1, y: 0, z: 0 }, rotX);
+      const d = Math.abs(v.x * light.x + v.y * light.y + v.z * light.z);
+      const lgt = 0.35 + 0.65 * d;
+      const rC = Math.round(247 - (1 - lgt) * 190), gC = Math.round(251 - (1 - lgt) * 160), bC = Math.round(255 - (1 - lgt) * 38);
+      ctx.beginPath();
+      pts.forEach((p, k) => k ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
+      ctx.closePath();
+      ctx.fillStyle = "rgb(" + rC + "," + gC + "," + bC + ")";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(23,58,168,0.85)";
+      ctx.lineWidth = Math.max(1, canvas.width / 520);
+      ctx.stroke();
+      // centre crease line
+      const m1 = { x: (pts[0].x + pts[3].x) / 2, y: (pts[0].y + pts[3].y) / 2 };
+      const m2 = { x: (pts[1].x + pts[2].x) / 2, y: (pts[1].y + pts[2].y) / 2 };
+      ctx.beginPath(); ctx.moveTo(m1.x, m1.y); ctx.lineTo(m2.x, m2.y);
+      ctx.strokeStyle = "rgba(23,58,168,0.20)"; ctx.lineWidth = 1; ctx.stroke();
+    });
+  }
+
+  function needsFrame() {
+    for (let i = 0; i < hingesCur.length; i++) if (Math.abs(hingesCur[i] - hingesTgt[i]) > 0.0005) return true;
+    return Math.abs(rotX - rotXT) > 0.0005 || Math.abs(rotY - rotYT) > 0.0005;
+  }
+  function tick() {
+    hingesCur = hingesCur.map((v, i) => v + (hingesTgt[i] - v) * 0.16);
+    rotX += (rotXT - rotX) * 0.16; rotY += (rotYT - rotY) * 0.16;
+    draw();
+    if (needsFrame()) { raf = requestAnimationFrame(tick); }
+    else { running = false; hingesCur = hingesTgt.slice(); rotX = rotXT; rotY = rotYT; draw(); }
+  }
+  function animate() {
+    if (reduceMotion.matches) { hingesCur = hingesTgt.slice(); rotX = rotXT; rotY = rotYT; draw(); return; }
+    if (!running) { running = true; raf = requestAnimationFrame(tick); }
+  }
+
+  function describe() {
+    const pct = Math.round(fold * 100);
+    const state = pct === 0 ? "Flat" : pct === 100 ? "Fully folded" : pct + "% folded";
+    output.textContent = state + " · " + pct + "%";
+    output.value = state;
+    stageState.textContent = pct + "% FOLDED";
+    live.textContent = LABELS[pattern].name + " fold, " + pct + " percent folded.";
+    stagePattern.textContent = LABELS[pattern].tag;
+  }
+  function retarget() { hingesTgt = hingesFor(pattern, fold); describe(); animate(); }
+
+  range.addEventListener("input", () => { fold = Number(range.value) / 100; retarget(); });
+  patternBtns.forEach(btn => btn.addEventListener("click", () => {
+    patternBtns.forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+    pattern = btn.dataset.pattern; retarget();
+  }));
+  function setFold(pct) { range.value = String(pct); fold = pct / 100; retarget(); }
+  document.getElementById("btnFlat").addEventListener("click", () => setFold(0));
+  document.getElementById("btnHalf").addEventListener("click", () => setFold(50));
+  document.getElementById("btnFull").addEventListener("click", () => setFold(100));
+
+  // drag to orbit
+  let dragging = false, lastX = 0, lastY = 0;
+  canvas.addEventListener("pointerdown", e => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener("pointermove", e => {
+    if (!dragging) return;
+    rotYT += (e.clientX - lastX) * 0.008; rotXT += (e.clientY - lastY) * 0.006;
+    rotXT = Math.max(-0.2, Math.min(1.9, rotXT));
+    lastX = e.clientX; lastY = e.clientY; animate();
+  });
+  const endDrag = () => { dragging = false; };
+  canvas.addEventListener("pointerup", endDrag);
+  canvas.addEventListener("pointercancel", endDrag);
+  reduceMotion.addEventListener("change", () => { if (reduceMotion.matches) { cancelAnimationFrame(raf); running = false; hingesCur = hingesTgt.slice(); draw(); } });
+
+  window.addEventListener("resize", resize);
+  resize(); describe(); draw();
+})();
+</script>
+</body>
+</html>

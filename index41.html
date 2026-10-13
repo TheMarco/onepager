@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Synoptic | Marco van Hylckama Vlieg</title>
+<meta name="description" content="Marco van Hylckama Vlieg, senior product designer and AI-native builder, as a surface analysis chart and an area forecast discussion. Drag the pressure systems. Designed by Opus 5.5.">
+<meta name="designer" content="Opus 5.5">
+<meta name="theme-color" content="#F3F3EF">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;600;700;800&family=Overpass+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Synoptic. Page 41. A career as a surface analysis. */
+:root {
+  --paper: #F3F3EF;
+  --ocean: #E7EEF1;
+  --land: #ECE6D6;
+  --ink: #1A1F25;
+  --ink-2: #39424B;
+  --muted: #59616A;
+  --rule: rgba(26, 31, 37, .14);
+  --rule-2: rgba(26, 31, 37, .3);
+  --cold: #1F57C3;
+  --cold-deep: #17449C;
+  --warm: #CC3426;
+  --occl: #7B3AA3;
+  --dew: #2C7A4D;
+  --gutter: clamp(16px, 4vw, 56px);
+  --max: 1360px;
+  --sans: 'Overpass', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Overpass Mono', ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+::selection { background: var(--cold); color: #fff; }
+a { color: inherit; }
+canvas, svg { display: block; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--cold); outline-offset: 3px; }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gutter); }
+.skip { position: absolute; left: 12px; top: -60px; background: var(--ink); color: #fff; padding: 10px 14px; z-index: 30; text-decoration: none; transition: top .2s var(--ease); }
+.skip:focus { top: 12px; }
+
+/* top */
+.top { display: flex; align-items: baseline; gap: 28px; padding-block: 18px; font-size: 15px; border-bottom: 1px solid var(--rule-2); }
+.top .mark { text-decoration: none; font-weight: 700; letter-spacing: -.005em; }
+.top .mark span { font-family: var(--mono); font-weight: 500; color: var(--muted); margin-left: 10px; font-size: 13px; }
+.top nav { display: flex; gap: 24px; margin-left: auto; }
+.top nav a, .top .back { text-decoration: none; color: var(--ink-2); transition: color .2s var(--ease); }
+.top nav a:hover, .top .back:hover { color: var(--cold); }
+.top .back { padding-left: 24px; border-left: 1px solid var(--rule-2); }
+@media (max-width: 860px) { .top nav { display: none; } .top .back { margin-left: auto; padding-left: 0; border: 0; } .top .mark span { display: none; } }
+
+/* chart */
+.analysis { position: relative; }
+.chart { position: relative; height: clamp(560px, calc(100svh - 64px), 900px); background: var(--ocean); overflow: hidden; touch-action: pan-y; border-bottom: 1px solid var(--rule-2); }
+@media (max-width: 1000px) { .chart { height: min(116vw, 860px); } }
+.chart canvas, .chart svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sys { position: absolute; transform: translate(-50%, -50%); background: none; border: 0; padding: 6px 10px; cursor: grab; text-align: center; line-height: 1; touch-action: none; border-radius: 4px; transition: background .18s var(--ease); }
+.sys:hover { background: rgba(255, 255, 255, .55); }
+.sys:active, .sys.is-drag { cursor: grabbing; background: rgba(255, 255, 255, .7); }
+.sys b { display: block; font-weight: 800; font-size: clamp(42px, 4.6vw, 64px); letter-spacing: -.02em; }
+.sys span { display: inline-block; margin-top: 2px; font-family: var(--mono); font-size: 14px; font-weight: 600; border-bottom: 2px solid currentColor; }
+.sys--h { color: var(--cold); }
+.sys--l { color: var(--warm); }
+.buoy { position: absolute; width: 30px; height: 30px; transform: translate(-50%, -50%); border: 0; background: none; padding: 0; cursor: pointer; border-radius: 50%; }
+.buoy:hover::after, .buoy:focus-visible::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; box-shadow: 0 0 0 2px var(--cold); }
+.tip { position: absolute; z-index: 5; max-width: 260px; background: #fff; border: 1px solid var(--rule-2); padding: 10px 12px 11px; font-size: 14px; line-height: 1.4; pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity .16s var(--ease), transform .16s var(--ease); box-shadow: 0 8px 22px rgba(20, 30, 40, .14); }
+.tip.is-on { opacity: 1; transform: none; }
+.tip b { display: block; font-size: 15px; }
+.tip code { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+.titleblock { position: absolute; left: var(--gutter); bottom: clamp(16px, 3vw, 36px); z-index: 4; width: min(470px, calc(100% - 2 * var(--gutter))); background: rgba(255, 255, 255, .94); border: 1.5px solid var(--ink); padding: 18px 22px 16px; }
+@media (max-width: 1000px) { .titleblock { position: relative; left: auto; bottom: auto; width: auto; margin: 0; border-width: 0 0 1px; border-color: var(--rule-2); background: var(--paper); padding: 22px var(--gutter) 22px; } }
+.titleblock .prod { margin: 0; font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--rule-2); padding-bottom: 8px; }
+.titleblock .prod span { font-family: var(--mono); font-weight: 500; color: var(--muted); font-size: 13px; }
+.titleblock h1 { margin: 12px 0 2px; font-weight: 800; font-size: clamp(32px, 3.4vw, 46px); line-height: 1; letter-spacing: -.025em; }
+.titleblock p { margin: 6px 0 0; color: var(--ink-2); font-size: 16px; }
+.titleblock .valid { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.key { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 14px 0 0; padding: 10px 0 0; border-top: 1px solid var(--rule); list-style: none; font-size: 13px; color: var(--ink-2); }
+.key li { display: flex; align-items: center; gap: 7px; }
+.key svg { width: 46px; height: 12px; position: static; }
+.hint { margin-top: 10px !important; font-size: 13.5px !important; color: var(--muted) !important; }
+
+/* the discussion */
+.afd { max-width: 900px; margin: 0 auto; padding: clamp(56px, 8vw, 110px) var(--gutter) 40px; font-family: var(--mono); font-size: 16px; line-height: 1.7; color: var(--ink); }
+.afd__head { margin: 0 0 40px; line-height: 1.5; }
+.afd__head .id { color: var(--muted); }
+.afd__head h2 { margin: 18px 0 2px; font-family: var(--sans); font-weight: 800; font-size: clamp(34px, 4.4vw, 54px); line-height: 1; letter-spacing: -.025em; }
+.afd__head p { margin: 4px 0 0; }
+.afd section { padding: 4px 0 6px; }
+.afd h3 { margin: 26px 0 12px; font-size: 16px; font-weight: 600; letter-spacing: .01em; }
+.afd h3 em { font-style: normal; font-weight: 400; color: var(--muted); }
+.afd p { margin: 0 0 16px; max-width: 72ch; }
+.afd .amp { color: var(--muted); margin: 30px 0 4px; user-select: none; }
+.afd ul.km { list-style: none; margin: 0; padding: 0; }
+.afd ul.km li { position: relative; padding-left: 2ch; margin-bottom: 12px; max-width: 72ch; }
+.afd ul.km li::before { content: '-'; position: absolute; left: 0; }
+.afd table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 6px 0 12px; }
+.afd th { text-align: left; font-weight: 600; padding: 0 16px 8px 0; border-bottom: 1px solid var(--rule-2); white-space: nowrap; }
+.afd td { vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--rule); }
+.afd td:first-child { white-space: nowrap; color: var(--muted); }
+.afd td b { font-weight: 600; }
+.afd td a { color: var(--cold-deep); text-underline-offset: 3px; }
+.afd td a:hover { color: var(--cold); }
+@media (max-width: 680px) {
+  .afd table, .afd tbody, .afd tr, .afd td { display: block; }
+  .afd thead { display: none; }
+  .afd tr { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .afd td { border: 0; padding: 0 0 4px; }
+}
+.caps { display: grid; grid-template-columns: 1fr; gap: 0 32px; margin: 0; padding: 0; }
+@media (min-width: 760px) { .caps { grid-template-columns: 1fr 1fr; } }
+.caps div { padding: 0 0 14px; }
+.caps dt { font-weight: 600; }
+.caps dd { margin: 0; color: var(--ink-2); }
+.wwa { margin: 0; padding: 0; list-style: none; }
+.wwa li { display: grid; grid-template-columns: 4ch 1fr; }
+.wwa .on { color: var(--warm); font-weight: 600; }
+.cta { display: inline-flex; align-items: center; gap: 12px; margin: 6px 0 4px; background: var(--cold); color: #fff; text-decoration: none; padding: 14px 20px; font-family: var(--sans); font-weight: 600; font-size: 17px; border-radius: 2px; transition: background .2s var(--ease); }
+.cta:hover { background: var(--cold-deep); }
+.cta:active { transform: translateY(1px); }
+.sig { margin-top: 30px; }
+.sig a { color: var(--cold-deep); text-underline-offset: 3px; }
+.sig a:hover { color: var(--cold); }
+footer.foot { max-width: var(--max); margin: 0 auto; padding: 26px var(--gutter) 44px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 32px; font-size: 14px; color: var(--muted); }
+footer.foot a { color: var(--ink-2); }
+footer.foot a:hover { color: var(--cold); }
+.foot-rule { max-width: var(--max); margin: 40px auto 0; padding-inline: var(--gutter); }
+.foot-rule hr { border: 0; border-top: 1px solid var(--rule-2); margin: 0; }
+</style>
+</head>
+<body>
+<a class="skip" href="#afd">Skip to the forecast discussion</a>
+
+<header class="top wrap">
+  <a class="mark" href="#chart">Marco van Hylckama Vlieg<span>AFDMVH</span></a>
+  <nav aria-label="Sections">
+    <a href="#afd">Discussion</a>
+    <a href="#climate">Climate</a>
+    <a href="#marine">Buoys</a>
+    <a href="#long-term">Contact</a>
+  </nav>
+  <a class="back" href="index.html#opus-pages">All directions</a>
+</header>
+
+<main>
+<section class="analysis" aria-label="Surface analysis chart">
+  <div class="chart" id="chart">
+  <svg id="base" aria-hidden="true"></svg>
+  <canvas id="wx" role="img" aria-label="A weather chart of the northeast Pacific. A low in the Gulf of Alaska trails cold, warm and occluded fronts toward the coast. High pressure sits off California and over the Great Basin. Portland is marked. Ten buoys offshore carry the products from the lab."></canvas>
+  <div id="handles"></div>
+  <div class="tip" id="tip" role="status" aria-live="polite"></div>
+  </div>
+  <div class="titleblock">
+    <p class="prod">Surface analysis <span id="valid-short">00Z</span></p>
+    <h1>Marco van Hylckama Vlieg</h1>
+    <p>Senior product designer and AI&#8209;native builder. Portland, Oregon.</p>
+    <p class="valid" id="valid">Valid now. A chart of a career, not of the weather.</p>
+    <ul class="key" aria-label="Chart key">
+      <li><svg viewBox="0 0 46 12" aria-hidden="true"><path d="M0 10H46" stroke="#1F57C3" stroke-width="2.4"/><path d="M6 10L11 2L16 10ZM26 10L31 2L36 10Z" fill="#1F57C3"/></svg>Cold front</li>
+      <li><svg viewBox="0 0 46 12" aria-hidden="true"><path d="M0 10H46" stroke="#CC3426" stroke-width="2.4"/><path d="M6 10A5 5 0 0 1 16 10ZM26 10A5 5 0 0 1 36 10Z" fill="#CC3426"/></svg>Warm front</li>
+      <li><svg viewBox="0 0 46 12" aria-hidden="true"><path d="M0 10H46" stroke="#7B3AA3" stroke-width="2.4"/><path d="M4 10L9 2L14 10ZM24 10A5 5 0 0 1 34 10Z" fill="#7B3AA3"/></svg>Occluded</li>
+      <li>Isobars every 4 hPa</li>
+    </ul>
+    <p class="hint" id="hint">Drag the H and the L. The isobars and winds follow. Hover a buoy for a product from the lab.</p>
+  </div>
+</section>
+
+<article class="afd" id="afd" aria-labelledby="afd-title">
+  <div class="afd__head">
+    <div class="id">FXUS56 KMVH <span id="afd-ddhh">000000</span><br>AFDMVH</div>
+    <h2 id="afd-title">Area forecast discussion</h2>
+    <p>Marco van Hylckama Vlieg, Portland OR</p>
+    <p id="afd-time">Issued now</p>
+  </div>
+
+  <section aria-labelledby="km">
+    <h3 id="km">.KEY MESSAGES...</h3>
+    <ul class="km">
+      <li>Senior product designer and AI-native builder. Twenty years of steady output across consumer scale, enterprise complexity and an independent lab.</li>
+      <li>Strongest where strategy, interaction design and working code meet. The prototypes run because they are real software.</li>
+      <li>Open to senior IC, lead and director roles. Conditions favorable.</li>
+    </ul>
+  </section>
+  <p class="amp" aria-hidden="true">&amp;&amp;</p>
+
+  <section aria-labelledby="syn">
+    <h3 id="syn">.SYNOPSIS...</h3>
+    <p>High pressure has been building over Portland since 1998. Products are designed at the seam where intent becomes interface, where a half-formed idea has to choose what kind of system it becomes. That is where the interesting decisions live: pacing, posture, what shows up first, what stays hidden, and what the model is allowed to assume.</p>
+    <p>AI made the design problem about judgment: what to build, how it should behave in someone&rsquo;s actual life, and when to ship it. Expect the prototype, the build, and someone who stays for the part where it has to work for real users.</p>
+  </section>
+
+  <section aria-labelledby="st">
+    <h3 id="st">.SHORT TERM <em>/through 2026/</em>...</h3>
+    <p>Kohl&rsquo;s: Senior Product Designer and Generative AI Specialist. UX across cart, checkout, wallet, account and in-store self-checkout, plus AI tooling, prompt libraries and training across the design organization. The independent lab, AI-Created, continues to ship most weeks. Speaking at Imagine AI Live as a founding contributor.</p>
+  </section>
+
+  <section aria-labelledby="long-term" id="long-term">
+    <h3>.LONG TERM <em>/2027 and beyond/</em>...</h3>
+    <p>Open to senior IC, lead and director roles in product design, design engineering and AI. Best results expected on ambiguous, zero-to-one problems where the model is the interaction. Send what you are building, what is still unclear about it, and when it needs to ship.</p>
+    <a class="cta" href="mailto:marcovhv@gmail.com">marcovhv@gmail.com <span aria-hidden="true">&#8599;</span></a>
+  </section>
+  <p class="amp" aria-hidden="true">&amp;&amp;</p>
+
+  <section aria-labelledby="climate" id="climate-sec">
+    <h3 id="climate">.CLIMATE...</h3>
+    <p>Period of record, 1998 to present. One station at a time, with the lab reporting throughout.</p>
+    <table>
+      <thead><tr><th scope="col">Period</th><th scope="col">Station</th><th scope="col">Remarks</th></tr></thead>
+      <tbody>
+        <tr><td>1998-2005</td><td><b>Endemol</b><br>UX &amp; Engineering Lead</td><td>Multilingual content systems and large web platforms across an international entertainment group. Most of the technical depth on record formed here.</td></tr>
+        <tr><td>2005-2013</td><td><b>Yahoo!</b><br>Director of UX Prototyping, Senior UX Manager</td><td>Built and led prototyping teams across offices and product lines. Rebrand and personalization work, a scalable design process, senior prototypers mentored.</td></tr>
+        <tr><td>2013-2017</td><td><b>Google</b><br>Senior UX Engineer, Prototyper</td><td>High-fidelity prototypes for Google Cloud AI, Google Assistant and Android that moved research, alignment and decisions forward.</td></tr>
+        <tr><td>2017-2021</td><td><b>Walmart Labs</b><br>Principal Product Designer, Design Technologist</td><td>Mobile, voice and personalization during the digital transformation. Recommendation systems turned into interfaces that need no explanation.</td></tr>
+        <tr><td>2021-now</td><td><b>Kohl&rsquo;s</b><br>Senior Product Designer, Generative AI Specialist</td><td>Cart, checkout, wallet, account and in-store self-checkout. AI tooling and training for the design organization.</td></tr>
+        <tr><td>Always</td><td><b>AI-Created</b><br>Independent product lab</td><td>AI tools, design utilities, music, video and arcade games, built end to end and tested in public. Eighteen shipped.</td></tr>
+      </tbody>
+    </table>
+  </section>
+  <p class="amp" aria-hidden="true">&amp;&amp;</p>
+
+  <section aria-labelledby="caps">
+    <h3 id="caps">.CAPABILITIES...</h3>
+    <dl class="caps">
+      <div><dt>AI-native product design</dt><dd>Products where the model is the interaction: voice, agents, ambient assistance.</dd></div>
+      <div><dt>Design engineering</dt><dd>Prototypes that behave like real software because they are real software.</dd></div>
+      <div><dt>Zero to one</dt><dd>An ambiguous brief carried through research, framing, design, prototype and launch.</dd></div>
+      <div><dt>Enterprise UX modernization</dt><dd>Cart, checkout, account and internal tools rebuilt into systems people choose to use.</dd></div>
+      <div><dt>Internal AI tooling</dt><dd>Copilots, prompt libraries and workflow tools that teams use every day.</dd></div>
+      <div><dt>Leadership and enablement</dt><dd>Built and led prototyping teams at Yahoo!. IC, lead or director.</dd></div>
+    </dl>
+  </section>
+  <p class="amp" aria-hidden="true">&amp;&amp;</p>
+
+  <section aria-labelledby="marine" id="marine-sec">
+    <h3 id="marine">.MARINE...</h3>
+    <p>Buoy reports from AI-Created. Ten of eighteen stations shown; all are live. The full network is at <a href="https://ai-created.com/products" target="_blank" rel="noopener" style="color:var(--cold-deep)">ai-created.com</a>.</p>
+    <table id="buoy-table">
+      <thead><tr><th scope="col">Buoy</th><th scope="col">Product</th><th scope="col">Remarks</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+  <p class="amp" aria-hidden="true">&amp;&amp;</p>
+
+  <section aria-labelledby="wwa">
+    <h3 id="wwa">.MVH WATCHES/WARNINGS/ADVISORIES...</h3>
+    <ul class="wwa">
+      <li><span>OR</span><span class="on">Availability Watch in effect until filled.</span></li>
+      <li><span>WA</span><span>None.</span></li>
+      <li><span>PZ</span><span>None.</span></li>
+    </ul>
+  </section>
+  <p class="amp" aria-hidden="true">$$</p>
+
+  <div class="sig">
+    <p>Forecaster: MVHV. Speaks Dutch, English, German and Spanish.</p>
+    <p><a href="mailto:marcovhv@gmail.com">marcovhv@gmail.com</a> &middot; <a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a> &middot; <a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a> &middot; <a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x.com/AIandDesign</a> &middot; <a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">youtube.com/@AIandDesign</a></p>
+  </div>
+</article>
+</main>
+
+<div class="foot-rule"><hr></div>
+<footer class="foot">
+  <span>Synoptic. Page 41 of the radical directions. Designed by Opus 5.5.</span>
+  <span>One HTML file, no frameworks. Isobars, fronts and winds are computed live from the pressure field.</span>
+  <a href="index.html#opus-pages">All directions</a>
+</footer>
+
+<script>
+(() => {
+'use strict';
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+const chart = document.getElementById('chart');
+const cv = document.getElementById('wx');
+const ctx = cv.getContext('2d');
+const base = document.getElementById('base');
+const handles = document.getElementById('handles');
+const tip = document.getElementById('tip');
+const NS = 'http://www.w3.org/2000/svg';
+const C = { ink: '#1A1F25', iso: '#38434E', cold: '#1F57C3', warm: '#CC3426', occl: '#7B3AA3', dew: '#2C7A4D', land: '#ECE6D6', ocean: '#E7EEF1', grat: '#BAC6CD', coast: '#7F7869' };
+
+/* ───────── Lambert conformal conic, standard parallels 30N and 60N ───────── */
+const rad = d => d * Math.PI / 180;
+const P1 = rad(30), P2 = rad(60), LAT0 = rad(45), LON0 = rad(-135);
+const nC = Math.log(Math.cos(P1) / Math.cos(P2)) / Math.log(Math.tan(Math.PI / 4 + P2 / 2) / Math.tan(Math.PI / 4 + P1 / 2));
+const FC = Math.cos(P1) * Math.pow(Math.tan(Math.PI / 4 + P1 / 2), nC) / nC;
+const rho0 = FC / Math.pow(Math.tan(Math.PI / 4 + LAT0 / 2), nC);
+function lcc(lat, lon) {
+  const r = FC / Math.pow(Math.tan(Math.PI / 4 + rad(lat) / 2), nC);
+  const t = nC * (rad(lon) - LON0);
+  return [r * Math.sin(t), rho0 - r * Math.cos(t)];
+}
+let view = null;
+function fit(W, H) {
+  const small = W < 760;
+  const win = small ? { lat: [31, 61], lon: [-152, -112], c: [47, -132] } : { lat: [25, 62], lon: [-172, -106], c: [44.5, -138] };
+  const corners = [];
+  for (const la of win.lat) for (const lo of win.lon) corners.push(lcc(la, lo));
+  for (let lo = win.lon[0]; lo <= win.lon[1]; lo += 4) corners.push(lcc(win.lat[0], lo));
+  const xs = corners.map(p => p[0]), ys = corners.map(p => p[1]);
+  const sx = W / (Math.max(...xs) - Math.min(...xs)), sy = H / (Math.max(...ys) - Math.min(...ys));
+  const s = small ? Math.max(sx, sy) * 1.02 : Math.max(sx, sy) * 1.0;
+  const c = lcc(win.c[0], win.c[1]);
+  view = { s, cx: c[0], cy: c[1], W, H, small };
+}
+const proj = (lat, lon) => { const [x, y] = lcc(lat, lon); return [view.W / 2 + (x - view.cx) * view.s, view.H / 2 - (y - view.cy) * view.s]; };
+
+/* ───────── geography, simplified ───────── */
+const MAINLAND = [[22.88, -109.91], [23.45, -110.22], [24.3, -111.5], [24.6, -112.1], [25.6, -112.1], [26.7, -113.6], [27.8, -114.3], [27.85, -115.08], [28.6, -114.3], [30.0, -115.8], [31.85, -116.6], [32.7, -117.2], [33.75, -118.3], [34.0, -118.8], [34.45, -120.47], [35.4, -120.9], [36.2, -121.7], [36.6, -121.9], [37.0, -122.2], [37.8, -122.5], [38.0, -123.0], [38.95, -123.7], [40.44, -124.41], [41.75, -124.2], [42.84, -124.56], [43.37, -124.3], [44.63, -124.06], [46.25, -124.05], [46.95, -124.15], [48.38, -124.72], [48.2, -123.4], [47.6, -122.4], [48.2, -122.6], [49.0, -123.0], [49.3, -123.2], [50.1, -125.2], [51.0, -127.5], [52.2, -128.4], [53.4, -129.5], [54.2, -130.3], [55.3, -131.6], [56.0, -132.7], [56.8, -133.6], [58.3, -134.4], [58.8, -136.6], [59.4, -139.6], [60.1, -142.5], [60.3, -145.8], [59.8, -148.0], [59.6, -149.8], [59.1, -151.8], [60.0, -151.6], [61.2, -150.0], [60.6, -151.4], [59.6, -153.6], [58.8, -153.9], [57.5, -156.5], [56.6, -158.4], [56.0, -159.5], [55.0, -162.8], [54.6, -164.9], [54.9, -163.3], [55.9, -160.6], [57.2, -157.6], [58.6, -157.0], [58.9, -158.6], [59.8, -162.0], [60.6, -165.3], [64, -168], [70, -168], [70, -95], [18, -95], [19.1, -104.3], [20.5, -105.4], [21.5, -105.3], [23.2, -106.4], [25.0, -108.0], [26.5, -109.3], [27.9, -110.9], [29.1, -112.2], [30.5, -112.9], [31.4, -113.6], [31.8, -114.8], [31.0, -114.8], [29.9, -114.4], [29.0, -113.5], [28.0, -112.8], [27.3, -112.3], [26.0, -111.3], [24.6, -110.6], [24.15, -110.3], [23.6, -109.6]];
+const ISLANDS = [
+  [[48.4, -123.4], [48.6, -124.5], [49.2, -125.9], [49.9, -127.1], [50.7, -128.4], [50.8, -127.3], [50.1, -125.3], [49.4, -124.4]],
+  [[54.1, -133.0], [53.0, -132.6], [52.1, -131.0], [53.3, -131.7], [54.1, -131.7]],
+  [[58.0, -152.6], [57.5, -152.3], [56.9, -153.9], [57.4, -154.8], [57.9, -153.4]],
+  [[55.6, -134.0], [57.0, -135.8], [58.0, -136.6], [57.3, -134.6], [56.3, -133.3]]
+];
+const PDX = [45.52, -122.68];
+
+function drawBase() {
+  const { W, H } = view;
+  base.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  base.innerHTML = '';
+  const ring = pts => 'M' + pts.map(([la, lo]) => proj(la, lo).map(v => v.toFixed(1)).join(' ')).join('L') + 'Z';
+  const land = document.createElementNS(NS, 'path');
+  land.setAttribute('d', ring(MAINLAND) + ISLANDS.map(ring).join(''));
+  land.setAttribute('fill', C.land); land.setAttribute('stroke', C.coast); land.setAttribute('stroke-width', '1'); land.setAttribute('stroke-linejoin', 'round');
+  base.appendChild(land);
+  /* graticule */
+  const g = document.createElementNS(NS, 'g');
+  g.setAttribute('stroke', C.grat); g.setAttribute('stroke-width', '.8'); g.setAttribute('fill', 'none');
+  for (let lat = 10; lat <= 70; lat += 10) {
+    let d = ''; for (let lon = -200; lon <= -80; lon += 2) { const [x, y] = proj(lat, lon); d += (d ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); }
+    const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); g.appendChild(p);
+  }
+  for (let lon = -180; lon <= -90; lon += 10) {
+    let d = ''; for (let lat = 5; lat <= 75; lat += 2) { const [x, y] = proj(lat, lon); d += (d ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); }
+    const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); g.appendChild(p);
+  }
+  base.appendChild(g);
+  /* graticule labels along the top and left edges */
+  const lab = (txt, x, y, anchor = 'start') => { const t = document.createElementNS(NS, 'text'); t.setAttribute('x', x); t.setAttribute('y', y); t.setAttribute('font-family', 'Overpass Mono, monospace'); t.setAttribute('font-size', '11'); t.setAttribute('fill', '#6B7680'); t.setAttribute('text-anchor', anchor); t.textContent = txt; base.appendChild(t); };
+  for (let lon = -170; lon <= -100; lon += 10) {
+    for (let lat = 75; lat > 0; lat -= .25) { const [x, y] = proj(lat, lon); if (y > 14 && x > 8 && x < W - 30) { lab(`${-lon}°W`, x + 4, 26); break; } }
+  }
+  for (let lat = 30; lat <= 60; lat += 10) {
+    for (let lon = -200; lon < -80; lon += .25) { const [x, y] = proj(lat, lon); if (x > 6 && y > 30 && y < H - 10) { if (y > 60 && y < H - 20) lab(`${lat}°N`, 10, y - 5); break; } }
+  }
+}
+
+/* ───────── pressure systems ───────── */
+const SYS = [
+  { id: 'L', kind: 'l', lat: 52.5, lon: -147, p: 984, amp: -30, sig: .19 },
+  { id: 'H', kind: 'h', lat: 33.5, lon: -134, p: 1031, amp: 18, sig: .3 },
+  { id: 'H2', kind: 'h', lat: 41.5, lon: -114, p: 1024, amp: 9, sig: .2 }
+];
+/* fronts, as offsets in degrees from the low */
+const FRONT = {
+  occl: [[0, 0], [-1.4, 4.5], [-3.6, 8.5], [-6.2, 11.5]],
+  warm: [[-6.2, 11.5], [-6.9, 15.5], [-8.6, 19.5], [-10.4, 22.5]],
+  cold: [[-6.2, 11.5], [-10.2, 11.2], [-14.5, 9.0], [-19.5, 5.0], [-23.5, 0.0]]
+};
+let low = null;
+function placeSystems() {
+  SYS.forEach(s => { [s.x, s.y] = proj(s.lat, s.lon); s.x = Math.max(56, Math.min(view.W - 56, s.x)); s.y = Math.max(56, Math.min(view.H - 56, s.y)); });
+  low = SYS[0];
+  low.front = {};
+  for (const k in FRONT) low.front[k] = FRONT[k].map(([dla, dlo]) => { const [x, y] = proj(low.lat + dla, low.lon + dlo); return [x - low.x, y - low.y]; });
+}
+
+/* smooth a polyline through control points (Catmull-Rom), sampled densely */
+function spline(pts, step = 4) {
+  const out = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+    const len = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+    const n = Math.max(2, Math.ceil(len / step));
+    for (let k = 0; k < n; k++) {
+      const t = k / n, t2 = t * t, t3 = t2 * t;
+      out.push([
+        .5 * (2 * p1[0] + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+        .5 * (2 * p1[1] + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)
+      ]);
+    }
+  }
+  out.push(pts[pts.length - 1]);
+  return out;
+}
+function frontLines() {
+  const res = {};
+  for (const k in low.front) res[k] = spline(low.front[k].map(([dx, dy]) => [low.x + dx, low.y + dy]));
+  return res;
+}
+
+/* the pressure at a point: a background, three systems, and troughs along the fronts */
+function makeField(fl) {
+  const { W, H } = view;
+  const cell = view.small ? 8 : 10;
+  const nx = Math.ceil(W / cell) + 2, ny = Math.ceil(H / cell) + 2;
+  const f = new Float32Array(nx * ny);
+  const scale = Math.max(W, H);
+  const trough = [...fl.occl, ...fl.cold].filter((_, i) => i % 3 === 0);
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+    const x = (i - 1) * cell, y = (j - 1) * cell;
+    let p = 1013 + (y / H) * 3;
+    for (const s of SYS) {
+      const dx = (x - s.x) / scale, dy = (y - s.y) / scale;
+      p += s.amp * Math.exp(-(dx * dx + dy * dy) / (s.sig * s.sig));
+    }
+    let dmin = 1e9;
+    for (let k = 0; k < trough.length; k++) { const d = (x - trough[k][0]) ** 2 + (y - trough[k][1]) ** 2; if (d < dmin) dmin = d; }
+    p -= 3.2 * Math.exp(-dmin / (34 * 34));
+    f[j * nx + i] = p;
+  }
+  return { f, nx, ny, cell };
+}
+function pressureAt(F, x, y) {
+  const gx = x / F.cell + 1, gy = y / F.cell + 1;
+  const i = Math.max(0, Math.min(F.nx - 2, Math.floor(gx))), j = Math.max(0, Math.min(F.ny - 2, Math.floor(gy)));
+  const u = gx - i, v = gy - j, f = F.f, nx = F.nx;
+  return f[j * nx + i] * (1 - u) * (1 - v) + f[j * nx + i + 1] * u * (1 - v) + f[(j + 1) * nx + i] * (1 - u) * v + f[(j + 1) * nx + i + 1] * u * v;
+}
+
+/* marching squares, chained into polylines and smoothed */
+function contours(F, level) {
+  const { f, nx, ny, cell } = F;
+  const segs = [];
+  const P = (i, j) => [(i - 1) * cell, (j - 1) * cell];
+  const lerp = (a, b, va, vb) => { const t = (level - va) / (vb - va); return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; };
+  for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+    const a = f[j * nx + i], b = f[j * nx + i + 1], c = f[(j + 1) * nx + i + 1], d = f[(j + 1) * nx + i];
+    const code = (a > level ? 8 : 0) | (b > level ? 4 : 0) | (c > level ? 2 : 0) | (d > level ? 1 : 0);
+    if (code === 0 || code === 15) continue;
+    const pa = P(i, j), pb = P(i + 1, j), pc = P(i + 1, j + 1), pd = P(i, j + 1);
+    const top = () => lerp(pa, pb, a, b), right = () => lerp(pb, pc, b, c), bottom = () => lerp(pd, pc, d, c), left = () => lerp(pa, pd, a, d);
+    switch (code) {
+      case 1: case 14: segs.push([left(), bottom()]); break;
+      case 2: case 13: segs.push([bottom(), right()]); break;
+      case 3: case 12: segs.push([left(), right()]); break;
+      case 4: case 11: segs.push([top(), right()]); break;
+      case 6: case 9: segs.push([top(), bottom()]); break;
+      case 7: case 8: segs.push([left(), top()]); break;
+      case 5: segs.push([left(), top()]); segs.push([bottom(), right()]); break;
+      case 10: segs.push([left(), bottom()]); segs.push([top(), right()]); break;
+    }
+  }
+  /* chain segments by shared endpoints */
+  const key = p => Math.round(p[0] * 4) + ',' + Math.round(p[1] * 4);
+  const ends = new Map();
+  segs.forEach((s, idx) => { [0, 1].forEach(e => { const k = key(s[e]); if (!ends.has(k)) ends.set(k, []); ends.get(k).push(idx); }); });
+  const used = new Uint8Array(segs.length);
+  const lines = [];
+  for (let s0 = 0; s0 < segs.length; s0++) {
+    if (used[s0]) continue;
+    used[s0] = 1;
+    const line = [segs[s0][0], segs[s0][1]];
+    for (const dir of [1, 0]) {
+      for (;;) {
+        const tail = dir ? line[line.length - 1] : line[0];
+        const cand = (ends.get(key(tail)) || []).find(i => !used[i]);
+        if (cand === undefined) break;
+        used[cand] = 1;
+        const s = segs[cand];
+        const nxt = key(s[0]) === key(tail) ? s[1] : s[0];
+        if (dir) line.push(nxt); else line.unshift(nxt);
+      }
+    }
+    lines.push(line);
+  }
+  return lines.map(l => chaikin(chaikin(l)));
+}
+function chaikin(pts) {
+  if (pts.length < 3) return pts;
+  const out = [pts[0]];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x0, y0] = pts[i], [x1, y1] = pts[i + 1];
+    out.push([x0 * .75 + x1 * .25, y0 * .75 + y1 * .25], [x0 * .25 + x1 * .75, y0 * .25 + y1 * .75]);
+  }
+  out.push(pts[pts.length - 1]);
+  return out;
+}
+
+/* ───────── drawing ───────── */
+function polyLen(pts) { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return L; }
+function pointAt(pts, dist) {
+  let acc = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const seg = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+    if (acc + seg >= dist) { const t = (dist - acc) / seg; return { x: pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * t, y: pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * t, a: Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0]) }; }
+    acc += seg;
+  }
+  const n = pts.length - 1; return { x: pts[n][0], y: pts[n][1], a: Math.atan2(pts[n][1] - pts[n - 1][1], pts[n][0] - pts[n - 1][0]) };
+}
+function drawFront(pts, kind) {
+  const col = kind === 'cold' ? C.cold : kind === 'warm' ? C.warm : C.occl;
+  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+  const L = polyLen(pts), gap = 30, size = 9;
+  let k = 0;
+  for (let d = 16; d < L - 8; d += gap, k++) {
+    const p = pointAt(pts, d);
+    /* pips point to the side the front moves toward: here, east and south */
+    const nxv = -Math.sin(p.a), nyv = Math.cos(p.a);
+    const want = kind === 'cold' ? [1, .35] : kind === 'warm' ? [.45, -1] : [1, -.25];
+    const side = (nxv * want[0] + nyv * want[1]) >= 0 ? 1 : -1;
+    const tri = kind === 'cold' || (kind === 'occl' && k % 2 === 0);
+    ctx.beginPath();
+    if (tri) {
+      const ax = Math.cos(p.a), ay = Math.sin(p.a);
+      ctx.moveTo(p.x - ax * size * .8, p.y - ay * size * .8);
+      ctx.lineTo(p.x + nxv * side * size * 1.15, p.y + nyv * side * size * 1.15);
+      ctx.lineTo(p.x + ax * size * .8, p.y + ay * size * .8);
+    } else {
+      const start = p.a + (side > 0 ? 0 : Math.PI);
+      ctx.arc(p.x, p.y, size * .8, start, start + Math.PI, false);
+    }
+    ctx.closePath(); ctx.fill();
+  }
+}
+function barb(x, y, u, v, kt, col, len = 22) {
+  /* u, v: screen direction the wind blows toward. The staff points to where it comes from. */
+  const sp = Math.hypot(u, v) || 1;
+  const fx = -u / sp, fy = -v / sp;
+  const ex = x + fx * len, ey = y + fy * len;
+  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1.3; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke();
+  /* feathers on the clockwise side of the staff */
+  const px = -fy, py = fx;
+  let r = Math.round(kt / 5) * 5, pos = 0;
+  const step = 4.2;
+  while (r >= 50) { const bx = ex - fx * pos, by = ey - fy * pos; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + px * 10 + fx * -2, by + py * 10 + fy * -2); ctx.lineTo(bx - fx * 5, by - fy * 5); ctx.closePath(); ctx.fill(); pos += 7; r -= 50; }
+  while (r >= 10) { const bx = ex - fx * pos, by = ey - fy * pos; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + px * 10 + fx * 3, by + py * 10 + fy * 3); ctx.stroke(); pos += step; r -= 10; }
+  if (r >= 5) { if (pos === 0) pos = step; const bx = ex - fx * pos, by = ey - fy * pos; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + px * 5.5 + fx * 1.5, by + py * 5.5 + fy * 1.5); ctx.stroke(); }
+}
+function windAt(F, x, y) {
+  const h = 6;
+  const dpx = (pressureAt(F, x + h, y) - pressureAt(F, x - h, y)) / (2 * h);
+  const dpy = (pressureAt(F, x, y + h) - pressureAt(F, x, y - h)) / (2 * h);
+  /* geostrophic in screen space, turned 18 degrees toward low pressure by friction */
+  let u = dpy, v = -dpx;
+  const a = -18 * Math.PI / 180, cu = u * Math.cos(a) - v * Math.sin(a), cvv = u * Math.sin(a) + v * Math.cos(a);
+  const kt = Math.min(65, Math.hypot(dpx, dpy) * 26 * Math.max(view.W, view.H) / 1400 * 10);
+  return { u: cu, v: cvv, kt };
+}
+const BUOYS = [
+  { id: 'DIRY', lat: 47.2, lon: -131.5, name: 'My AI Diary', text: 'Voice-first journaling that still sounds like you. Local-first, zero-knowledge encryption.', url: 'https://diary.ai-created.com/' },
+  { id: 'HUMN', lat: 42.6, lon: -134.5, name: 'Human, Actually', text: 'Tailors your résumé to the job without sounding like a robot wrote it.', url: 'https://ai-created.com/products/human-actually' },
+  { id: 'WGPT', lat: 38.6, lon: -128.5, name: 'WatchGPT', text: 'Realtime ChatGPT voice, on your wrist.', url: 'https://ai-created.com/products/watchgpt' },
+  { id: 'AIUS', lat: 34.6, lon: -124.6, name: 'AI Usage', text: 'Claude Code and Codex usage in your Mac menubar.', url: 'https://ai-created.com/products/ai-usage' },
+  { id: 'CALC', lat: 49.5, lon: -139.5, name: 'Calorie Counter', text: 'The most frictionless food logger yet. Speak, photograph, done.', url: 'https://ai-created.com/products/calorie-counter' },
+  { id: 'VECX', lat: 44.3, lon: -145.5, name: 'Vectronix', text: 'Hardcore arcade space combat. No mercy, no filler.', url: 'https://www.ai-created.com/products/vectronix' },
+  { id: 'RDFT', lat: 55.5, lon: -138.5, name: 'Radial Drift', text: 'One finger. One mistake ends the run.', url: 'https://ai-created.com/games' },
+  { id: 'AVSU', lat: 39.5, lon: -138.5, name: 'Audio Visualizer Suite', text: 'Render-quality video visualizations of your music.', url: 'https://ai-created.com/products/audio-visualizer-suite' },
+  { id: 'CLCK', lat: 31.5, lon: -130.5, name: 'Color Clock', text: 'A 1991 clock design, brought back with care.', url: 'https://ai-created.com/products/color-clock' },
+  { id: 'JMBO', lat: 51.5, lon: -131.0, name: 'Jumbotron Simulator', text: 'Your name in lights at a stadium. A pixel-faithful LED simulation.', url: 'https://ai-created.com/products' }
+];
+function stationCircle(x, y, r, cover) {
+  ctx.fillStyle = '#fff'; ctx.strokeStyle = C.ink; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  if (cover > 0) { ctx.fillStyle = C.ink; ctx.beginPath(); ctx.moveTo(x, y); ctx.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * cover); ctx.closePath(); ctx.fill(); }
+}
+let F = null;
+function render() {
+  const { W, H } = view;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  const fl = frontLines();
+  F = makeField(fl);
+  /* isobars */
+  const labels = [];
+  ctx.font = '600 11px "Overpass Mono", monospace';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (let lev = 960; lev <= 1044; lev += 4) {
+    const lines = contours(F, lev);
+    ctx.strokeStyle = C.iso; ctx.lineWidth = lev % 8 === 0 ? 1.25 : 1; ctx.globalAlpha = .9;
+    for (const l of lines) {
+      ctx.beginPath(); l.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+      const L = polyLen(l);
+      if (L > 180) {
+        for (const frac of [.32, .78]) {
+          const p = pointAt(l, L * frac);
+          if (p.x < 60 || p.x > W - 60 || p.y < 50 || p.y > H - 40) continue;
+          if (labels.some(q => Math.hypot(q.x - p.x, q.y - p.y) < 120)) continue;
+          labels.push({ x: p.x, y: p.y, t: String(lev) });
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  labels.forEach(({ x, y, t }) => {
+    ctx.fillStyle = 'rgba(240, 243, 242, .95)'; ctx.fillRect(x - 17, y - 8, 34, 16);
+    ctx.fillStyle = C.iso; ctx.fillText(t, x, y + 1);
+  });
+  /* winds on a sparse grid */
+  const gap = view.small ? 58 : 74;
+  for (let y = gap * .7; y < H; y += gap) for (let x = gap * .6 + ((y / gap) % 2 ? gap / 2 : 0); x < W; x += gap) {
+    const w = windAt(F, x, y);
+    if (w.kt < 4) continue;
+    barb(x, y, w.u, w.v, w.kt, 'rgba(56, 67, 78, .42)', 18);
+    ctx.fillStyle = 'rgba(56, 67, 78, .42)'; ctx.beginPath(); ctx.arc(x, y, 1.6, 0, Math.PI * 2); ctx.fill();
+  }
+  /* fronts */
+  drawFront(fl.cold, 'cold'); drawFront(fl.warm, 'warm'); drawFront(fl.occl, 'occl');
+  /* buoys: the lab */
+  ctx.font = '600 10.5px "Overpass Mono", monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  BUOYS.forEach((b, i) => {
+    [b.x, b.y] = proj(b.lat, b.lon);
+    if (b.x < 10 || b.x > W - 10 || b.y < 10 || b.y > H - 10) { b.off = true; return; }
+    b.off = false;
+    const w = windAt(F, b.x, b.y);
+    barb(b.x, b.y, w.u, w.v, w.kt, C.ink, 24);
+    stationCircle(b.x, b.y, 5.5, [0, .25, .5, .75, 1][i % 5]);
+    ctx.fillStyle = C.ink; ctx.fillText(b.id, b.x + 9, b.y + 16);
+  });
+  /* Portland */
+  const [px, py] = proj(PDX[0], PDX[1]);
+  const pw = windAt(F, px, py);
+  barb(px, py, pw.u, pw.v, pw.kt, C.ink, 30);
+  stationCircle(px, py, 8, .75);
+  const pp = pressureAt(F, px, py);
+  ctx.font = '700 13px "Overpass Mono", monospace';
+  ctx.fillStyle = C.warm; ctx.textAlign = 'right'; ctx.fillText('58', px - 13, py - 6);
+  ctx.fillStyle = C.dew; ctx.fillText('51', px - 13, py + 16);
+  ctx.fillStyle = C.ink; ctx.textAlign = 'left'; ctx.fillText(String(Math.round(pp * 10) % 1000).padStart(3, '0'), px + 13, py - 6);
+  ctx.font = '800 14px Overpass, sans-serif'; ctx.fillText('PDX', px + 13, py + 16);
+  /* keep the H and L handles on their systems */
+  SYS.forEach(s => { if (s.btn) { s.btn.style.left = s.x + 'px'; s.btn.style.top = s.y + 'px'; } });
+  BUOYS.forEach(b => { if (b.btn) { b.btn.style.display = b.off ? 'none' : ''; b.btn.style.left = b.x + 'px'; b.btn.style.top = b.y + 'px'; } });
+}
+let raf = 0;
+const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; render(); }); };
+
+/* ───────── handles: drag with a pointer, or move with arrow keys ───────── */
+function buildHandles() {
+  handles.innerHTML = '';
+  SYS.forEach(s => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'sys sys--' + s.kind;
+    b.innerHTML = `<b>${s.kind === 'h' ? 'H' : 'L'}</b><span>${s.p}</span>`;
+    b.setAttribute('aria-label', `${s.kind === 'h' ? 'High' : 'Low'} pressure, ${s.p} hectopascals. Drag, or use the arrow keys, to move it.`);
+    handles.appendChild(b);
+    s.btn = b;
+    let drag = null;
+    b.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, sx: s.x, sy: s.y }; b.setPointerCapture(e.pointerId); b.classList.add('is-drag'); });
+    b.addEventListener('pointermove', e => {
+      if (!drag) return;
+      s.x = Math.max(20, Math.min(view.W - 20, drag.sx + e.clientX - drag.x));
+      s.y = Math.max(20, Math.min(view.H - 20, drag.sy + e.clientY - drag.y));
+      schedule();
+    });
+    const end = () => { drag = null; b.classList.remove('is-drag'); };
+    b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
+    b.addEventListener('keydown', e => {
+      const d = e.shiftKey ? 40 : 12;
+      const mv = { ArrowLeft: [-d, 0], ArrowRight: [d, 0], ArrowUp: [0, -d], ArrowDown: [0, d] }[e.key];
+      if (!mv) return;
+      e.preventDefault();
+      s.x = Math.max(20, Math.min(view.W - 20, s.x + mv[0])); s.y = Math.max(20, Math.min(view.H - 20, s.y + mv[1]));
+      schedule();
+    });
+  });
+  BUOYS.forEach(bu => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'buoy';
+    b.setAttribute('aria-label', `Buoy ${bu.id}: ${bu.name}. ${bu.text}`);
+    const show = () => {
+      tip.innerHTML = `<code>BUOY ${bu.id}</code><b>${bu.name}</b>${bu.text}`;
+      const left = Math.min(view.W - 270, Math.max(8, bu.x + 16)), top = Math.max(8, bu.y - 86);
+      tip.style.left = left + 'px'; tip.style.top = top + 'px';
+      tip.classList.add('is-on');
+    };
+    const hide = () => tip.classList.remove('is-on');
+    b.addEventListener('pointerenter', show); b.addEventListener('pointerleave', hide);
+    b.addEventListener('focus', show); b.addEventListener('blur', hide);
+    b.addEventListener('click', () => window.open(bu.url, '_blank', 'noopener'));
+    handles.appendChild(b);
+    bu.btn = b;
+  });
+}
+
+/* ───────── sizing ───────── */
+function size() {
+  const r = chart.getBoundingClientRect();
+  const W = Math.round(r.width), H = Math.round(r.height);
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  fit(W, H);
+  placeSystems();
+  drawBase();
+  render();
+}
+
+/* ───────── issuance time, in the style of a text product ───────── */
+function stamp() {
+  const now = new Date();
+  const pt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: '2-digit', hour12: true, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZoneName: 'short' }).formatToParts(now);
+  const p = {}; pt.forEach(x => p[x.type] = x.value);
+  const hhmm = `${p.hour}${p.minute}`;
+  document.getElementById('afd-time').textContent = `${hhmm} ${p.dayPeriod} ${p.timeZoneName} ${p.weekday} ${p.month} ${p.day} ${p.year}`;
+  const z = n => String(n).padStart(2, '0');
+  const utc = `${z(now.getUTCHours())}${z(now.getUTCMinutes())}Z`;
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], mons = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.getElementById('valid').textContent = `Valid ${utc} ${days[now.getUTCDay()]} ${now.getUTCDate()} ${mons[now.getUTCMonth()]} ${now.getUTCFullYear()}. A chart of a career, not of the weather.`;
+  document.getElementById('valid-short').textContent = `${z(now.getUTCHours())}Z`;
+  document.getElementById('afd-ddhh').textContent = `${z(now.getUTCDate())}${z(now.getUTCHours())}${z(now.getUTCMinutes())}`;
+}
+
+/* ───────── buoy table ───────── */
+const tbody = document.querySelector('#buoy-table tbody');
+BUOYS.forEach(b => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${b.id}</td><td><a href="${b.url}" target="_blank" rel="noopener">${b.name}</a></td><td>${b.text}</td>`;
+  tbody.appendChild(tr);
+});
+
+if (!matchMedia('(hover: hover)').matches) document.getElementById('hint').textContent = 'Drag the H and the L. The isobars and winds follow. Tap a buoy for a product from the lab.';
+stamp(); setInterval(stamp, 30000);
+buildHandles();
+size();
+if (document.fonts) document.fonts.ready.then(() => { drawBase(); render(); });
+let lastW = innerWidth, rt = 0;
+addEventListener('resize', () => {
+  if (Math.abs(innerWidth - lastW) < 2) return;
+  lastW = innerWidth; clearTimeout(rt); rt = setTimeout(size, 150);
+});
+})();
+</script>
+</body>
+</html>

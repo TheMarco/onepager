@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kintsugi | Marco van Hylckama Vlieg</title>
+<meta name="description" content="Marco van Hylckama Vlieg, senior product designer and AI-native builder, as a mended bowl. Every break in the career is filled with gold. Designed by Muse Wonder 1.0.">
+<meta name="designer" content="Muse Wonder 1.0">
+<meta name="theme-color" content="#1C1B19">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Kintsugi. Page 45. A career as a mended bowl. */
+:root{
+  --char:#1C1B19; --char-2:#26241F; --char-3:#322F28;
+  --bone:#F2EDE3; --bone-2:#CFC6B4; --bone-3:#8F8672;
+  --gold:#D4A93C; --gold-2:#EBCB6B;
+  --rule:rgba(242,237,227,.14); --rule-2:rgba(242,237,227,.3);
+  --gutter:clamp(16px,4vw,56px); --max:1360px;
+  --serif:'Noto Serif JP',Georgia,serif;
+  --sans:'Noto Sans JP','Helvetica Neue',Arial,sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--char);color:var(--bone);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:var(--char)}
+a{color:inherit}
+canvas,svg{display:block}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--gutter)}
+.skip{position:absolute;left:12px;top:-60px;background:var(--bone);color:var(--char);padding:10px 14px;z-index:30;text-decoration:none;transition:top .2s var(--ease)}
+.skip:focus{top:12px}
+.top{display:flex;align-items:baseline;gap:28px;padding-block:18px;font-size:15px;border-bottom:1px solid var(--rule-2)}
+.top .mark{text-decoration:none;font-weight:700}
+.top .mark span{font-weight:400;color:var(--bone-3);margin-left:10px;font-size:13px}
+.top nav{display:flex;gap:24px;margin-left:auto}
+.top nav a,.top .back{text-decoration:none;color:var(--bone-2);transition:color .2s var(--ease)}
+.top nav a:hover,.top .back:hover{color:var(--gold-2)}
+.top .back{padding-left:24px;border-left:1px solid var(--rule-2)}
+@media (max-width:860px){.top nav{display:none}.top .back{margin-left:auto;padding-left:0;border:0}.top .mark span{display:none}}
+.hero{display:grid;grid-template-columns:1fr}
+@media (min-width:1000px){.hero{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)}}
+.hero__text{padding:clamp(36px,5vw,72px) var(--gutter) clamp(40px,5vw,64px)}
+@media (min-width:1000px){.hero__text{padding-left:max(var(--gutter),calc((100vw - var(--max))/2 + var(--gutter)))}}
+.hero h1{margin:0;font-family:var(--serif);font-weight:600;font-size:clamp(54px,6.8vw,106px);line-height:.95;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--gold-2)}
+.hero__sub{margin:22px 0 0;font-size:clamp(20px,2vw,26px);line-height:1.35;max-width:30ch}
+.hero__body{margin:16px 0 0;color:var(--bone-2);max-width:46ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px 36px;margin:32px 0 0;padding:16px 0 0;border-top:1px solid var(--rule-2);font-size:13px;color:var(--bone-3)}
+.facts b{display:block;font-family:var(--sans);font-size:28px;line-height:1.1;color:var(--bone)}
+.bowl-wrap{position:relative;background:radial-gradient(circle at 50% 42%,#2E2A20 0%,#1C1B19 68%);min-height:560px;overflow:hidden}
+@media (max-width:999px){.bowl-wrap{height:72svh;min-height:480px}}
+.bowl-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
+.bowl-ui{position:absolute;left:16px;right:16px;bottom:16px;z-index:3;display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:rgba(28,27,25,.88);border:1px solid var(--rule-2);padding:10px 14px}
+.bowl-ui button{background:var(--gold);color:var(--char);border:0;padding:9px 16px;font-weight:700;cursor:pointer}
+.bowl-ui button:hover{background:var(--gold-2)}
+.bowl-ui button:active{transform:translateY(1px)}
+.bowl-ui span{font-size:13.5px;color:var(--bone-2)}
+</style>
+</head>
+<body>
+<a class="skip" href="#breaks">Skip to the breaks</a>
+<header class="top wrap">
+  <a class="mark" href="#top" id="top">Marco van Hylckama Vlieg<span>BOWL MVHV-45</span></a>
+  <nav aria-label="Sections"><a href="#breaks">Breaks</a><a href="#method">Method</a><a href="#collection">Collection</a><a href="#contact">Contact</a></nav>
+  <a class="back" href="index.html#wonder-pages">All directions</a>
+</header>
+<main>
+<section class="hero" aria-labelledby="name">
+  <div class="hero__text">
+    <h1 id="name">Marco van<br>Hylckama <em>Vlieg</em></h1>
+    <p class="hero__sub">Senior product designer and AI-native builder, mended in gold.</p>
+    <p class="hero__body">Kintsugi repairs broken pottery with lacquer mixed with gold. The break is not hidden. It is the most valuable part of the bowl, because it records where the bowl has been. Careers break in the same places: a company ends, a platform shifts, a craft has to be relearned. This bowl has five breaks. All of them hold.</p>
+    <dl class="facts">
+      <div><dt>Breaks</dt><dd><b>5</b></dd></div>
+      <div><dt>Gold</dt><dd><b>28 yrs</b></dd></div>
+      <div><dt>Products</dt><dd><b>18 whole</b></dd></div>
+      <div><dt>Kiln</dt><dd><b>Portland</b></dd></div>
+    </dl>
+  </div>
+  <div class="bowl-wrap" id="bowl-wrap">
+    <canvas id="bowl" role="img" aria-label="A dark ceramic bowl crossed by bright gold repair lines. Five main fractures meet near the center. The gold lines draw themselves slowly, then hold."></canvas>
+    <div class="bowl-ui">
+      <button type="button" id="remend">Break and mend again</button>
+      <span id="bowl-note" aria-live="polite">The bowl mends itself. No two mendings are alike.</span>
+    </div>
+  </div>
+</section>
+<style>
+.sec{padding-block:clamp(64px,9vw,130px)}
+.sec h2{margin:0;font-family:var(--serif);font-weight:600;font-size:clamp(40px,5vw,74px);line-height:1;max-width:20ch}
+.sec h2 em{font-style:normal;color:var(--gold-2)}
+.lede{margin:20px 0 0;font-size:clamp(20px,2vw,26px);line-height:1.4;max-width:54ch}
+.prose p{margin:0 0 16px;color:var(--bone-2);max-width:62ch}
+.rule-top{background:linear-gradient(var(--rule-2),var(--rule-2)) var(--gutter) 0 / calc(100% - 2*var(--gutter)) 1px no-repeat}
+.breaks{display:grid;grid-template-columns:1fr;gap:0;margin-top:48px;border-top:1px solid var(--rule-2)}
+.break-row{display:grid;grid-template-columns:1fr;gap:6px 32px;padding:26px 0 28px;border-bottom:1px solid var(--rule);transition:background .25s var(--ease)}
+@media (min-width:900px){.break-row{grid-template-columns:9em 1fr 1.4fr;align-items:start}}
+.break-row:hover{background:rgba(212,169,60,.06)}
+.break-row .when{color:var(--bone-3);font-size:15px;padding-top:4px}
+.break-row h3{margin:0;font-family:var(--serif);font-size:28px;line-height:1.2}
+.break-row .role{margin:2px 0 0;color:var(--bone-2);font-size:15px}
+.break-row p{margin:0;color:var(--bone-2)}
+.break-row .mend{color:var(--gold-2)}
+.caps{display:grid;grid-template-columns:1fr;margin-top:48px;border-top:1px solid var(--rule-2)}
+@media (min-width:760px){.caps{grid-template-columns:1fr 1fr;column-gap:56px}}
+@media (min-width:1140px){.caps{grid-template-columns:1fr 1fr 1fr}}
+.caps div{padding:24px 0 26px;border-bottom:1px solid var(--rule)}
+.caps h3{margin:0 0 8px;font-size:23px;line-height:1.2}
+.caps p{margin:0;color:var(--bone-2);font-size:16px}
+.collection{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:40px 28px;margin-top:48px}
+.vessel{text-decoration:none;display:block}
+.vessel__bowl{height:120px;border:1px solid var(--rule-2);overflow:hidden;background:var(--char-2)}
+.vessel__bowl canvas{width:100%;height:100%}
+.vessel h3{margin:14px 0 4px;font-size:21px;display:flex;justify-content:space-between;gap:10px}
+.vessel h3 span{color:var(--gold-2);transition:transform .2s var(--ease)}
+.vessel:hover h3 span{transform:translate(2px,-2px)}
+.vessel p{margin:0;color:var(--bone-2);font-size:15.5px}
+.vessel small{display:block;margin-top:6px;font-size:12px;color:var(--bone-3)}
+.cta{display:inline-flex;gap:12px;align-items:center;margin-top:26px;background:var(--gold);color:var(--char);text-decoration:none;padding:15px 24px;font-size:17px;font-weight:700;transition:background .2s var(--ease)}
+.cta:hover{background:var(--gold-2)}
+.cta:active{transform:translateY(1px)}
+.links{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule-2)}
+.links li{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--rule);font-size:16px}
+.links li span{color:var(--bone-3);font-size:13px}
+.links a{text-decoration:none}
+.links a:hover{color:var(--gold-2)}
+footer.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 32px;padding-block:26px 40px;font-size:14px;color:var(--bone-3)}
+footer.foot a{color:var(--bone-2)}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.is-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+<section class="sec wrap rule-top" id="breaks" aria-labelledby="breaks-h">
+  <h2 id="breaks-h">Five breaks, <em>all holding.</em></h2>
+  <p class="lede">Each row names a break: the moment one period ended and the next had to be joined to it. The gold line in each row is what the joining produced.</p>
+  <div class="breaks" id="break-list"></div>
+</section>
+<section class="sec wrap rule-top" id="method" aria-labelledby="method-h">
+  <h2 id="method-h">The repair <em>method.</em></h2>
+  <div class="prose" style="margin-top:28px">
+    <p>Western repair hides the seam. Kintsugi does the opposite, because the seam is information. A hiring manager does not need a career without breaks. Every long career has them. What matters is whether the joins are stronger than the original wall, and whether the person can show you the gold.</p>
+    <p>AI is the newest break, and the widest. Production skills that took twenty years to fire in the kiln suddenly needed rejoining to a model that drafts, codes and critiques. The mend on this bowl is still wet. It is also, so far, the strongest seam in the piece.</p>
+  </div>
+  <div class="caps">
+    <div><h3>AI-native product design</h3><p>Products where the model is the interaction: voice, agents, ambient assistance. Not a chat panel bolted onto an old screen.</p></div>
+    <div><h3>Design engineering</h3><p>Prototypes that behave like real software because they are real software, built end to end by one person.</p></div>
+    <div><h3>Zero to one</h3><p>An ambiguous brief carried through research, framing, design, prototype and launch, before anyone has written a roadmap.</p></div>
+    <div><h3>Enterprise UX modernization</h3><p>Cart, checkout, account and internal tools rebuilt into systems people choose to use, at retail scale.</p></div>
+    <div><h3>Internal AI tooling</h3><p>Copilots, prompt libraries, synthetic research setups and workflow tools that teams use every day.</p></div>
+    <div><h3>Leadership and enablement</h3><p>Prototyping teams built and led. AI practice taught inside a design organization. IC, lead or director.</p></div>
+  </div>
+</section>
+<section class="sec wrap rule-top" id="collection" aria-labelledby="coll-h">
+  <h2 id="coll-h">The <em>collection.</em></h2>
+  <p class="lede">Ten of eighteen vessels from AI-Created, each with its own hairline of gold. The full shelf is at the lab.</p>
+  <div class="collection" id="vessel-grid"></div>
+  <p><a href="https://ai-created.com/products" target="_blank" rel="noopener" style="color:var(--gold-2)">Full shelf at ai-created.com</a></p>
+</section>
+<section class="sec wrap rule-top" id="contact" aria-labelledby="contact-h">
+  <h2 id="contact-h">Commission a <em>mending.</em></h2>
+  <p class="lede">Open to senior IC, lead and director roles in product design, design engineering and AI. Best results on ambiguous, zero-to-one problems where the model is the interaction.</p>
+  <a class="cta" href="mailto:marcovhv@gmail.com">marcovhv@gmail.com <span aria-hidden="true">&#8599;</span></a>
+  <ul class="links" style="margin-top:48px">
+    <li><span>LAB</span><a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a></li>
+    <li><span>PROFESSIONAL</span><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a></li>
+    <li><span>SOCIAL</span><a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x.com/AIandDesign</a></li>
+    <li><span>VIDEO</span><a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">@AIandDesign on YouTube</a></li>
+  </ul>
+</section>
+</main>
+<footer class="foot wrap"><span>Bowl MVHV-45. Food safe. History visible.</span><span>Designed by <b>Muse Wonder 1.0</b>. One HTML file, no frameworks.</span><a href="index.html#wonder-pages">All directions</a></footer>
+<script>
+(function(){
+'use strict';
+var BREAKS=[
+ {when:'1998-2005',co:'Endemol',role:'UX & Engineering Lead',desc:'Multilingual content systems and large web platforms across an international entertainment group.',mend:'The engineering seam. Everything after it is joined to this wall.'},
+ {when:'2005-2013',co:'Yahoo!',role:'Director of UX Prototyping, Senior UX Manager',desc:'Built and led prototyping teams across offices and product lines. Rebrand and personalization work, a scalable design process, senior prototypers mentored.',mend:'The leadership seam. The bowl learned to hold work by other hands.'},
+ {when:'2013-2017',co:'Google',role:'Senior UX Engineer, Prototyper',desc:'High-fidelity prototypes for Google Cloud AI, Google Assistant and Android that moved research, alignment and decisions forward.',mend:'The research seam. Prototypes became evidence, not decoration.'},
+ {when:'2017-2021',co:'Walmart Labs',role:'Principal Product Designer, Design Technologist',desc:'Mobile, voice and personalization during the digital transformation. Recommendation systems turned into interfaces that need no explanation.',mend:'The scale seam. Retail volume tested every join in the piece.'},
+ {when:'2021-now',co:'Kohl\u2019s',role:'Senior Product Designer, Generative AI Specialist',desc:'Cart, checkout, wallet, account and in-store self-checkout. AI tooling, prompt libraries and training for the design organization.',mend:'The gold seam. AI practice, poured while still working the counter.'},
+ {when:'Always',co:'AI-Created',role:'Independent product lab',desc:'AI tools, design utilities, music, video and arcade games, built end to end and tested in public. Eighteen shipped.',mend:'The vein through the whole bowl. It was never a side project.'}
+];
+var list=document.getElementById('break-list');
+BREAKS.forEach(function(b){
+ var row=document.createElement('div'); row.className='break-row reveal';
+ row.innerHTML='<div class="when">'+b.when+'</div><div><h3>'+b.co+'</h3><p class="role">'+b.role+'</p></div><div><p>'+b.desc+'</p><p class="mend">'+b.mend+'</p></div>';
+ list.appendChild(row);
+});
+var PRODUCTS=[
+ {n:'My AI Diary',t:'Voice-first journaling that still sounds like you. Local-first, zero-knowledge encryption.',u:'https://diary.ai-created.com/',k:'Journal'},
+ {n:'Human, Actually',t:'Tailors your resume to the job without sounding like a robot wrote it.',u:'https://ai-created.com/products/human-actually',k:'Career tool'},
+ {n:'WatchGPT',t:'Realtime ChatGPT voice, on your wrist.',u:'https://ai-created.com/products/watchgpt',k:'Voice'},
+ {n:'AI Usage',t:'Claude Code and Codex usage in your Mac menubar.',u:'https://ai-created.com/products/ai-usage',k:'Utility'},
+ {n:'Calorie Counter',t:'The most frictionless food logger yet. Speak, photograph, done.',u:'https://ai-created.com/products/calorie-counter',k:'Health'},
+ {n:'Vectronix',t:'Hardcore arcade space combat. No mercy, no filler.',u:'https://www.ai-created.com/products/vectronix',k:'Game'},
+ {n:'Radial Drift',t:'One finger. One mistake ends the run.',u:'https://ai-created.com/games',k:'Game'},
+ {n:'Audio Visualizer Suite',t:'Render-quality video visualizations of your music.',u:'https://ai-created.com/products/audio-visualizer-suite',k:'Music tool'},
+ {n:'Color Clock',t:'A 1991 clock design, brought back with care.',u:'https://ai-created.com/products/color-clock',k:'Object'},
+ {n:'Jumbotron Simulator',t:'Your name in lights at a stadium. A pixel-faithful LED simulation.',u:'https://ai-created.com/products',k:'Simulation'}
+];
+var grid=document.getElementById('vessel-grid'), vessels=[];
+PRODUCTS.forEach(function(p){
+ var a=document.createElement('a'); a.className='vessel reveal'; a.href=p.u; a.target='_blank'; a.rel='noopener';
+ a.innerHTML='<div class="vessel__bowl"><canvas role="img" aria-label="Mended vessel pattern for '+p.n+'"></canvas></div><h3>'+p.n+'<span aria-hidden="true">\u2197</span></h3><p>'+p.t+'</p><small>'+p.k+'</small>';
+ grid.appendChild(a); vessels.push([a.querySelector('canvas'),p.n]);
+});
+function hash(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function rng(seed){return function(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
+vessels.forEach(function(pair){
+ var c=pair[0],x=c.getContext('2d'),r=rng(hash(pair[1]));c.width=480;c.height=240;
+ x.fillStyle='#26241F';x.fillRect(0,0,480,240);
+ x.strokeStyle='rgba(212,169,60,.9)';x.lineWidth=2;
+ for(var i=0;i<3;i++){x.beginPath();var sx=40+r()*400;x.moveTo(sx,0);x.bezierCurveTo(sx+24,70,sx-20,150,sx+12,240);x.stroke();}
+ x.fillStyle='rgba(242,237,227,.08)';x.beginPath();x.ellipse(240,120,150,62,0,0,7);x.fill();
+});
+var cv=document.getElementById('bowl'), ctx=cv.getContext('2d'), wrap=document.getElementById('bowl-wrap');
+var note=document.getElementById('bowl-note'), reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var seed=42045, cracks=[], t0=null, DPR=1;
+function buildCracks(){
+ var r=rng(seed); cracks=[];
+ var cx=0.5, cy=0.44;
+ for(var i=0;i<5;i++){
+  var ang=(i/5)*Math.PI*2 + r()*0.7, pts=[[cx,cy]], x=cx,y=cy, a=ang;
+  for(var s=0;s<5;s++){a+=(r()-0.5)*0.7; var len=0.09+r()*0.11; x+=Math.cos(a)*len; y+=Math.sin(a)*len*0.82; pts.push([x,y]);}
+  cracks.push(pts);
+ }
+ for(var j=0;j<4;j++){var a2=r()*Math.PI*2;var px=cx+Math.cos(a2)*0.18, py=cy+Math.sin(a2)*0.14;var pts2=[[px,py]];var x2=px,y2=py,aa=a2+1.2;for(var s2=0;s2<3;s2++){aa+=(r()-0.5)*0.8;x2+=Math.cos(aa)*0.08;y2+=Math.sin(aa)*0.07;pts2.push([x2,y2]);}cracks.push(pts2);}
+}
+function drawBowl(prog){
+ var w=cv.width/DPR,h=cv.height/DPR; if(!w)return; ctx.save(); ctx.scale(DPR,DPR); ctx.clearRect(0,0,w,h);
+ var cx=w/2, cy=h*0.46, R=Math.min(w,h)*0.335;
+ var g=ctx.createRadialGradient(cx-R*0.3,cy-R*0.35,10,cx,cy,R*1.15); g.addColorStop(0,'#454033'); g.addColorStop(.55,'#2A2721'); g.addColorStop(1,'#14120F');
+ ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,R,0,7); ctx.fill();
+ ctx.strokeStyle='rgba(242,237,227,.4)'; ctx.lineWidth=1.5; ctx.stroke();
+ ctx.beginPath(); ctx.arc(cx,cy,R*0.88,0,7); ctx.fillStyle='rgba(0,0,0,.38)'; ctx.fill();
+ ctx.beginPath(); ctx.arc(cx,cy,R*0.88,0,7); ctx.strokeStyle='rgba(242,237,227,.16)'; ctx.lineWidth=1; ctx.stroke();
+ var rx=R, ry=R;
+ ctx.lineCap='round';
+ cracks.forEach(function(pts,ci){
+  var total=pts.length-1, drawn=prog*(total+1.5)-ci*0.12; if(drawn<=0)return;
+  ctx.strokeStyle=ci<5?'#EBCB6B':'rgba(212,169,60,.8)'; ctx.lineWidth=ci<5?4:2.5;
+  ctx.shadowColor='rgba(212,169,60,.55)'; ctx.shadowBlur=prog>=1?8:3;
+  ctx.beginPath();
+  for(var i=0;i<pts.length;i++){
+   var px=cx+(pts[i][0]-0.5)*rx*2, py=cy+(pts[i][1]-0.44)*ry*2.1;
+   if(i===0)ctx.moveTo(px,py);
+   else{
+    var prev=pts[i-1], ppx=cx+(prev[0]-0.5)*rx*2, ppy=cy+(prev[1]-0.44)*ry*2.1, seg=Math.min(1,Math.max(0,drawn-(i-1)));
+    ctx.lineTo(ppx+(px-ppx)*seg,ppy+(py-ppy)*seg); if(seg<1)break;
+   }
+  }
+  ctx.stroke(); ctx.shadowBlur=0;
+ });
+ ctx.fillStyle='rgba(242,237,227,.8)'; ctx.font='500 12px "Noto Sans JP",sans-serif';
+ ctx.fillText('HAND-THROWN · WOOD-FIRED · GOLD LACQUER',16,26);
+ ctx.restore();
+}
+function fit(){var r=wrap.getBoundingClientRect();DPR=Math.min(2,window.devicePixelRatio||1);cv.width=Math.max(300,r.width)*DPR;cv.height=Math.max(420,r.height)*DPR;drawBowl(reduce?1:Math.min(1,((performance.now()-(t0||performance.now()))/2600)));}
+function animate(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/2600);drawBowl(p);if(p<1)requestAnimationFrame(animate);else note.textContent='Mended. Five breaks, all holding. Break it again if you like.';}
+document.getElementById('remend').addEventListener('click',function(){seed=(seed*9301+49297)%233280+7;buildCracks();t0=null;note.textContent='Broken. Mending with fresh gold.';if(reduce)drawBowl(1);else requestAnimationFrame(animate);});
+buildCracks();
+new ResizeObserver(fit).observe(wrap); fit();
+if(reduce)drawBowl(1);else requestAnimationFrame(animate);
+var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('is-in');io.unobserve(en.target);}});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>

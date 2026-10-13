@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jacquard | Marco van Hylckama Vlieg</title>
+<meta name="description" content="Marco van Hylckama Vlieg, senior product designer and AI-native builder, as a woven cloth. Every thread on the page is drawn live by a shader. Designed by Opus 5.5.">
+<meta name="designer" content="Opus 5.5">
+<meta name="theme-color" content="#ECE5D6">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&display=swap" rel="stylesheet">
+<style>
+/* Jacquard. Page 38. A portfolio woven from rules. */
+:root {
+  --paper: #ECE5D6;
+  --paper-2: #E3D9C5;
+  --sheet: #F4EFE4;
+  --ink: #1C2030;
+  --ink-2: #393C4A;
+  --ink-3: #5A5B66;
+  --rule: rgba(28, 32, 48, .13);
+  --rule-2: rgba(28, 32, 48, .26);
+  --madder: #973424;
+  --madder-deep: #7A2919;
+  --indigo: #26346F;
+  --gutter: clamp(16px, 4vw, 56px);
+  --max: 1320px;
+  --serif: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 24px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(60, 45, 20, .022) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(60, 45, 20, .02) 0 1px, transparent 1px 4px);
+  color: var(--ink);
+  font: 400 18px/1.6 var(--serif);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+::selection { background: var(--indigo); color: var(--sheet); }
+a { color: inherit; }
+img, canvas, svg { display: block; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--madder); outline-offset: 3px; border-radius: 1px; }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gutter); }
+.skip { position: absolute; left: 12px; top: -60px; background: var(--ink); color: var(--sheet); padding: 10px 14px; z-index: 20; text-decoration: none; transition: top .2s var(--ease); }
+.skip:focus { top: 12px; }
+
+/* masthead */
+.masthead { display: flex; align-items: baseline; gap: 28px; padding-top: 22px; padding-bottom: 20px; font-size: 16px; }
+.mark { text-decoration: none; font-weight: 500; letter-spacing: -.005em; }
+.masthead nav { display: flex; gap: 22px; margin-left: auto; }
+.masthead nav a, .back { text-decoration: none; color: var(--ink-2); transition: color .2s var(--ease); }
+.masthead nav a:hover, .back:hover { color: var(--madder); }
+.back { padding-left: 22px; border-left: 1px solid var(--rule-2); }
+@media (max-width: 860px) { .masthead nav { display: none; } .back { margin-left: auto; border: 0; padding: 0; } }
+
+/* hero swatch */
+.hero { padding-top: 8px; }
+.swatch { margin: 0; }
+.stage { position: relative; touch-action: pan-y; }
+.stage canvas.cloth { width: 100%; height: auto; filter: drop-shadow(0 1px 0 rgba(40, 30, 15, .10)) drop-shadow(0 22px 26px rgba(55, 40, 20, .16)); }
+.tester {
+  position: absolute; left: 0; top: 0; width: 196px; height: 196px;
+  pointer-events: none; opacity: 0; transform: scale(.96);
+  transition: opacity .18s var(--ease), transform .18s var(--ease);
+  box-shadow: 0 0 0 1px rgba(20, 22, 30, .55), 0 0 0 7px rgba(236, 229, 214, .92), 0 0 0 8px rgba(20, 22, 30, .4), 0 18px 34px rgba(20, 15, 5, .28);
+  background: #222;
+}
+.tester.is-on { opacity: 1; transform: none; }
+.tester canvas { width: 100%; height: 100%; }
+.tester::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 252, 240, .9) 0 1px, transparent 1px 16px) left bottom / 100% 6px no-repeat,
+    repeating-linear-gradient(0deg, rgba(255, 252, 240, .9) 0 1px, transparent 1px 16px) left top / 6px 100% no-repeat;
+  mix-blend-mode: normal;
+}
+.swatch figcaption { display: flex; flex-wrap: wrap; gap: 6px 28px; justify-content: space-between; margin-top: 14px; font-size: 15px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.hero__intro { display: grid; grid-template-columns: 1fr; gap: 20px 64px; padding: clamp(40px, 6vw, 84px) 0 clamp(56px, 8vw, 120px); }
+@media (min-width: 980px) { .hero__intro { grid-template-columns: 1.5fr 1fr; align-items: end; } }
+.lede { margin: 0; font-size: clamp(27px, 3.3vw, 44px); line-height: 1.18; letter-spacing: -.012em; font-weight: 400; max-width: 22ch; max-width: 26ch; }
+.lede em { color: var(--indigo); }
+.hero__aside { margin: 0; color: var(--ink-2); max-width: 44ch; }
+
+/* sections */
+.sec { border-top: 1px solid transparent; background: linear-gradient(var(--rule-2), var(--rule-2)) var(--gutter) 0 / calc(100% - 2 * var(--gutter)) 1px no-repeat; padding-block: clamp(56px, 8vw, 112px); }
+.sec h2 { font-weight: 400; font-size: clamp(36px, 5.2vw, 70px); line-height: 1.02; letter-spacing: -.022em; margin: 0 0 28px; max-width: 16ch; }
+.sec h2 em { font-style: italic; }
+.prose { max-width: 60ch; }
+.prose p { margin: 0 0 18px; color: var(--ink-2); }
+.prose p:last-child { margin-bottom: 0; }
+
+/* cards */
+.cards-grid { display: grid; grid-template-columns: 1fr; gap: 44px 72px; }
+@media (min-width: 1000px) { .cards-grid { grid-template-columns: 1fr 1.05fr; } }
+.quote { margin: 0 0 36px; padding: 0; }
+.quote p { margin: 0; font-size: clamp(24px, 2.5vw, 32px); line-height: 1.28; font-style: italic; letter-spacing: -.01em; color: var(--ink); }
+.quote footer { margin-top: 14px; font-size: 16px; color: var(--ink-3); }
+.chain { width: 100%; height: auto; overflow: visible; }
+.chain .card { cursor: default; }
+.chain .card-bg { fill: #D7C49C; stroke: rgba(70, 50, 20, .35); stroke-width: .6; transition: fill .2s var(--ease); }
+.chain .card:hover .card-bg, .chain .card:focus-visible .card-bg, .chain .card.is-on .card-bg { fill: #E2D1A9; }
+.chain .card:focus-visible { outline: none; }
+.chain .card:focus-visible .card-bg { stroke: var(--madder); stroke-width: 1.6; }
+.chain .hole { fill: #2A2622; }
+.chain .lace { fill: none; stroke: #6B5B44; stroke-width: 1; }
+.chain-cap { margin-top: 14px; font-size: 15.5px; color: var(--ink-3); min-height: 3.2em; font-variant-numeric: tabular-nums; }
+
+/* draft */
+.draft-head { display: grid; grid-template-columns: 1fr; gap: 24px 72px; margin-bottom: 44px; }
+@media (min-width: 1000px) { .draft-head { grid-template-columns: 1fr 1.05fr; } }
+.controls { display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: baseline; margin: 0 0 26px; padding: 0; border: 0; }
+.controls legend { float: left; margin-right: 18px; color: var(--ink-3); font-size: 15px; padding: 0; }
+.opt { background: none; border: 0; padding: 4px 0 3px; cursor: pointer; font-size: 17px; color: var(--ink-2); border-bottom: 1px solid transparent; transition: color .2s var(--ease), border-color .2s var(--ease); }
+.opt:hover { color: var(--ink); border-bottom-color: var(--rule-2); }
+.opt[aria-pressed="true"] { color: var(--madder-deep); border-bottom-color: var(--madder); }
+.studio { display: grid; grid-template-columns: 1fr; gap: 36px 56px; align-items: start; }
+@media (min-width: 1000px) { .studio { grid-template-columns: auto 1fr; } }
+.draft-svg { width: 100%; max-width: 520px; height: auto; user-select: none; -webkit-user-select: none; touch-action: none; }
+.draft-svg text { font: 500 12px var(--serif); fill: var(--ink-3); letter-spacing: .01em; }
+.draft-svg .cell { fill: var(--sheet); stroke: rgba(28, 32, 48, .2); stroke-width: .5; }
+.draft-svg .cell.on { fill: var(--ink); }
+.draft-svg .ed { cursor: pointer; }
+.draft-svg .ed:hover { fill: #D9CFBB; }
+.draft-svg .ed.on:hover { fill: #3A3F55; }
+.draft-svg .ed:focus { outline: none; }
+.draft-svg .ed:focus-visible { stroke: var(--madder); stroke-width: 2; }
+.draft-svg .frame { fill: none; stroke: rgba(28, 32, 48, .55); stroke-width: 1; }
+.preview-wrap { position: relative; }
+.preview-wrap canvas { width: 100%; height: auto; filter: drop-shadow(0 16px 22px rgba(55, 40, 20, .14)); }
+.studio-note { margin-top: 16px; font-size: 15px; color: var(--ink-3); }
+
+/* the cloth so far */
+.band-wrap { margin-top: 48px; }
+.band-wrap canvas { width: 100%; height: auto; filter: drop-shadow(0 14px 18px rgba(55, 40, 20, .14)); cursor: crosshair; }
+.axis { position: relative; height: 28px; margin-top: 12px; font-size: 14px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.axis span { position: absolute; top: 0; padding-left: 7px; border-left: 1px solid var(--rule-2); line-height: 1; padding-top: 6px; white-space: nowrap; }
+.eras { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--rule); }
+@media (min-width: 900px) { .eras { grid-template-columns: 1fr 1fr; column-gap: 64px; } }
+.era { display: grid; grid-template-columns: 7.2em 1fr; gap: 0 20px; padding: 22px 0 24px; border-bottom: 1px solid var(--rule); transition: opacity .2s var(--ease); }
+.eras.is-focus .era { opacity: .42; }
+.eras.is-focus .era.is-on { opacity: 1; }
+.era__when { font-variant-numeric: tabular-nums; color: var(--ink-3); font-size: 16px; padding-top: 4px; }
+.era__dye { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 14px; font-style: italic; }
+.era__dye i { width: 18px; height: 6px; display: inline-block; border-radius: 1px; }
+.era h3 { margin: 0; font-size: 26px; font-weight: 500; letter-spacing: -.012em; line-height: 1.2; }
+.era__role { margin: 2px 0 8px; font-style: italic; color: var(--ink-2); }
+.era p { margin: 0; color: var(--ink-2); font-size: 17px; }
+
+/* hired for */
+.hired { display: grid; grid-template-columns: 1fr; gap: 0 64px; margin-top: 40px; border-top: 1px solid var(--rule); }
+@media (min-width: 760px) { .hired { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1120px) { .hired { grid-template-columns: 1fr 1fr 1fr; } }
+.hired div { padding: 24px 0 28px; border-bottom: 1px solid var(--rule); }
+.hired h3 { margin: 0 0 8px; font-size: 24px; font-weight: 500; letter-spacing: -.01em; line-height: 1.2; }
+.hired p { margin: 0; color: var(--ink-2); font-size: 17px; }
+
+/* samples */
+.samples { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 48px 32px; margin-top: 48px; }
+.sample { text-decoration: none; color: inherit; display: block; }
+.sample__cloth { position: relative; aspect-ratio: 4 / 3; transition: transform .22s var(--ease); filter: drop-shadow(0 10px 14px rgba(55, 40, 20, .16)); }
+.sample__cloth canvas { width: 100%; height: 100%; }
+.sample:hover .sample__cloth, .sample:focus-visible .sample__cloth { transform: translateY(-4px) rotate(-.6deg); }
+.sample:focus-visible { outline: none; }
+.sample:focus-visible h3 { text-decoration: underline; text-decoration-color: var(--madder); text-underline-offset: 4px; }
+.sample h3 { margin: 18px 0 4px; font-size: 22px; font-weight: 500; letter-spacing: -.01em; display: flex; justify-content: space-between; gap: 12px; }
+.sample h3 span { color: var(--madder); font-weight: 400; transition: transform .2s var(--ease); }
+.sample:hover h3 span { transform: translate(2px, -2px); }
+.sample p { margin: 0; font-size: 16px; color: var(--ink-2); line-height: 1.5; }
+.sample small { display: block; margin-top: 8px; font-size: 14px; color: var(--ink-3); font-style: italic; }
+.all-link { display: inline-block; margin-top: 48px; font-size: 19px; color: var(--madder-deep); text-decoration-thickness: 1px; text-underline-offset: 5px; }
+.all-link:hover { color: var(--madder); }
+
+/* contact */
+.contact { display: grid; grid-template-columns: 1fr; gap: 40px 72px; }
+@media (min-width: 1000px) { .contact { grid-template-columns: 1.3fr 1fr; align-items: end; } }
+.contact h2 { max-width: 14ch; }
+.cta { display: inline-flex; align-items: center; gap: 14px; margin-top: 12px; background: var(--madder); color: #FBF6EC; text-decoration: none; padding: 16px 24px; font-size: 19px; border-radius: 2px; transition: background .2s var(--ease), transform .2s var(--ease); }
+.cta:hover { background: var(--madder-deep); }
+.cta:active { transform: translateY(1px); }
+.links { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.links li { display: flex; justify-content: space-between; gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--rule); font-size: 17px; }
+.links li span { color: var(--ink-3); }
+.links a { text-decoration: none; transition: color .2s var(--ease); }
+.links a:hover { color: var(--madder); }
+.label-wrap { margin-top: 72px; display: flex; justify-content: center; }
+.label-wrap canvas { width: min(420px, 100%); height: auto; filter: drop-shadow(0 8px 12px rgba(30, 20, 10, .2)); }
+
+footer.colophon { background: linear-gradient(var(--rule-2), var(--rule-2)) var(--gutter) 0 / calc(100% - 2 * var(--gutter)) 1px no-repeat; padding-block: 26px 40px; font-size: 15px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 8px 32px; justify-content: space-between; }
+footer.colophon a { color: var(--ink-2); }
+footer.colophon a:hover { color: var(--madder); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead wrap">
+  <a class="mark" href="#top" id="top">Marco van Hylckama Vlieg</a>
+  <nav aria-label="Sections">
+    <a href="#cards">Cards</a>
+    <a href="#draft">Draft</a>
+    <a href="#cloth">Cloth</a>
+    <a href="#samples">Samples</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a class="back" href="index.html#opus-pages">All directions</a>
+</header>
+
+<main id="main">
+
+<section class="hero wrap" aria-labelledby="name">
+  <h1 class="vh" id="name">Marco van Hylckama Vlieg</h1>
+  <figure class="swatch">
+    <div class="stage" id="stage">
+      <canvas class="cloth" id="cloth" role="img" aria-label="A woven sample in indigo and undyed linen. The name Marco van Hylckama Vlieg is woven into it as damask, indigo satin on a linen ground, with a fringe of loose warp along the bottom edge."></canvas>
+      <div class="tester" id="tester" aria-hidden="true"><canvas id="tester-canvas"></canvas></div>
+    </div>
+    <figcaption><span id="spec">Sample 38. Indigo warp, linen weft, five-end damask.</span><span id="hint">Move across the cloth to shift the light. The square is a linen tester at four times.</span></figcaption>
+  </figure>
+
+  <div class="hero__intro">
+    <p class="lede">Senior product designer and AI&#8209;native builder in Portland, Oregon. Twenty years of turning <em>structure</em> into things people use.</p>
+    <p class="hero__aside">Google, Yahoo!, Walmart Labs, Kohl&rsquo;s and Endemol, plus an independent lab that ships most weeks. Every thread on this page is drawn live from the same data you can edit further down.</p>
+  </div>
+</section>
+
+<section class="sec wrap" id="cards" aria-labelledby="cards-h">
+  <div class="cards-grid">
+    <div>
+      <h2 id="cards-h">Punched cards came from a <em>loom.</em></h2>
+      <div class="prose">
+        <p>Joseph Marie Jacquard&rsquo;s loom of 1804 read a chain of punched cards. Each card is one pass of the shuttle, and each hole lifts one warp thread. Charles Babbage borrowed the cards for the Analytical Engine. The line runs from there to the models I design with today.</p>
+        <p>That is still the job: decide the pattern, build the machine that applies it, then check the cloth in someone&rsquo;s hands.</p>
+      </div>
+    </div>
+    <div>
+      <blockquote class="quote">
+        <p>&ldquo;We may say most aptly, that the Analytical Engine weaves algebraical patterns just as the Jacquard-loom weaves flowers and leaves.&rdquo;</p>
+        <footer>Ada Lovelace, Note A, 1843</footer>
+      </blockquote>
+      <svg class="chain" id="chain" role="group" aria-label="Six punched cards computed from the woven name above"></svg>
+      <p class="chain-cap" id="chain-cap" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec wrap" id="draft" aria-labelledby="draft-h">
+  <div class="draft-head">
+    <h2 id="draft-h">Three decisions and a <em>result.</em></h2>
+    <div class="prose">
+      <p>A weaving draft has four parts. The threading says which shaft each warp thread runs through. The tie-up says which shafts each pedal lifts. The treadling says which pedal to press, pick after pick. The fourth part is the drawdown, the cloth itself, and nobody draws it directly. It falls out of the other three.</p>
+      <p>Product work runs the same way. Most of what I do is the first three parts: how a system is set up, the rules it follows, the order things happen in. Then I check the cloth with the people who will use it.</p>
+    </div>
+  </div>
+
+  <fieldset class="controls" id="presets"><legend>Draft</legend></fieldset>
+  <div class="studio">
+    <div>
+      <svg class="draft-svg" id="draft-svg" aria-label="Weaving draft. Threading, tie-up and treadling are editable; the drawdown is computed."></svg>
+      <p class="studio-note">Click or drag across the threading, tie-up or treadling. Arrow keys and Space work too.</p>
+    </div>
+    <div>
+      <fieldset class="controls" id="colorways"><legend>Yarn</legend></fieldset>
+      <div class="preview-wrap"><canvas id="preview" role="img" aria-label="The cloth this draft weaves, rendered thread by thread"></canvas></div>
+      <p class="studio-note" id="preview-note"></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec wrap" id="cloth" aria-labelledby="cloth-h">
+  <div class="draft-head">
+    <h2 id="cloth-h">The cloth <em>so far.</em></h2>
+    <div class="prose">
+      <p>Woven left to right, one pick at a time, from 1998 to now. Each employer is a different dye on the same warp. The red thread along both edges is the lab, which runs the whole length. The warp on the right is still on the loom.</p>
+    </div>
+  </div>
+  <div class="band-wrap">
+    <canvas id="band" role="img" aria-label="A woven band. Walnut from 1998, logwood from 2005, weld from 2013, woad from 2017 and indigo from 2021, with a madder selvage along both edges and unwoven warp at the right end."></canvas>
+    <div class="axis" id="axis" aria-hidden="true"></div>
+  </div>
+  <ol class="eras" id="eras">
+    <li class="era" data-era="0">
+      <div class="era__when">1998-2005<span class="era__dye"><i style="background:#5D4431"></i>walnut</span></div>
+      <div><h3>Endemol</h3><p class="era__role">UX &amp; Engineering Lead</p><p>Multilingual content systems and large web platforms across an international entertainment group. Most of my technical depth comes from here.</p></div>
+    </li>
+    <li class="era" data-era="1">
+      <div class="era__when">2005-2013<span class="era__dye"><i style="background:#4D3B66"></i>logwood</span></div>
+      <div><h3>Yahoo!</h3><p class="era__role">Director of UX Prototyping, Senior UX Manager</p><p>Built and led prototyping teams across offices and product lines. Rebrand and personalization work, a scalable design process, and a generation of senior prototypers mentored.</p></div>
+    </li>
+    <li class="era" data-era="2">
+      <div class="era__when">2013-2017<span class="era__dye"><i style="background:#C49A2E"></i>weld</span></div>
+      <div><h3>Google</h3><p class="era__role">Senior UX Engineer, Prototyper</p><p>High-fidelity prototypes for Google Cloud AI, Google Assistant and Android that moved research, alignment and decisions forward.</p></div>
+    </li>
+    <li class="era" data-era="3">
+      <div class="era__when">2017-2021<span class="era__dye"><i style="background:#56789F"></i>woad</span></div>
+      <div><h3>Walmart Labs</h3><p class="era__role">Principal Product Designer, Design Technologist</p><p>Mobile, voice and personalization during the digital transformation. Recommendation systems turned into interfaces that need no explanation.</p></div>
+    </li>
+    <li class="era" data-era="4">
+      <div class="era__when">2021-now<span class="era__dye"><i style="background:#26346F"></i>indigo</span></div>
+      <div><h3>Kohl&rsquo;s</h3><p class="era__role">Senior Product Designer, Generative AI Specialist</p><p>UX across cart, checkout, wallet, account and in-store self-checkout. AI tooling, prompt libraries and training for the design organization.</p></div>
+    </li>
+    <li class="era" data-era="5">
+      <div class="era__when">Always<span class="era__dye"><i style="background:#A13B28"></i>madder</span></div>
+      <div><h3>AI-Created</h3><p class="era__role">Independent product lab</p><p>AI tools, design utilities, music, video and arcade games. Built end to end, tested in public, eighteen shipped so far.</p></div>
+    </li>
+  </ol>
+</section>
+
+<section class="sec wrap" id="hired" aria-labelledby="hired-h">
+  <h2 id="hired-h">What I&rsquo;m hired <em>for.</em></h2>
+  <div class="hired">
+    <div><h3>AI-native product design</h3><p>Products where the model is the interaction: voice, agents, ambient assistance. Not a chat panel bolted onto an old screen.</p></div>
+    <div><h3>Design engineering</h3><p>Prototypes that behave like real software because they are real software, built end to end by one person.</p></div>
+    <div><h3>Zero to one</h3><p>An ambiguous brief carried through research, framing, design, prototype and launch, before anyone has written a roadmap.</p></div>
+    <div><h3>Enterprise UX modernization</h3><p>Cart, checkout, account and internal tools rebuilt into systems people choose to use. Years of it, at retail scale.</p></div>
+    <div><h3>Internal AI tooling</h3><p>Copilots, prompt libraries, synthetic research setups and workflow tools that design and product teams use every day.</p></div>
+    <div><h3>Leadership and enablement</h3><p>Built and led prototyping teams at Yahoo!. Now teaching AI practice inside a design organization. IC, lead or director.</p></div>
+  </div>
+</section>
+
+<section class="sec wrap" id="samples" aria-labelledby="samples-h">
+  <div class="draft-head">
+    <h2 id="samples-h">The sample <em>book.</em></h2>
+    <div class="prose"><p>Eighteen products have shipped from AI-Created. Here are ten of them, each cut from a different draft. They are real software and they are all live.</p></div>
+  </div>
+  <div class="samples" id="sample-grid"></div>
+  <a class="all-link" href="https://ai-created.com/products" target="_blank" rel="noopener">All eighteen at ai-created.com &#8599;</a>
+</section>
+
+<section class="sec wrap" id="contact" aria-labelledby="contact-h">
+  <div class="contact">
+    <div>
+      <h2 id="contact-h">Bring a brief with loose <em>ends.</em></h2>
+      <div class="prose"><p>Open to senior IC, lead and director roles in product design, design engineering and AI. Tell me what you are building, what is still unclear about it, and when it needs to ship.</p></div>
+      <a class="cta" href="mailto:marcovhv@gmail.com">marcovhv@gmail.com <span aria-hidden="true">&#8599;</span></a>
+    </div>
+    <ul class="links">
+      <li><span>Lab</span><a href="https://ai-created.com" target="_blank" rel="noopener">ai-created.com</a></li>
+      <li><span>Work history</span><a href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">linkedin.com/in/marcovhv</a></li>
+      <li><span>Writing</span><a href="https://x.com/AIandDesign" target="_blank" rel="noopener">x.com/AIandDesign</a></li>
+      <li><span>Video</span><a href="https://youtube.com/@AIandDesign" target="_blank" rel="noopener">youtube.com/@AIandDesign</a></li>
+      <li><span>Languages</span><span style="color:var(--ink)">Dutch, English, German, Spanish</span></li>
+    </ul>
+  </div>
+  <div class="label-wrap"><canvas id="label" role="img" aria-label="A woven garment label reading MVHV, Portland, Oregon"></canvas></div>
+</section>
+
+</main>
+
+<footer class="colophon wrap">
+  <span>Jacquard. Page 38 of the radical directions. Designed by Opus 5.5.</span>
+  <span>One HTML file, no frameworks. Every thread is rendered by a WebGL shader from a weaving draft.</span>
+  <a href="index.html#opus-pages">All directions</a>
+</footer>
+
+<script>
+(() => {
+'use strict';
+
+/* ───────── colour helpers ───────── */
+const hex = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+const DYE = {
+  indigo: '#26346F', linen: '#E6DCC6', madder: '#A13B28', walnut: '#5D4431',
+  logwood: '#4D3B66', weld: '#C49A2E', woad: '#56789F', ink: '#1E2130', cream: '#F1EBDD'
+};
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+/* ───────── the loom: a shader that draws cloth thread by thread ───────── */
+const VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+const FS = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform vec2 uRes;
+uniform vec2 uGrid;
+uniform float uPitch;
+uniform vec2 uOrigin;
+uniform sampler2D uInt;
+uniform sampler2D uColV;
+uniform sampler2D uColH;
+uniform vec3 uLight;
+uniform float uFringe;
+uniform float uLoose;
+uniform vec2 uHi;
+uniform float uHiAmt;
+uniform float uSheen;
+
+float hash(float n){ return fract(sin(n * 78.233 + 11.7) * 43758.5453); }
+vec3 colV(float i){ return texture2D(uColV, vec2((i + .5) / uGrid.x, .5)).rgb; }
+vec3 colH(float j){ return texture2D(uColH, vec2((j + .5) / uGrid.y, .5)).rgb; }
+float upAt(vec2 c){
+  if (c.x < 0. || c.y < 0. || c.x >= uGrid.x || c.y >= uGrid.y) return 0.;
+  return step(.5, texture2D(uInt, (c + .5) / uGrid).r);
+}
+vec3 shade(vec3 base, vec3 N, vec3 P, float ao, float tex){
+  vec3 L = normalize(uLight - P);
+  vec3 H = normalize(L + vec3(0., 0., 1.));
+  float diff = .5 + .5 * dot(N, L);
+  float spec = pow(max(dot(N, H), 0.), 26.);
+  vec3 c = base * (.30 + .80 * diff) * ao * tex;
+  return c + vec3(1., .96, .88) * spec * uSheen * ao;
+}
+vec3 vThread(float id, vec2 t, float s, float tilt, float ao, vec3 P){
+  float nz = sqrt(max(1. - s * s, 0.));
+  vec3 N = normalize(vec3(s, tilt, nz + .001));
+  float tw = .93 + .07 * sin(6.2831 * (t.y * 2.3 + s * .38 + hash(id) * 7.));
+  vec3 base = colV(id) * (.92 + .16 * hash(id * 1.71 + 3.));
+  return shade(base, N, P, ao * (.78 + .22 * nz), tw);
+}
+vec3 hThread(float id, vec2 t, float s, float tilt, float ao, vec3 P){
+  float nz = sqrt(max(1. - s * s, 0.));
+  vec3 N = normalize(vec3(tilt, s, nz + .001));
+  float tw = .93 + .07 * sin(6.2831 * (t.x * 2.3 - s * .38 + hash(id + 50.) * 7.));
+  vec3 base = colH(id) * (.92 + .16 * hash(id * 1.33 + 17.));
+  return shade(base, N, P, ao * (.78 + .22 * nz), tw);
+}
+void main(){
+  vec2 px = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
+  vec2 t = (px - uOrigin) / uPitch;
+  vec2 c = floor(t);
+  vec2 f = t - c;
+  vec3 P = vec3(px, 0.);
+  float hw = .46;
+  bool inX = c.x >= 0. && c.x < uGrid.x;
+  bool inY = c.y >= 0. && c.y < uGrid.y;
+  vec3 col;
+  if (inX && inY) {
+    float up = upAt(c);
+    float sx = (f.x - .5) / hw;
+    float sy = (f.y - .5) / hw;
+    float uL = upAt(c - vec2(1., 0.)), uR = upAt(c + vec2(1., 0.));
+    float uA = upAt(c - vec2(0., 1.)), uB = upAt(c + vec2(0., 1.));
+    if (up > .5 && uL + uR + uA + uB < .5) {
+      /* a single warp tie-down inside a weft float: mostly hidden by the floats either side */
+      vec2 q = vec2((f.x - .5) / .2, (f.y - .5) / .36);
+      float d = dot(q, q);
+      float press = 1. - .35 * exp(-dot(f - .5, f - .5) * 18.);
+      col = hThread(c.y, t, clamp(sy, -1., 1.), 0., abs(sy) <= 1. ? press : .5, P);
+      if (d < 1.) col = vThread(c.x, t, clamp(q.x, -1., 1.), q.y * .9, .78, P);
+    } else if (up < .5 && uL + uR + uA + uB > 3.5) {
+      /* a single weft tie-down inside a warp float */
+      vec2 q = vec2((f.x - .5) / .36, (f.y - .5) / .2);
+      float d = dot(q, q);
+      float press = 1. - .35 * exp(-dot(f - .5, f - .5) * 18.);
+      col = vThread(c.x, t, clamp(sx, -1., 1.), 0., abs(sx) <= 1. ? press : .5, P);
+      if (d < 1.) col = hThread(c.y, t, clamp(q.y, -1., 1.), q.x * .9, .78, P);
+    } else if (up > .5) {
+      if (abs(sx) <= 1.) {
+        float tilt = 0.; float ao = 1.;
+        if (uB < .5) { float k = smoothstep(.5, 1., f.y); tilt += k * 1.1; ao *= 1. - .5 * k * k; }
+        if (uA < .5) { float k = smoothstep(.5, 0., f.y); tilt -= k * 1.1; ao *= 1. - .5 * k * k; }
+        col = vThread(c.x, t, sx, tilt, ao, P);
+      } else {
+        float nbUp = f.x < .5 ? uL : uR;
+        if (nbUp > .5) col = vThread(c.x, t, sign(sx), 0., .55, P);
+        else col = hThread(c.y, t, clamp(sy, -1., 1.), 0., .5, P);
+      }
+    } else {
+      if (abs(sy) <= 1.) {
+        float tilt = 0.; float ao = 1.;
+        if (uR > .5) { float k = smoothstep(.5, 1., f.x); tilt += k * 1.1; ao *= 1. - .5 * k * k; }
+        if (uL > .5) { float k = smoothstep(.5, 0., f.x); tilt -= k * 1.1; ao *= 1. - .5 * k * k; }
+        col = hThread(c.y, t, sy, tilt, ao, P);
+      } else {
+        float nbUp = f.y < .5 ? uA : uB;
+        vec2 nb = c + vec2(0., f.y < .5 ? -1. : 1.);
+        if (nbUp < .5 && nb.y >= 0. && nb.y < uGrid.y) col = hThread(c.y, t, sign(sy), 0., .55, P);
+        else col = vThread(c.x, t, clamp(sx, -1., 1.), 0., .5, P);
+      }
+    }
+    if (uHiAmt > 0.) {
+      float inside = step(uHi.x, c.x) * step(c.x, uHi.y - 1.);
+      float g = dot(col, vec3(.3, .59, .11));
+      col = mix(col, vec3(g) * .55 + .38, (1. - inside) * uHiAmt * .8);
+    }
+    gl_FragColor = vec4(col, 1.);
+    return;
+  }
+  if (inX && c.y >= uGrid.y && uFringe > 0.) {
+    float d = t.y - uGrid.y;
+    float len = uFringe * (.62 + .38 * hash(c.x * 3.1 + 5.));
+    if (d > len) discard;
+    float wob = sin(d * .45 + hash(c.x) * 6.28) * .13 * smoothstep(0., 5., d);
+    float taper = smoothstep(len + .2, len - 1.6, d);
+    float s = (f.x - .5 - wob) / (hw * .92);
+    if (abs(s) > taper) discard;
+    float spread = 1. - .25 * smoothstep(len - 3., len, d);
+    col = vThread(c.x, t, s / max(spread, .2), 0., .92, P);
+    gl_FragColor = vec4(col, 1.);
+    return;
+  }
+  if (inY && c.x >= uGrid.x && uLoose > 0.) {
+    float d = t.x - uGrid.x;
+    if (d > uLoose) discard;
+    float s = (f.y - .5) / hw;
+    if (abs(s) > 1.) discard;
+    col = hThread(c.y, t, s, 0., .95, P);
+    gl_FragColor = vec4(col, 1.);
+    return;
+  }
+  discard;
+}`;
+
+function makeLoom(canvas, opts = {}) {
+  const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, preserveDrawingBuffer: !!opts.preserve });
+  if (!gl) return makeFallbackLoom(canvas);
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(s)); return s; };
+  const prog = gl.createProgram();
+  gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(prog)); return makeFallbackLoom(canvas); }
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+  const U = {};
+  ['uRes', 'uGrid', 'uPitch', 'uOrigin', 'uInt', 'uColV', 'uColH', 'uLight', 'uFringe', 'uLoose', 'uHi', 'uHiAmt', 'uSheen'].forEach(n => U[n] = gl.getUniformLocation(prog, n));
+  const tex = () => { const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t); [gl.TEXTURE_MIN_FILTER, gl.TEXTURE_MAG_FILTER].forEach(k => gl.texParameteri(gl.TEXTURE_2D, k, gl.NEAREST)); [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(k => gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE)); return t; };
+  const tInt = tex(), tV = tex(), tH = tex();
+  let cloth = null;
+  const state = { light: [0, 0, 600], pitch: 8, origin: [0, 0], fringe: 0, loose: 0, hi: [-1, -1], hiAmt: 0, sheen: .2 };
+  return {
+    gl: true,
+    setCloth(c) {
+      cloth = c;
+      const inter = new Uint8Array(c.ends * c.picks);
+      for (let i = 0; i < inter.length; i++) inter[i] = c.inter[i] ? 255 : 0;
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tInt);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, c.ends, c.picks, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, inter);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tV);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, c.ends, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, c.colV);
+      gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, tH);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, c.picks, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, c.colH);
+    },
+    set(o) { Object.assign(state, o); },
+    get state() { return state; },
+    render() {
+      if (!cloth) return;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(U.uRes, canvas.width, canvas.height);
+      gl.uniform2f(U.uGrid, cloth.ends, cloth.picks);
+      gl.uniform1f(U.uPitch, state.pitch);
+      gl.uniform2f(U.uOrigin, state.origin[0], state.origin[1]);
+      gl.uniform3f(U.uLight, state.light[0], state.light[1], state.light[2]);
+      gl.uniform1f(U.uFringe, state.fringe);
+      gl.uniform1f(U.uLoose, state.loose);
+      gl.uniform2f(U.uHi, state.hi[0], state.hi[1]);
+      gl.uniform1f(U.uHiAmt, state.hiAmt);
+      gl.uniform1f(U.uSheen, state.sheen);
+      gl.uniform1i(U.uInt, 0); gl.uniform1i(U.uColV, 1); gl.uniform1i(U.uColH, 2);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tInt);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tV);
+      gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, tH);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+  };
+}
+
+/* flat 2D fallback for browsers without WebGL */
+function makeFallbackLoom(canvas) {
+  const ctx = canvas.getContext('2d');
+  let cloth = null;
+  const state = { light: [0, 0, 600], pitch: 8, origin: [0, 0], fringe: 0, loose: 0, hi: [-1, -1], hiAmt: 0, sheen: .2 };
+  return {
+    gl: false,
+    setCloth(c) { cloth = c; },
+    set(o) { Object.assign(state, o); },
+    get state() { return state; },
+    render() {
+      if (!cloth) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const p = state.pitch, [ox, oy] = state.origin, g = Math.max(1, p * .12);
+      for (let j = 0; j < cloth.picks; j++) for (let i = 0; i < cloth.ends; i++) {
+        const up = cloth.inter[j * cloth.ends + i];
+        const c = up ? cloth.colV.subarray(i * 3, i * 3 + 3) : cloth.colH.subarray(j * 3, j * 3 + 3);
+        ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`;
+        const x = ox + i * p, y = oy + j * p;
+        if (up) ctx.fillRect(x + g, y, p - 2 * g, p); else ctx.fillRect(x, y + g, p, p - 2 * g);
+      }
+    }
+  };
+}
+
+/* ───────── weave structures ───────── */
+const satin = (i, j) => (((i - 2 * j) % 5) + 5) % 5 === 0;
+const twill22 = (i, j) => ((i + j) % 4) < 2;
+const plain = (i, j) => ((i + j) & 1) === 0;
+function colorArray(n, fn) { const a = new Uint8Array(n * 3); for (let k = 0; k < n; k++) { const c = fn(k); a[k * 3] = c[0]; a[k * 3 + 1] = c[1]; a[k * 3 + 2] = c[2]; } return a; }
+
+/* ───────── draft presets ───────── */
+const R = (arr, n) => Array.from({ length: n }, (_, k) => arr[k % arr.length]);
+const TWILL4 = [[1, 2], [2, 3], [3, 4], [4, 1]];
+const PRESETS = [
+  { id: 'plain', name: 'Plain weave', th: R([1, 2, 3, 4], 24), tu: [[1, 3], [2, 4]], tr: R([1, 2], 24) },
+  { id: 'basket', name: 'Basket', th: R([1, 1, 2, 2], 24), tu: [[1], [2]], tr: R([1, 1, 2, 2], 24) },
+  { id: 'twill', name: 'Twill', th: R([1, 2, 3, 4], 24), tu: TWILL4, tr: R([1, 2, 3, 4], 24) },
+  { id: 'point', name: 'Point twill', th: R([1, 2, 3, 4, 3, 2], 24), tu: TWILL4, tr: R([1, 2, 3, 4], 24) },
+  { id: 'birdseye', name: 'Bird’s eye', th: R([1, 2, 3, 4, 3, 2], 24), tu: TWILL4, tr: R([1, 2, 3, 4, 3, 2], 24) },
+  { id: 'herringbone', name: 'Herringbone', th: R([1, 2, 3, 4, 1, 2, 4, 3, 2, 1, 4, 3], 24), tu: TWILL4, tr: R([1, 2, 3, 4], 24) },
+  { id: 'diamond', name: 'Diamond', th: R([1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2], 24), tu: Array.from({ length: 7 }, (_, t) => [0, 1, 2, 3].map(k => ((t + k) % 7) + 1)), tr: R([1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2], 24) },
+  { id: 'satin', name: 'Satin', th: R([1, 2, 3, 4, 5, 6, 7, 8], 24), tu: Array.from({ length: 8 }, (_, t) => [1, 2, 3, 4, 5, 6, 7, 8].filter(s => s - 1 !== (t * 3) % 8)), tr: R([1, 2, 3, 4, 5, 6, 7, 8], 24) }
+];
+const SH = 8, TR = 8, DE = 24, DP = 24;
+function presetState(p) {
+  const s = { threading: new Int8Array(DE), tieup: new Uint8Array(SH * TR), treadling: new Int8Array(DP) };
+  p.th.forEach((v, e) => s.threading[e] = v - 1);
+  p.tu.forEach((list, t) => list.forEach(sh => s.tieup[(sh - 1) * TR + t] = 1));
+  p.tr.forEach((v, k) => s.treadling[k] = v - 1);
+  return s;
+}
+function drawdown(s) {
+  const d = new Uint8Array(DE * DP);
+  for (let p = 0; p < DP; p++) for (let e = 0; e < DE; e++) {
+    const sh = s.threading[e], tr = s.treadling[p];
+    d[p * DE + e] = (sh >= 0 && tr >= 0 && s.tieup[sh * TR + tr]) ? 1 : 0;
+  }
+  return d;
+}
+function tiled(dd, ends, picks, ox = 0, oy = 0) {
+  const a = new Uint8Array(ends * picks);
+  for (let j = 0; j < picks; j++) for (let i = 0; i < ends; i++) a[j * ends + i] = dd[((j + oy) % DP) * DE + ((i + ox) % DE)];
+  return a;
+}
+
+/* ───────── hero: the woven name ───────── */
+const stage = document.getElementById('stage');
+const heroCanvas = document.getElementById('cloth');
+const tester = document.getElementById('tester');
+const testerCanvas = document.getElementById('tester-canvas');
+const hero = makeLoom(heroCanvas);
+const loupe = makeLoom(testerCanvas);
+let H = null;
+
+const GLYPHS = {
+  P: '11110100011000111110100001000010000', O: '01110100011000110001100011000101110', R: '11110100011000111110101001001010001',
+  T: '11111001000010000100001000010000100', L: '10000100001000010000100001000011111', A: '01110100011000111111100011000110001',
+  N: '10001110011010110011100011000110001', D: '11110100011000110001100011000111110', E: '11111100001000011110100001000011111',
+  G: '01110100011000010111100011000101111', M: '10001110111010110101100011000110001', V: '10001100011000101010010100010000100',
+  H: '10001100011000111111100011000110001', '2': '01110100010000100010001000100011111', '0': '01110100011001110101110011000101110',
+  '6': '00110010001000011110100011000101110', '3': '11110000010000101110000010000111110', '8': '01110100011000101110100011000101110', ' ': '00000000000000000000000000000000000',
+  '.': '00000000000000000000000000110001100'
+};
+function pixelText(mask, ends, x0, y0, str) {
+  let x = x0;
+  for (const ch of str) {
+    const g = GLYPHS[ch] || GLYPHS[' '];
+    for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) if (g[r * 5 + c] === '1') mask[(y0 + r) * ends + x + c] = 2;
+    x += 6;
+  }
+  return x - x0 - 1;
+}
+
+function buildHero() {
+  const W = stage.clientWidth;
+  const small = W < 640;
+  const pitch = small ? 2 : W < 1100 ? 3 : (DPR >= 2 ? 4 : 5);
+  const ends = Math.floor(W / pitch);
+  const lines = small ? ['Marco van', 'Hylckama', 'Vlieg'] : ['Marco van', 'Hylckama Vlieg'];
+  const margin = Math.round(ends * (small ? .1 : .062));
+  const head = 6;
+  const avail = ends - margin * 2;
+  const family = '"Newsreader", Georgia, serif';
+  const weight = small ? 600 : 500;
+  const probe = document.createElement('canvas').getContext('2d');
+  probe.font = `italic ${weight} 100px ${family}`;
+  const widest = Math.max(...lines.map(l => probe.measureText(l).width));
+  const lh = .93;
+  let fs = 100 * avail / widest;
+  let picks;
+  if (small) {
+    fs = Math.floor(fs);
+    picks = Math.round(head + margin * 2 + fs * (lines.length * lh + .12));
+  } else {
+    const hCss = Math.round(Math.min(Math.max(innerHeight * .6, 380), 640, W * .52));
+    picks = Math.floor(hCss / pitch);
+    fs = Math.floor(Math.min(fs, (picks - head - margin * 2) / (lines.length * lh + .1)));
+  }
+  const availH = picks - head - margin * 2;
+  const fringe = small ? 16 : 15;
+  const cssW = ends * pitch, cssH = (picks + fringe) * pitch;
+  heroCanvas.width = Math.round(cssW * DPR); heroCanvas.height = Math.round(cssH * DPR);
+  heroCanvas.style.width = cssW + 'px'; heroCanvas.style.height = cssH + 'px';
+
+  /* figure mask from type */
+  const off = document.createElement('canvas'); off.width = ends; off.height = picks;
+  const x = off.getContext('2d', { willReadFrequently: true });
+  x.fillStyle = '#000'; x.fillRect(0, 0, ends, picks);
+  x.font = `italic ${weight} ${fs}px ${family}`;
+  x.fillStyle = '#fff';
+  x.textBaseline = 'alphabetic';
+  const blockH = fs * lh * lines.length;
+  let y = head + margin + (availH - blockH) * (small ? .5 : .42) + fs * .78;
+  lines.forEach(l => { x.fillText(l, margin - fs * .02, Math.round(y)); y += fs * lh; });
+  const img = x.getImageData(0, 0, ends, picks).data;
+  const mask = new Uint8Array(ends * picks);
+  for (let k = 0; k < mask.length; k++) mask[k] = img[k * 4] > 118 ? 1 : 0;
+
+  /* border frame, inset */
+  const b = Math.max(4, Math.round(margin * .42)) ;
+  const frame = (i, j) => {
+    const top = head + b, bot = picks - 1 - b, lef = b, rig = ends - 1 - b;
+    const inR = (v, a) => v === a || v === a + 1;
+    const onH = (inR(j, top) || inR(j, top + 5) || inR(j, bot - 1) || inR(j, bot - 6)) && i >= lef && i <= rig;
+    const onV = (inR(i, lef) || inR(i, lef + 5) || inR(i, rig - 1) || inR(i, rig - 6)) && j >= top && j <= bot;
+    return onH || onV;
+  };
+
+  const inter = new Uint8Array(ends * picks);
+  for (let j = 0; j < picks; j++) for (let i = 0; i < ends; i++) {
+    const k = j * ends + i;
+    if (j < head) { inter[k] = plain(i, j) ? 1 : 0; continue; }
+    const s = satin(i, j);
+    const fig = mask[k] === 1 || frame(i, j);
+    if (mask[k] === 2) { inter[k] = 1; continue; }
+    inter[k] = fig ? (s ? 0 : 1) : (s ? 1 : 0);
+  }
+  const indigo = hex(DYE.indigo), linen = hex(DYE.linen), deep = hex('#1B2552');
+  const colV = colorArray(ends, i => (i % 37 === 11 ? deep : indigo));
+  const colH = colorArray(picks, j => (j < head - 2 ? deep : linen));
+  const cloth = { ends, picks, inter, colV, colH };
+  hero.setCloth(cloth); loupe.setCloth(cloth);
+  H = { ends, picks, pitch, cssW, cssH, fringe, inter, head, mask, lines, fs };
+  hero.set({ pitch: pitch * DPR, origin: [0, 0], fringe, sheen: .24 });
+  if (!lightState.init) { lightState.cur = [cssW * .22, -cssH * .05]; lightState.tgt = lightState.cur.slice(); lightState.init = true; }
+  heroRender();
+  document.getElementById('spec').textContent = `Sample 38. Indigo warp, linen weft, five-end damask. ${ends} ends by ${picks} picks, each one drawn as a thread.`;
+  buildChain();
+}
+
+const lightState = { cur: [0, 0], tgt: [0, 0], init: false, raf: 0, pointer: null };
+function heroRender() {
+  if (!H) return;
+  const [lx, ly] = lightState.cur;
+  hero.set({ light: [lx * DPR, ly * DPR, H.cssW * .42 * DPR] });
+  hero.render();
+  if (lightState.pointer) renderLoupe();
+}
+function renderLoupe() {
+  const size = 196, mag = 4;
+  const [px, py] = lightState.pointer;
+  if (testerCanvas.width !== size * DPR) { testerCanvas.width = size * DPR; testerCanvas.height = size * DPR; }
+  const pitch = H.pitch * mag * DPR;
+  const cx = size / 2 * DPR, cy = size / 2 * DPR;
+  const origin = [cx - px * mag * DPR, cy - py * mag * DPR];
+  const [lx, ly] = lightState.cur;
+  loupe.set({ pitch, origin, fringe: H.fringe, sheen: .3, light: [cx + (lx - px) * mag * DPR, cy + (ly - py) * mag * DPR, H.cssW * .42 * mag * DPR] });
+  loupe.render();
+}
+function animateLight() {
+  const c = lightState.cur, t = lightState.tgt;
+  const k = reduceMotion ? 1 : .2;
+  c[0] += (t[0] - c[0]) * k; c[1] += (t[1] - c[1]) * k;
+  heroRender();
+  if (Math.abs(t[0] - c[0]) + Math.abs(t[1] - c[1]) > .5) lightState.raf = requestAnimationFrame(animateLight);
+  else { c[0] = t[0]; c[1] = t[1]; heroRender(); lightState.raf = 0; }
+}
+function kick() { if (!lightState.raf) lightState.raf = requestAnimationFrame(animateLight); }
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+if (!finePointer) document.getElementById('hint').textContent = 'Touch the cloth to move the light.';
+stage.addEventListener('pointermove', e => {
+  if (!H) return;
+  const r = heroCanvas.getBoundingClientRect();
+  const x = e.clientX - r.left, y = e.clientY - r.top;
+  lightState.tgt = [x, y];
+  if (e.pointerType === 'mouse') {
+    const inCloth = x >= 0 && y >= 0 && x <= H.cssW && y <= H.picks * H.pitch;
+    lightState.pointer = inCloth ? [x, y] : null;
+    tester.classList.toggle('is-on', inCloth);
+    const s = 196;
+    tester.style.transform = '';
+    tester.style.left = Math.round(x - s / 2) + 'px';
+    tester.style.top = Math.round(y - s / 2) + 'px';
+  }
+  kick();
+});
+stage.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' || !H) return;
+  const r = heroCanvas.getBoundingClientRect();
+  lightState.tgt = [e.clientX - r.left, e.clientY - r.top];
+  kick();
+});
+stage.addEventListener('pointerleave', () => { lightState.pointer = null; tester.classList.remove('is-on'); });
+
+/* ───────── the card chain ───────── */
+const chainSvg = document.getElementById('chain');
+const chainCap = document.getElementById('chain-cap');
+function buildChain() {
+  if (!H) return;
+  const { ends, picks, inter, mask } = H;
+  /* pick the band of rows that crosses the most figure */
+  let best = 0, bestRow = Math.floor(picks / 2);
+  for (let j = 0; j < picks - 6; j++) { let s = 0; for (let r = 0; r < 6; r++) for (let i = 0; i < ends; i++) s += mask[(j + r) * ends + i] === 1 ? 1 : 0; if (s > best) { best = s; bestRow = j; } }
+  const rowsPerCard = 8, cols = Math.ceil(ends / rowsPerCard);
+  const cell = 9, padX = 34, padY = 10;
+  const cw = padX * 2 + cols * cell, ch = padY * 2 + rowsPerCard * cell;
+  const gap = 7, n = 6;
+  const NS = 'http://www.w3.org/2000/svg';
+  chainSvg.setAttribute('viewBox', `0 0 ${cw} ${n * ch + (n - 1) * gap}`);
+  chainSvg.innerHTML = '';
+  const cards = [];
+  for (let k = 0; k < n; k++) {
+    const pick = bestRow + k;
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'card');
+    g.setAttribute('tabindex', '0');
+    g.setAttribute('transform', `translate(0 ${k * (ch + gap)})`);
+    let lifted = 0, holes = '';
+    for (let i = 0; i < ends; i++) {
+      if (!inter[pick * ends + i]) continue;
+      lifted++;
+      const col = Math.floor(i / rowsPerCard), row = i % rowsPerCard;
+      const cx = padX + col * cell + cell / 2, cy = padY + row * cell + cell / 2;
+      holes += `M${cx - 2.6} ${cy}a2.6 2.6 0 1 0 5.2 0a2.6 2.6 0 1 0 -5.2 0`;
+    }
+    g.setAttribute('aria-label', `Card for pick ${pick + 1}: lifts ${lifted} of ${ends} warp threads`);
+    g.innerHTML = `<rect class="card-bg" x="0" y="0" width="${cw}" height="${ch}" rx="2"/>` +
+      `<path class="hole" d="${holes}"/>` +
+      `<circle class="hole" cx="${padX / 2}" cy="${ch / 2}" r="5"/><circle class="hole" cx="${cw - padX / 2}" cy="${ch / 2}" r="5"/>` +
+      `<circle class="hole" cx="${padX / 2}" cy="${ch * .2}" r="2.2"/><circle class="hole" cx="${padX / 2}" cy="${ch * .8}" r="2.2"/>` +
+      `<circle class="hole" cx="${cw - padX / 2}" cy="${ch * .2}" r="2.2"/><circle class="hole" cx="${cw - padX / 2}" cy="${ch * .8}" r="2.2"/>`;
+    if (k < n - 1) {
+      const lace = document.createElementNS(NS, 'path');
+      lace.setAttribute('class', 'lace');
+      const y1 = ch * .8, y2 = ch + gap + ch * .2;
+      lace.setAttribute('d', `M${padX / 2} ${y1}L${padX / 2 + 3} ${y2}M${padX / 2 + 3} ${y1}L${padX / 2} ${y2}M${cw - padX / 2} ${y1}L${cw - padX / 2 - 3} ${y2}M${cw - padX / 2 - 3} ${y1}L${cw - padX / 2} ${y2}`);
+      g.appendChild(lace);
+    }
+    const say = () => { cards.forEach(c => c.classList.remove('is-on')); g.classList.add('is-on'); chainCap.textContent = `Card ${pick + 1} of ${picks}. It lifts ${lifted} of ${ends} warp threads, in rows of eight, as the shuttle passes through the name.`; };
+    g.addEventListener('pointerenter', say); g.addEventListener('focus', say);
+    cards.push(g); chainSvg.appendChild(g);
+  }
+  chainCap.textContent = `These six cards are computed from the cloth above. They are picks ${bestRow + 1} to ${bestRow + n} of ${picks}, where the shuttle crosses the name. Each hole is a lifted thread.`;
+}
+
+/* ───────── the draft studio ───────── */
+const draftSvg = document.getElementById('draft-svg');
+const presetBox = document.getElementById('presets');
+const yarnBox = document.getElementById('colorways');
+const previewCanvas = document.getElementById('preview');
+const preview = makeLoom(previewCanvas);
+const COLORWAYS = [
+  { id: 'indigo', name: 'Indigo', v: DYE.indigo, h: DYE.linen },
+  { id: 'madder', name: 'Madder', v: DYE.madder, h: DYE.linen },
+  { id: 'walnut', name: 'Walnut and weld', v: DYE.walnut, h: '#D7B858' },
+  { id: 'woad', name: 'Woad and logwood', v: '#7E9CC0', h: DYE.logwood }
+];
+let D = presetState(PRESETS.find(p => p.id === 'diamond'));
+let presetId = 'diamond', yarn = COLORWAYS[0];
+
+PRESETS.forEach(p => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'opt'; b.textContent = p.name; b.dataset.id = p.id;
+  b.setAttribute('aria-pressed', String(p.id === presetId));
+  b.addEventListener('click', () => { D = presetState(p); presetId = p.id; syncButtons(); drawDraft(); });
+  presetBox.appendChild(b);
+});
+COLORWAYS.forEach(cw => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'opt'; b.textContent = cw.name; b.dataset.id = cw.id;
+  b.setAttribute('aria-pressed', String(cw.id === yarn.id));
+  b.addEventListener('click', () => { yarn = cw; syncButtons(); drawPreview(); });
+  yarnBox.appendChild(b);
+});
+function syncButtons() {
+  presetBox.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === presetId)));
+  yarnBox.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === yarn.id)));
+}
+
+const NS = 'http://www.w3.org/2000/svg';
+const CELL = 14, LABEL = 22, VGAP = 30;
+const geo = {
+  th: { x: 0, y: LABEL, cols: DE, rows: SH },
+  tu: { x: (DE + 1) * CELL, y: LABEL, cols: TR, rows: SH },
+  dd: { x: 0, y: LABEL + SH * CELL + VGAP, cols: DE, rows: DP },
+  tr: { x: (DE + 1) * CELL, y: LABEL + SH * CELL + VGAP, cols: TR, rows: DP }
+};
+const cellsBy = { th: [], tu: [], tr: [], dd: [] };
+const focusPos = { th: [0, 0], tu: [0, 0], tr: [0, 0] };
+function buildDraftSvg() {
+  const w = (DE + 1 + TR) * CELL + 1, h = LABEL + (SH + DP) * CELL + VGAP + 1;
+  draftSvg.setAttribute('viewBox', `-0.5 -0.5 ${w} ${h}`);
+  draftSvg.innerHTML = '';
+  const label = (txt, x, y) => { const t = document.createElementNS(NS, 'text'); t.setAttribute('x', x); t.setAttribute('y', y); t.textContent = txt; draftSvg.appendChild(t); };
+  label('Threading', geo.th.x, 14); label('Tie-up', geo.tu.x, 14);
+  Object.entries(geo).forEach(([key, g]) => {
+    const grp = document.createElementNS(NS, 'g');
+    if (key !== 'dd') { grp.setAttribute('role', 'group'); grp.setAttribute('aria-label', { th: 'Threading', tu: 'Tie-up', tr: 'Treadling' }[key]); }
+    else grp.setAttribute('aria-hidden', 'true');
+    cellsBy[key] = [];
+    for (let r = 0; r < g.rows; r++) {
+      cellsBy[key][r] = [];
+      for (let c = 0; c < g.cols; c++) {
+        const rect = document.createElementNS(NS, 'rect');
+        rect.setAttribute('x', g.x + c * CELL); rect.setAttribute('y', g.y + r * CELL);
+        rect.setAttribute('width', CELL); rect.setAttribute('height', CELL);
+        rect.setAttribute('class', 'cell' + (key === 'dd' ? '' : ' ed'));
+        if (key !== 'dd') {
+          rect.setAttribute('tabindex', r === 0 && c === 0 ? '0' : '-1');
+          rect.setAttribute('role', 'button');
+          rect.dataset.k = key; rect.dataset.r = r; rect.dataset.c = c;
+        }
+        grp.appendChild(rect); cellsBy[key][r][c] = rect;
+      }
+    }
+    const fr = document.createElementNS(NS, 'rect');
+    fr.setAttribute('class', 'frame'); fr.setAttribute('x', g.x); fr.setAttribute('y', g.y);
+    fr.setAttribute('width', g.cols * CELL); fr.setAttribute('height', g.rows * CELL);
+    grp.appendChild(fr);
+    draftSvg.appendChild(grp);
+  });
+  label('Treadling', geo.tr.x, geo.tr.y - 8);
+  label('Drawdown', geo.dd.x, geo.dd.y - 8);
+}
+/* threading row 0 is the top row = shaft 8; shaft 1 sits at the bottom, as drafts are usually drawn */
+const shaftOfRow = r => SH - 1 - r;
+function apply(key, r, c, mode) {
+  if (key === 'th') { const s = shaftOfRow(r); D.threading[c] = mode === 'set' ? s : (D.threading[c] === s ? -1 : s); }
+  if (key === 'tr') { D.treadling[r] = mode === 'set' ? c : (D.treadling[r] === c ? -1 : c); }
+  if (key === 'tu') { const s = shaftOfRow(r); const idx = s * TR + c; D.tieup[idx] = mode === 'on' ? 1 : mode === 'off' ? 0 : (D.tieup[idx] ? 0 : 1); }
+  presetId = null; syncButtons(); drawDraft();
+}
+function isOn(key, r, c) {
+  if (key === 'th') return D.threading[c] === shaftOfRow(r);
+  if (key === 'tr') return D.treadling[r] === c;
+  if (key === 'tu') return !!D.tieup[shaftOfRow(r) * TR + c];
+  return false;
+}
+let dd = drawdown(D);
+function drawDraft() {
+  dd = drawdown(D);
+  ['th', 'tu', 'tr'].forEach(key => cellsBy[key].forEach((row, r) => row.forEach((rect, c) => {
+    const on = isOn(key, r, c);
+    rect.classList.toggle('on', on);
+    rect.setAttribute('aria-pressed', String(on));
+    const name = key === 'th' ? `End ${c + 1}, shaft ${shaftOfRow(r) + 1}` : key === 'tr' ? `Pick ${r + 1}, pedal ${c + 1}` : `Shaft ${shaftOfRow(r) + 1}, pedal ${c + 1}`;
+    rect.setAttribute('aria-label', name);
+  })));
+  const v = yarn.v, h = yarn.h;
+  cellsBy.dd.forEach((row, r) => row.forEach((rect, c) => rect.style.fill = dd[r * DE + c] ? v : h));
+  drawPreview();
+}
+let dragMode = null, dragKey = null;
+draftSvg.addEventListener('pointerdown', e => {
+  const t = e.target; if (!t.dataset || !t.dataset.k) return;
+  e.preventDefault();
+  const key = t.dataset.k, r = +t.dataset.r, c = +t.dataset.c;
+  dragKey = key;
+  if (key === 'tu') { dragMode = isOn(key, r, c) ? 'off' : 'on'; apply(key, r, c, dragMode); }
+  else { dragMode = 'set'; apply(key, r, c, isOn(key, r, c) ? 'toggle' : 'set'); }
+  draftSvg.setPointerCapture(e.pointerId);
+});
+draftSvg.addEventListener('pointermove', e => {
+  if (!dragMode) return;
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  if (!el || !el.dataset || el.dataset.k !== dragKey) return;
+  const r = +el.dataset.r, c = +el.dataset.c;
+  if (dragKey === 'tu') { if (isOn('tu', r, c) !== (dragMode === 'on')) apply('tu', r, c, dragMode); }
+  else if (!isOn(dragKey, r, c)) apply(dragKey, r, c, 'set');
+});
+const endDrag = () => { dragMode = null; dragKey = null; };
+draftSvg.addEventListener('pointerup', endDrag);
+draftSvg.addEventListener('pointercancel', endDrag);
+draftSvg.addEventListener('keydown', e => {
+  const t = e.target; if (!t.dataset || !t.dataset.k) return;
+  const key = t.dataset.k, g = geo[key];
+  let r = +t.dataset.r, c = +t.dataset.c;
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); apply(key, r, c, 'toggle'); cellsBy[key][r][c].focus(); return; }
+  const mv = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] }[e.key];
+  if (!mv) return;
+  e.preventDefault();
+  r = Math.max(0, Math.min(g.rows - 1, r + mv[0])); c = Math.max(0, Math.min(g.cols - 1, c + mv[1]));
+  cellsBy[key].forEach(row => row.forEach(x => x.setAttribute('tabindex', '-1')));
+  const n = cellsBy[key][r][c]; n.setAttribute('tabindex', '0'); n.focus();
+});
+function drawPreview() {
+  const W = previewCanvas.parentElement.clientWidth;
+  if (!W) return;
+  const pitch = W < 500 ? 4 : 5;
+  const ends = Math.floor(W / pitch), picks = Math.floor(Math.min(W * .72, 440) / pitch);
+  const cssW = ends * pitch, cssH = picks * pitch;
+  previewCanvas.width = Math.round(cssW * DPR); previewCanvas.height = Math.round(cssH * DPR);
+  previewCanvas.style.width = cssW + 'px'; previewCanvas.style.height = cssH + 'px';
+  const v = hex(yarn.v), h = hex(yarn.h);
+  preview.setCloth({ ends, picks, inter: tiled(dd, ends, picks), colV: colorArray(ends, () => v), colH: colorArray(picks, () => h) });
+  preview.set({ pitch: pitch * DPR, origin: [0, 0], light: [cssW * .3 * DPR, -cssH * .1 * DPR, cssW * .9 * DPR], sheen: .22 });
+  preview.render();
+  let up = 0; for (let k = 0; k < dd.length; k++) up += dd[k];
+  const longest = longestFloat(dd);
+  document.getElementById('preview-note').textContent = `${Math.round(up / dd.length * 100)} percent warp on the face. Longest float: ${longest} thread${longest === 1 ? '' : 's'}.`;
+}
+function longestFloat(d) {
+  let best = 0;
+  for (let p = 0; p < DP; p++) { let run = 0, prev = -1; for (let k = 0; k < DE * 2; k++) { const v = d[p * DE + (k % DE)]; run = v === prev ? run + 1 : 1; prev = v; if (run > best) best = run; } }
+  for (let e = 0; e < DE; e++) { let run = 0, prev = -1; for (let k = 0; k < DP * 2; k++) { const v = d[(k % DP) * DE + e]; run = v === prev ? run + 1 : 1; prev = v; if (run > best) best = run; } }
+  return Math.min(best, Math.max(DE, DP));
+}
+
+/* ───────── the career band ───────── */
+const bandCanvas = document.getElementById('band');
+const band = makeLoom(bandCanvas);
+const erasList = document.getElementById('eras');
+const ERAS = [
+  { from: 1998, to: 2005, dye: DYE.walnut },
+  { from: 2005, to: 2013, dye: DYE.logwood },
+  { from: 2013, to: 2017, dye: DYE.weld },
+  { from: 2017, to: 2021, dye: DYE.woad },
+  { from: 2021, to: 2026 + 9.4 / 12, dye: DYE.indigo }
+];
+let B = null;
+function buildBand() {
+  const W = bandCanvas.parentElement.clientWidth;
+  const pitch = W < 640 ? 3 : 4;
+  const total = Math.floor(W / pitch);
+  const loose = Math.round(total * .07);
+  const ends = total - loose;
+  const picks = W < 640 ? 34 : 38;
+  const cssW = total * pitch, cssH = picks * pitch;
+  bandCanvas.width = Math.round(cssW * DPR); bandCanvas.height = Math.round(cssH * DPR);
+  bandCanvas.style.width = cssW + 'px'; bandCanvas.style.height = cssH + 'px';
+  const t0 = 1998, t1 = ERAS[ERAS.length - 1].to;
+  const yearToEnd = y => Math.round((y - t0) / (t1 - t0) * ends);
+  const ranges = ERAS.map(e => [yearToEnd(e.from), yearToEnd(e.to)]);
+  const colV = colorArray(ends, i => {
+    const k = ranges.findIndex(([a, b]) => i >= a && i < b);
+    if (k > 0 && i - ranges[k][0] < 2) return hex(DYE.linen);
+    return hex(ERAS[Math.max(0, k)].dye);
+  });
+  const sel = j => j === 2 || j === 3 || j === 4 || j === picks - 3 || j === picks - 4 || j === picks - 5;
+  const colH = colorArray(picks, j => sel(j) ? hex(DYE.madder) : hex(DYE.linen));
+  const inter = new Uint8Array(ends * picks);
+  for (let j = 0; j < picks; j++) for (let i = 0; i < ends; i++) {
+    const edge = j < 2 || j >= picks - 2;
+    /* columns are the picks in time; rows are the warp. Twill body, plain selvage. */
+    inter[j * ends + i] = edge ? (plain(i, j) ? 1 : 0) : (twill22(i, j) ? 1 : 0);
+  }
+  band.setCloth({ ends, picks, inter, colV, colH });
+  band.set({ pitch: pitch * DPR, origin: [0, 0], loose, light: [cssW * .35 * DPR, -cssH * 2 * DPR, cssW * .6 * DPR], sheen: .2 });
+  B = { ends, pitch, ranges, cssW, loose, amt: 0, tgt: 0, hi: [-1, -1], raf: 0 };
+  band.render();
+  const axis = document.getElementById('axis');
+  axis.innerHTML = '';
+  const marks = [[1998, '1998'], [2005, '2005'], [2013, '2013'], [2017, '2017'], [2021, '2021'], [t1, 'now']];
+  marks.forEach(([y, txt], k) => {
+    if (W < 640 && (k === 3)) return;
+    const s = document.createElement('span');
+    s.style.left = (yearToEnd(y) * pitch) + 'px';
+    s.textContent = txt;
+    axis.appendChild(s);
+  });
+}
+function bandFocus(k) {
+  if (!B) return;
+  if (k === null || k === 5) { B.tgt = 0; erasList.classList.toggle('is-focus', k === 5); }
+  else { B.hi = B.ranges[k]; B.tgt = 1; erasList.classList.add('is-focus'); }
+  erasList.querySelectorAll('.era').forEach(li => li.classList.toggle('is-on', k !== null && +li.dataset.era === k));
+  if (!B.raf) B.raf = requestAnimationFrame(bandTick);
+}
+function bandTick() {
+  B.amt += (B.tgt - B.amt) * (reduceMotion ? 1 : .22);
+  if (Math.abs(B.tgt - B.amt) < .01) B.amt = B.tgt;
+  band.set({ hi: B.hi, hiAmt: B.amt });
+  band.render();
+  B.raf = B.amt !== B.tgt ? requestAnimationFrame(bandTick) : 0;
+}
+erasList.querySelectorAll('.era').forEach(li => {
+  li.addEventListener('pointerenter', () => bandFocus(+li.dataset.era));
+  li.addEventListener('pointerleave', () => bandFocus(null));
+});
+bandCanvas.addEventListener('pointermove', e => {
+  if (!B) return;
+  const r = bandCanvas.getBoundingClientRect();
+  const i = Math.floor((e.clientX - r.left) / B.pitch);
+  const k = B.ranges.findIndex(([a, b]) => i >= a && i < b);
+  bandFocus(k < 0 ? null : k);
+});
+bandCanvas.addEventListener('pointerleave', () => bandFocus(null));
+
+/* ───────── the sample book ───────── */
+const SAMPLES = [
+  { name: 'My AI Diary', text: 'Voice-first journaling that still sounds like you. Local-first, with zero-knowledge encryption.', kind: 'Satin in indigo and linen', url: 'https://diary.ai-created.com/', p: 'satin', v: DYE.indigo, h: DYE.linen },
+  { name: 'Human, Actually', text: 'Tailors your résumé to the job without sounding like a robot wrote it.', kind: 'Twill in walnut and linen', url: 'https://ai-created.com/products/human-actually', p: 'twill', v: DYE.walnut, h: DYE.linen },
+  { name: 'WatchGPT', text: 'Realtime ChatGPT voice, on your wrist.', kind: 'Bird’s eye in ink and weld', url: 'https://ai-created.com/products/watchgpt', p: 'birdseye', v: DYE.ink, h: '#D7B858' },
+  { name: 'AI Usage', text: 'Claude Code and Codex usage in your Mac menubar.', kind: 'Herringbone in woad and cream', url: 'https://ai-created.com/products/ai-usage', p: 'herringbone', v: '#3E5E86', h: DYE.cream },
+  { name: 'Calorie Counter', text: 'The most frictionless food logger yet. Speak, photograph, done.', kind: 'Basket in madder and linen', url: 'https://ai-created.com/products/calorie-counter', p: 'basket', v: DYE.madder, h: DYE.linen },
+  { name: 'Vectronix', text: 'Hardcore arcade space combat. No mercy, no filler.', kind: 'Diamond in ink and madder', url: 'https://www.ai-created.com/products/vectronix', p: 'diamond', v: DYE.ink, h: DYE.madder },
+  { name: 'Radial Drift', text: 'One finger. One mistake ends the run.', kind: 'Point twill in woad and cream', url: 'https://ai-created.com/games', p: 'point', v: '#3E5E86', h: DYE.cream },
+  { name: 'Audio Visualizer Suite', text: 'Render-quality video visualizations of your music.', kind: 'Herringbone in logwood and weld', url: 'https://ai-created.com/products/audio-visualizer-suite', p: 'herringbone', v: DYE.logwood, h: '#D7B858' },
+  { name: 'Color Clock', text: 'A 1991 clock design, brought back with care.', kind: 'Twill in weld and indigo', url: 'https://ai-created.com/products/color-clock', p: 'twill', v: DYE.weld, h: DYE.indigo },
+  { name: 'Jumbotron Simulator', text: 'Your name in lights at a stadium. A pixel-faithful LED simulation.', kind: 'Bird\u2019s eye in madder and weld', url: 'https://ai-created.com/products', p: 'birdseye', v: DYE.madder, h: '#D7B858' }
+];
+const grid = document.getElementById('sample-grid');
+const sampleCanvases = [];
+SAMPLES.forEach(s => {
+  const a = document.createElement('a');
+  a.className = 'sample'; a.href = s.url; a.target = '_blank'; a.rel = 'noopener';
+  a.innerHTML = `<div class="sample__cloth"><canvas role="img" aria-label="${s.kind}"></canvas></div><h3>${s.name}<span aria-hidden="true">&#8599;</span></h3><p>${s.text}</p><small>${s.kind}</small>`;
+  grid.appendChild(a);
+  sampleCanvases.push([a.querySelector('canvas'), s]);
+});
+const offCanvas = document.createElement('canvas');
+const off = makeLoom(offCanvas, { preserve: true });
+function pinked(w, h, tooth) {
+  const pts = [];
+  const nx = Math.max(2, Math.round(w / tooth)), ny = Math.max(2, Math.round(h / tooth));
+  const dx = w / nx, dy = h / ny, d = tooth * .5;
+  for (let k = 0; k < nx; k++) { pts.push([k * dx, d]); pts.push([k * dx + dx / 2, 0]); }
+  for (let k = 0; k < ny; k++) { pts.push([w - d, k * dy]); pts.push([w, k * dy + dy / 2]); }
+  for (let k = nx; k > 0; k--) { pts.push([k * dx, h - d]); pts.push([k * dx - dx / 2, h]); }
+  for (let k = ny; k > 0; k--) { pts.push([d, k * dy]); pts.push([0, k * dy - dy / 2]); }
+  return `polygon(${pts.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(',')})`;
+}
+function buildSamples() {
+  sampleCanvases.forEach(([cv, s], idx) => {
+    const box = cv.parentElement;
+    const w = box.clientWidth, h = box.clientHeight;
+    if (!w || !h) return;
+    const pitch = 4;
+    const ends = Math.ceil(w / pitch), picks = Math.ceil(h / pitch);
+    offCanvas.width = Math.round(w * DPR); offCanvas.height = Math.round(h * DPR);
+    const preset = PRESETS.find(p => p.id === s.p);
+    const d = drawdown(presetState(preset));
+    const v = hex(s.v), hh = hex(s.h);
+    off.setCloth({ ends, picks, inter: tiled(d, ends, picks, idx * 3, idx * 5), colV: colorArray(ends, () => v), colH: colorArray(picks, () => hh) });
+    off.set({ pitch: pitch * DPR, origin: [0, 0], light: [w * .2 * DPR, -h * .3 * DPR, w * 1.4 * DPR], sheen: .2 });
+    off.render();
+    cv.width = offCanvas.width; cv.height = offCanvas.height;
+    const ctx = cv.getContext('2d');
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.drawImage(offCanvas, 0, 0);
+    box.style.clipPath = pinked(w, h, 9);
+  });
+}
+
+/* ───────── a woven label to sign off ───────── */
+const labelCanvas = document.getElementById('label');
+const labelLoom = makeLoom(labelCanvas);
+function buildLabel() {
+  const pitch = 2;
+  const W = Math.min(420, labelCanvas.parentElement.clientWidth);
+  const ends = Math.floor(W / pitch), picks = 64;
+  const cssW = ends * pitch, cssH = picks * pitch;
+  labelCanvas.width = Math.round(cssW * DPR); labelCanvas.height = Math.round(cssH * DPR);
+  labelCanvas.style.width = cssW + 'px'; labelCanvas.style.height = cssH + 'px';
+  const mask = new Uint8Array(ends * picks);
+  const stamp = (str, scale, y0) => {
+    const w = (str.length * 6 - 1) * scale;
+    let x0 = Math.round((ends - w) / 2);
+    for (const ch of str) {
+      const g = GLYPHS[ch] || GLYPHS[' '];
+      for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) if (g[r * 5 + c] === '1')
+        for (let a = 0; a < scale; a++) for (let b = 0; b < scale; b++) mask[(y0 + r * scale + a) * ends + x0 + c * scale + b] = 1;
+      x0 += 6 * scale;
+    }
+  };
+  stamp('MVHV', 3, 10);
+  const small = (('PORTLAND OREGON'.length * 6 - 1) * 2) <= ends - 8;
+  stamp(small ? 'PORTLAND OREGON' : 'PORTLAND OR', 2, 39);
+  const inter = new Uint8Array(ends * picks);
+  for (let j = 0; j < picks; j++) for (let i = 0; i < ends; i++) {
+    const edge = j < 3 || j >= picks - 3;
+    /* black warp-faced satin ground; the letters are cream weft floats */
+    inter[j * ends + i] = edge ? (plain(i, j) ? 1 : 0) : (mask[j * ends + i] ? 0 : (satin(i, j) ? 0 : 1));
+  }
+  const black = hex('#17181F'), cream = hex('#EFE6D2');
+  labelLoom.setCloth({ ends, picks, inter, colV: colorArray(ends, () => black), colH: colorArray(picks, () => cream) });
+  labelLoom.set({ pitch: pitch * DPR, origin: [0, 0], light: [cssW * .3 * DPR, -cssH * DPR, cssW * DPR], sheen: .35 });
+  labelLoom.render();
+}
+
+/* ───────── boot ───────── */
+let lastW = 0;
+function buildRest() {
+  buildDraftSvg(); drawDraft();
+  buildBand();
+  buildSamples();
+  buildLabel();
+}
+function buildAll() { lastW = innerWidth; buildHero(); buildRest(); }
+lastW = innerWidth;
+{
+  const W = stage.clientWidth;
+  stage.style.minHeight = Math.round(W < 640 ? W * .78 : Math.min(Math.max(innerHeight * .6, 380), 640, W * .52) + 60) + 'px';
+}
+buildRest();
+const fontReady = (document.fonts && document.fonts.load) ? Promise.race([
+  Promise.all([document.fonts.load('italic 500 64px "Newsreader"'), document.fonts.load('italic 600 64px "Newsreader"')]),
+  new Promise(r => setTimeout(r, 1800))
+]) : Promise.resolve();
+const heroNow = () => { buildHero(); stage.style.minHeight = ''; };
+fontReady.then(heroNow, heroNow);
+let rt = 0;
+addEventListener('resize', () => {
+  if (Math.abs(innerWidth - lastW) < 2) return;
+  clearTimeout(rt); rt = setTimeout(buildAll, 160);
+});
+})();
+</script>
+</body>
+</html>
