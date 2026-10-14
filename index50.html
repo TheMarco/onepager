@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MVHV // LATENT MANIFOLD — 3D Tensor Embedding Portfolio</title>
+<meta name="description" content="Interactive 3D Three.js & GLSL neural manifold portfolio of Marco van Hylckama Vlieg — 20+ years of Product Design, Design Engineering, and AI-Native Systems." />
+<meta name="theme-color" content="#04060C" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --void: #04060C;
+  --glass: rgba(8, 12, 24, 0.72);
+  --glass-heavy: rgba(5, 8, 18, 0.9);
+  --cyan: #00F5D4;
+  --violet: #9B5DE5;
+  --magenta: #F15BB5;
+  --amber: #FEE440;
+  --ink: #EEF2FF;
+  --ink-dim: #94A3B8;
+  --ink-mute: #475569;
+  --border: rgba(0, 245, 212, 0.24);
+  --border-soft: rgba(238, 242, 255, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; min-height: 100vh;
+  background: var(--void);
+  color: var(--ink);
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+#webgl-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  cursor: grab;
+}
+#webgl-canvas:active { cursor: grabbing; }
+
+.mono { font-family: 'JetBrains Mono', monospace; }
+.serif { font-family: 'Instrument Serif', Georgia, serif; }
+a { color: inherit; text-decoration: none; }
+
+/* HUD TOP BAR */
+.hud-top {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px clamp(18px, 3.5vw, 48px);
+  background: rgba(4, 6, 12, 0.65);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-soft);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.hud-top__left, .hud-top__right {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.badge-model {
+  background: linear-gradient(90deg, rgba(0,245,212,0.16), rgba(155,93,229,0.22));
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  padding: 5px 10px;
+  font-weight: 700;
+  border-radius: 2px;
+}
+.pulse-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.45; }
+}
+.btn-hud {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+  padding: 6px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-hud:hover, .btn-hud.active {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(0,245,212,0.08);
+}
+
+/* PAGE OVERLAY LAYER */
+.ui-layer {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+  padding-top: 76px;
+}
+.interactive { pointer-events: auto; }
+
+/* HERO PANEL + INSPECTOR */
+.viewport-grid {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 28px clamp(18px, 3.5vw, 48px);
+  min-height: calc(100vh - 96px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: end;
+}
+@media (min-width: 1024px) {
+  .viewport-grid {
+    grid-template-columns: 440px 1fr 410px;
+    align-items: stretch;
+  }
+}
+
+.glass-panel {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+  padding: 28px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 12px;
+}
+.hero-title {
+  font-size: clamp(36px, 4.2vw, 56px);
+  line-height: 0.96;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-bottom: 14px;
+}
+.hero-title em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--cyan);
+  font-size: 1.12em;
+}
+.hero-lead {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+  margin-bottom: 20px;
+}
+
+.tensor-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 16px;
+  margin-top: 12px;
+}
+.tensor-stat {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 10px 12px;
+}
+.tensor-stat dt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.tensor-stat dd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 3px;
+}
+.tensor-stat dd span { color: var(--cyan); }
+
+/* NODE SELECTOR PILLS */
+.cluster-nav {
+  margin-top: 18px;
+}
+.cluster-nav__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.pill-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.node-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-soft);
+  background: rgba(255,255,255,0.03);
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.node-pill:hover, .node-pill.is-active {
+  border-color: var(--cyan);
+  color: var(--void);
+  background: var(--cyan);
+  font-weight: 700;
+}
+.node-pill.lab:hover, .node-pill.lab.is-active {
+  border-color: var(--magenta);
+  background: var(--magenta);
+  color: var(--ink);
+}
+
+/* RIGHT INSPECTOR CARD */
+.inspector-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+}
+.inspector-coords {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--amber);
+  letter-spacing: 0.12em;
+}
+.inspector-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 6px;
+}
+.inspector-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+.inspector-body {
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--ink-dim);
+  margin-bottom: 20px;
+}
+.inspector-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.inspector-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 4px 8px;
+  background: rgba(155, 93, 229, 0.15);
+  border: 1px solid rgba(155, 93, 229, 0.4);
+  color: #E2C6FF;
+}
+.inspector-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(0, 245, 212, 0.12);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  transition: all 0.2s;
+}
+.inspector-cta:hover {
+  background: var(--cyan);
+  color: var(--void);
+}
+
+/* CENTER FLOATING RETICLE HINT */
+.center-hint {
+  align-self: end;
+  justify-self: center;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: rgba(4, 6, 12, 0.72);
+  border: 1px solid var(--border-soft);
+  padding: 10px 18px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+
+/* LOWER CONTENT DECK */
+.dossier-deck {
+  max-width: 1440px;
+  margin: 40px auto 0;
+  padding: 64px clamp(18px, 3.5vw, 48px) 96px;
+  display: grid;
+  gap: 64px;
+}
+.section-banner {
+  background: var(--glass-heavy);
+  backdrop-filter: blur(22px);
+  border: 1px solid var(--border-soft);
+  padding: clamp(24px, 4vw, 48px);
+  border-radius: 4px;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 18px;
+  margin-bottom: 32px;
+}
+.section-header h2 {
+  font-size: clamp(26px, 3.2vw, 42px);
+  letter-spacing: -0.02em;
+}
+.section-header h2 em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--cyan);
+}
+
+/* 5 ENTERPRISE EPOCHS + 6 CAPABILITIES + 10 LAB CARDS */
+.card-matrix {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.matrix-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border-soft);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+.matrix-card:hover {
+  border-color: var(--cyan);
+  background: rgba(0, 245, 212, 0.05);
+  transform: translateY(-4px);
+}
+.matrix-card__meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 12px;
+}
+.matrix-card h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.matrix-card p {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  margin-bottom: 16px;
+}
+.matrix-card__foot {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  border-top: 1px dashed rgba(255,255,255,0.1);
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.contact-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.contact-tile {
+  padding: 20px;
+  border: 1px solid var(--border-soft);
+  background: rgba(255,255,255,0.03);
+  transition: all 0.25s;
+}
+.contact-tile:hover {
+  border-color: var(--magenta);
+  background: rgba(241, 91, 181, 0.08);
+}
+.contact-tile small {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--magenta);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+}
+.contact-tile strong {
+  font-size: 16px;
+}
+</style>
+</head>
+<body>
+
+<canvas id="webgl-canvas" aria-label="Interactive 3D Latent Manifold"></canvas>
+
+<header class="hud-top">
+  <div class="hud-top__left">
+    <a href="index.html" class="btn-hud">← Index</a>
+    <span class="pulse-dot"></span>
+    <span>MVHV // LATENT MANIFOLD v2.6</span>
+    <span class="badge-model">Gemini Argon 4 · Three.js + GLSL</span>
+  </div>
+  <div class="hud-top__right">
+    <span>TENSOR DIM: <b id="hud-dim" style="color:var(--cyan);">1536</b></span>
+    <button type="button" class="btn-hud active" id="btn-orbit">AUTO-ORBIT: ON</button>
+    <button type="button" class="btn-hud" id="btn-audio">SYNTH AUDIO: ON</button>
+  </div>
+</header>
+
+<main class="ui-layer">
+  <section class="viewport-grid">
+    
+    <!-- LEFT: MANIFOLD CONTROL & BIO -->
+    <div class="glass-panel interactive">
+      <div>
+        <div class="kicker">Direction 16 · Neural Topology</div>
+        <h1 class="hero-title">Marco van Hylckama <em>Vlieg</em></h1>
+        <p class="hero-lead">
+          Senior Product Designer, Design Engineer, and Generative-AI Specialist. Twenty years of mapping ambiguous product territory into working software across <b>Endemol, Yahoo!, Google, Walmart Labs, and Kohl's</b> — plus <b>18 shipped artifacts</b> at <em>ai-created.com</em>.
+        </p>
+
+        <dl class="tensor-stats">
+          <div class="tensor-stat"><dt>Practice Span</dt><dd>20<span>+</span> yrs</dd></div>
+          <div class="tensor-stat"><dt>Enterprise Clusters</dt><dd>05 <span>Hubs</span></dd></div>
+          <div class="tensor-stat"><dt>Lab Artifacts</dt><dd>18 <span>Live</span></dd></div>
+          <div class="tensor-stat"><dt>Base Coordinate</dt><dd>PDX <span>OR</span></dd></div>
+        </dl>
+
+        <div class="cluster-nav">
+          <div class="cluster-nav__label">01 // Career Epoch Nodes (Click to Fly)</div>
+          <div class="pill-grid" id="career-pills"></div>
+        </div>
+
+        <div class="cluster-nav">
+          <div class="cluster-nav__label">02 // AI-Created Lab Nodes (10 Orbitals)</div>
+          <div class="pill-grid" id="lab-pills"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER HINT -->
+    <div class="center-hint interactive">
+      Drag to rotate 3D manifold · Scroll or click any node to warp camera
+    </div>
+
+    <!-- RIGHT: ACTIVE TENSOR INSPECTOR -->
+    <aside class="glass-panel interactive" id="inspector-panel">
+      <div>
+        <div class="inspector-head">
+          <span class="kicker" style="margin:0;" id="insp-type">CLUSTER // ENTERPRISE</span>
+          <span class="inspector-coords" id="insp-coords">[+04.2, +01.8, -02.4]</span>
+        </div>
+        <h2 class="inspector-title" id="insp-title">Kohl's</h2>
+        <div class="inspector-sub" id="insp-sub">2021 — PRESENT · SR. PRODUCT DESIGNER & GEN-AI SPECIALIST</div>
+        <p class="inspector-body" id="insp-desc">
+          Leading UX across cart, checkout, wallet, account, and in-store self-checkout for millions of shoppers while driving generative-AI tooling, prompt libraries, and education across the enterprise design organization.
+        </p>
+        <div class="inspector-tags" id="insp-tags">
+          <span class="inspector-tag">Omnichannel Checkout</span>
+          <span class="inspector-tag">GenAI Enablement</span>
+          <span class="inspector-tag">Enterprise Scale</span>
+        </div>
+      </div>
+      <a class="inspector-cta" id="insp-link" href="https://kohls.com" target="_blank" rel="noopener">
+        <span>Open Tensor Target</span>
+        <span>↗</span>
+      </a>
+    </aside>
+
+  </section>
+
+  <!-- FULL DOSSIER BELOW THE FOLD -->
+  <div class="dossier-deck interactive">
+
+    <!-- CAPABILITIES MATRIX -->
+    <section class="section-banner">
+      <header class="section-header">
+        <div>
+          <div class="kicker">§ 01 · High-Dimensional Vectors</div>
+          <h2>Six Core <em>Capabilities</em></h2>
+        </div>
+        <span class="mono" style="font-size:11px; color:var(--ink-dim);">IC · LEAD · DIRECTOR FLUENCY</span>
+      </header>
+      <div class="card-matrix">
+        <article class="matrix-card">
+          <div>
+            <div class="matrix-card__meta"><span>VEC-01</span><span>MODEL AS MATERIAL</span></div>
+            <h3>AI-Native Product Design</h3>
+            <p>Designing systems where the model is the interaction — voice agents, ambient memory, contextual autonomy, and model-aware interfaces beyond generic chat wrappers.</p>
+          </div>
+          <div class="matrix-card__foot"><span>Voice UX · Agent UI · Prompts</span><span>99.4%</span></div>
+        </article>
+        <article class="matrix-card">
+          <div>
+            <div class="matrix-card__meta"><span>VEC-02</span><span>CODE = DESIGN</span></div>
+            <h3>Design Engineering</h3>
+            <p>Production-grade interactive prototypes in TypeScript, Next.js, WebGL, and Swift that behave like real software because they are real software.</p>
+          </div>
+          <div class="matrix-card__foot"><span>Next.js · TypeScript · Swift</span><span>98.9%</span></div>
+        </article>
+        <article class="matrix-card">
+          <div>
+            <div class="matrix-card__meta"><span>VEC-03</span><span>AMBIGUITY TO 1.0</span></div>
+            <h3>0 → 1 Product Incubation</h3>
+            <p>Taking half-formed executive briefs from initial framing to deployed software before momentum fades.</p>
+          </div>
+          <div class="matrix-card__foot"><span>Strategy · Framing · Shipping</span><span>99.1%</span></div>
+        </article>
+        <article class="matrix-card">
+          <div>
+            <div class="matrix-card__meta"><span>VEC-04</span><span>100M+ SCALE</span></div>
+            <h3>Enterprise UX Modernization</h3>
+            <p>Untangling high-volume cart, checkout, wallet, self-checkout, and merchant workflows where every basis point of clarity matters.</p>
+          </div>
+          <div class="matrix-card__foot"><span>Commerce · Checkout · A11y</span><span>99.7%</span></div>
+        </article>
+        <article class="matrix-card">
+          <div>
+            <div class="matrix-card__meta"><span>VEC-05</span><span>FORCE MULTIPLIERS</span></div>
+            <h3>Internal AI Tooling</h3>
+            <p>Custom copilots, prompt systems, and synthetic research accelerators purpose-built for design and product teams.</p>
+          </div>
+          <div class="matrix-card__foot"><span>LLMs · Workflows · Toolmaking</span><span>97.8%</span></div>
+        </article>
+        <article class="matrix-card">
+          <div>
+            <div class="matrix-card__meta"><span>VEC-06</span><span>TEACHING BY MAKING</span></div>
+            <h3>Leadership &amp; Enablement</h3>
+            <p>Directed global UX prototyping teams at Yahoo!; leading AI literacy and hands-on design engineering craft across enterprise orgs.</p>
+          </div>
+          <div class="matrix-card__foot"><span>Mentorship · Org Strategy</span><span>98.5%</span></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ALL 10 LAB ARTIFACTS -->
+    <section class="section-banner">
+      <header class="section-header">
+        <div>
+          <div class="kicker">§ 02 · Independent Lab (ai-created.com)</div>
+          <h2>Ten Shipped <em>Lab Artifacts</em></h2>
+        </div>
+        <a href="https://ai-created.com" target="_blank" rel="noopener" class="btn-hud">Visit ai-created.com ↗</a>
+      </header>
+      <div class="card-matrix" id="lab-grid-cards"></div>
+    </section>
+
+    <!-- SIGNAL / CONTACT -->
+    <section class="section-banner">
+      <header class="section-header">
+        <div>
+          <div class="kicker">§ 03 · Open Transmission</div>
+          <h2>Establish <em>Connection</em></h2>
+        </div>
+        <span class="mono" style="font-size:11px; color:var(--cyan);">PORTLAND, OR · UTC-8</span>
+      </header>
+      <div class="contact-strip">
+        <a class="contact-tile" href="mailto:marcovhv@gmail.com">
+          <small>01 // Direct Electronic Mail</small>
+          <strong>marcovhv@gmail.com</strong>
+        </a>
+        <a class="contact-tile" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">
+          <small>02 // Professional Network</small>
+          <strong>linkedin.com/in/marcovhv</strong>
+        </a>
+        <a class="contact-tile" href="https://ai-created.com" target="_blank" rel="noopener">
+          <small>03 // Independent Product Lab</small>
+          <strong>ai-created.com</strong>
+        </a>
+        <a class="contact-tile" href="https://x.com/AIandDesign" target="_blank" rel="noopener">
+          <small>04 // Broadcasts &amp; Video</small>
+          <strong>@AIandDesign (X &amp; YouTube)</strong>
+        </a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // Complete dataset of Marco's 5 career epochs + 10 lab artifacts
+  const NODES = [
+    {
+      id: 'kohls', group: 'career', label: "Kohl's",
+      period: '2021 — PRESENT · SR. PRODUCT DESIGNER & GEN-AI SPECIALIST',
+      coords: [4.2, 1.8, -1.5], color: 0x00F5D4, freq: 523.25,
+      desc: "Leading UX across cart, checkout, wallet, account, and in-store self-checkout while driving generative-AI tooling, prompt libraries, and design org enablement.",
+      tags: ['Omnichannel Checkout', 'Wallet', 'GenAI Enablement'],
+      link: 'https://kohls.com'
+    },
+    {
+      id: 'walmart', group: 'career', label: 'Walmart Labs',
+      period: '2017 — 2021 · PRINCIPAL PRODUCT DESIGNER / DESIGN TECHNOLOGIST',
+      coords: [2.1, -2.4, 2.8], color: 0x00BBF9, freq: 440.00,
+      desc: "Spearheaded mobile commerce, voice shopping, and ML-powered personalization systems serving hundreds of millions of retail customers.",
+      tags: ['Mobile Commerce', 'Voice UX', 'Personalization ML'],
+      link: 'https://tech.walmart.com'
+    },
+    {
+      id: 'google', group: 'career', label: 'Google',
+      period: '2013 — 2017 · SENIOR UX ENGINEER / PROTOTYPER',
+      coords: [-2.8, 2.6, 2.1], color: 0xFEE440, freq: 392.00,
+      desc: "Built high-fidelity functional prototypes for Google Cloud AI, Google Assistant, and Android — bridging expressive interaction design with production engineering.",
+      tags: ['Cloud AI', 'Google Assistant', 'Android Prototyping'],
+      link: 'https://google.com'
+    },
+    {
+      id: 'yahoo', group: 'career', label: 'Yahoo!',
+      period: '2005 — 2013 · DIRECTOR OF UX PROTOTYPING & SR. UX MANAGER',
+      coords: [-4.5, -1.2, -1.8], color: 0x9B5DE5, freq: 329.63,
+      desc: "Directed global UX prototyping teams across international hubs, stress-testing homepage personalization, media portals, and search experiences.",
+      tags: ['Director Leadership', 'Global Teams', 'Rapid Prototyping'],
+      link: 'https://yahoo.com'
+    },
+    {
+      id: 'endemol', group: 'career', label: 'Endemol',
+      period: '1998 — 2005 · UX & ENGINEERING LEAD',
+      coords: [0.4, -3.8, -3.4], color: 0x38B000, freq: 293.66,
+      desc: "Engineered multilingual interactive broadcast platforms and real-time companion web systems for international television formats.",
+      tags: ['Broadcast Sync', 'Full-Stack UX', 'Multilingual'],
+      link: 'https://endemolshine.us/'
+    },
+    // 10 AI-Created Lab Artifacts
+    {
+      id: 'diary', group: 'lab', label: 'My AI Diary',
+      period: 'OB-01 · VOICE-FIRST JOURNALING PWA',
+      coords: [6.0, 3.6, 1.2], color: 0xF15BB5, freq: 659.25,
+      desc: "Voice-first journaling app with Whisper transcription, semantic search, weekly AI reflection digests, and zero-knowledge encryption.",
+      tags: ['Next.js', 'Whisper', 'Zero-Knowledge Crypto'],
+      link: 'https://diary.ai-created.com/'
+    },
+    {
+      id: 'watchgpt', group: 'lab', label: 'WatchGPT',
+      period: 'OB-02 · REALTIME VOICE ON WATCHOS',
+      coords: [5.4, 0.2, 4.4], color: 0xF15BB5, freq: 698.46,
+      desc: "Realtime conversational ChatGPT voice interface engineered natively for Apple Watch wrist interactions.",
+      tags: ['watchOS', 'Swift', 'Realtime API'],
+      link: 'https://ai-created.com/products/watchgpt'
+    },
+    {
+      id: 'human', group: 'lab', label: 'Human, Actually',
+      period: 'OB-03 · AUTHENTIC RESUME TAILORING',
+      coords: [3.6, 4.8, -3.2], color: 0xF15BB5, freq: 783.99,
+      desc: "LLM + NLP resume tailoring platform that aligns experience to roles while stripping synthetic AI clichés.",
+      tags: ['LLM', 'NLP', 'Origin Verification'],
+      link: 'https://ai-created.com/products/human-actually'
+    },
+    {
+      id: 'aiusage', group: 'lab', label: 'AI Usage',
+      period: 'OB-04 · MACOS MENUBAR TELEMETRY',
+      coords: [-1.4, 5.4, -2.6], color: 0xF15BB5, freq: 587.33,
+      desc: "Native macOS menubar utility tracking token consumption and budget velocity across Claude Code and Codex.",
+      tags: ['macOS', 'Swift', 'Menubar Utility'],
+      link: 'https://ai-created.com/products/ai-usage'
+    },
+    {
+      id: 'calorie', group: 'lab', label: 'Calorie Counter',
+      period: 'OB-05 · VISION + VOICE NUTRITION LOG',
+      coords: [-5.2, 3.2, -0.8], color: 0xF15BB5, freq: 622.25,
+      desc: "Zero-friction nutrition logging via meal photography and natural speech parsing.",
+      tags: ['Computer Vision', 'LLM', 'PWA'],
+      link: 'https://ai-created.com/products/calorie-counter'
+    },
+    {
+      id: 'vectronix', group: 'lab', label: 'Vectronix',
+      period: 'OB-06 · VECTOR ARCADE COMBAT',
+      coords: [-5.8, -0.4, 3.8], color: 0xF15BB5, freq: 739.99,
+      desc: "Hardcore retro vector arcade combat engine featuring custom particle physics and procedural Web Audio.",
+      tags: ['Canvas 2D', 'Vector Physics', 'Web Audio'],
+      link: 'https://www.ai-created.com/products/vectronix'
+    },
+    {
+      id: 'radial', group: 'lab', label: 'Radial Drift',
+      period: 'OB-07 · ONE-TAP WEBGL ARCADE',
+      coords: [-3.4, -4.6, 2.6], color: 0xF15BB5, freq: 830.61,
+      desc: "Minimalist one-finger orbital tension game exploring precision touch timing and haptics.",
+      tags: ['WebGL', 'Touch Physics', 'Haptics'],
+      link: 'https://ai-created.com/games'
+    },
+    {
+      id: 'audiovis', group: 'lab', label: 'Audio Visualizer',
+      period: 'OB-08 · WEBGL FFT SHADER SUITE',
+      coords: [1.6, -5.2, 1.4], color: 0xF15BB5, freq: 880.00,
+      desc: "Real-time FFT frequency spectrum analyzer driving custom WebGL shaders and FFmpeg video export.",
+      tags: ['WebGL', 'FFT Audio', 'FFmpeg'],
+      link: 'https://ai-created.com/products/audio-visualizer-suite'
+    },
+    {
+      id: 'colorclock', group: 'lab', label: 'Color Clock',
+      period: 'OB-09 · 1991 CHROMATIC HOROLOGY',
+      coords: [4.8, -3.4, -2.8], color: 0xF15BB5, freq: 987.77,
+      desc: "A typographic homage to the 1991 spectrum clock, mapping continuous time to 24-bit color space.",
+      tags: ['Chromatic Math', 'CSS', 'Typography'],
+      link: 'https://ai-created.com/products/color-clock'
+    },
+    {
+      id: 'jumbotron', group: 'lab', label: 'Jumbotron Simulator',
+      period: 'OB-10 · STADIUM LED MATRIX',
+      coords: [-2.2, 1.2, -5.6], color: 0xF15BB5, freq: 1046.50,
+      desc: "Pixel-accurate stadium scoreboard LED matrix simulator with live custom shaders and message sequencing.",
+      tags: ['Canvas', 'LED Shader', 'Simulation'],
+      link: 'https://ai-created.com/products'
+    }
+  ];
+
+  // Populate UI pills and Lab Grid
+  const careerPillsEl = document.getElementById('career-pills');
+  const labPillsEl = document.getElementById('lab-pills');
+  const labGridEl = document.getElementById('lab-grid-cards');
+
+  NODES.forEach((n, idx) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'node-pill' + (n.group === 'lab' ? ' lab' : '') + (idx === 0 ? ' is-active' : '');
+    btn.dataset.id = n.id;
+    btn.textContent = n.label;
+    btn.addEventListener('click', () => selectNode(n.id));
+    if (n.group === 'career') careerPillsEl.appendChild(btn);
+    else labPillsEl.appendChild(btn);
+
+    if (n.group === 'lab') {
+      const card = document.createElement('a');
+      card.className = 'matrix-card';
+      card.href = n.link;
+      card.target = '_blank';
+      card.rel = 'noopener';
+      card.innerHTML = `
+        <div>
+          <div class="matrix-card__meta"><span>${n.period.split('·')[0].trim()}</span><span>LIVE ARTIFACT ↗</span></div>
+          <h3>${n.label}</h3>
+          <p>${n.desc}</p>
+        </div>
+        <div class="matrix-card__foot"><span>${n.tags.join(' · ')}</span><span>[${n.coords.join(', ')}]</span></div>
+      `;
+      labGridEl.appendChild(card);
+    }
+  });
+
+  // Web Audio harmonic synth
+  let audioCtx = null;
+  let audioOn = true;
+  function playTensorChord(baseFreq) {
+    if (!audioOn) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+      [1, 1.25, 1.5].forEach((ratio, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = i === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(baseFreq * ratio, now);
+        gain.gain.setValueAtTime(0.03 / (i + 1), now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.95);
+      });
+    } catch (e) {}
+  }
+
+  document.getElementById('btn-audio').addEventListener('click', function () {
+    audioOn = !audioOn;
+    this.textContent = `SYNTH AUDIO: ${audioOn ? 'ON' : 'OFF'}`;
+    this.classList.toggle('active', audioOn);
+  });
+
+  // THREE.JS SCENE SETUP
+  const canvas = document.getElementById('webgl-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x04060C, 0.038);
+
+  const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 120);
+  camera.position.set(0, 2.5, 14.5);
+
+  const worldGroup = new THREE.Group();
+  scene.add(worldGroup);
+
+  // CENTRAL CUSTOM GLSL SHADER CORE (Morphing Latent Singularity)
+  const coreGeo = new THREE.IcosahedronGeometry(1.55, 32);
+  const coreMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uAccent: { value: new THREE.Color(0x00F5D4) }
+    },
+    vertexShader: `
+      uniform float uTime;
+      varying vec3 vNormal;
+      varying float vDisp;
+      // Simplex-style trigonometric turbulence
+      float wave(vec3 p) {
+        return sin(p.x * 2.8 + uTime * 1.6) * cos(p.y * 2.8 - uTime * 1.2) * sin(p.z * 2.8 + uTime * 1.4);
+      }
+      void main() {
+        vNormal = normal;
+        float d = wave(position) * 0.24 + wave(position * 2.1) * 0.1;
+        vDisp = d;
+        vec3 newPos = position + normal * d;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 uAccent;
+      varying vec3 vNormal;
+      varying float vDisp;
+      void main() {
+        float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.2);
+        vec3 base = mix(vec3(0.05, 0.08, 0.22), uAccent, clamp(vDisp * 2.5 + 0.5, 0.0, 1.0));
+        vec3 col = base + uAccent * fresnel * 1.4;
+        gl_FragColor = vec4(col, 0.92);
+      }
+    `,
+    transparent: true,
+    wireframe: true
+  });
+  const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+  worldGroup.add(coreMesh);
+
+  // 3,200 GPU BACKGROUND TENSOR PARTICLES
+  const pCount = 3200;
+  const pPos = new Float32Array(pCount * 3);
+  const pCol = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount; i++) {
+    const r = 4.5 + Math.random() * 18;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    pPos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+    pPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    pPos[i * 3 + 2] = r * Math.cos(phi);
+
+    const c = Math.random() < 0.5 ? new THREE.Color(0x00F5D4) : (Math.random() < 0.5 ? new THREE.Color(0x9B5DE5) : new THREE.Color(0xF15BB5));
+    pCol[i * 3] = c.r; pCol[i * 3 + 1] = c.g; pCol[i * 3 + 2] = c.b;
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
+  const pMat = new THREE.PointsMaterial({ size: 0.065, vertexColors: true, transparent: true, opacity: 0.7 });
+  const particleCloud = new THREE.Points(pGeo, pMat);
+  worldGroup.add(particleCloud);
+
+  // BUILD 3D NODE MESHES & SYNAPTIC FILAMENTS
+  const nodeMeshes = [];
+  const linePositions = [];
+
+  NODES.forEach(node => {
+    const [x, y, z] = node.coords;
+    const isCareer = node.group === 'career';
+    const geo = isCareer
+      ? new THREE.OctahedronGeometry(0.42, 1)
+      : new THREE.SphereGeometry(0.26, 16, 16);
+    const mat = new THREE.MeshBasicMaterial({ color: node.color, wireframe: isCareer });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x, y, z);
+    mesh.userData = node;
+
+    // Outer halo ring
+    const ringGeo = new THREE.RingGeometry(isCareer ? 0.54 : 0.36, isCareer ? 0.62 : 0.42, 32);
+    const ringMat = new THREE.MeshBasicMaterial({ color: node.color, side: THREE.DoubleSide, transparent: true, opacity: 0.55 });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    mesh.add(ring);
+
+    worldGroup.add(mesh);
+    nodeMeshes.push(mesh);
+
+    // Connect every node to the central singularity (0,0,0)
+    linePositions.push(0, 0, 0, x, y, z);
+  });
+
+  const lineGeo = new THREE.BufferGeometry();
+  lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x00F5D4, transparent: true, opacity: 0.22 });
+  const synapticLines = new THREE.LineSegments(lineGeo, lineMat);
+  worldGroup.add(synapticLines);
+
+  // Target selection Ring
+  const targetRingGeo = new THREE.RingGeometry(0.75, 0.88, 32);
+  const targetRingMat = new THREE.MeshBasicMaterial({ color: 0xFEE440, side: THREE.DoubleSide });
+  const targetRing = new THREE.Mesh(targetRingGeo, targetRingMat);
+  targetRing.position.set(...NODES[0].coords);
+  worldGroup.add(targetRing);
+
+  // CAMERA & ORBIT INTERACTION
+  let autoOrbit = true;
+  let isDragging = false;
+  let prevX = 0, prevY = 0;
+  let targetRotY = 0.3, targetRotX = 0.15;
+  let camTargetPos = new THREE.Vector3(2.1, 1.2, 11.5);
+
+  document.getElementById('btn-orbit').addEventListener('click', function () {
+    autoOrbit = !autoOrbit;
+    this.textContent = `AUTO-ORBIT: ${autoOrbit ? 'ON' : 'OFF'}`;
+    this.classList.toggle('active', autoOrbit);
+  });
+
+  function selectNode(id) {
+    const node = NODES.find(n => n.id === id);
+    if (!node) return;
+
+    // Update UI Inspector
+    document.getElementById('insp-type').textContent = node.group === 'career' ? 'CLUSTER // ENTERPRISE EPOCH' : 'CLUSTER // AI-CREATED LAB';
+    document.getElementById('insp-coords').textContent = `[${node.coords.map(n => (n >= 0 ? '+' : '') + n.toFixed(1)).join(', ')}]`;
+    document.getElementById('insp-title').textContent = node.label;
+    document.getElementById('insp-sub').textContent = node.period;
+    document.getElementById('insp-desc').textContent = node.desc;
+    document.getElementById('insp-link').href = node.link;
+
+    const tagsEl = document.getElementById('insp-tags');
+    tagsEl.innerHTML = node.tags.map(t => `<span class="inspector-tag">${t}</span>`).join('');
+
+    document.querySelectorAll('.node-pill').forEach(p => {
+      p.classList.toggle('is-active', p.dataset.id === id);
+    });
+
+    // Move target ring & shader accent color
+    targetRing.position.set(...node.coords);
+    coreMat.uniforms.uAccent.value.setHex(node.color);
+
+    // Orient world rotation so selected node faces camera
+    const [nx, ny, nz] = node.coords;
+    targetRotY = -Math.atan2(nx, nz) * 0.65;
+    targetRotX = Math.atan2(ny, Math.hypot(nx, nz)) * 0.45;
+
+    playTensorChord(node.freq);
+  }
+
+  // Raycaster for clicking 3D nodes directly
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+
+  canvas.addEventListener('pointerdown', e => {
+    isDragging = true;
+    prevX = e.clientX;
+    prevY = e.clientY;
+  });
+
+  window.addEventListener('pointermove', e => {
+    if (!isDragging) return;
+    const dx = e.clientX - prevX;
+    const dy = e.clientY - prevY;
+    prevX = e.clientX;
+    prevY = e.clientY;
+    targetRotY += dx * 0.006;
+    targetRotX = Math.max(-1.1, Math.min(1.1, targetRotX + dy * 0.006));
+  });
+
+  window.addEventListener('pointerup', e => {
+    if (!isDragging) return;
+    isDragging = false;
+  });
+
+  canvas.addEventListener('click', e => {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObjects(nodeMeshes, false);
+    if (hits.length > 0 && hits[0].object.userData.id) {
+      selectNode(hits[0].object.userData.id);
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // RENDER LOOP
+  const clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    coreMat.uniforms.uTime.value = t;
+
+    if (autoOrbit && !isDragging) {
+      targetRotY += 0.0022;
+    }
+
+    worldGroup.rotation.y += (targetRotY - worldGroup.rotation.y) * 0.06;
+    worldGroup.rotation.x += (targetRotX - worldGroup.rotation.x) * 0.06;
+
+    // Billboard node rings & target reticle toward camera
+    nodeMeshes.forEach((m, idx) => {
+      m.rotation.x = t * 0.7 + idx;
+      m.rotation.y = t * 0.5 + idx;
+      if (m.children[0]) m.children[0].lookAt(camera.position);
+    });
+    targetRing.lookAt(camera.position);
+    targetRing.scale.setScalar(1 + Math.sin(t * 4) * 0.12);
+
+    camera.position.lerp(camTargetPos, 0.04);
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>

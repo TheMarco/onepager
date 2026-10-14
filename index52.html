@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MVHV // SHADER MONOLITH — Raymarched SDF Brutalist Portfolio</title>
+<meta name="description" content="Real-time GLSL raymarched liquid metal shader and Swiss brutalist portfolio of Marco van Hylckama Vlieg." />
+<meta name="theme-color" content="#09090B" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #09090B;
+  --ink: #FAFAFA;
+  --acid: #D4FF00;
+  --hyper: #FF2A85;
+  --muted: #A1A1AA;
+  --line: rgba(250, 250, 250, 0.22);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+#sdf-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+.display { font-family: 'Anton', Impact, sans-serif; text-transform: uppercase; letter-spacing: 0.01em; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+a { color: inherit; text-decoration: none; }
+
+.brutal-shell {
+  position: relative;
+  z-index: 10;
+}
+
+/* STICKY SWISS GRID HEADER */
+.swiss-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  border-bottom: 2px solid var(--ink);
+  background: rgba(9, 9, 11, 0.84);
+  backdrop-filter: blur(12px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.swiss-bar > * {
+  padding: 14px 20px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.swiss-bar > *:last-child { border-right: none; }
+.acid-pill {
+  background: var(--acid);
+  color: var(--bg);
+  padding: 3px 8px;
+  font-weight: 700;
+}
+
+/* HERO POSTER */
+.poster-hero {
+  min-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(24px, 4vw, 56px);
+  border-bottom: 2px solid var(--ink);
+}
+.poster-title {
+  font-family: 'Anton', Impact, sans-serif;
+  font-size: clamp(64px, 13.5vw, 210px);
+  line-height: 0.84;
+  text-transform: uppercase;
+  mix-blend-mode: difference;
+  user-select: none;
+}
+.poster-title span {
+  color: var(--acid);
+  display: block;
+}
+
+.poster-bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  background: rgba(9, 9, 11, 0.78);
+  backdrop-filter: blur(16px);
+  border: 2px solid var(--ink);
+  padding: 24px;
+}
+@media (min-width: 960px) {
+  .poster-bottom {
+    grid-template-columns: 1.3fr 1fr auto;
+    align-items: center;
+  }
+}
+.poster-lead {
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.45;
+}
+.poster-lead b { color: var(--acid); }
+
+.shader-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.btn-brutal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border: 1.5px solid var(--ink);
+  background: var(--bg);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-brutal:hover, .btn-brutal.active {
+  background: var(--acid);
+  color: var(--bg);
+  border-color: var(--acid);
+}
+
+/* BRUTALIST TABLE LEDGER */
+.ledger-section {
+  background: rgba(9, 9, 11, 0.9);
+  backdrop-filter: blur(18px);
+  border-bottom: 2px solid var(--ink);
+}
+.ledger-head {
+  padding: 36px clamp(24px, 4vw, 56px);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.ledger-head h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(40px, 6vw, 84px);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+.ledger-head h2 span { color: var(--acid); }
+
+.ledger-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-bottom: 1px solid var(--line);
+  padding: 24px clamp(24px, 4vw, 56px);
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+@media (min-width: 900px) {
+  .ledger-row {
+    grid-template-columns: 140px 240px 260px 1fr 60px;
+    align-items: baseline;
+    gap: 20px;
+  }
+}
+.ledger-row:hover {
+  background: var(--acid);
+  color: var(--bg);
+}
+.ledger-row:hover .mono, .ledger-row:hover p { color: var(--bg); }
+.ledger-row .yr { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--acid); font-weight: 700; }
+.ledger-row:hover .yr { color: var(--bg); }
+.ledger-row h3 { font-size: 26px; font-weight: 700; }
+.ledger-row .role { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--muted); }
+.ledger-row p { font-size: 14.5px; color: var(--muted); line-height: 1.55; }
+.ledger-row .arr { font-family: 'JetBrains Mono', monospace; font-size: 20px; text-align: right; }
+
+/* 10 LAB SPECIMENS GRID */
+.specimen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.specimen-cell {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 240px;
+  transition: all 0.2s;
+}
+.specimen-cell:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+.specimen-cell:hover .mono, .specimen-cell:hover p { color: var(--bg); }
+.specimen-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--acid);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.specimen-cell:hover .specimen-num { color: var(--hyper); }
+.specimen-cell h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: 32px;
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+.specimen-cell p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.specimen-stack {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<canvas id="sdf-canvas" aria-label="Raymarched Liquid Chrome GLSL Shader"></canvas>
+
+<div class="brutal-shell">
+  <header class="swiss-bar">
+    <a href="index.html">← INDEX</a>
+    <div>
+      <span class="acid-pill">DIRECTION 18 // RAYMARCHED SDF SHADER</span>
+      <span>MARCO VAN HYLCKAMA VLIEG · PORTLAND, OR</span>
+    </div>
+    <div id="shader-fps">GLSL 60 FPS</div>
+  </header>
+
+  <section class="poster-hero">
+    <h1 class="poster-title">
+      REFUSE THE<span>AVERAGE.</span>
+    </h1>
+
+    <div class="poster-bottom">
+      <p class="poster-lead">
+        <b>Marco van Hylckama Vlieg</b> — Senior Product Designer, Design Engineer &amp; Generative-AI Specialist. Twenty years of building real, high-leverage software across <b>Kohl's, Walmart Labs, Yahoo!, Google, and Endemol</b>, plus 18 live products at <b>ai-created.com</b>.
+      </p>
+      <div class="mono" style="font-size:11px; color:var(--muted);">
+        SHADER MODE: RAYMARCHED METABALLS<br/>
+        MOVE CURSOR TO DEFORM LIQUID CHROME
+      </div>
+      <div class="shader-controls">
+        <button type="button" class="btn-brutal active" data-palette="0">CHROME / ACID</button>
+        <button type="button" class="btn-brutal" data-palette="1">HYPER / PLASMA</button>
+        <button type="button" class="btn-brutal" data-palette="2">OBSIDIAN GOLD</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 CAREER EPOCHS -->
+  <section class="ledger-section">
+    <header class="ledger-head">
+      <h2>01 // ENTERPRISE <span>PROVENANCE</span></h2>
+      <span class="mono">1998 — 2026 · FIVE MAJOR STOPS</span>
+    </header>
+
+    <a class="ledger-row" href="https://kohls.com" target="_blank" rel="noopener">
+      <span class="yr">2021 — NOW</span>
+      <h3>Kohl's</h3>
+      <span class="role">Sr. Product Designer &amp; GenAI Specialist</span>
+      <p>Leading UX across cart, checkout, wallet, account, and in-store self-checkout while driving generative-AI tooling and education across the design org.</p>
+      <span class="arr">↗</span>
+    </a>
+    <a class="ledger-row" href="https://tech.walmart.com" target="_blank" rel="noopener">
+      <span class="yr">2017 — 2021</span>
+      <h3>Walmart Labs</h3>
+      <span class="role">Principal Product Designer</span>
+      <p>Architected mobile commerce, voice shopping, and ML personalization flows for hundreds of millions of shoppers.</p>
+      <span class="arr">↗</span>
+    </a>
+    <a class="ledger-row" href="https://google.com" target="_blank" rel="noopener">
+      <span class="yr">2013 — 2017</span>
+      <h3>Google</h3>
+      <span class="role">Senior UX Engineer / Prototyper</span>
+      <p>Built high-fidelity functional prototypes for Google Cloud AI, Google Assistant, and Android OS.</p>
+      <span class="arr">↗</span>
+    </a>
+    <a class="ledger-row" href="https://yahoo.com" target="_blank" rel="noopener">
+      <span class="yr">2005 — 2013</span>
+      <h3>Yahoo!</h3>
+      <span class="role">Director of UX Prototyping</span>
+      <p>Directed global UX prototyping teams across international hubs for homepage personalization, media, and search.</p>
+      <span class="arr">↗</span>
+    </a>
+    <a class="ledger-row" href="https://endemolshine.us/" target="_blank" rel="noopener">
+      <span class="yr">1998 — 2005</span>
+      <h3>Endemol</h3>
+      <span class="role">UX &amp; Engineering Lead</span>
+      <p>Engineered real-time second-screen interactive broadcast platforms and multilingual web systems.</p>
+      <span class="arr">↗</span>
+    </a>
+  </section>
+
+  <!-- 6 CORE CAPABILITIES -->
+  <section class="ledger-section">
+    <header class="ledger-head">
+      <h2>02 // SIX <span>CAPABILITIES</span></h2>
+      <span class="mono">STRATEGY · DESIGN · CODE · AI</span>
+    </header>
+    <div class="specimen-grid">
+      <article class="specimen-cell">
+        <div><div class="specimen-num"><span>CAP-01</span><span>AI-NATIVE</span></div><h3>Model-First UX</h3><p>Voice agents, semantic memory, and model-aware interfaces designed from first principles.</p></div>
+        <div class="specimen-stack">Voice UX · Agent UI · Prompt Engineering</div>
+      </article>
+      <article class="specimen-cell">
+        <div><div class="specimen-num"><span>CAP-02</span><span>BUILDER</span></div><h3>Design Engineering</h3><p>Shipping production-grade code in Next.js, TypeScript, Swift, and WebGL without handoff loss.</p></div>
+        <div class="specimen-stack">TypeScript · React · Swift · GLSL</div>
+      </article>
+      <article class="specimen-cell">
+        <div><div class="specimen-num"><span>CAP-03</span><span>INCUBATION</span></div><h3>0 → 1 Products</h3><p>Turning ambiguous briefs into working software prototypes in days instead of quarters.</p></div>
+        <div class="specimen-stack">Framing · Rapid Prototyping · Shipping</div>
+      </article>
+      <article class="specimen-cell">
+        <div><div class="specimen-num"><span>CAP-04</span><span>SCALE</span></div><h3>Enterprise Commerce</h3><p>Modernizing high-volume cart, checkout, wallet, and self-checkout pipelines.</p></div>
+        <div class="specimen-stack">Checkout · Wallet · Accessibility</div>
+      </article>
+      <article class="specimen-cell">
+        <div><div class="specimen-num"><span>CAP-05</span><span>TOOLING</span></div><h3>Internal AI Systems</h3><p>Custom design copilots, prompt libraries, and synthetic user research workflows.</p></div>
+        <div class="specimen-stack">LLMs · Internal Platforms · Automation</div>
+      </article>
+      <article class="specimen-cell">
+        <div><div class="specimen-num"><span>CAP-06</span><span>ORG IMPACT</span></div><h3>Design Leadership</h3><p>Building prototyping teams and teaching AI-native craft across enterprise organizations.</p></div>
+        <div class="specimen-stack">Director Experience · Mentorship</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 10 SHIPPED LAB ARTIFACTS -->
+  <section class="ledger-section">
+    <header class="ledger-head">
+      <h2>03 // AI-CREATED <span>LAB (10)</span></h2>
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="btn-brutal">OPEN AI-CREATED.COM ↗</a>
+    </header>
+    <div class="specimen-grid">
+      <a class="specimen-cell" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-01</span><span>LIVE PWA ↗</span></div><h3>My AI Diary</h3><p>Voice-first journaling with Whisper transcription, semantic search, and zero-knowledge encryption.</p></div>
+        <div class="specimen-stack">Next.js · Whisper · IndexedDB · Crypto</div>
+      </a>
+      <a class="specimen-cell" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-02</span><span>WATCHOS ↗</span></div><h3>WatchGPT</h3><p>Realtime conversational ChatGPT voice client engineered for Apple Watch.</p></div>
+        <div class="specimen-stack">watchOS · Swift · Realtime API</div>
+      </a>
+      <a class="specimen-cell" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-03</span><span>LLM + NLP ↗</span></div><h3>Human, Actually</h3><p>Resume tailoring tool that preserves authentic human tone and strips AI clichés.</p></div>
+        <div class="specimen-stack">LLM · NLP · Editorial UX</div>
+      </a>
+      <a class="specimen-cell" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-04</span><span>MACOS ↗</span></div><h3>AI Usage</h3><p>Native macOS menubar utility tracking Claude Code and Codex token budgets.</p></div>
+        <div class="specimen-stack">macOS · Swift · Menubar</div>
+      </a>
+      <a class="specimen-cell" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-05</span><span>VISION AI ↗</span></div><h3>Calorie Counter</h3><p>Zero-friction meal logging powered by camera vision and voice parsing.</p></div>
+        <div class="specimen-stack">Vision LLM · Speech · PWA</div>
+      </a>
+      <a class="specimen-cell" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-06</span><span>ARCADE ↗</span></div><h3>Vectronix</h3><p>Hardcore retro vector arcade combat with custom particle physics and Web Audio.</p></div>
+        <div class="specimen-stack">Canvas · Vector Physics · Web Audio</div>
+      </a>
+      <a class="specimen-cell" href="https://ai-created.com/games" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-07</span><span>WEBGL GAME ↗</span></div><h3>Radial Drift</h3><p>One-tap orbital drift game built around precision timing and haptics.</p></div>
+        <div class="specimen-stack">WebGL · Touch · Haptics</div>
+      </a>
+      <a class="specimen-cell" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-08</span><span>FFT SHADER ↗</span></div><h3>Audio Visualizer</h3><p>WebGL audio-reactive shader suite with real-time FFT analysis and FFmpeg export.</p></div>
+        <div class="specimen-stack">WebGL · FFT · FFmpeg</div>
+      </a>
+      <a class="specimen-cell" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-09</span><span>1991 HOMAGE ↗</span></div><h3>Color Clock</h3><p>Chromatic horology mapping the passage of time onto 24-bit color space.</p></div>
+        <div class="specimen-stack">CSS · Typography · Color Math</div>
+      </a>
+      <a class="specimen-cell" href="https://ai-created.com/products" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>OB-10</span><span>SIMULATOR ↗</span></div><h3>Jumbotron Simulator</h3><p>Pixel-faithful stadium LED scoreboard simulator in Canvas and WebGL.</p></div>
+        <div class="specimen-stack">Canvas · WebGL · LED Shader</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- DIRECT TRANSMISSION -->
+  <section class="ledger-section">
+    <header class="ledger-head">
+      <h2>04 // DIRECT <span>SIGNAL</span></h2>
+      <span class="mono">AVAILABLE FOR SENIOR IC · LEAD · DIRECTOR CONVERSATIONS</span>
+    </header>
+    <div class="specimen-grid">
+      <a class="specimen-cell" href="mailto:marcovhv@gmail.com">
+        <div><div class="specimen-num"><span>CH-01</span><span>EMAIL</span></div><h3>marcovhv@gmail.com</h3><p>Direct inbox. Fastest response path.</p></div>
+        <div class="specimen-stack">Send Transmission ↗</div>
+      </a>
+      <a class="specimen-cell" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>CH-02</span><span>LINKEDIN</span></div><h3>/in/marcovhv</h3><p>Full professional history and recommendations.</p></div>
+        <div class="specimen-stack">Open Profile ↗</div>
+      </a>
+      <a class="specimen-cell" href="https://x.com/AIandDesign" target="_blank" rel="noopener">
+        <div><div class="specimen-num"><span>CH-03</span><span>X + YOUTUBE</span></div><h3>@AIandDesign</h3><p>Daily AI design engineering dispatches and video demos.</p></div>
+        <div class="specimen-stack">Follow Signal ↗</div>
+      </a>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // Raw WebGL Raymarched Signed Distance Field (SDF) Liquid Metal Shader
+  const canvas = document.getElementById('sdf-canvas');
+  const gl = canvas.getContext('webgl');
+  if (!gl) return;
+
+  const vsSource = `
+    attribute vec2 aPos;
+    void main() {
+      gl_Position = vec4(aPos, 0.0, 1.0);
+    }
+  `;
+
+  const fsSource = `
+    precision highp float;
+    uniform vec2 uRes;
+    uniform float uTime;
+    uniform vec2 uMouse;
+    uniform float uPalette;
+
+    // Smooth minimum for liquid metaball fusion
+    float smin(float a, float b, float k) {
+      float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+      return mix(b, a, h) - k * h * (1.0 - h);
+    }
+
+    float map(vec3 p) {
+      vec3 m = vec3((uMouse - 0.5) * vec2(3.2, 2.0), 0.0);
+      float s1 = length(p - vec3(sin(uTime * 0.9) * 1.3, cos(uTime * 0.7) * 0.8, 0.0)) - 0.85;
+      float s2 = length(p - vec3(cos(uTime * 0.6) * -1.4, sin(uTime * 1.1) * 0.9, 0.2)) - 0.78;
+      float s3 = length(p - m) - 0.72;
+      float torus = length(vec2(length(p.xz) - 1.45, p.y)) - 0.28;
+      float d = smin(s1, s2, 0.65);
+      d = smin(d, s3, 0.65);
+      d = smin(d, torus, 0.45);
+      d += 0.04 * sin(p.x * 6.0 + uTime * 2.0) * cos(p.y * 6.0 - uTime);
+      return d;
+    }
+
+    vec3 calcNormal(vec3 p) {
+      vec2 e = vec2(0.002, 0.0);
+      return normalize(vec3(
+        map(p + e.xyy) - map(p - e.xyy),
+        map(p + e.yxy) - map(p - e.yxy),
+        map(p + e.yyx) - map(p - e.yyx)
+      ));
+    }
+
+    void main() {
+      vec2 uv = (gl_FragCoord.xy - 0.5 * uRes.xy) / uRes.y;
+      vec3 ro = vec3(0.0, 0.0, 3.6);
+      vec3 rd = normalize(vec3(uv, -1.2));
+
+      float t = 0.0;
+      float hit = 0.0;
+      vec3 p;
+      for (int i = 0; i < 56; i++) {
+        p = ro + rd * t;
+        float d = map(p);
+        if (d < 0.002) { hit = 1.0; break; }
+        if (t > 8.0) break;
+        t += d * 0.85;
+      }
+
+      vec3 col = vec3(0.035, 0.035, 0.045);
+      if (hit > 0.5) {
+        vec3 n = calcNormal(p);
+        vec3 ref = reflect(rd, n);
+        float fresnel = pow(1.0 - max(dot(-rd, n), 0.0), 3.0);
+        // Chromatic studio environment reflection
+        vec3 env = 0.5 + 0.5 * cos(ref.xyx * 3.2 + vec3(0.0, 2.1, 4.2) + uTime * 0.5);
+        vec3 accent = uPalette < 0.5 ? vec3(0.83, 1.0, 0.0)
+                    : (uPalette < 1.5 ? vec3(1.0, 0.16, 0.52) : vec3(0.95, 0.78, 0.35));
+        col = mix(env * 0.85, accent, fresnel * 0.75);
+        float spec = pow(max(dot(ref, normalize(vec3(1.0, 1.5, 1.0))), 0.0), 24.0);
+        col += spec * 0.9;
+      }
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vsSource));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fsSource));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+  const aPos = gl.getAttribLocation(prog, 'aPos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const uRes = gl.getUniformLocation(prog, 'uRes');
+  const uTime = gl.getUniformLocation(prog, 'uTime');
+  const uMouse = gl.getUniformLocation(prog, 'uMouse');
+  const uPalette = gl.getUniformLocation(prog, 'uPalette');
+
+  let mx = 0.5, my = 0.5, palette = 0;
+
+  window.addEventListener('pointermove', e => {
+    mx = e.clientX / window.innerWidth;
+    my = 1.0 - (e.clientY / window.innerHeight);
+  });
+
+  document.querySelectorAll('[data-palette]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      palette = Number(btn.dataset.palette);
+      document.querySelectorAll('[data-palette]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let start = performance.now();
+  function render(now) {
+    requestAnimationFrame(render);
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.uniform1f(uTime, (now - start) * 0.001);
+    gl.uniform2f(uMouse, mx, my);
+    gl.uniform1f(uPalette, palette);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
+  requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>

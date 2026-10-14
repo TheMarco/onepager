@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CALIBRE MVHV-26 — Grand Complication Horological Portfolio</title>
+<meta name="description" content="Haute Horlogerie 3D mechanical watch movement portfolio of Marco van Hylckama Vlieg — 28 jewels of Product Design, Engineering, and AI Craft." />
+<meta name="theme-color" content="#0A0908" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --obsidian: #0A0908;
+  --dial: #12100E;
+  --brass: #D4AF37;
+  --rose-gold: #E5C185;
+  --ruby: #C9184A;
+  --steel: #CBD5E1;
+  --ivory: #F7F3E8;
+  --ivory-dim: #A8A29E;
+  --rule: rgba(212, 175, 55, 0.25);
+  --rule-soft: rgba(247, 243, 232, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--obsidian);
+  color: var(--ivory);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+#horology-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+.serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+a { color: inherit; text-decoration: none; }
+
+/* TOP CHRONOMETER BAR */
+.chrono-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px clamp(20px, 4vw, 56px);
+  background: rgba(10, 9, 8, 0.82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.chrono-bar__group { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.jewel-badge {
+  color: var(--obsidian);
+  background: linear-gradient(135deg, var(--rose-gold), var(--brass));
+  padding: 4px 10px;
+  font-weight: 700;
+}
+.btn-crown {
+  border: 1px solid var(--rule);
+  background: rgba(212,175,55,0.08);
+  color: var(--rose-gold);
+  padding: 6px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.btn-crown:hover { background: var(--brass); color: var(--obsidian); }
+
+/* MAIN STAGE */
+.stage {
+  position: relative;
+  z-index: 10;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 96px clamp(20px, 4vw, 56px) 80px;
+}
+
+.complication-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  min-height: calc(100vh - 140px);
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .complication-hero {
+    grid-template-columns: 440px 1fr 420px;
+  }
+}
+
+.plaque {
+  background: rgba(18, 16, 14, 0.82);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--rule);
+  padding: 32px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.75), inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+.plaque-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 12px;
+}
+.plaque h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(40px, 4.5vw, 62px);
+  font-weight: 500;
+  line-height: 0.94;
+  margin-bottom: 16px;
+}
+.plaque h1 em {
+  font-style: italic;
+  color: var(--rose-gold);
+}
+.plaque p {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ivory-dim);
+  margin-bottom: 20px;
+}
+
+/* CROWN WINDING SCRUBBER */
+.crown-winder {
+  border-top: 1px solid var(--rule);
+  padding-top: 20px;
+  margin-top: 16px;
+}
+.crown-winder label {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rose-gold);
+  margin-bottom: 10px;
+}
+.crown-slider {
+  width: 100%;
+  accent-color: var(--brass);
+  cursor: ew-resize;
+}
+.chapter-stops {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+}
+.chapter-btn {
+  padding: 8px 4px;
+  border: 1px solid var(--rule-soft);
+  background: rgba(255,255,255,0.02);
+  color: var(--ivory-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chapter-btn:hover, .chapter-btn.active {
+  border-color: var(--brass);
+  background: rgba(212, 175, 55, 0.16);
+  color: var(--ivory);
+  font-weight: 700;
+}
+
+/* RIGHT: ESCAPEMENT CALIBRE READOUT */
+.calibre-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--brass);
+  letter-spacing: 0.18em;
+}
+.calibre-year {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-style: italic;
+  color: var(--rose-gold);
+  line-height: 0.9;
+}
+.calibre-company {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 600;
+  margin: 8px 0 4px;
+}
+.calibre-role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--brass);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+}
+.calibre-specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  border-top: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
+  padding: 12px 0;
+  margin: 18px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+.calibre-specs div span { display: block; color: var(--ivory-dim); font-size: 9px; }
+.calibre-specs div b { color: var(--rose-gold); font-size: 13px; }
+
+/* EXHIBITION TABLES BELOW */
+.horology-section {
+  margin-top: 64px;
+  background: rgba(18, 16, 14, 0.88);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--rule);
+  padding: clamp(24px, 4vw, 48px);
+}
+.horology-section__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 18px;
+  margin-bottom: 32px;
+}
+.horology-section__head h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(30px, 3.8vw, 48px);
+  font-weight: 500;
+}
+.horology-section__head h2 em { color: var(--rose-gold); font-style: italic; }
+
+.complication-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.jewel-card {
+  border: 1px solid var(--rule-soft);
+  background: rgba(255,255,255,0.015);
+  padding: 24px;
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.jewel-card:hover {
+  border-color: var(--brass);
+  background: rgba(212, 175, 55, 0.06);
+  transform: translateY(-3px);
+}
+.jewel-card__top {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ruby);
+  letter-spacing: 0.14em;
+  margin-bottom: 12px;
+}
+.jewel-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+.jewel-card p {
+  font-size: 13.5px;
+  color: var(--ivory-dim);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.jewel-card__foot {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--rose-gold);
+  border-top: 1px dotted var(--rule);
+  padding-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<canvas id="horology-canvas" aria-label="3D Mechanical Tourbillon Movement"></canvas>
+
+<header class="chrono-bar">
+  <div class="chrono-bar__group">
+    <a href="index.html" class="btn-crown">← Index</a>
+    <span>MANUFACTURE MVHV · PORTLAND, OR</span>
+    <span class="jewel-badge">CALIBRE 17 · GEMINI ARGON 4</span>
+  </div>
+  <div class="chrono-bar__group">
+    <span>FREQUENCY: <b style="color:var(--rose-gold);">28,800 vph (4 Hz)</b></span>
+    <span>RESERVE: <b style="color:var(--brass);">20+ YEARS</b></span>
+    <button type="button" class="btn-crown" id="btn-escapement-sound">ESCAPEMENT TICK: ON</button>
+  </div>
+</header>
+
+<main class="stage">
+  <section class="complication-hero">
+    
+    <!-- LEFT PLAQUE -->
+    <div class="plaque">
+      <div class="plaque-kicker">Haute Horlogerie · Direction 17</div>
+      <h1>The Grand <em>Complication</em> of Craft.</h1>
+      <p>
+        Like a hand-assembled mechanical calibre, great software requires invisible tolerances: strategy geared to interaction, engineering meshed with taste, and generative models regulated by human judgment.
+      </p>
+      <p>
+        <b>Marco van Hylckama Vlieg</b> has spent twenty-eight years assembling high-precision digital instruments across <b>Endemol, Yahoo!, Google, Walmart Labs, and Kohl's</b>.
+      </p>
+
+      <div class="crown-winder">
+        <label for="crown-range">
+          <span>Wind Manual Crown (1998 → 2026)</span>
+          <span id="crown-rpm">GEAR RATIO 1:1.0</span>
+        </label>
+        <input type="range" id="crown-range" class="crown-slider" min="0" max="4" step="1" value="4" />
+        <div class="chapter-stops">
+          <button type="button" class="chapter-btn" data-idx="0">1998<br/>Endemol</button>
+          <button type="button" class="chapter-btn" data-idx="1">2005<br/>Yahoo!</button>
+          <button type="button" class="chapter-btn" data-idx="2">2013<br/>Google</button>
+          <button type="button" class="chapter-btn" data-idx="3">2017<br/>Walmart</button>
+          <button type="button" class="chapter-btn active" data-idx="4">2021+<br/>Kohl's</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER 3D TOURBILLON SPACE -->
+    <div></div>
+
+    <!-- RIGHT CALIBRE INSPECTOR -->
+    <aside class="plaque">
+      <div class="calibre-header">
+        <span id="cal-ref">REF. MVHV-2021-V</span>
+        <span>● RUBY BEARING ACTIVE</span>
+      </div>
+      <div class="calibre-year" id="cal-year">2021 — Present</div>
+      <h2 class="calibre-company" id="cal-company">Kohl's</h2>
+      <div class="calibre-role" id="cal-role">Sr. Product Designer &amp; Generative-AI Specialist</div>
+      <p id="cal-desc">
+        Regulating the primary revenue escapement: cart, checkout, wallet, account, and in-store self-checkout while driving generative-AI tooling, prompt libraries, and education across the enterprise design organization.
+      </p>
+      <div class="calibre-specs">
+        <div><span>JEWELS</span><b id="cal-jewels">28 Rubies</b></div>
+        <div><span>TORQUE</span><b id="cal-torque">Enterprise</b></div>
+        <div><span>BEAT RATE</span><b id="cal-beat">28,800 vph</b></div>
+      </div>
+      <a href="https://kohls.com" target="_blank" rel="noopener" id="cal-link" class="btn-crown" style="display:block; text-align:center; padding:12px;">
+        Inspect Movement Provenance ↗
+      </a>
+    </aside>
+
+  </section>
+
+  <!-- SIX HOROLOGICAL COMPLICATIONS (CAPABILITIES) -->
+  <section class="horology-section">
+    <header class="horology-section__head">
+      <div>
+        <div class="plaque-kicker">§ I · Six Internal Complications</div>
+        <h2>Architecture of the <em>Movement</em></h2>
+      </div>
+      <span class="mono" style="font-size:11px; color:var(--ivory-dim);">SWISS ANCHOR PRECISION · ZERO FRAMEWORKS</span>
+    </header>
+    <div class="complication-grid">
+      <article class="jewel-card">
+        <div>
+          <div class="jewel-card__top"><span>JEWEL 01</span><span>TOURBILLON</span></div>
+          <h3>AI-Native Product Design</h3>
+          <p>Counteracting gravity in model-driven interfaces: voice-first rituals, semantic memory, and agentic flows that feel effortless.</p>
+        </div>
+        <div class="jewel-card__foot">Voice UX · Agent UI · Prompt Architecture</div>
+      </article>
+      <article class="jewel-card">
+        <div>
+          <div class="jewel-card__top"><span>JEWEL 02</span><span>CHRONOGRAPHE</span></div>
+          <h3>Design Engineering</h3>
+          <p>Bridging the mainspring of design intent directly to the gear train of production TypeScript, Next.js, Swift, and WebGL.</p>
+        </div>
+        <div class="jewel-card__foot">Next.js · TypeScript · Swift · Shaders</div>
+      </article>
+      <article class="jewel-card">
+        <div>
+          <div class="jewel-card__top"><span>JEWEL 03</span><span>PERPETUAL CALENDAR</span></div>
+          <h3>Enterprise UX Modernization</h3>
+          <p>High-reliability transactional loops — cart, checkout, wallet, and self-checkout engineered for hundreds of millions of cycles.</p>
+        </div>
+        <div class="jewel-card__foot">Omnichannel Commerce · Accessibility</div>
+      </article>
+      <article class="jewel-card">
+        <div>
+          <div class="jewel-card__top"><span>JEWEL 04</span><span>MINUTE REPEATER</span></div>
+          <h3>0 → 1 Product Incubation</h3>
+          <p>Chiming clarity into ambiguous executive briefs by building the working prototype before the meeting ends.</p>
+        </div>
+        <div class="jewel-card__foot">Rapid Prototyping · Product Strategy</div>
+      </article>
+      <article class="jewel-card">
+        <div>
+          <div class="jewel-card__top"><span>JEWEL 05</span><span>POWER RESERVE</span></div>
+          <h3>Internal AI Tooling</h3>
+          <p>Multiplying organizational torque with custom prompt libraries, synthetic user research, and design copilots.</p>
+        </div>
+        <div class="jewel-card__foot">LLM Workflows · Internal Platforms</div>
+      </article>
+      <article class="jewel-card">
+        <div>
+          <div class="jewel-card__top"><span>JEWEL 06</span><span>MASTER HOROLOGIST</span></div>
+          <h3>Leadership &amp; Enablement</h3>
+          <p>Former Director of UX Prototyping at Yahoo!; mentoring teams to ship with craft, speed, and AI fluency.</p>
+        </div>
+        <div class="jewel-card__foot">Org Enablement · Design Direction</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- TEN SHIPPED LAB CHRONOMETERS -->
+  <section class="horology-section">
+    <header class="horology-section__head">
+      <div>
+        <div class="plaque-kicker">§ II · Atelier AI-Created (ai-created.com)</div>
+        <h2>Ten Shipped <em>Instruments</em></h2>
+      </div>
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="btn-crown">Enter Atelier ↗</a>
+    </header>
+    <div class="complication-grid">
+      <a class="jewel-card" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 01</span><span>VOICE PWA ↗</span></div><h3>My AI Diary</h3><p>Voice-first journaling with Whisper transcription, semantic recall, and zero-knowledge encryption.</p></div>
+        <div class="jewel-card__foot">Next.js · OpenAI · Whisper · Web Crypto</div>
+      </a>
+      <a class="jewel-card" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 02</span><span>WRIST INSTRUMENT ↗</span></div><h3>WatchGPT</h3><p>Realtime ChatGPT voice conversation engineered natively for watchOS on the wrist.</p></div>
+        <div class="jewel-card__foot">watchOS · Swift · Realtime API</div>
+      </a>
+      <a class="jewel-card" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 03</span><span>PROVENANCE ↗</span></div><h3>Human, Actually</h3><p>LLM resume tailoring calibrated to preserve authentic human voice and strip synthetic phrasing.</p></div>
+        <div class="jewel-card__foot">LLM · NLP · Editorial UX</div>
+      </a>
+      <a class="jewel-card" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 04</span><span>TELEMETRY ↗</span></div><h3>AI Usage</h3><p>Native macOS menubar complication monitoring live Claude Code and Codex token burn.</p></div>
+        <div class="jewel-card__foot">macOS · Swift · Menubar</div>
+      </a>
+      <a class="jewel-card" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 05</span><span>VISION LOG ↗</span></div><h3>Calorie Counter</h3><p>Frictionless dietary logging via instant camera vision and voice recognition.</p></div>
+        <div class="jewel-card__foot">Vision LLM · Voice · PWA</div>
+      </a>
+      <a class="jewel-card" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 06</span><span>KINETIC ARCADE ↗</span></div><h3>Vectronix</h3><p>High-speed vector space combat engine with procedural Web Audio and particle physics.</p></div>
+        <div class="jewel-card__foot">Canvas · Vector Math · Web Audio</div>
+      </a>
+      <a class="jewel-card" href="https://ai-created.com/games" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 07</span><span>ORBITAL TIMING ↗</span></div><h3>Radial Drift</h3><p>One-tap precision orbital drift game built around micro-timing and haptic tension.</p></div>
+        <div class="jewel-card__foot">WebGL · Touch · Haptics</div>
+      </a>
+      <a class="jewel-card" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 08</span><span>HARMONIC FFT ↗</span></div><h3>Audio Visualizer Suite</h3><p>Real-time FFT frequency spectrum shaders with high-res FFmpeg video rendering.</p></div>
+        <div class="jewel-card__foot">WebGL · FFT · FFmpeg</div>
+      </a>
+      <a class="jewel-card" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 09</span><span>CHROMATIC TIME ↗</span></div><h3>Color Clock</h3><p>Faithful digital recreation of the 1991 spectrum clock mapping time to hue.</p></div>
+        <div class="jewel-card__foot">CSS · Typography · Color Math</div>
+      </a>
+      <a class="jewel-card" href="https://ai-created.com/products" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CAL. 10</span><span>MATRIX DISPLAY ↗</span></div><h3>Jumbotron Simulator</h3><p>Stadium LED scoreboard simulator with pixel-accurate phosphor bloom.</p></div>
+        <div class="jewel-card__foot">Canvas · WebGL · Shaders</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- BESPOKE COMMISSIONS / CONTACT -->
+  <section class="horology-section">
+    <header class="horology-section__head">
+      <div>
+        <div class="plaque-kicker">§ III · Bespoke Commissions &amp; Roles</div>
+        <h2>Inquire with the <em>Horologist</em></h2>
+      </div>
+      <a href="mailto:marcovhv@gmail.com" class="btn-crown">marcovhv@gmail.com ↗</a>
+    </header>
+    <div class="complication-grid">
+      <a class="jewel-card" href="mailto:marcovhv@gmail.com">
+        <div><div class="jewel-card__top"><span>CHANNEL I</span><span>DIRECT</span></div><h3>Electronic Post</h3><p>marcovhv@gmail.com — read personally in Portland, Oregon.</p></div>
+        <div class="jewel-card__foot">Immediate Dispatch</div>
+      </a>
+      <a class="jewel-card" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CHANNEL II</span><span>LEDGER</span></div><h3>LinkedIn Registry</h3><p>Full twenty-eight year provenance, endorsements, and leadership record.</p></div>
+        <div class="jewel-card__foot">linkedin.com/in/marcovhv</div>
+      </a>
+      <a class="jewel-card" href="https://x.com/AIandDesign" target="_blank" rel="noopener">
+        <div><div class="jewel-card__top"><span>CHANNEL III</span><span>DISPATCH</span></div><h3>X &amp; YouTube (@AIandDesign)</h3><p>Live build logs, AI design experiments, and speaking dispatches.</p></div>
+        <div class="jewel-card__foot">x.com/AIandDesign</div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const CHAPTERS = [
+    {
+      ref: 'REF. MVHV-1998-I', year: '1998 — 2005', company: 'Endemol',
+      role: 'UX & Engineering Lead',
+      desc: 'Engineered real-time synchronous broadcast companion systems and multilingual web platforms for international television formats.',
+      jewels: '17 Rubies', torque: 'Broadcast Scale', beat: '18,000 vph', speed: 0.6,
+      link: 'https://endemolshine.us/'
+    },
+    {
+      ref: 'REF. MVHV-2005-II', year: '2005 — 2013', company: 'Yahoo!',
+      role: 'Director of UX Prototyping & Sr. UX Manager',
+      desc: 'Built and directed global design-engineering and rapid UX prototyping teams across international hubs for Yahoo homepage, media, and search.',
+      jewels: '21 Rubies', torque: 'Global Portal', beat: '21,600 vph', speed: 0.9,
+      link: 'https://yahoo.com'
+    },
+    {
+      ref: 'REF. MVHV-2013-III', year: '2013 — 2017', company: 'Google',
+      role: 'Senior UX Engineer / Prototyper',
+      desc: 'Constructed high-fidelity interactive prototypes for Google Cloud AI, Google Assistant, and Android — uniting Material craft with live code.',
+      jewels: '24 Rubies', torque: 'Cloud & Assistant', beat: '25,200 vph', speed: 1.25,
+      link: 'https://google.com'
+    },
+    {
+      ref: 'REF. MVHV-2017-IV', year: '2017 — 2021', company: 'Walmart Labs',
+      role: 'Principal Product Designer / Design Technologist',
+      desc: 'Led mobile commerce, voice shopping, and ML recommendation interfaces across Walmart’s core retail ecosystem.',
+      jewels: '26 Rubies', torque: 'Fortune 1 Scale', beat: '28,800 vph', speed: 1.6,
+      link: 'https://tech.walmart.com'
+    },
+    {
+      ref: 'REF. MVHV-2021-V', year: '2021 — Present', company: "Kohl's",
+      role: 'Sr. Product Designer & Generative-AI Specialist',
+      desc: 'Regulating the primary revenue escapement: cart, checkout, wallet, account, and in-store self-checkout while driving generative-AI tooling and education across the design org.',
+      jewels: '28 Rubies', torque: 'Omnichannel + AI', beat: '36,000 vph', speed: 2.1,
+      link: 'https://kohls.com'
+    }
+  ];
+
+  // Mechanical Escapement Audio Tick
+  let audioCtx = null;
+  let tickEnabled = true;
+  function playEscapementTick(pitch = 1800) {
+    if (!tickEnabled) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(pitch, now);
+      osc.frequency.exponentialRampToValueAtTime(120, now + 0.025);
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.028);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.03);
+    } catch (e) {}
+  }
+
+  document.getElementById('btn-escapement-sound').addEventListener('click', function () {
+    tickEnabled = !tickEnabled;
+    this.textContent = `ESCAPEMENT TICK: ${tickEnabled ? 'ON' : 'OFF'}`;
+  });
+
+  // THREE.JS 3D MECHANICAL WATCH MOVEMENT
+  const canvas = document.getElementById('horology-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 0.5, 11.5);
+
+  const ambLight = new THREE.AmbientLight(0xffffff, 0.55);
+  scene.add(ambLight);
+  const keyLight = new THREE.PointLight(0xFFE5B4, 2.2, 35);
+  keyLight.position.set(6, 7, 8);
+  scene.add(keyLight);
+  const rimLight = new THREE.PointLight(0xC9184A, 1.4, 28);
+  rimLight.position.set(-7, -5, 5);
+  scene.add(rimLight);
+
+  const movementGroup = new THREE.Group();
+  scene.add(movementGroup);
+
+  const brassMat = new THREE.MeshStandardMaterial({ color: 0xD4AF37, metalness: 0.88, roughness: 0.24 });
+  const roseGoldMat = new THREE.MeshStandardMaterial({ color: 0xE5C185, metalness: 0.92, roughness: 0.18 });
+  const steelMat = new THREE.MeshStandardMaterial({ color: 0x94A3B8, metalness: 0.9, roughness: 0.22 });
+  const rubyMat = new THREE.MeshStandardMaterial({ color: 0xC9184A, metalness: 0.3, roughness: 0.1, emissive: 0x4A0418 });
+
+  // Helper to build a procedural toothed gear wheel
+  function createGearWheel(radius, teeth, thickness, mat) {
+    const group = new THREE.Group();
+    const rimGeo = new THREE.TorusGeometry(radius, thickness, 16, 64);
+    group.add(new THREE.Mesh(rimGeo, mat));
+
+    // Spokes
+    for (let i = 0; i < 6; i++) {
+      const spokeGeo = new THREE.BoxGeometry(radius * 1.95, thickness * 0.7, thickness * 0.7);
+      const spoke = new THREE.Mesh(spokeGeo, mat);
+      spoke.rotation.z = (i * Math.PI) / 6;
+      group.add(spoke);
+    }
+    // Teeth around perimeter
+    for (let i = 0; i < teeth; i++) {
+      const angle = (i / teeth) * Math.PI * 2;
+      const toothGeo = new THREE.BoxGeometry(0.14, 0.22, thickness * 1.1);
+      const tooth = new THREE.Mesh(toothGeo, mat);
+      tooth.position.set(Math.cos(angle) * (radius + 0.08), Math.sin(angle) * (radius + 0.08), 0);
+      tooth.rotation.z = angle + Math.PI / 2;
+      group.add(tooth);
+    }
+    // Center ruby jewel bearing
+    const jewelGeo = new THREE.CylinderGeometry(radius * 0.16, radius * 0.16, thickness * 1.5, 24);
+    jewelGeo.rotateX(Math.PI / 2);
+    group.add(new THREE.Mesh(jewelGeo, rubyMat));
+    return group;
+  }
+
+  const mainWheel = createGearWheel(2.6, 36, 0.14, brassMat);
+  movementGroup.add(mainWheel);
+
+  const escapementWheel = createGearWheel(1.45, 24, 0.12, roseGoldMat);
+  escapementWheel.position.set(2.1, 1.5, 0.35);
+  movementGroup.add(escapementWheel);
+
+  const secondsWheel = createGearWheel(1.2, 20, 0.1, steelMat);
+  secondsWheel.position.set(-2.0, -1.4, -0.35);
+  movementGroup.add(secondsWheel);
+
+  // Tourbillon Outer Cage
+  const cageGeo = new THREE.TorusGeometry(3.55, 0.06, 16, 96);
+  const cageMesh = new THREE.Mesh(cageGeo, steelMat);
+  movementGroup.add(cageMesh);
+
+  // Sweeping Chronograph Hand
+  const handGeo = new THREE.BoxGeometry(0.08, 3.2, 0.08);
+  handGeo.translate(0, 1.3, 0.55);
+  const chronoHand = new THREE.Mesh(handGeo, roseGoldMat);
+  movementGroup.add(chronoHand);
+
+  let gearSpeedMultiplier = 2.1;
+  let targetTiltX = 0.22, targetTiltY = -0.28;
+
+  function setChapter(idx) {
+    const ch = CHAPTERS[idx];
+    if (!ch) return;
+    gearSpeedMultiplier = ch.speed;
+    document.getElementById('crown-range').value = idx;
+    document.getElementById('crown-rpm').textContent = `GEAR RATIO 1:${ch.speed.toFixed(1)}`;
+    document.getElementById('cal-ref').textContent = ch.ref;
+    document.getElementById('cal-year').textContent = ch.year;
+    document.getElementById('cal-company').textContent = ch.company;
+    document.getElementById('cal-role').textContent = ch.role;
+    document.getElementById('cal-desc').textContent = ch.desc;
+    document.getElementById('cal-jewels').textContent = ch.jewels;
+    document.getElementById('cal-torque').textContent = ch.torque;
+    document.getElementById('cal-beat').textContent = ch.beat;
+    document.getElementById('cal-link').href = ch.link;
+
+    document.querySelectorAll('.chapter-btn').forEach(b => {
+      b.classList.toggle('active', Number(b.dataset.idx) === Number(idx));
+    });
+    playEscapementTick(1400 + idx * 220);
+  }
+
+  document.getElementById('crown-range').addEventListener('input', e => setChapter(Number(e.target.value)));
+  document.querySelectorAll('.chapter-btn').forEach(btn => {
+    btn.addEventListener('click', () => setChapter(Number(btn.dataset.idx)));
+  });
+
+  window.addEventListener('pointermove', e => {
+    const nx = (e.clientX / window.innerWidth) - 0.5;
+    const ny = (e.clientY / window.innerHeight) - 0.5;
+    targetTiltY = nx * 0.75;
+    targetTiltX = ny * 0.55;
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  const clock = new THREE.Clock();
+  let lastTickStep = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    const elapsed = clock.getElapsedTime();
+
+    // Mechanical 4Hz discrete escapement step feel
+    const stepAngle = Math.floor(elapsed * 8 * gearSpeedMultiplier) / 8;
+    if (stepAngle !== lastTickStep) {
+      lastTickStep = stepAngle;
+    }
+
+    mainWheel.rotation.z -= dt * 0.35 * gearSpeedMultiplier;
+    escapementWheel.rotation.z += dt * 0.65 * gearSpeedMultiplier;
+    secondsWheel.rotation.z += dt * 0.85 * gearSpeedMultiplier;
+    cageMesh.rotation.x = Math.sin(elapsed * 0.5) * 0.25;
+    cageMesh.rotation.y = Math.cos(elapsed * 0.4) * 0.25;
+    chronoHand.rotation.z = -stepAngle * 0.35;
+
+    movementGroup.rotation.x += (targetTiltX - movementGroup.rotation.x) * 0.06;
+    movementGroup.rotation.y += (targetTiltY - movementGroup.rotation.y) * 0.06;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>

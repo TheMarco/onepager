@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ROV MVHV-DSV-19 — Bathymetric Sonar & Deep-Trench Portfolio</title>
+<meta name="description" content="Interactive 3D Bathymetric Sonar & Deep-Submergence ROV portfolio of Marco van Hylckama Vlieg." />
+<meta name="theme-color" content="#020B10" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --abyss: #020B10;
+  --trench: rgba(4, 18, 26, 0.78);
+  --sonar: #00F59B;
+  --biolume: #00D2FF;
+  --warning: #FF9F1C;
+  --ink: #E2F8F0;
+  --ink-dim: #7FA69B;
+  --rule: rgba(0, 245, 155, 0.25);
+  --rule-soft: rgba(0, 245, 155, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--abyss);
+  color: var(--ink);
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+#bathymetry-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+.mono { font-family: 'JetBrains Mono', monospace; }
+.syne { font-family: 'Syne', sans-serif; }
+a { color: inherit; text-decoration: none; }
+
+/* SONAR HUD HEADER */
+.sonar-hud {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px clamp(18px, 3.5vw, 48px);
+  background: rgba(2, 11, 16, 0.85);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.sonar-hud__group { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.sonar-btn {
+  background: rgba(0, 245, 155, 0.08);
+  border: 1px solid var(--rule);
+  color: var(--sonar);
+  padding: 6px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.sonar-btn:hover { background: var(--sonar); color: var(--abyss); font-weight: 700; }
+
+/* MAIN BATHYMETRIC DECK */
+.rov-deck {
+  position: relative;
+  z-index: 10;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 88px clamp(18px, 3.5vw, 48px) 96px;
+}
+
+.rov-bridge {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  min-height: calc(100vh - 130px);
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .rov-bridge {
+    grid-template-columns: 430px 1fr 430px;
+  }
+}
+
+.sonar-card {
+  background: var(--trench);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--rule);
+  padding: 28px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 0 24px rgba(0, 245, 155, 0.04);
+}
+.sonar-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--sonar);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.sonar-card h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 3.8vw, 50px);
+  line-height: 0.96;
+  margin-bottom: 14px;
+}
+.sonar-card h1 span { color: var(--sonar); }
+.sonar-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+  margin-bottom: 18px;
+}
+
+/* DEPTH ZONE LADDER */
+.depth-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+.depth-rung {
+  display: grid;
+  grid-template-columns: 82px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule-soft);
+  background: rgba(0, 245, 155, 0.03);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  color: var(--ink);
+}
+.depth-rung:hover, .depth-rung.active {
+  border-color: var(--sonar);
+  background: rgba(0, 245, 155, 0.16);
+}
+.depth-rung .meters { color: var(--sonar); font-weight: 700; }
+.depth-rung .zone { color: var(--ink-dim); font-size: 10px; }
+
+/* TELEMETRY READOUT RIGHT */
+.telemetry-gauges {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--rule-soft);
+  padding-bottom: 14px;
+}
+.gauge-box {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--rule-soft);
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.gauge-box small { display: block; font-size: 9px; color: var(--ink-dim); }
+.gauge-box b { font-size: 15px; color: var(--sonar); }
+
+/* LOWER TRENCH SECTORS */
+.trench-sector {
+  margin-top: 56px;
+  background: var(--trench);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--rule);
+  padding: clamp(24px, 4vw, 44px);
+}
+.trench-sector__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+}
+.trench-sector__head h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(26px, 3.2vw, 40px);
+}
+.trench-sector__head h2 span { color: var(--sonar); }
+
+.sonar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.sonar-specimen {
+  border: 1px solid var(--rule-soft);
+  background: rgba(2, 11, 16, 0.65);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s;
+}
+.sonar-specimen:hover {
+  border-color: var(--sonar);
+  box-shadow: 0 0 24px rgba(0, 245, 155, 0.14);
+  transform: translateY(-3px);
+}
+.sonar-specimen__top {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--biolume);
+  margin-bottom: 10px;
+}
+.sonar-specimen h3 {
+  font-size: 19px;
+  margin-bottom: 8px;
+}
+.sonar-specimen p {
+  font-size: 13.5px;
+  color: var(--ink-dim);
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+.sonar-specimen__foot {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--sonar);
+  border-top: 1px dashed var(--rule-soft);
+  padding-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bathymetry-canvas" aria-label="3D Bathymetric Ocean Floor Scanner"></canvas>
+
+<header class="sonar-hud">
+  <div class="sonar-hud__group">
+    <a href="index.html" class="sonar-btn">← Surface Index</a>
+    <span>VESSEL: ROV MVHV-DSV-19</span>
+    <span style="color:var(--biolume);">GEMINI ARGON 4 · 3D BATHYMETRY</span>
+  </div>
+  <div class="sonar-hud__group">
+    <span>DEPTH: <b id="hud-depth" style="color:var(--sonar);">4,200m</b></span>
+    <button type="button" class="sonar-btn" id="btn-ping">EMIT SONAR PING</button>
+  </div>
+</header>
+
+<main class="rov-deck">
+  <section class="rov-bridge">
+
+    <!-- LEFT: SUBMERSIBLE MISSION LOG -->
+    <div class="sonar-card">
+      <div class="sonar-kicker">Direction 19 · Bathymetric Telemetry</div>
+      <h1>Deep-Ocean <span>Systems</span> Survey.</h1>
+      <p>
+        Surface-level design stops at appearances. <b>Marco van Hylckama Vlieg</b> operates at full trench pressure — where enterprise transaction architecture, hands-on code prototyping, and AI-native behavior converge.
+      </p>
+
+      <div class="sonar-kicker" style="margin-top:8px;">Select Bathymetric Depth Zone</div>
+      <div class="depth-ladder" id="depth-ladder">
+        <button type="button" class="depth-rung" data-idx="0">
+          <span class="meters">-0200m</span>
+          <strong>Endemol Shelf</strong>
+          <span class="zone">1998–2005</span>
+        </button>
+        <button type="button" class="depth-rung" data-idx="1">
+          <span class="meters">-1200m</span>
+          <strong>Yahoo! Ridge</strong>
+          <span class="zone">2005–2013</span>
+        </button>
+        <button type="button" class="depth-rung" data-idx="2">
+          <span class="meters">-2400m</span>
+          <strong>Google Seamount</strong>
+          <span class="zone">2013–2017</span>
+        </button>
+        <button type="button" class="depth-rung" data-idx="3">
+          <span class="meters">-3400m</span>
+          <strong>Walmart Basin</strong>
+          <span class="zone">2017–2021</span>
+        </button>
+        <button type="button" class="depth-rung active" data-idx="4">
+          <span class="meters">-4200m</span>
+          <strong>Kohl's Abyssal Plain</strong>
+          <span class="zone">2021–NOW</span>
+        </button>
+        <button type="button" class="depth-rung" data-idx="5">
+          <span class="meters">-6000m</span>
+          <strong>AI-Created Hadal Trench</strong>
+          <span class="zone">18 ARTIFACTS</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- CENTER 3D SONAR VIEW -->
+    <div></div>
+
+    <!-- RIGHT: ACTIVE SONAR TARGET -->
+    <aside class="sonar-card">
+      <div class="telemetry-gauges">
+        <div class="gauge-box"><small>DEPTH</small><b id="t-depth">-4,200m</b></div>
+        <div class="gauge-box"><small>PRESSURE</small><b id="t-bar">420 BAR</b></div>
+        <div class="gauge-box"><small>BEARING</small><b id="t-bearing">45.5° N</b></div>
+      </div>
+      <div class="sonar-kicker" id="t-zone">ABYSSAL ZONE // CURRENT DEPLOYMENT</div>
+      <h2 class="syne" style="font-size:32px; margin-bottom:6px;" id="t-title">Kohl's</h2>
+      <div class="mono" style="font-size:11px; color:var(--biolume); margin-bottom:14px;" id="t-role">
+        2021 — PRESENT · SR. PRODUCT DESIGNER &amp; GEN-AI SPECIALIST
+      </div>
+      <p id="t-desc">
+        Leading high-volume omnichannel cart, checkout, wallet, account, and in-store self-checkout UX while spearheading generative-AI tooling, prompt libraries, and design org enablement.
+      </p>
+      <a href="https://kohls.com" target="_blank" rel="noopener" id="t-link" class="sonar-btn" style="display:block; text-align:center; padding:12px;">
+        Inspect Acoustic Target ↗
+      </a>
+    </aside>
+
+  </section>
+
+  <!-- 6 CAPABILITIES -->
+  <section class="trench-sector">
+    <header class="trench-sector__head">
+      <div>
+        <div class="sonar-kicker">§ 01 · Submersible Instrumentation</div>
+        <h2>Six Core <span>Sonar Arrays</span></h2>
+      </div>
+      <span class="mono" style="font-size:11px; color:var(--ink-dim);">20+ YEARS CONTINUOUS DIVE LOG</span>
+    </header>
+    <div class="sonar-grid">
+      <article class="sonar-specimen">
+        <div><div class="sonar-specimen__top"><span>ARRAY 01</span><span>AI-NATIVE</span></div><h3>AI-Native Product Design</h3><p>Designing voice, memory, and agentic behaviors where the model is the medium itself.</p></div>
+        <div class="sonar-specimen__foot">Voice UX · Agent UI · Prompt Systems</div>
+      </article>
+      <article class="sonar-specimen">
+        <div><div class="sonar-specimen__top"><span>ARRAY 02</span><span>FULL-STACK</span></div><h3>Design Engineering</h3><p>Building living software prototypes in Next.js, TypeScript, Swift, WebGL, and Web Audio.</p></div>
+        <div class="sonar-specimen__foot">Next.js · TypeScript · Swift · Shaders</div>
+      </article>
+      <article class="sonar-specimen">
+        <div><div class="sonar-specimen__top"><span>ARRAY 03</span><span>INCUBATION</span></div><h3>0 → 1 Product Incubation</h3><p>Charting unmapped product waters from ambiguous brief to deployed 1.0 release.</p></div>
+        <div class="sonar-specimen__foot">Framing · Rapid Prototyping · Shipping</div>
+      </article>
+      <article class="sonar-specimen">
+        <div><div class="sonar-specimen__top"><span>ARRAY 04</span><span>HIGH PRESSURE</span></div><h3>Enterprise UX Modernization</h3><p>Architecting cart, checkout, wallet, and self-checkout systems for 100M+ users.</p></div>
+        <div class="sonar-specimen__foot">Omnichannel Commerce · Accessibility</div>
+      </article>
+      <article class="sonar-specimen">
+        <div><div class="sonar-specimen__top"><span>ARRAY 05</span><span>TOOLING</span></div><h3>Internal AI Tooling</h3><p>Custom copilots, prompt systems, and synthetic research accelerators for design teams.</p></div>
+        <div class="sonar-specimen__foot">LLM Pipelines · Workflow Tooling</div>
+      </article>
+      <article class="sonar-specimen">
+        <div><div class="sonar-specimen__top"><span>ARRAY 06</span><span>COMMAND</span></div><h3>Leadership &amp; Enablement</h3><p>Former Director of UX Prototyping at Yahoo!; enabling enterprise teams through hands-on craft.</p></div>
+        <div class="sonar-specimen__foot">Director Leadership · AI Education</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 10 SHIPPED LAB ARTIFACTS -->
+  <section class="trench-sector">
+    <header class="trench-sector__head">
+      <div>
+        <div class="sonar-kicker">§ 02 · Hadal Trench Bioluminescence (ai-created.com)</div>
+        <h2>Ten Shipped <span>Deep-Lab Artifacts</span></h2>
+      </div>
+      <a href="https://ai-created.com" target="_blank" rel="noopener" class="sonar-btn">Surface at ai-created.com ↗</a>
+    </header>
+    <div class="sonar-grid">
+      <a class="sonar-specimen" href="https://diary.ai-created.com/" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-01</span><span>LIVE PWA ↗</span></div><h3>My AI Diary</h3><p>Voice-first journaling with Whisper transcription, semantic recall, and zero-knowledge encryption.</p></div>
+        <div class="sonar-specimen__foot">Next.js · Whisper · IndexedDB · Crypto</div>
+      </a>
+      <a class="sonar-specimen" href="https://ai-created.com/products/watchgpt" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-02</span><span>WATCHOS ↗</span></div><h3>WatchGPT</h3><p>Realtime ChatGPT voice client engineered natively for Apple Watch.</p></div>
+        <div class="sonar-specimen__foot">watchOS · Swift · Realtime API</div>
+      </a>
+      <a class="sonar-specimen" href="https://ai-created.com/products/human-actually" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-03</span><span>LLM + NLP ↗</span></div><h3>Human, Actually</h3><p>Resume tailoring system that preserves authentic human voice and removes AI clichés.</p></div>
+        <div class="sonar-specimen__foot">LLM · NLP · Origin Verification</div>
+      </a>
+      <a class="sonar-specimen" href="https://ai-created.com/products/ai-usage" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-04</span><span>MACOS ↗</span></div><h3>AI Usage</h3><p>macOS menubar utility tracking Claude Code and Codex token consumption.</p></div>
+        <div class="sonar-specimen__foot">macOS · Swift · Menubar</div>
+      </a>
+      <a class="sonar-specimen" href="https://ai-created.com/products/calorie-counter" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-05</span><span>VISION AI ↗</span></div><h3>Calorie Counter</h3><p>Frictionless nutrition logging via camera vision and natural speech.</p></div>
+        <div class="sonar-specimen__foot">Vision LLM · Voice · PWA</div>
+      </a>
+      <a class="sonar-specimen" href="https://www.ai-created.com/products/vectronix" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-06</span><span>ARCADE ↗</span></div><h3>Vectronix</h3><p>Hardcore vector arcade combat with procedural Web Audio and particle physics.</p></div>
+        <div class="sonar-specimen__foot">Canvas · Vector Physics · Web Audio</div>
+      </a>
+      <a class="sonar-specimen" href="https://ai-created.com/games" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-07</span><span>WEBGL ↗</span></div><h3>Radial Drift</h3><p>One-tap precision orbital drift game built around touch timing and haptics.</p></div>
+        <div class="sonar-specimen__foot">WebGL · Touch · Haptics</div>
+      </a>
+      <a class="sonar-specimen" href="https://ai-created.com/products/audio-visualizer-suite" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-08</span><span>FFT SHADER ↗</span></div><h3>Audio Visualizer Suite</h3><p>Real-time FFT frequency spectrum shaders with FFmpeg video export.</p></div>
+        <div class="sonar-specimen__foot">WebGL · FFT · FFmpeg</div>
+      </a>
+      <a class="sonar-specimen" href="https://ai-created.com/products/color-clock" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-09</span><span>HOROLOGY ↗</span></div><h3>Color Clock</h3><p>1991 chromatic clock homage mapping continuous time onto 24-bit color space.</p></div>
+        <div class="sonar-specimen__foot">CSS · Typography · Color Math</div>
+      </a>
+      <a class="sonar-specimen" href="https://ai-created.com/products" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>SONAR-10</span><span>MATRIX ↗</span></div><h3>Jumbotron Simulator</h3><p>Pixel-accurate stadium LED scoreboard simulator in Canvas and WebGL.</p></div>
+        <div class="sonar-specimen__foot">Canvas · WebGL · Shaders</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ACOUSTIC TRANSPONDER / CONTACT -->
+  <section class="trench-sector">
+    <header class="trench-sector__head">
+      <div>
+        <div class="sonar-kicker">§ 03 · Acoustic Uplink</div>
+        <h2>Hail the <span>Vessel</span></h2>
+      </div>
+      <a href="mailto:marcovhv@gmail.com" class="sonar-btn">marcovhv@gmail.com ↗</a>
+    </header>
+    <div class="sonar-grid">
+      <a class="sonar-specimen" href="mailto:marcovhv@gmail.com">
+        <div><div class="sonar-specimen__top"><span>FREQ 01</span><span>DIRECT</span></div><h3>marcovhv@gmail.com</h3><p>Direct acoustic transponder to Portland, Oregon.</p></div>
+        <div class="sonar-specimen__foot">Transmit Message ↗</div>
+      </a>
+      <a class="sonar-specimen" href="https://linkedin.com/in/marcovhv" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>FREQ 02</span><span>LINKEDIN</span></div><h3>linkedin.com/in/marcovhv</h3><p>Complete 20+ year expedition log and leadership credentials.</p></div>
+        <div class="sonar-specimen__foot">Open Dossier ↗</div>
+      </a>
+      <a class="sonar-specimen" href="https://x.com/AIandDesign" target="_blank" rel="noopener">
+        <div><div class="sonar-specimen__top"><span>FREQ 03</span><span>BROADCAST</span></div><h3>@AIandDesign (X &amp; YouTube)</h3><p>Dispatches from the AI-Created lab and Imagine AI Live speaking engagements.</p></div>
+        <div class="sonar-specimen__foot">Tune Transponder ↗</div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const ZONES = [
+    {
+      depth: '-0,200m', bar: '20 BAR', bearing: '52.3° N',
+      zone: 'EPIPELAGIC SHELF // BROADCAST ENTRY', title: 'Endemol',
+      role: '1998 — 2005 · UX & ENGINEERING LEAD',
+      desc: 'Engineered real-time synchronous broadcast companion systems and multilingual web platforms for international television formats.',
+      link: 'https://endemolshine.us/', amp: 0.7, color: 0x00F59B
+    },
+    {
+      depth: '-1,200m', bar: '120 BAR', bearing: '37.4° N',
+      zone: 'MESOPELAGIC RIDGE // GLOBAL PORTALS', title: 'Yahoo!',
+      role: '2005 — 2013 · DIRECTOR OF UX PROTOTYPING',
+      desc: 'Directed global UX prototyping teams across international hubs for Yahoo homepage personalization, media networks, and search.',
+      link: 'https://yahoo.com', amp: 1.15, color: 0x00D2FF
+    },
+    {
+      depth: '-2,400m', bar: '240 BAR', bearing: '37.4° N',
+      zone: 'BATHYPELAGIC SEAMOUNT // CLOUD & AI', title: 'Google',
+      role: '2013 — 2017 · SENIOR UX ENGINEER / PROTOTYPER',
+      desc: 'Built high-fidelity functional prototypes for Google Cloud AI, Google Assistant, and Android OS.',
+      link: 'https://google.com', amp: 1.55, color: 0x00F59B
+    },
+    {
+      depth: '-3,400m', bar: '340 BAR', bearing: '36.3° N',
+      zone: 'ABYSSAL BASIN // RETAIL SCALE', title: 'Walmart Labs',
+      role: '2017 — 2021 · PRINCIPAL PRODUCT DESIGNER',
+      desc: 'Led mobile commerce, voice shopping, and ML personalization interfaces serving hundreds of millions of customers.',
+      link: 'https://tech.walmart.com', amp: 1.95, color: 0x00D2FF
+    },
+    {
+      depth: '-4,200m', bar: '420 BAR', bearing: '45.5° N',
+      zone: 'ABYSSAL PLAIN // CURRENT DEPLOYMENT', title: "Kohl's",
+      role: '2021 — PRESENT · SR. PRODUCT DESIGNER & GEN-AI SPECIALIST',
+      desc: 'Leading high-volume omnichannel cart, checkout, wallet, account, and in-store self-checkout UX while spearheading generative-AI tooling and design org enablement.',
+      link: 'https://kohls.com', amp: 2.35, color: 0x00F59B
+    },
+    {
+      depth: '-6,000m', bar: '600 BAR', bearing: '45.5° N',
+      zone: 'HADAL TRENCH // INDEPENDENT PRODUCT LAB', title: 'AI-Created.com',
+      role: 'ONGOING · SOLO FOUNDER & DESIGN ENGINEER · 18 SHIPPED ARTIFACTS',
+      desc: 'Independent laboratory shipping My AI Diary, WatchGPT, Human Actually, AI Usage, Calorie Counter, Vectronix, Radial Drift, Audio Visualizer, Color Clock, and Jumbotron Simulator.',
+      link: 'https://ai-created.com', amp: 2.85, color: 0xFF9F1C
+    }
+  ];
+
+  // Hydrophone Sonar Ping Audio
+  let audioCtx = null;
+  function emitSonarPing(freq = 1320) {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.96, now + 1.1);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.15);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 1.2);
+    } catch (e) {}
+  }
+
+  // THREE.JS 3D BATHYMETRIC TERRAIN & SONAR RING
+  const canvas = document.getElementById('bathymetry-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x020B10, 0.055);
+
+  const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 4.8, 10.5);
+  camera.lookAt(0, -1, 0);
+
+  const planeGeo = new THREE.PlaneGeometry(34, 34, 96, 96);
+  planeGeo.rotateX(-Math.PI / 2);
+
+  const terrainMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uAmp: { value: 2.35 },
+      uPingRadius: { value: 0 },
+      uColor: { value: new THREE.Color(0x00F59B) }
+    },
+    vertexShader: `
+      uniform float uTime;
+      uniform float uAmp;
+      varying vec3 vPos;
+      varying float vElev;
+      void main() {
+        vec3 p = position;
+        float ridge = sin(p.x * 0.45 + uTime * 0.4) * cos(p.z * 0.45 + uTime * 0.3) * uAmp;
+        ridge += sin(p.x * 1.2 - uTime * 0.2) * cos(p.z * 1.1) * (uAmp * 0.35);
+        // Trench channel down the center
+        float trench = -exp(-pow(p.x * 0.35, 2.0)) * (uAmp * 1.2);
+        p.y += ridge + trench;
+        vElev = p.y;
+        vPos = p;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uPingRadius;
+      uniform vec3 uColor;
+      varying vec3 vPos;
+      varying float vElev;
+      void main() {
+        float dist = length(vPos.xz);
+        float pingBand = smoothstep(1.2, 0.0, abs(dist - uPingRadius));
+        vec3 col = mix(vec3(0.0, 0.28, 0.32), uColor, clamp((vElev + 3.0) / 6.0, 0.0, 1.0));
+        col += vec3(0.6, 1.0, 0.9) * pingBand * 1.3;
+        gl_FragColor = vec4(col, 0.68 + pingBand * 0.32);
+      }
+    `,
+    wireframe: true,
+    transparent: true
+  });
+
+  const terrainMesh = new THREE.Mesh(planeGeo, terrainMat);
+  terrainMesh.position.y = -2.2;
+  scene.add(terrainMesh);
+
+  let pingRadius = 0;
+  function triggerPing() {
+    pingRadius = 0.1;
+    emitSonarPing(1380);
+  }
+
+  document.getElementById('btn-ping').addEventListener('click', triggerPing);
+
+  function selectZone(idx) {
+    const z = ZONES[idx];
+    if (!z) return;
+    document.getElementById('hud-depth').textContent = z.depth;
+    document.getElementById('t-depth').textContent = z.depth;
+    document.getElementById('t-bar').textContent = z.bar;
+    document.getElementById('t-bearing').textContent = z.bearing;
+    document.getElementById('t-zone').textContent = z.zone;
+    document.getElementById('t-title').textContent = z.title;
+    document.getElementById('t-role').textContent = z.role;
+    document.getElementById('t-desc').textContent = z.desc;
+    document.getElementById('t-link').href = z.link;
+
+    terrainMat.uniforms.uAmp.value = z.amp;
+    terrainMat.uniforms.uColor.value.setHex(z.color);
+
+    document.querySelectorAll('.depth-rung').forEach(r => {
+      r.classList.toggle('active', Number(r.dataset.idx) === Number(idx));
+    });
+    triggerPing();
+  }
+
+  document.querySelectorAll('.depth-rung').forEach(btn => {
+    btn.addEventListener('click', () => selectZone(Number(btn.dataset.idx)));
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  const clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    const t = clock.getElapsedTime();
+    terrainMat.uniforms.uTime.value = t;
+
+    if (pingRadius > 0) {
+      pingRadius += dt * 14.0;
+      if (pingRadius > 24.0) pingRadius = 0;
+    } else if (Math.sin(t * 0.8) > 0.995) {
+      pingRadius = 0.1;
+    }
+    terrainMat.uniforms.uPingRadius.value = pingRadius;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>
